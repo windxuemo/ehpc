@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div id="content-container" class="container">
+        <div class="es-section login-section">
+            <div class="logon-tab clearfix">
+                <a href="{{ url_for('user.signin') }}">{{ _('Sign In') }}</a>
+                <a class="active">{{ _('Registration') }}</a>
+            </div>
+            <div class="login-main">
+                <form id="register-form" method="post" action="" novalidate="novalidate" data-widget-cid="widget-1">
+                    <div class="form-group mbl">
+                        <label class="control-label required" for="register_nickname">{{ _('Username') }}</label>
+                        <div class="controls">
+                            <input type="text" id="register_nickname" name="username" required="required"
+                                   class="form-control input-lg" data-url="/register/nickname/check"
+                                   placeholder="{{ _('letters,digits,underscore') }}"
+                                   data-com.agilebits.onepassword.user-edited="yes"
+                                   data-widget-cid="widget-3" data-explain="">
+                            <p class="help-block"></p>
+                        </div>
+                        {% if message_u %}
+                            <p class="help-block"><span class="text-danger"> {{ message_u }}</span></p>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mbl">
+                        <label class="control-label required" for="register_mobile">{{ _('Email Address') }}</label>
+                        <div class="controls">
+                            <input type="text" id="login_email" name="email" required="required"
+                                   class="form-control input-lg"
+                                   placeholder="{{ _('Email Address') }}" data-widget-cid="widget-2" data-explain="">
+                            <p class="help-block"></p>
+                        </div>
+                        {% if message_e %}
+                            <p class="help-block"><span class="text-danger"> {{ message_e }}</span></p>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mbl">
+                        <label class="control-label required" for="register_password">{{ _('Password') }}</label>
+                        <div class="controls">
+                            <input type="password" id="register_password" name="password" required="required"
+                                   class="form-control input-lg" data-widget-cid="widget-4" data-explain=""
+                                   data-com.agilebits.onepassword.user-edited="yes">
+                            <p class="help-block"></p>
+                        </div>
+                    </div>
+                    <div class="form-group mbl">
+                        <label class="control-label required" for="register_password">{{ _('Password Again') }}</label>
+                        <div class="controls">
+                            <input type="password" id="register_password" name="password2" required="required"
+                                   class="form-control input-lg" data-widget-cid="widget-4" data-explain=""
+                                   data-com.agilebits.onepassword.user-edited="yes">
+                            <p class="help-block"></p>
+                        </div>
+                        {% if message_p %}
+                            <p class="help-block"><span class="text-danger"> {{ message_p }}</span></p>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group mbl">
+                        <div class="controls">
+                            <button type="submit" id="register-btn" data-submiting-text="{{ _('Submiting...') }}"
+                                    class="btn btn-primary btn-lg btn-block">{{ _('Registration') }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="social-login">
+            <span>
+                <a href="/login/bind/weibo?_target_path={{ url_for('main.index') }}&amp;inviteCode="
+                   class="social-icon social-weibo">
+                  <i class="es-icon es-icon-weibo"></i>
+                </a>
+
+                <a href="/login/bind/qq?_target_path={{ url_for('main.index') }}&amp;inviteCode="
+                   class="social-icon social-qq">
+                  <i class="es-icon es-icon-qq"></i>
+                </a>
+
+                <a href="/login/bind/weixinweb?_target_path={{ url_for('main.index') }}&amp;inviteCode="
+                   class="social-icon social-weixin">
+                  <i class="es-icon es-icon-weixin"></i>
+                </a>
+            </span>
+                    <div class="line"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

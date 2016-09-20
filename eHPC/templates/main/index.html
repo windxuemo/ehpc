@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="course-list-section open-course-list-section ">
+        <div class="container">
+            <div class="text-line">
+                <h5><span>{{ _('Online Courses') }}</span>
+                    <div class="line"></div>
+                </h5>
+                <div class="subtitle">{{ _('Learn HPC.') }}</div>
+            </div>
+
+            <div class="course-list">
+                <div class="row">
+                    {% for c in courses %}
+                        <div class="col-lg-3 col-md-4 col-xs-6">
+                            <div class="course-item">
+                                <div class="course-img">
+                                    <a href="{{ url_for('course.view') }}" target="_blank">
+                                        <img src="" alt=c.title class="img-responsive">
+                                    </a>
+
+                                </div>
+                                <div class="course-info">
+                                    <div class="title">
+                                        <a class="link-dark" href="{{ url_for('course.view') }}" target="_blank"
+                                           title=c.title>
+                                            {{ c.title }}
+                                        </a>
+                                    </div>
+                                    <div class="metas clearfix">
+                                        <span class="num"><i class="es-icon es-icon-removeredeye"></i>{{ c.studentNum }}</span>
+                                        <span class="comment"><i
+                                                class="es-icon es-icon-textsms"></i>{{ c.voteNum }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="section-more-btn">
+                <a href="{{ url_for('course.index') }}" class="btn btn-default btn-lg">
+                    {{ _('More Courses') }}<i class="mrs-o es-icon es-icon-chevronright"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="introduction-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 introduction-item">
+                    <a href="{{ url_for('lab.index') }}" target="_blank">
+                        <img class="img-responsive" src="image/lab.png">
+                    </a>
+                    <h4>{{ _('Virtual Lab!') }}</h4>
+                    <h5>{{ _('Try Out Your Pogrammer.') }}</h5>
+                </div>
+                <div class="col-xs-6 introduction-item">
+                    <a href="{{ url_for('problem.index') }}" target="_blank">
+                        <img class="img-responsive" src="image/problems.png">
+                    </a>
+                    <h4>{{ _('Challenge Yourself!') }}</h4>
+                    <h5>{{ _('Try To Solve The Problem.') }}</h5>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="dynamic-section ">
+        <div class="container">
+            <div class="text-line gray">
+                <h5><span>动态</span>
+                    <div class="line"></div>
+                </h5>
+                <div class="subtitle">参与小组，结交更多同学，关注课程动态。</div>
+            </div>
+            <div class="dynamic-section-main row">
+                <div class="col-md-6">
+                    <div class="panel panel-default index-group">
+                        <div class="panel-heading">
+                            <a href="/group" class="more"><i class="es-icon es-icon-morehoriz"></i></a>
+                            <h3 class="panel-title"><i class="es-icon es-icon-whatshot pull-left"></i>热门小组</h3>
+                        </div>
+                        <div class="panel-body row">
+                            <div class="media-group-list">
+                                <div class="media media-group col-md-6 col-sm-4">
+                                    <div class="media-left">
+                                        <a href="/group/3">
+                                            <img class="avatar-square-md"
+                                                 src="/files/default/2015/06-09/110306a628f7385125.jpg?7.1.5"
+                                                 alt="在线教育频道">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="title">
+                                            <a class="link-light" href="/group/3">
+                                                在线教育频道
+                                            </a>
+                                        </div>
+                                        <div class="metas">
+                                            <span><i class="es-icon es-icon-people"></i>182</span>
+                                            <span><i class="es-icon es-icon-textsms"></i>13</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="media media-group col-md-6 col-sm-4">
+                                    <div class="media-left">
+                                        <a href="/group/4">
+                                            <img class="avatar-square-md"
+                                                 src="/files/user/2015/03-17/172533d6fbf5121921.png?7.1.5"
+                                                 alt="EduSoho后院">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="title">
+                                            <a class="link-light" href="/group/4">
+                                                EduSoho后院
+                                            </a>
+                                        </div>
+                                        <div class="metas">
+                                            <span><i class="es-icon es-icon-people"></i>117</span>
+                                            <span><i class="es-icon es-icon-textsms"></i>9</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="media media-group col-md-6 col-sm-4">
+                                    <div class="media-left">
+                                        <a href="/group/2">
+                                            <img class="avatar-square-md"
+                                                 src="/files/default/2015/06-09/110146ad1191457603.png?7.1.5"
+                                                 alt="EduSoho安装讨论区">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="title">
+                                            <a class="link-light" href="/group/2">
+                                                EduSoho安装讨论区
+                                            </a>
+                                        </div>
+                                        <div class="metas">
+                                            <span><i class="es-icon es-icon-people"></i>52</span>
+                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="media media-group col-md-6 col-sm-4">
+                                    <div class="media-left">
+                                        <a href="/group/1">
+                                            <img class="avatar-square-md"
+                                                 src="/files/default/2015/06-09/1059026535c2755820.jpg?7.1.5" alt="教务处">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="title">
+                                            <a class="link-light" href="/group/1">
+                                                教务处
+                                            </a>
+                                        </div>
+                                        <div class="metas">
+                                            <span><i class="es-icon es-icon-people"></i>33</span>
+                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="media media-group col-md-6 col-sm-4">
+                                    <div class="media-left">
+                                        <a href="/group/5">
+                                            <img class="avatar-square-md"
+                                                 src="/files/default/2015/06-09/10553461bb34946372.jpg?7.1.5"
+                                                 alt="ES云平台开发者社区">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="title">
+                                            <a class="link-light" href="/group/5">
+                                                ES云平台开发者社区
+                                            </a>
+                                        </div>
+                                        <div class="metas">
+                                            <span><i class="es-icon es-icon-people"></i>28</span>
+                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="media media-group col-md-6 col-sm-4">
+                                    <div class="media-left">
+                                        <a href="/group/6">
+                                            <img class="avatar-square-md"
+                                                 src="/files/default/2015/06-09/105835b48c3c992263.jpg?7.1.5"
+                                                 alt="给ES提建议">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <div class="title">
+                                            <a class="link-light" href="/group/6">
+                                                给ES提建议
+                                            </a>
+                                        </div>
+                                        <div class="metas">
+                                            <span><i class="es-icon es-icon-people"></i>21</span>
+                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default index-article">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                最新资讯
+                                <a class="more" href="/article"><i class="es-icon es-icon-morehoriz"></i></a>
+                            </h3>
+                        </div>
+                        <div class="panel-body clearfix">
+                            <ul class="index-recommend-aricle clearfix">
+                                <li class="">
+                                    <a href="/article/246">
+                                        <img class="img-responsive"
+                                             src="/assets/v2/img/article/article_banner_1.jpg?7.1.5">
+                                        <div class="image-overlay"></div>
+                                        <div class="title">内容为王--在线教育为老师插上“金色"的翅膀</div>
+                                    </a>
+                                </li>
+                                <li class="last">
+                                    <a href="/article/238">
+                                        <img class="img-responsive"
+                                             src="/assets/v2/img/article/article_banner_2.jpg?7.1.5">
+                                        <div class="image-overlay"></div>
+                                        <div class="title">【观察】在线教育，真的可以为教育发展带来新契机吗？</div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="index-new-article ">
+                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
+                                        class="link-dark" href="/article/246" title="内容为王--在线教育为老师插上“金色&quot;的翅膀">内容为王--在线教育为老师插上“金色"的翅膀</a>
+                                    <span class="date">11-18</span></li>
+                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
+                                        class="link-dark" href="/article/245" title="【观点】“互联网+”上升为国家战略在线教育受青睐">【观点】“互联网+”上升为国家战略在线教育受青睐</a>
+                                    <span class="date">11-18</span></li>
+                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
+                                        class="link-dark" href="/article/244" title="教育部指路“地方高校转型”：校企合作，为地方、行业发展培养人才">教育部指路“地方高校转型”：校企合作，为地方、行业发展培养人才</a>
+                                    <span class="date">11-17</span></li>
+                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
+                                        class="link-dark" href="/article/243" title="【互联网+教育】K12在线教育：需要同步课堂，更需要交互课堂">【互联网+教育】K12在线教育：需要同步课堂，更需要交互课堂</a>
+                                    <span class="date">11-17</span></li>
+                                <li class="last clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
+                                        class="link-dark" href="/article/242" title="2015 Hackthon 杭州站回顾之BugLife篇">2015
+                                    Hackthon 杭州站回顾之BugLife篇</a> <span class="date">11-03</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

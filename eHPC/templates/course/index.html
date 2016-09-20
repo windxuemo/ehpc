@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="es-banner">
+        <div class="container">
+            <div class="title">
+                {{ _('All The Courses') }}
+            </div>
+        </div>
+    </div>
+
+    <div class="open-course-list">
+        {% for c in courses %}
+            <div class="row course-list es-open-course-list">
+                <div class="col-md-4 col-xs-6">
+                    <div class="course-item">
+                        <div class="course-img">
+                            <a href="{{ url_for('course.view', cid=c.id) }}" target="_blank">
+                                <img src="{{ c.smallPicture }}"
+                                     alt="{{ c.title }}" class="img-responsive">
+                            </a>
+                        </div>
+                        <div class="course-info clearfix">
+                            <div class="title">
+                                <a class="link-dark" href="{{ url_for('course.view', cid=c.id) }}" target="_blank"
+                                   title="{{ c.title }}">
+                                    {{ c.title }}
+                                </a>
+                            </div>
+                            <div class="metas pull-right">
+                                <span class="num"><i class="es-icon es-icon-removeredeye"></i>c.studentNum/span>
+                                <span class="comment"><i class="es-icon es-icon-textsms"></i>c.voteNum</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

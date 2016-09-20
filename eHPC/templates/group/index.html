@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li class="active"><a href="/group">小组主页</a></li>
+        </ol>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">热门小组</h3>
+                        <a href="/group/search_group" class="more"><i class="es-icon es-icon-morehoriz"></i></a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row media-group-list">
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/3" title="在线教育频道">
+                                        <img src="/files/default/2015/06-09/110306a628f7385125.jpg?7.1.5" alt="在线教育频道"
+                                             class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/3" title="在线教育频道">
+                                            在线教育频道
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>182</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>13</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/4" title="EduSoho后院">
+                                        <img src="/files/user/2015/03-17/172533d6fbf5121921.png?7.1.5" alt="EduSoho后院"
+                                             class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/4" title="EduSoho后院">
+                                            EduSoho后院
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>117</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>9</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/2" title="EduSoho安装讨论区">
+                                        <img src="/files/default/2015/06-09/110146ad1191457603.png?7.1.5"
+                                             alt="EduSoho安装讨论区" class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/2" title="EduSoho安装讨论区">
+                                            EduSoho安装...
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>52</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/1" title="教务处">
+                                        <img src="/files/default/2015/06-09/1059026535c2755820.jpg?7.1.5" alt="教务处"
+                                             class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/1" title="教务处">
+                                            教务处
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>33</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/5" title="ES云平台开发者社区">
+                                        <img src="/files/default/2015/06-09/10553461bb34946372.jpg?7.1.5"
+                                             alt="ES云平台开发者社区" class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/5" title="ES云平台开发者社区">
+                                            ES云平台开发者社...
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>28</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/6" title="给ES提建议">
+                                        <img src="/files/default/2015/06-09/105835b48c3c992263.jpg?7.1.5" alt="给ES提建议"
+                                             class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/6" title="给ES提建议">
+                                            给ES提建议
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>21</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/10" title="本小组为演示小组，演示站内的测试数据定时清理！">
+                                        <img src="/files/group/2016/08-16/172442ab5b31487609.jpg?7.1.5"
+                                             alt="本小组为演示小组，演示站内的测试数据定时清理！" class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/10" title="本小组为演示小组，演示站内的测试数据定时清理！">
+                                            本小组为演示小组，...
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>2</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/11" title="教务处 ">
+                                        <img src="/files/group/2016/08-16/172751705d0e486241.jpg?7.1.5" alt="教务处 "
+                                             class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/11" title="教务处 ">
+                                            教务处
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>2</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>1</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media media-group col-md-4 col-sm-4">
+                                <div class="media-left">
+                                    <a href="/group/12" title="12">
+                                        <img src="/assets/img/default/group.png?7.1.5" alt="12"
+                                             class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/12" title="12">
+                                            12
+                                        </a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>1</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">最近话题</h3></div>
+                    <div class="panel-body">
+                        <ul class="media-list thread-list">
+                            <li class="empty">暂无话题！</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <form class="mbl" action="/group/search_group" method="get">
+                    <div class="search-with-btn">
+                        <input type="hidden" name="_csrf_token" value="061532c03e85456ed4a0dcc805896ed9444bce33">
+                        <input type="text" class="form-control" placeholder="小组搜索" name="keyWord" value="">
+                        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">我的小组</h3>
+                        <a href="/my/group/join?type=myGroup" class="more">
+                            <i class="es-icon es-icon-morehoriz"></i></a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="media-group-list">
+                            <div class="media media-group">
+                                <div class="media-left">
+                                    <a href="/group/3" title="在线教育频道">
+                                        <img src="/files/default/2015/06-09/110306a628f7385125.jpg?7.1.5" alt="在线教育频道"
+                                             class="avatar-square-md">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="title">
+                                        <a class="gray-darker" href="/group/3" title="在线教育频道">在线教育频道</a>
+                                    </div>
+                                    <div class="metas">
+                                        <span><i class="es-icon es-icon-people"></i>182</span>
+                                        <span><i class="es-icon es-icon-textsms"></i>13</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

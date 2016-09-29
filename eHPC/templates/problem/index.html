@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="es-banner">
+        <div class="container">
+            <div class="title">
+                所有题目
+            </div>
+        </div>
+    </div>
+
+    <div id="content-container" class="container">
+        <div class="table-responsive">
+            <table class="table table-default table-bordered display" cellspacing="0" id="problem">
+                <thead>
+                <tr>
+                    <th>{{ _('ID') }}</th>
+                    <th>{{ _('Title') }}</th>
+                    <th>{{ _('Difficulty') }}</th>
+                    <th>{{ _('CreadtedTime') }}</th>
+                    <th>{{ _('AcceptNum') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+
+
+    <script>
+        $(document).ready(
+                function () {
+                    $('#problem').DataTable({
+                        language: {
+                            url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Chinese.json"
+                        },
+                        bProcessing: true,
+                        bServerSide: true,
+                        bPaginate: true,
+                        sAjaxSource: "{{ url_for('problem.list') }}",
+                        sDom: "<'row'<'col-sm-4'l><'col-sm-8 text-right'f>r>" + "t" + "<'row'<'col-sm-6'i><'col-sm-6 text-right'p><'col-sm-0 text-right'T>>",
+                        oTableTools: {
+                            "sRowSelect": "multi",
+                            "aButtons": []
+                        },
+                    });
+                });
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/jquery.dataTables.css') }} ">
+{% endblock %}

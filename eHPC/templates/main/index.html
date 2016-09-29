@@ -11,31 +11,7 @@
 
             <div class="course-list">
                 <div class="row">
-                    {% for c in courses %}
-                        <div class="col-lg-3 col-md-4 col-xs-6">
-                            <div class="course-item">
-                                <div class="course-img">
-                                    <a href="{{ url_for('course.view') }}" target="_blank">
-                                        <img src="" alt=c.title class="img-responsive">
-                                    </a>
-
-                                </div>
-                                <div class="course-info">
-                                    <div class="title">
-                                        <a class="link-dark" href="{{ url_for('course.view') }}" target="_blank"
-                                           title=c.title>
-                                            {{ c.title }}
-                                        </a>
-                                    </div>
-                                    <div class="metas clearfix">
-                                        <span class="num"><i class="es-icon es-icon-removeredeye"></i>{{ c.studentNum }}</span>
-                                        <span class="comment"><i
-                                                class="es-icon es-icon-textsms"></i>{{ c.voteNum }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+                    {% include 'course/widget_courses.html' %}
                 </div>
             </div>
             <div class="section-more-btn">
@@ -85,125 +61,26 @@
                         </div>
                         <div class="panel-body row">
                             <div class="media-group-list">
-                                <div class="media media-group col-md-6 col-sm-4">
-                                    <div class="media-left">
-                                        <a href="/group/3">
-                                            <img class="avatar-square-md"
-                                                 src="/files/default/2015/06-09/110306a628f7385125.jpg?7.1.5"
-                                                 alt="在线教育频道">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="title">
-                                            <a class="link-light" href="/group/3">
-                                                在线教育频道
+                                {% for g in groups %}
+                                    <div class="media media-group col-md-6 col-sm-4">
+                                        <div class="media-left">
+                                            <a href="{{ url_for('group.view', gid=g.id) }}" class="pull-left ">
+                                                <img src="" alt="{{ g.title }}"
+                                                     class="avatar-square-md">
                                             </a>
                                         </div>
-                                        <div class="metas">
-                                            <span><i class="es-icon es-icon-people"></i>182</span>
-                                            <span><i class="es-icon es-icon-textsms"></i>13</span>
+                                        <div class="media-body">
+                                            <div class="title">
+                                                <a class="gray-darker"
+                                                   href="url_for('group.view', gid=g.id)">{{ g.title }}</a>
+                                            </div>
+                                            <div class="metas">
+                                                <span><i class="es-icon es-icon-people"></i>{{ g.memberNum }}</span>
+                                                <span><i class="es-icon es-icon-textsms"></i>{{ g.topicNum }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="media media-group col-md-6 col-sm-4">
-                                    <div class="media-left">
-                                        <a href="/group/4">
-                                            <img class="avatar-square-md"
-                                                 src="/files/user/2015/03-17/172533d6fbf5121921.png?7.1.5"
-                                                 alt="EduSoho后院">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="title">
-                                            <a class="link-light" href="/group/4">
-                                                EduSoho后院
-                                            </a>
-                                        </div>
-                                        <div class="metas">
-                                            <span><i class="es-icon es-icon-people"></i>117</span>
-                                            <span><i class="es-icon es-icon-textsms"></i>9</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="media media-group col-md-6 col-sm-4">
-                                    <div class="media-left">
-                                        <a href="/group/2">
-                                            <img class="avatar-square-md"
-                                                 src="/files/default/2015/06-09/110146ad1191457603.png?7.1.5"
-                                                 alt="EduSoho安装讨论区">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="title">
-                                            <a class="link-light" href="/group/2">
-                                                EduSoho安装讨论区
-                                            </a>
-                                        </div>
-                                        <div class="metas">
-                                            <span><i class="es-icon es-icon-people"></i>52</span>
-                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="media media-group col-md-6 col-sm-4">
-                                    <div class="media-left">
-                                        <a href="/group/1">
-                                            <img class="avatar-square-md"
-                                                 src="/files/default/2015/06-09/1059026535c2755820.jpg?7.1.5" alt="教务处">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="title">
-                                            <a class="link-light" href="/group/1">
-                                                教务处
-                                            </a>
-                                        </div>
-                                        <div class="metas">
-                                            <span><i class="es-icon es-icon-people"></i>33</span>
-                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="media media-group col-md-6 col-sm-4">
-                                    <div class="media-left">
-                                        <a href="/group/5">
-                                            <img class="avatar-square-md"
-                                                 src="/files/default/2015/06-09/10553461bb34946372.jpg?7.1.5"
-                                                 alt="ES云平台开发者社区">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="title">
-                                            <a class="link-light" href="/group/5">
-                                                ES云平台开发者社区
-                                            </a>
-                                        </div>
-                                        <div class="metas">
-                                            <span><i class="es-icon es-icon-people"></i>28</span>
-                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="media media-group col-md-6 col-sm-4">
-                                    <div class="media-left">
-                                        <a href="/group/6">
-                                            <img class="avatar-square-md"
-                                                 src="/files/default/2015/06-09/105835b48c3c992263.jpg?7.1.5"
-                                                 alt="给ES提建议">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="title">
-                                            <a class="link-light" href="/group/6">
-                                                给ES提建议
-                                            </a>
-                                        </div>
-                                        <div class="metas">
-                                            <span><i class="es-icon es-icon-people"></i>21</span>
-                                            <span><i class="es-icon es-icon-textsms"></i>1</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

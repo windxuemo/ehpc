@@ -1,0 +1,37 @@
+<div class="panel-body">
+
+    {% for t in latest_topics %}
+        <ul class="media-list thread-list">
+            <li class="media">
+                <div class="media-left">
+        <span class="reply-num">
+         <strong> {{ t.postNum }} </strong> {{ _('replies') }}
+        </span>
+                </div>
+                <div class="media-body pts">
+                    <div class="media-heading">
+                        <a class="title gray-darker" href="{{ url_for('group.topic_view', tid=t.id) }}">{{ t.title }}</a>
+                    </div>
+
+                    <div class="metas">
+                        <a class="userImg js-user-card" href=" {{ url_for('user.view', uid=t.userID) }} ">
+                            <img class="avatar-xxs" src=" {{ t.userID.avatar }} ">
+                        </a>
+
+                        <a class="link-dark pls" href="url_for('user.info', uid=t.userID)">{{  t.userID }}</a>
+                        {{ _('Created this topic.') }}
+                        <span class="divider">•</span>
+                        {{ t.createdTime | natural_time}}
+                        <span class="divider">•</span>
+                        <a class="gray-darker" href="{{ url_for('group.view', gid=t.groupID) }}" title="">{{ t.group.title }}</a>
+
+                    </div>
+                </div>
+            </li>
+        </ul>
+    {% endfor %}
+
+</div>
+
+
+{# latest_topics #}

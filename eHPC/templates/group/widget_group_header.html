@@ -1,0 +1,25 @@
+<div class="group-header"
+     style="background:url({{ url_for('static', filename='image/background_group.jpg') }}); background-repeat: no-repeat;background-size: 100% 100%;">
+    <div class="media">
+        <div class="media-left">
+            <a href="{{ url_for('group.view', gid=cur_group.id) }}">
+                <img src="{{ cur_group.img_src }}" alt="{{ cur_group.title }}" class="avatar-square-md">
+            </a>
+        </div>
+        <div class="media-body">
+            <h2 class="media-heading">
+                {{ cur_group.title }}
+                <a id="exit-btn" class="btn btn-default btn-sm mlm" href="{{ url_for('group.exit', id=cur_group.id) }}">{{ _('Exit Group') }}</a>
+
+            </h2>
+            <div class="media-metas">
+
+                {{ cur_group.memberNum }} {{ _(' Members') }}
+                <span class="mlm"> {{ cur_group.topicNum }} {{ _(' Topics') }}</span>
+                <span class="fsn mlm">{{ _('Created Time') }} {{ cur_group.createdTime | natural_time}}</span>
+
+            </div>
+        </div>
+    </div>
+    <div class="image-overlay image-overlay-o"></div>
+</div>

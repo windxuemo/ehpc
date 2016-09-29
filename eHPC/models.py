@@ -155,7 +155,6 @@ class Group(db.Model):
     title = db.Column(db.String(64), nullable=False)            # 讨论组名字
     about = db.Column(db.Text(), nullable=False)                # 讨论组介绍
     logo = db.Column(db.String(128))                            # 讨论组 Logo
-    backgroundLogo = db.Column(db.String(128))                  # 背景图
 
     memberNum = db.Column(db.Integer, default=0)                # 讨论组成员数目
     topicNum = db.Column(db.Integer, default=0)                 # 讨论组话题数目
@@ -175,7 +174,7 @@ class Topic(db.Model):
     content = db.Column(db.String(1024), nullable=False)        # 话题内容
     visitNum = db.Column(db.Integer, default=0)                 # 话题浏览次数
     postNum = db.Column(db.Integer, default=0)                  # 评论次数
-    groupId = db.Column(db.Integer, db.ForeignKey('groups.id'))  # 所属群组的ID
+    groupID = db.Column(db.Integer, db.ForeignKey('groups.id'))  # 所属群组的ID
     userID = db.Column(db.Integer, db.ForeignKey('users.id'))    # 创建用户的ID
 
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -190,13 +189,29 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)                # 评论的ID
     content = db.Column(db.String(1024), nullable=False)        # 评论内容
 
-    topicId = db.Column(db.Integer, db.ForeignKey('topics.id'))  # 所属话题的ID
+    topicID = db.Column(db.Integer, db.ForeignKey('topics.id'))  # 所属话题的ID
     userID = db.Column(db.Integer, db.ForeignKey('users.id'))    # 回复用户的ID
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
 
 
 """ 虚拟实验室模块 """
+
 """ 竞赛平台(OJ) """
+
+
+class Problem(db.Model):
+    __tablename__="problems"
+    id = db.Column(db.Integer, primary_key=True)                # 题目 ID
+    title = db.Column(db.String(64), nullable=False)            # 题目标题
+    detail = db.Column(db.Text(), nullable=False)               # 题目详情
+    difficulty = db.Column(db.Integer, default=0)               # 题目难度
+    acceptedNum = db.Column(db.Integer, default=0)              # 通过次数
+    submitNum = db.Column(db.Integer, default=0)                # 提交次数
+
+    createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
+    # TODO
 
 
 """ 其他: 咨询信息 """

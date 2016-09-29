@@ -2,25 +2,21 @@
 {% block content %}
 
     <div id="content-container" class="container">
+
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">{{ _('Index') }}</a></li>
-            <li class="active"><a href="/group">{{ _('Group Index') }}</a></li>
+            <li><a href="{{ url_for('group.index') }}">{{ _('Group Index') }}</a></li>
+            <li><a href="{{ url_for('group.all') }}">{{ _('All Groups') }}</a></li>
         </ol>
+
+
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-9 group-main">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ _('Hot Groups') }}</h3>
-                        <a href="{{ url_for('group.all') }}" class="more"><i class="es-icon es-icon-morehoriz"></i></a>
+                        <h3 class="panel-title">{{ _('All Groups') }}</h3>
                     </div>
-
                     {% include 'group/widget_groups.html' %}
-                </div>
-
-
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ _('Latest Topics') }}</h3></div>
-                    {% include 'group/widget_topic.html' %}
                 </div>
             </div>
             <div class="col-md-3">

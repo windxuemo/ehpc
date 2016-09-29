@@ -26,6 +26,10 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
 
+    from .util.time_process import filter_blueprint
+    app.register_blueprint(filter_blueprint)
+
+
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
     from .user import user as user_blueprint
@@ -36,6 +40,7 @@ def create_app(config_name):
     app.register_blueprint(course_blueprint, url_prefix='/course')
     from .group import group as group_blueprint
     app.register_blueprint(group_blueprint, url_prefix='/group')
+
 
     # TODO
     from .lab import lab as lab_blueprint

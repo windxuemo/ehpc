@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
 # @Last Modified time: 2016-09-19 14:27:41
-from flask import render_template, redirect, request, url_for, abort, current_app
+from flask import render_template, redirect, request, url_for, abort, current_app, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_babel import gettext
 from flask_paginate import Pagination
@@ -100,6 +100,12 @@ def reg():
 
             # TODO, Confirm the email.
             return redirect(request.args.get('next') or url_for('main.index'))
+
+
+@user.route('<int:uid>')
+def view(uid):
+    # TODO
+    abort(404)
 
 
 @user.route('/password/reset', methods=['GET', 'POST'])
@@ -297,3 +303,4 @@ def voice_403(err):
 @user.app_errorhandler(500)
 def voice_500(err):
     return render_template('500.html'), 500
+

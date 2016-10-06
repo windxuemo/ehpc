@@ -32,7 +32,7 @@
                             <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>
                             <li><a href=""><i class="es-icon es-icon-person"></i>{{ _('Personal') }}</a>
                             </li>
-                            <li><a href="{{ url_for('user.setting_password')}}"><i class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a></li>
+                            <li><a href=""><i class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a></li>
                             <li><a href="{{ url_for('user.signout') }}"><i
                                     class="es-icon es-icon-power"></i>{{ _('Logout') }}</a></li>
                         </ul>

@@ -16,13 +16,13 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # If use QQ email, please see http://service.mail.qq.com/cgi-bin/help?id=28 firstly.
-    MAIL_SERVER = 'smtp.qq.com'
+    MAIL_SERVER = 'smtp.sina.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_USERNAME = 'milanlanlanlan@sina.com'#os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = '1970025901a'#os.environ.get('MAIL_PASSWORD')
     FORUM_MAIL_SUBJECT_PREFIX = 'eHPC'
-    FORUM_MAIL_SENDER = 'eHPC <selfboot@qq.com>'
+    FORUM_MAIL_SENDER = '<milanlanlanlan@sina.com>'
 
     BABEL_DEFAULT_LOCALE = 'zh'
     BABEL_DEFAULT_TIMEZONE = 'CST'
@@ -43,7 +43,7 @@ class DevelopmentConfig(Config):
 
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = (os.environ.get('DEV_DATABASE_URL') or
-                               'mysql://root:123456@localhost/ehpc')
+                               'mysql://root:@localhost/ehpc')
 
 
 class ProductionConfig(Config):
@@ -51,7 +51,7 @@ class ProductionConfig(Config):
         pass
 
     SQLALCHEMY_DATABASE_URI = (os.environ.get('DEV_DATABASE_URL') or
-                               'mysql://root:123456@localhost/ehpc')
+                               'mysql://root:@localhost/ehpc')
 
 
 config = {

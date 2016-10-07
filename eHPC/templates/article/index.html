@@ -1,64 +1,56 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-<style type="text/css">
-    article{
-        margin-top: 30px;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid;
-    }
-    .metas-body{
-        margin-top: 7px;
-    }
-    .content{
-        font-size: 18px;
-        margin: 10px;
-    }
-</style>
+    <style type="text/css">
+        article {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid;
+        }
 
+        .metas-body {
+            margin-top: 7px;
+        }
 
-
+        .content {
+            font-size: 18px;
+            margin: 10px;
+        }
+    </style>
 {% endblock %}
 
-
-
-
 {% block content %}
+    <div class="container">
+        {% if article_list %}
+            <h2>最新资讯</h2>
+            {% for article in article_list %}
 
-<div class="container">
+                <article class="article-item">
+                    <div class="article-metas clearfix">
+                        <div class="pull-left">
+                            <div class="date">
+                                <div class="day">{{ article.visitNum }}</div>
+                                <div class="month">hits</div>
+                            </div>
+                        </div>
+                        <div class="metas-body">
+                            <h2 class="title">
+                                <a class="link-dark" href="/article/{{ article.id }}">{{ article.title[:40] }}</a>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="content">
+                        {{ article.content[:200] }}
+                    </div>
+                </article>
 
+            {% endfor %}
 
-{% if article_list %}
-<h2>最新资讯</h2>
-{% for article in article_list %}
+        {% else %}
+            <h2>暂无资讯信息</h2>
+        {% endif %}
 
-<article class="article-item">
-  <div class="article-metas clearfix">
-    <div class="pull-left">
-      <div class="date">
-        <div class="day">{{ article.visitNum }}</div>
-        <div class="month">hits</div>
-      </div>
     </div>
-    <div class="metas-body">
-      <h2 class="title">
-        <a class="link-dark" href="/article/{{ article.id }}">{{ article.title[:40] }}</a>
-      </h2>
-    </div>
-  </div>
-      <div class="content">
-      {{ article.content[:200] }}
-      </div>
-</article> 
-
-{% endfor %}
-
-{% else %}
-    <h2>暂无资讯信息</h2>
-{% endif %}
-
-
-</div>
 {% endblock %}
 

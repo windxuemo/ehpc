@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-07 20:24+0800\n"
+"POT-Creation-Date: 2016-10-07 21:11+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
+
+#: article/views.py:11 article/views.py:26
+msgid "Articles"
+msgstr ""
+
+#: article/views.py:20
+msgid "Articles:"
+msgstr ""
 
 #: course/views.py:10
 msgid "Courses"
@@ -73,26 +81,30 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
-#: templates/navbar.html:36
-msgid "Setting"
+#: templates/navbar.html:35
+msgid "Job's List"
 msgstr ""
 
 #: templates/navbar.html:38
+msgid "Setting"
+msgstr ""
+
+#: templates/navbar.html:40
 msgid "Logout"
 msgstr ""
 
-#: templates/navbar.html:42 templates/user/reg.html:6
+#: templates/navbar.html:44 templates/user/reg.html:6
 #: templates/user/signin.html:6 templates/user/signin.html:37
 msgid "Sign In"
 msgstr ""
 
-#: templates/navbar.html:43 templates/user/reg.html:7
+#: templates/navbar.html:45 templates/user/reg.html:7
 #: templates/user/reg.html:64 templates/user/signin.html:7
 #: templates/user/signin.html:46
 msgid "Registration"
 msgstr ""
 
-#: templates/navbar.html:48
+#: templates/navbar.html:50
 msgid "search"
 msgstr ""
 
@@ -217,34 +229,18 @@ msgid "log out"
 msgstr ""
 
 #: templates/user/panel.html:25
-msgid "Speaker for children"
+msgid "..."
 msgstr ""
 
-#: templates/user/panel.html:27
-msgid " Do you ever SEE what children play."
-msgstr ""
-
-#: templates/user/panel.html:28
-msgid " Do you ever HEAR what children speak."
-msgstr ""
-
-#: templates/user/panel.html:29
-msgid " Do you ever Think what children think."
-msgstr ""
-
-#: templates/user/passwd_reset.html:3
-msgid "reset password"
-msgstr ""
-
-#: templates/user/passwd_reset.html:10
+#: templates/user/passwd_reset.html:3 templates/user/passwd_reset.html:12
 msgid "Reset Password"
 msgstr ""
 
-#: templates/user/passwd_reset.html:13
+#: templates/user/passwd_reset.html:15
 msgid "Please enter your email"
 msgstr ""
 
-#: templates/user/passwd_reset.html:22
+#: templates/user/passwd_reset.html:27
 msgid "submit"
 msgstr ""
 

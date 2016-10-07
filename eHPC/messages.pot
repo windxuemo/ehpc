@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-09-26 09:37+0800\n"
+"POT-Creation-Date: 2016-10-07 20:24+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,97 +17,325 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: course/views.py:10 templates/base.html:37
+#: course/views.py:10
 msgid "Courses"
 msgstr ""
 
-#: group/views.py:11 templates/base.html:46
+#: group/views.py:12
 msgid "Groups"
 msgstr ""
 
-#: lab/views.py:8 templates/base.html:40
+#: group/views.py:19 templates/group/all.html:9 templates/group/all.html:17
+msgid "All Groups"
+msgstr ""
+
+#: lab/views.py:8
 msgid "Labs"
 msgstr ""
 
-#: main/views.py:8
+#: main/views.py:12
 msgid "Education Practice Platform"
 msgstr ""
 
-#: problem/views.py:8
+#: problem/views.py:11
 msgid "Petition Problem List"
 msgstr ""
 
-#: templates/base.html:11
+#: problem/views.py:19
+msgid "Problem"
+msgstr ""
+
+#: templates/footer.html:4
+msgid "SYSU SDCS"
+msgstr ""
+
+#: templates/header.html:7
 msgid "eHPC"
 msgstr ""
 
-#: templates/base.html:43
-msgid "Problems"
+#: templates/main/index.html:6 templates/navbar.html:11
+msgid "Online Courses"
 msgstr ""
 
-#: templates/base.html:59
+#: templates/navbar.html:14
+msgid "Competition Platform"
+msgstr ""
+
+#: templates/navbar.html:17
+msgid "Community"
+msgstr ""
+
+#: templates/navbar.html:20
+msgid "Virutal Lab"
+msgstr ""
+
+#: templates/navbar.html:33
 msgid "Personal"
 msgstr ""
 
-#: templates/base.html:61
+#: templates/navbar.html:36
 msgid "Setting"
 msgstr ""
 
-#: templates/base.html:62
+#: templates/navbar.html:38
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:66 templates/user/reg.html:6
-#: templates/user/signin.html:6 templates/user/signin.html:36
+#: templates/navbar.html:42 templates/user/reg.html:6
+#: templates/user/signin.html:6 templates/user/signin.html:37
 msgid "Sign In"
 msgstr ""
 
-#: templates/base.html:67 templates/user/reg.html:7 templates/user/reg.html:64
-#: templates/user/signin.html:7 templates/user/signin.html:45
+#: templates/navbar.html:43 templates/user/reg.html:7
+#: templates/user/reg.html:64 templates/user/signin.html:7
+#: templates/user/signin.html:46
 msgid "Registration"
 msgstr ""
 
-#: templates/base.html:72
+#: templates/navbar.html:48
 msgid "search"
-msgstr ""
-
-#: templates/base.html:88
-msgid "SYSU SDCS"
 msgstr ""
 
 #: templates/course/index.html:7
 msgid "All The Courses"
 msgstr ""
 
-#: templates/main/index.html:6
-msgid "Online Courses"
+#: templates/group/all.html:7 templates/group/index.html:6
+msgid "Index"
+msgstr ""
+
+#: templates/group/all.html:8 templates/group/index.html:7
+msgid "Group Index"
+msgstr ""
+
+#: templates/group/index.html:13
+msgid "Hot Groups"
+msgstr ""
+
+#: templates/group/index.html:22
+msgid "Latest Topics"
+msgstr ""
+
+#: templates/group/widget_group_header.html:12
+msgid "Exit Group"
+msgstr ""
+
+#: templates/group/widget_group_header.html:17
+msgid " Members"
+msgstr ""
+
+#: templates/group/widget_group_header.html:18
+msgid " Topics"
+msgstr ""
+
+#: templates/group/widget_group_header.html:19
+msgid "Created Time"
+msgstr ""
+
+#: templates/group/widget_topic.html:8
+msgid "replies"
+msgstr ""
+
+#: templates/group/widget_topic.html:22
+msgid "Created this topic."
 msgstr ""
 
 #: templates/main/index.html:9
 msgid "Learn HPC."
 msgstr ""
 
-#: templates/main/index.html:43
+#: templates/main/index.html:19
 msgid "More Courses"
 msgstr ""
 
-#: templates/main/index.html:56
-msgid "Virtual Lab!"
+#: templates/main/index.html:32
+msgid "Virtual Lab"
 msgstr ""
 
-#: templates/main/index.html:57
-msgid "Try Out Your Pogrammer."
+#: templates/main/index.html:33
+msgid "Learn ehpc in Lab"
 msgstr ""
 
-#: templates/main/index.html:63
+#: templates/main/index.html:39
 msgid "Challenge Yourself!"
 msgstr ""
 
-#: templates/main/index.html:64
+#: templates/main/index.html:40
 msgid "Try To Solve The Problem."
 msgstr ""
 
-#: templates/user/reg.html:12 templates/user/signin.html:13
+#: templates/problem/detail.html:40
+msgid "Submit Solution"
+msgstr ""
+
+#: templates/problem/detail.html:83
+msgid "Submit Result: "
+msgstr ""
+
+#: templates/problem/index.html:8
+msgid "All Problems"
+msgstr ""
+
+#: templates/problem/index.html:14
+msgid "ID"
+msgstr ""
+
+#: templates/problem/index.html:15
+msgid "Description"
+msgstr ""
+
+#: templates/problem/index.html:16
+msgid "CreadtedTime"
+msgstr ""
+
+#: templates/problem/index.html:17
+msgid "Difficulty"
+msgstr ""
+
+#: templates/problem/index.html:18
+msgid "AcceptNum"
+msgstr ""
+
+#: templates/user/panel.html:9
+msgid "The "
+msgstr ""
+
+#: templates/user/panel.html:9
+msgid "th users"
+msgstr ""
+
+#: templates/user/panel.html:15
+msgid "info"
+msgstr ""
+
+#: templates/user/panel.html:18
+msgid "settings"
+msgstr ""
+
+#: templates/user/panel.html:21
+msgid "log out"
+msgstr ""
+
+#: templates/user/panel.html:25
+msgid "Speaker for children"
+msgstr ""
+
+#: templates/user/panel.html:27
+msgid " Do you ever SEE what children play."
+msgstr ""
+
+#: templates/user/panel.html:28
+msgid " Do you ever HEAR what children speak."
+msgstr ""
+
+#: templates/user/panel.html:29
+msgid " Do you ever Think what children think."
+msgstr ""
+
+#: templates/user/passwd_reset.html:3
+msgid "reset password"
+msgstr ""
+
+#: templates/user/passwd_reset.html:10
+msgid "Reset Password"
+msgstr ""
+
+#: templates/user/passwd_reset.html:13
+msgid "Please enter your email"
+msgstr ""
+
+#: templates/user/passwd_reset.html:22
+msgid "submit"
+msgstr ""
+
+#: templates/user/passwd_reset_confirm.html:3
+msgid "reset password confirm"
+msgstr ""
+
+#: templates/user/passwd_reset_confirm.html:10
+msgid "Enter new password"
+msgstr ""
+
+#: templates/user/passwd_reset_confirm.html:13
+#: templates/user/setting_passwd.html:30
+msgid "new password"
+msgstr ""
+
+#: templates/user/passwd_reset_confirm.html:18
+#: templates/user/setting_passwd.html:35
+msgid "repeat password"
+msgstr ""
+
+#: templates/user/passwd_reset_confirm.html:25
+msgid "Confirm"
+msgstr ""
+
+#: templates/user/passwd_reset_done.html:2
+#: templates/user/passwd_reset_sent.html:2
+msgid "Password reset email sent"
+msgstr ""
+
+#: templates/user/passwd_reset_done.html:7
+msgid "Successful!"
+msgstr ""
+
+#: templates/user/passwd_reset_done.html:9
+msgid "Password reset successfully. "
+msgstr ""
+
+#: templates/user/passwd_reset_done.html:15
+msgid "Failed!"
+msgstr ""
+
+#: templates/user/passwd_reset_done.html:17
+msgid ""
+"Password reset failed somehow.  Please make sure your reset link is legal"
+" and not used already!"
+msgstr ""
+
+#: templates/user/passwd_reset_email.html:1
+msgid "Dear"
+msgstr ""
+
+#: templates/user/passwd_reset_email.html:2
+msgid "To reset your password"
+msgstr ""
+
+#: templates/user/passwd_reset_email.html:2
+msgid "click here."
+msgstr ""
+
+#: templates/user/passwd_reset_email.html:3
+msgid ""
+"Alternatively, you can paste the following link in your browser's address"
+" bar:"
+msgstr ""
+
+#: templates/user/passwd_reset_email.html:5
+msgid "If you have not requested a password reset simply ignore this message."
+msgstr ""
+
+#: templates/user/passwd_reset_email.html:6
+msgid ""
+"Sincerely, \n"
+" The eHPC Team"
+msgstr ""
+
+#: templates/user/passwd_reset_email.html:7
+msgid "Note: replies to this email address are not monitored."
+msgstr ""
+
+#: templates/user/passwd_reset_sent.html:6
+msgid "Email Sent"
+msgstr ""
+
+#: templates/user/passwd_reset_sent.html:8
+msgid ""
+"We have sent you an email with a link to reset your password. Please "
+"check your email and click the link to continue."
+msgstr ""
+
+#: templates/user/reg.html:12 templates/user/signin.html:14
 msgid "Username"
 msgstr ""
 
@@ -116,12 +344,13 @@ msgid "letters,digits,underscore"
 msgstr ""
 
 #: templates/user/reg.html:27 templates/user/reg.html:31
-#: templates/user/signin.html:16
+#: templates/user/signin.html:17
 msgid "Email Address"
 msgstr ""
 
-#: templates/user/reg.html:40 templates/user/signin.html:23
-#: templates/user/signin.html:26
+#: templates/user/reg.html:40 templates/user/setting_avatar.html:8
+#: templates/user/setting_info.html:9 templates/user/setting_passwd.html:8
+#: templates/user/signin.html:24 templates/user/signin.html:27
 msgid "Password"
 msgstr ""
 
@@ -133,11 +362,50 @@ msgstr ""
 msgid "Submiting..."
 msgstr ""
 
-#: templates/user/signin.html:42
+#: templates/user/setting_avatar.html:7 templates/user/setting_info.html:8
+#: templates/user/setting_passwd.html:7
+msgid "Info"
+msgstr ""
+
+#: templates/user/setting_avatar.html:9 templates/user/setting_info.html:10
+#: templates/user/setting_passwd.html:9
+msgid "Avatar"
+msgstr ""
+
+#: templates/user/setting_avatar.html:23
+msgid "upload new avatar"
+msgstr ""
+
+#: templates/user/setting_avatar.html:25
+msgid "maximum 512K, png and jpeg only"
+msgstr ""
+
+#: templates/user/setting_avatar.html:34 templates/user/setting_info.html:36
+#: templates/user/setting_passwd.html:43
+msgid "update"
+msgstr ""
+
+#: templates/user/setting_info.html:24
+msgid "Email"
+msgstr ""
+
+#: templates/user/setting_info.html:31
+msgid "website"
+msgstr ""
+
+#: templates/user/setting_info.html:32
+msgid "Optional"
+msgstr ""
+
+#: templates/user/setting_passwd.html:23
+msgid "current password"
+msgstr ""
+
+#: templates/user/signin.html:43
 msgid "Forget Password"
 msgstr ""
 
-#: templates/user/signin.html:44
+#: templates/user/signin.html:45
 msgid "Have no account?"
 msgstr ""
 
@@ -165,11 +433,11 @@ msgstr ""
 msgid "Username already exists."
 msgstr ""
 
-#: user/views.py:75 user/views.py:239
+#: user/views.py:75 user/views.py:245
 msgid "Email address can not be empty."
 msgstr ""
 
-#: user/views.py:77 user/views.py:117 user/views.py:241
+#: user/views.py:77 user/views.py:123 user/views.py:247
 msgid "Email address is invalid."
 msgstr ""
 
@@ -177,43 +445,107 @@ msgstr ""
 msgid "Email already exists."
 msgstr ""
 
-#: user/views.py:83 user/views.py:150 user/views.py:211
+#: user/views.py:83 user/views.py:156 user/views.py:217
 msgid "Passwords don't match."
 msgstr ""
 
-#: user/views.py:85 user/views.py:152 user/views.py:213
+#: user/views.py:85 user/views.py:158 user/views.py:219
 msgid "Passwords can not be empty."
 msgstr ""
 
-#: user/views.py:115
+#: user/views.py:121
 msgid "The email can not be empty"
 msgstr ""
 
-#: user/views.py:119
+#: user/views.py:125
 msgid "The email has not be registered"
 msgstr ""
 
-#: user/views.py:187 user/views.py:188
+#: user/views.py:193 user/views.py:194
 msgid "'s Topics"
 msgstr ""
 
-#: user/views.py:222
+#: user/views.py:228
 msgid "Update password done!"
 msgstr ""
 
-#: user/views.py:251
+#: user/views.py:257
 msgid "Update info done!"
 msgstr ""
 
-#: user/views.py:264
+#: user/views.py:270
 msgid "No selected file"
 msgstr ""
 
-#: user/views.py:280
+#: user/views.py:286
 msgid "Update avatar done!"
 msgstr ""
 
-#: user/views.py:283
+#: user/views.py:289
 msgid "Invalid file"
+msgstr ""
+
+#: util/time_process.py:25
+msgid "year"
+msgstr ""
+
+#: util/time_process.py:25
+msgid "years"
+msgstr ""
+
+#: util/time_process.py:26
+msgid "month"
+msgstr ""
+
+#: util/time_process.py:26
+msgid "months"
+msgstr ""
+
+#: util/time_process.py:27
+msgid "week"
+msgstr ""
+
+#: util/time_process.py:27
+msgid "weeks"
+msgstr ""
+
+#: util/time_process.py:28
+msgid "day"
+msgstr ""
+
+#: util/time_process.py:28
+msgid "days"
+msgstr ""
+
+#: util/time_process.py:29
+msgid "hour"
+msgstr ""
+
+#: util/time_process.py:29
+msgid "hours"
+msgstr ""
+
+#: util/time_process.py:30
+msgid "minute"
+msgstr ""
+
+#: util/time_process.py:30
+msgid "minutes"
+msgstr ""
+
+#: util/time_process.py:31
+msgid "second"
+msgstr ""
+
+#: util/time_process.py:31
+msgid "seconds"
+msgstr ""
+
+#: util/time_process.py:36
+msgid " ago"
+msgstr ""
+
+#: util/time_process.py:38
+msgid "Just now"
 msgstr ""
 

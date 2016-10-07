@@ -8,16 +8,16 @@
     <nav class="collapse navbar-collapse">
         <ul class="nav navbar-nav clearfix hidden-xs" id="nav">
             <li>
-                <a href="{{ url_for('course.index') }}">{{ _('Courses') }}</a>
+                <a href="{{ url_for('course.index') }}">{{ _('Online Courses') }}</a>
             </li>
-            <li class="">
-                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Labs') }}</a>
-            </li>
-            <li class="">
+            <li>
                 <a href="{{ url_for('problem.index') }}">{{ _('Competition Platform') }}</a>
             </li>
-            <li class="">
+            <li>
                 <a href="{{ url_for('group.index') }}">{{ _('Community') }}</a>
+            </li>
+            <li>
+                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Lab') }}</a>
             </li>
         </ul>
 
@@ -26,13 +26,14 @@
                 {% if current_user.is_authenticated %}
                     <li class="user-avatar-li nav-hover">
                         <a href="javascript:;" class="dropdown-toggle">
-                            <img class="avatar-xs" src="/files/user/2016/09-19/10134150b4ee081554.png?7.1.5">
+                            <img class="avatar-xs" src="/">
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>
                             <li><a href=""><i class="es-icon es-icon-person"></i>{{ _('Personal') }}</a>
                             </li>
-                            <li><a href="{{ url_for('user.setting_password')}}"><i class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a></li>
+                            <li><a href="{{ url_for('user.setting_password') }}"><i
+                                    class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a></li>
                             <li><a href="{{ url_for('user.signout') }}"><i
                                     class="es-icon es-icon-power"></i>{{ _('Logout') }}</a></li>
                         </ul>

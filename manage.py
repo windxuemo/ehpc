@@ -8,11 +8,9 @@ from eHPC import create_app, db
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_babel import Babel
-from flask_bootstrap import Bootstrap
 
 app = create_app(os.getenv('EHPC_CONFIG') or 'default')
 manager = Manager(app)
-bootstrap = Bootstrap(app)
 migrate = Migrate(app, db)
 babel = Babel(app)
 

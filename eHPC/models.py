@@ -208,6 +208,8 @@ class Problem(db.Model):
     acceptedNum = db.Column(db.Integer, default=0)              # 通过次数
     submitNum = db.Column(db.Integer, default=0)                # 提交次数
 
+    # default_code = db.Column(db.Text(), default="")             # 预先设定的代码
+
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系

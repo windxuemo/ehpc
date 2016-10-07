@@ -1,7 +1,7 @@
 <nav class="content-header navbar">
     <div class="navbar-header">
         <a href="{{ url_for('main.index') }}" class="navbar-brand">
-            <img src="{{ url_for('static', filename='image/logo.png') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
         </a>
     </div>
 
@@ -11,13 +11,13 @@
                 <a href="{{ url_for('course.index') }}">{{ _('Courses') }}</a>
             </li>
             <li class="">
-                <a href="{{ url_for('lab.index') }}">{{ _('Labs') }}</a>
+                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Labs') }}</a>
             </li>
             <li class="">
-                <a href="{{ url_for('problem.index') }}">{{ _('Problems') }}</a>
+                <a href="{{ url_for('problem.index') }}">{{ _('Competition Platform') }}</a>
             </li>
             <li class="">
-                <a href="{{ url_for('group.index') }}">{{ _('Groups') }}</a>
+                <a href="{{ url_for('group.index') }}">{{ _('Community') }}</a>
             </li>
         </ul>
 

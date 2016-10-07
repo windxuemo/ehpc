@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div id="content-container" class="container" xmlns="http://www.w3.org/1999/html">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ problem.id }}. {{ problem.title }}</h3></div>
+                    <div class="panel-body">
+                        <p>{{ problem.detail }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form onsubmit="submit()">
+            <div class="row form-group">
+                <div class="col-md-4 col-md-offset-1">
+                    <select class="form-control" id="language">
+                        <option value="ace/mode/c_cpp">C</option>
+                        <option value="ace/mode/c_cpp">C++</option>
+                        <option value="ace/mode/python">Python</option>
+                        <option value="ace/mode/fortran">Fortran</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-10 col-md-offset-1">
+                    <div id="editor"></div>
+                </div>
+            </div>
+
+            <input class="hide" name="problem_id" value="{{ problem.id }}">
+            <input id="source_code" name="source_code" value="" type="hidden">
+
+            <div class="row form-group">
+                <div class="col-md-11">
+                    <div class="pull-right">
+                        <button id="submit" class="btn btn-primary"
+                                type="submit">{{ _('Submit Solution') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {#  keep the result #}
+        <div class="row" id="result" style="display: none">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p> {{ _('Submit Process: ') }} <span id="result_status"> Accept </span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/tomorrow");
+        editor.getSession().setMode("ace/mode/c_cpp");
+    </script>
+
+    <script>
+        function submit() {
+            document.getElementById('source_code').value = editor.getValue();
+            $('.result').css('display', 'block');
+        }
+    </script>
+
+{% endblock %}
+
+{# problem #}

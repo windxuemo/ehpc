@@ -7,7 +7,8 @@
                 <a href="{{ url_for('user.reg') }}">{{ _('Registration') }}</a>
             </div>
             <div class="login-main">
-                <form id="login-form" class="form-vertical" method="post" action="{{ url_for('user.signin', next=request.args.get('next')) }}" novalidate="novalidate"
+                <form id="login-form" class="form-vertical" method="post"
+                      action="{{ url_for('user.signin', next=request.args.get('next')) }}" novalidate="novalidate"
                       data-widget-cid="widget-1">
                     <div class="form-group mbl">
                         <label class="control-label" for="login_username">{{ _('Username') }}</label>
@@ -30,7 +31,7 @@
                         </div>
                     </div>
                     {% if message %}
-                    <div class="alert alert-danger">{{ message }}</div>
+                        <div class="alert alert-danger">{{ message }}</div>
                     {% endif %}
                     <div class="form-group mbl">
                         <button type="submit" class="btn btn-primary btn-lg btn-block">{{ _('Sign In') }}</button>
@@ -43,26 +44,6 @@
                     <span class="text-muted mhs">|</span>
                     <span class="text-muted">{{ _('Have no account?') }}</span>
                     <a href="{{ url_for('user.reg') }}">{{ _('Registration') }}</a>
-                </div>
-
-                <div class="social-login">
-            <span>
-                <a href="/login/bind/weibo?_target_path={{ url_for('main.index') }}&amp;inviteCode="
-                   class="social-icon social-weibo">
-                  <i class="es-icon es-icon-weibo"></i>
-                </a>
-
-                <a href="/login/bind/qq?_target_path={{ url_for('main.index') }}&amp;inviteCode="
-                   class="social-icon social-qq">
-                  <i class="es-icon es-icon-qq"></i>
-                </a>
-
-                <a href="/login/bind/weixinweb?_target_path={{ url_for('main.index') }}&amp;inviteCode="
-                   class="social-icon social-weixin">
-                  <i class="es-icon es-icon-weixin"></i>
-                </a>
-            </span>
-                    <div class="line"></div>
                 </div>
             </div>
         </div>

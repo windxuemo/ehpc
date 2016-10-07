@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block header_ext %}
+<style type="text/css">
+    article{
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+    }
+    .metas-body{
+        margin-top: 7px;
+    }
+    .content{
+        font-size: 18px;
+        margin: 10px;
+    }
+</style>
+
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+<article class="article-item">
+  <div class="article-metas clearfix">
+    <div class="pull-left">
+      <div class="date">
+        <div class="day">{{ article.visitNum }}</div>
+        <div class="month">hits</div>
+      </div>
+    </div>
+    <div class="metas-body">
+      <h2 class="title">
+         {{ article.title }}
+      </h2>
+    </div>
+  </div>
+      <div class="content">
+         {{ article.content }}
+      </div>
+</article> 
+
+{% endblock %}

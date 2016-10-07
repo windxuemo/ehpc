@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header_ext %}
+<style type="text/css">
+  label{
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  #submit{
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+  }
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+<div class='container'>
+    <h2>发布资讯</h2>
+    <form action='http://127.0.0.1:5000/article/post' method='POST'>
+        <label>文章标题：</label><input type="text" class="form-control" name='title' placeholder="Text input">
+        <label>文章内容：</label><textarea type="text" class="form-control" name='content' rows=25 placeholder="Text input"></textarea>
+        <input class='btn btn-success' id='submit' type='submit'>
+    </form>
+</div>
+
+{% endblock %}

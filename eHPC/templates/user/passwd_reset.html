@@ -6,24 +6,32 @@
 {% block content %}
 
 <div class="container">
-    <form class="form-horizontal panel-body password-reset" method="post">
+  <div class="es-section login-section">
+  <div class="login-main">
+    <form novalidate="novalidate" data-widget-cid="widget-1" method="post">
         <h2 class="text-center" style="margin-bottom:1em"> {{ _('Reset Password') }} </h2>
 
-		<div class="form-group ">
-			<label for="email"> {{ _('Please enter your email') }} </label>
-            <input class="form-control" id="email" name="email" placeholder=example@gmail.com type="text">
+		<div class="form-group mbl">
+			<label class="control-label required" for="email"> {{ _('Please enter your email') }} </label>
+	    <div clas="controls">
+            <input class="form-control input-lg" data-widget-cid="widget-2" id="email" name="email" placeholder=example@gmail.com type="text">
+	    </div>
             {% if message_email %}
             <div class="messages col-sm-10"> <p class="text-danger"> {{ message_email }} </p> </div>
             {% endif %}
         </div>
 
-        <div class="form-group">
-            <button class="btn btn-default btn-success">
+        <div class="form-group mbl">
+	<div class="controls">
+            <button class="btn btn-primary btn-lg btn-block">
                 {{ _('submit') }}
             </button>
+	</div>
         </div>
 
     </form>
+  </div>
+  </div>
 </div>
 {% endblock %}
 

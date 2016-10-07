@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div id="content-container" class="container" xmlns="http://www.w3.org/1999/html">
+        <div class="row">
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-10 col-md-offset-1">
+                <div id="editor"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/tomorrow");
+        editor.getSession().setMode("ace/mode/c_cpp");
+        editor.setValue("{{ source_code | safe }}");
+    </script>
+{% endblock %}
+
+{# result #}
+{# source_code #}

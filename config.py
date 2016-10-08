@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
-# @Last Modified time: 2016-09-19 14:36:38
-
+# @Last Modified time: 2016-10-08 14:38:25
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -19,8 +18,8 @@ class Config:
     MAIL_SERVER = 'smtp.sina.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = 'milanlanlanlan@sina.com'#os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = '1970025901a'#os.environ.get('MAIL_PASSWORD')
+    MAIL_USERNAME = 'milanlanlanlan@sina.com'   # os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = '1970025901a'               # os.environ.get('MAIL_PASSWORD')
     FORUM_MAIL_SUBJECT_PREFIX = 'eHPC'
     FORUM_MAIL_SENDER = '<milanlanlanlan@sina.com>'
 

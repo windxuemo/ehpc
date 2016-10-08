@@ -11,7 +11,7 @@
                     </div>
                     <div class="media-body">
                         <div class="title">
-                            <a class="gray-darker" href="url_for('group.view', gid=g.id)">{{ g.title }}</a>
+                            <a class="gray-darker" href="{{ url_for('group.view', gid=g.id) }}">{{ g.title }}</a>
                         </div>
                         <div class="metas">
                             <span><i class="es-icon es-icon-people"></i>{{ g.memberNum }}</span>

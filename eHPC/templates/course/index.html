@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-
-    <div class="es-banner">
-        <div class="container">
-            <div class="title">
-                {{ _('All The Courses') }}
-            </div>
-        </div>
-    </div>
-
     <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li class="active"><a href="{{ url_for('course.index') }}">{{ _('All The Courses') }}</a></li>
+        </ol>
+
         <div class="course-list">
             <div class="row">
                 {% include 'course/widget_courses.html' %}

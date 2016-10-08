@@ -17813,9 +17813,19 @@ textarea {
     border-top: 1px solid #dddddd;
 }
 
+/* Add */
 #editor {
     position: relative;
     min-height: 400px;
     min-width: 400px;
     font-size: 14px;
+}
+
+.content-wrap{
+    min-height: 100%;
+    margin-bottom: -71px;
+    margin-top: -60px;
+    height: auto;
+    padding-bottom: 71px;
+    padding-top: 60px;
 }

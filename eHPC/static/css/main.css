@@ -11267,6 +11267,7 @@ textarea {
     float: left;
     width: 570px;
     width: 568px \9;
+    height: 198.75px;   /* Hard Code */
     padding: 15px 25px;
     background-color: #fff;
 }
@@ -11299,6 +11300,7 @@ textarea {
 .course-detail-header.after .course-operation {
     float: right;
     width: 238px;
+    height: 198.75px;   /* Hard Code */
 }
 
 @media (max-width: 1199px) {
@@ -11479,7 +11481,7 @@ textarea {
 }
 
 .course-detail {
-    margin-top: -10px;
+    margin-top: 20px;
 }
 
 .course-manage-header {
@@ -17828,4 +17830,9 @@ textarea {
     height: auto;
     padding-bottom: 71px;
     padding-top: 60px;
+}
+
+.join{
+    text-align: center;
+    padding-top: 30px;
 }

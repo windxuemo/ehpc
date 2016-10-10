@@ -9,7 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import config
 
-
 mail = Mail()
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -26,9 +25,9 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
 
-    from .util.time_process import filter_blueprint
+    # Register all the filter.
+    from .util import filter_blueprint
     app.register_blueprint(filter_blueprint)
-
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
@@ -40,10 +39,10 @@ def create_app(config_name):
     app.register_blueprint(course_blueprint, url_prefix='/course')
     from .group import group as group_blueprint
     app.register_blueprint(group_blueprint, url_prefix='/group')
-    
-    #By Zou Zhepeng
+
+    # By Zou Zhepeng
     from .article import article as article_blueprint
-    app.register_blueprint(article_blueprint,url_prefix='/article')
+    app.register_blueprint(article_blueprint, url_prefix='/article')
 
     # TODO
     from .lab import lab as lab_blueprint

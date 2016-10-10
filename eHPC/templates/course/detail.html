@@ -1,0 +1,48 @@
+{% extends 'course/widget_course_base.html' %}
+
+{% block course_page %}
+    <div class="col-lg-9 col-md-8  course-detail-main">
+        <section class="es-section">
+            <div class="nav-btn-tab">
+                <ul class="nav nav-tabs" role="tablist" id="course-content">
+                    <li role="presentation" class="active"><a
+                            href="{{ url_for('course.detail_course', cid=course.id) }}">课程概览</a></li>
+                    <li role="presentation"><a href="{{ url_for('course.detail_lessons', cid=course.id) }}">课时列表</a>
+                    </li>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="course-detail-content" data-widget-cid="widget-1" id="ajax-content">
+                <p> {{ course.about }} </p>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    {{ super() }}
+    <script>
+        $(document).ready(function () {
+            $("#course-content li a").click(function () {
+                $("#ajax-content").empty().append("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
+                $("#course-content li").removeClass('active');
+                $(this).parent().addClass('active');
+
+                $.ajax({
+                    url: this.href,
+                    dataType: "json",
+                    success: function (html) {
+                        $("#ajax-content").empty().append(html);
+                    },
+                    error: function () {
+                        $("#ajax-content").empty().append("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");
+                    },
+                });
+                return false;
+            });
+        });
+    </script>
+{% endblock %}
+{# course #}

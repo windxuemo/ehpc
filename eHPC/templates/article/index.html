@@ -1,30 +1,44 @@
 {% extends 'base.html' %}
 
-{% block header_ext %}
-    <style type="text/css">
-        article {
-            margin-top: 30px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid;
-        }
-
-        .metas-body {
-            margin-top: 7px;
-        }
-
-        .content {
-            font-size: 18px;
-            margin: 10px;
-        }
-    </style>
-{% endblock %}
-
 {% block content %}
+    <div id="content-container" class="container">
+        <div class="article-list-body row">
+            <div class="col-md-10 col-offset-1">
+                <section class="es-section">
+                    <div class="article-list">
+                        <article class="article-item">
+                            <div class="article-metas clearfix">
+                                <div class="pull-left">
+                                    <div class="date">
+                                        <div class="day">20</div>
+                                        <div class="month">10月</div>
+                                    </div>
+                                </div>
+                                <div class="metas-body">
+                                    <p>
+                                        <a class="link-light" href="/article/category/news">行业动态</a>
+                                    </p>
+                                    <h2 class="title">
+                                        <a class="link-dark" href="/article/238">【观察】在线教育，真的可以为教育发展带来新契机吗？</a>
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="content">
+                                当前，“互联网+”是个热词。“互联网+”正影响并改变着各行各业，越来越多的传统产业在与互联网技术的融合中发生了新变化、形成了新格局、出现了新业态。同样，“互联网+”也为教育发展带来了重大的新契机。
+                                作为“互联网+教育...
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         {% if article_list %}
             <h2>最新资讯</h2>
             {% for article in article_list %}
+
 
                 <article class="article-item">
                     <div class="article-metas clearfix">

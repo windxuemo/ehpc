@@ -3,8 +3,7 @@
 
 from datetime import datetime
 from flask_babel import gettext
-from flask import Blueprint
-filter_blueprint = Blueprint('filters', __name__)
+from . import filter_blueprint
 
 
 @filter_blueprint.app_template_filter('natural_time')

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-07 21:11+0800\n"
+"POT-Creation-Date: 2016-10-11 11:28+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Articles:"
 msgstr ""
 
-#: course/views.py:10
+#: course/views.py:14
 msgid "Courses"
 msgstr ""
 
@@ -66,15 +66,11 @@ msgid "Online Courses"
 msgstr ""
 
 #: templates/navbar.html:14
-msgid "Competition Platform"
+msgid "Examination Center"
 msgstr ""
 
 #: templates/navbar.html:17
 msgid "Community"
-msgstr ""
-
-#: templates/navbar.html:20
-msgid "Virutal Lab"
 msgstr ""
 
 #: templates/navbar.html:33
@@ -108,12 +104,14 @@ msgstr ""
 msgid "search"
 msgstr ""
 
-#: templates/course/index.html:7
-msgid "All The Courses"
+#: templates/course/index.html:5 templates/course/widget_course_base.html:7
+#: templates/group/all.html:7 templates/group/index.html:6
+#: templates/problem/index.html:16
+msgid "Index"
 msgstr ""
 
-#: templates/group/all.html:7 templates/group/index.html:6
-msgid "Index"
+#: templates/course/index.html:6 templates/course/widget_course_base.html:8
+msgid "All The Courses"
 msgstr ""
 
 #: templates/group/all.html:8 templates/group/index.html:7
@@ -184,27 +182,23 @@ msgstr ""
 msgid "Submit Result: "
 msgstr ""
 
-#: templates/problem/index.html:8
+#: templates/problem/index.html:17
 msgid "All Problems"
 msgstr ""
 
-#: templates/problem/index.html:14
+#: templates/problem/index.html:25
 msgid "ID"
 msgstr ""
 
-#: templates/problem/index.html:15
+#: templates/problem/index.html:26
 msgid "Description"
 msgstr ""
 
-#: templates/problem/index.html:16
-msgid "CreadtedTime"
-msgstr ""
-
-#: templates/problem/index.html:17
+#: templates/problem/index.html:27
 msgid "Difficulty"
 msgstr ""
 
-#: templates/problem/index.html:18
+#: templates/problem/index.html:28
 msgid "AcceptNum"
 msgstr ""
 
@@ -481,67 +475,67 @@ msgstr ""
 msgid "Invalid file"
 msgstr ""
 
-#: util/time_process.py:25
+#: util/time_process.py:24
 msgid "year"
 msgstr ""
 
-#: util/time_process.py:25
+#: util/time_process.py:24
 msgid "years"
 msgstr ""
 
-#: util/time_process.py:26
+#: util/time_process.py:25
 msgid "month"
 msgstr ""
 
-#: util/time_process.py:26
+#: util/time_process.py:25
 msgid "months"
 msgstr ""
 
-#: util/time_process.py:27
+#: util/time_process.py:26
 msgid "week"
 msgstr ""
 
-#: util/time_process.py:27
+#: util/time_process.py:26
 msgid "weeks"
 msgstr ""
 
-#: util/time_process.py:28
+#: util/time_process.py:27
 msgid "day"
 msgstr ""
 
-#: util/time_process.py:28
+#: util/time_process.py:27
 msgid "days"
 msgstr ""
 
-#: util/time_process.py:29
+#: util/time_process.py:28
 msgid "hour"
 msgstr ""
 
-#: util/time_process.py:29
+#: util/time_process.py:28
 msgid "hours"
 msgstr ""
 
-#: util/time_process.py:30
+#: util/time_process.py:29
 msgid "minute"
 msgstr ""
 
-#: util/time_process.py:30
+#: util/time_process.py:29
 msgid "minutes"
 msgstr ""
 
-#: util/time_process.py:31
+#: util/time_process.py:30
 msgid "second"
 msgstr ""
 
-#: util/time_process.py:31
+#: util/time_process.py:30
 msgid "seconds"
 msgstr ""
 
-#: util/time_process.py:36
+#: util/time_process.py:35
 msgid " ago"
 msgstr ""
 
-#: util/time_process.py:38
+#: util/time_process.py:37
 msgid "Just now"
 msgstr ""
 

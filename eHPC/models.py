@@ -31,11 +31,6 @@ class User(UserMixin, db.Model):
     avatar_url = db.Column(db.String(64),
                            default="http://www.gravatar.com/avatar/")
 
-    # Third part acount
-    # TODO
-    # weibo = db.Column(db.String(64), nullable=True)
-    # qq = db.Column(db.String(64), nullable=True)
-    # weixin = db.Column(db.String(64), nullable=True)
 
     @property
     def password(self):
@@ -64,18 +59,27 @@ class User(UserMixin, db.Model):
             return User.query.get(uid)
         return None
 
+    # Third part acount
+    # TODO
+    # weibo = db.Column(db.String(64), nullable=True)
+    # qq = db.Column(db.String(64), nullable=True)
+    # weixin = db.Column(db.String(64), nullable=True)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class Student(db.Model):
-    __tablename__ = 'students'
-    id = db.Column(db.Integer, primary_key=True)
+""" 在线课堂模块
+@Course: 课程实体
+@Lesson: 课时实体
+@Material: 课时资源实体(PDF,PPT,MP4,MP3等资源)
+"""
 
-
-""" 在线课堂模块 """
+course_users = db.Table('group_members',
+                         db.Column('group_id', db.Integer, db.ForeignKey('users.id')),
+                         db.Column('user_id', db.Integer, db.ForeignKey('groups.id')))
 
 
 class Course(db.Model):
@@ -100,22 +104,14 @@ class Course(db.Model):
     # rates = db.relationship('Rate', backref='course', lazy='dynamic')
 
 
-'''
-class Teachers(db.Model):
-    __tablename__ = 'teachers'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, index=True)    # 教师名称
-'''
-
-
 class Lesson(db.Model):
     """ Every course may have more than one lessons.  One lesson belongs to only one course.
     """
     __tablename__ = 'lessons'
     id = db.Column(db.Integer, primary_key=True)  # 课时 ID
-    number = db.Column(db.Integer)  # 课时编号
-    title = db.Column(db.String(64))  # 课时标题
-    content = db.Column(db.Text())  # 课时正文
+    number = db.Column(db.Integer)      # 课时所在课程的编号
+    title = db.Column(db.String(64))    # 课时标题
+    content = db.Column(db.Text())      # 课时正文
     courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
 
     materials = db.relationship('Material', backref='lesson', lazy='dynamic')
@@ -128,16 +124,25 @@ class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)        # 资料 ID
     name = db.Column(db.String(64), nullable=False)     # 资料名称
     uri = db.Column(db.String(64), default="")          # 资料路径
-    size = db.Column(db.Integer)                        # 资料大小
+    # size = db.Column(db.Integer)                      # 资料大小
+    m_type = db.Column(db.String(64), nullable=False)   # 资料类型
+
     lessonId = db.Column(db.Integer, db.ForeignKey('lessons.id'))  # 所属课时ID
 
+
+'''
+class Teachers(db.Model):
+    __tablename__ = 'teachers'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, index=True)    # 教师名称
+'''
 
 # class Rate(db.Model):
 #     """ Every course may have more than one rates.  One rate belongs to only one course.
 #     """
 #     __tablename__ = 'rates'
 #     id = db.Column(db.Integer, primary_key=True)  # 评价 ID
-#     rating = db.Column(db.Integer, default=0)  # 评分
+#     rating = db.Column(db.Integer, default=0)     # 评分
 #     content = db.Column(db.String(64), nullable=False)  # 评论内容
 #     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
 #     courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
@@ -222,9 +227,9 @@ class Problem(db.Model):
 
 class Article(db.Model):
     __tablename__ = "articles"
-    id = db.Column(db.Integer, primary_key=True)  # 资讯 ID
-    title = db.Column(db.String(64), nullable=False)  # 资讯标题
-    content = db.Column(db.Text(), nullable=False)  # 资讯正文
-    visitNum = db.Column(db.Integer, default=0)  # 浏览次数
+    id = db.Column(db.Integer, primary_key=True)        # 资讯 ID
+    title = db.Column(db.String(64), nullable=False)    # 资讯标题
+    content = db.Column(db.Text(), nullable=False)      # 资讯正文
+    visitNum = db.Column(db.Integer, default=0)         # 浏览次数
 
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)

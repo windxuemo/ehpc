@@ -1,86 +1,79 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container" id="content-container">
-    <section class="course-detail-header after">
-        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-            <li><a href="/">{{ _('Index') }}</a></li>
-            <li><a href="{{ url_for('course.index') }}">{{ _('All The Courses') }}</a></li>
-            <li class="active"><a href="{{ url_for('course.view', cid=course.id) }}">{{ course.title }}</a></li>
-        </ol>
+    <div class="container" id="content-container">
+        <section class="course-detail-header after">
+            <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+                <li><a href="/">{{ _('Index') }}</a></li>
+                <li><a href="{{ url_for('course.index') }}">{{ _('All The Courses') }}</a></li>
+                <li class="active"><a href="{{ url_for('course.view', cid=course.id) }}">{{ course.title }}</a></li>
+            </ol>
 
-        <div class="es-section clearfix">
-            <div class="course-header-top clearfix">
-                <div class="course-img">
-                    <img class="img-responsive" src="{{ url_for('static', filename=course.smallPicture) }}"
-                         alt="{{ course.title }}">
-                </div>
-
-                <div class="course-info">
-                    <h2 class="title">
-                        {{ course.title }}
-                    </h2>
-                    <div class="subtitle"> {{ course.subtitle }}</div>
-                </div>
-
-                <div class="course-operation clearfix">
-                    <div class="student-num hidden-xs">
-                        <i class="es-icon es-icon-people"></i>{{ course.studentNum }} 人
+            <div class="es-section clearfix">
+                <div class="course-header-top clearfix">
+                    <div class="course-img">
+                        <img class="img-responsive" src="{{ url_for('static', filename=course.smallPicture) }}"
+                             alt="{{ course.title }}">
                     </div>
 
-                    {% if current_user.id | is_join_course(course.id) %}
-                    <div class="join">
-                        <a class="btn btn-primary btn-lg">
-                            已加入</a>
+                    <div class="course-info">
+                        <h2 class="title">
+                            {{ course.title }}
+                        </h2>
+                        <div class="subtitle"> {{ course.subtitle }}</div>
                     </div>
-                    {% else %}
-                    <div class="join" id="join-course">
-                        <a class="btn btn-primary btn-lg"
-                           href="{{ url_for('course.join', cid=course.id, uid=current_user.id) }}" id="course-in">
-                            加入课程</a>
-                    </div>
-                    {% endif %}
-                </div>
 
+                    <div class="course-operation clearfix">
+                        <div class="student-num hidden-xs">
+                            <i class="es-icon es-icon-people"></i>{{ course.studentNum }} 人
+                        </div>
+
+                        {% if current_user.id | is_join_course(course.id) %}
+                            <div class="join">
+                                <a class="btn btn-danger btn-lg" href="{{ url_for('course.exit_out', cid=course.id) }}">
+                                    退出课堂</a>
+                            </div>
+                        {% else %}
+                            <div class="join" id="join-course">
+                                <a class="btn btn-primary btn-lg"
+                                   href="{{ url_for('course.join', cid=course.id) }}" id="course-in">
+                                    加入课程</a>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div class="course-detail row">
+        <div class="course-detail row">
 
-        {% block course_page %}
-        {% endblock %}
+            {% block course_page %}
+            {% endblock %}
 
-        <div class="col-lg-3 col-md-4  course-sidebar">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        <i class="es-icon es-icon-personadd"></i>
-                        最新学员
-                    </h3>
-                </div>
-                <div class="panel-body">
-                    <ul class="user-avatar-list clearfix">
-                        <li>
-                            <a class=" js-user-card" href="/user/19324" data-card-url="/user/19324/card/show"
-                               data-user-id="19324">
-                                <img class="avatar-sm"
-                                     src="/files/user/2016/09-19/10134150b4ee081554.png?7.2.2">
-                            </a>
-                        </li>
-                        <li>
-                            <a class=" js-user-card" href="/user/19555" data-card-url="/user/19555/card/show"
-                               data-user-id="19555">
-                                <img class="avatar-sm"
-                                     src="/files/default/2016/10-08/10282042fb9e266483.jpg?7.2.2">
-                            </a>
-                        </li>
-                    </ul>
+            <div class="col-lg-3 col-md-4  course-sidebar">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <i class="es-icon es-icon-personadd"></i>
+                            最新学员
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="user-avatar-list clearfix">
+                            {% for u in course.students %}
+                                <li>
+                                    <a class="js-user-card" href="{{ url_for('user.view', uid=u.id) }}">
+                                        <img class="avatar-sm" src="{{ u.avatar_url }}">
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
@@ -91,7 +84,20 @@
                 $.ajax({
                     url: this.href,
                     success: function (html) {
-                        $("#course-in").text('已加入');
+                        /* 目前状态是已经加入了课程 */
+                        if ($('#course-in').hasClass('btn-primary')) {
+                            $("#course-in").text('退出课程');
+                            $("#course-in").removeClass('btn-primary').addClass('btn-danger');
+                            $("#course-in").attr("href", "{{ url_for('course.exit_out', cid=course.id) }}");
+                        }
+
+                        /* 需要加入课程 */
+                        else {
+                            $("#course-in").text('加入课程');
+                            $("#course-in").removeClass('btn-danger').addClass('btn-primary');
+                            $("#course-in").attr("href", "{{ url_for('course.join', cid=course.id) }}");
+                        }
+
                     },
                     error: function () {
                         alert('加入课程失败, 请重试');

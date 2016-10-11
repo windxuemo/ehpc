@@ -33,8 +33,9 @@
                 $.ajax({
                     url: this.href,
                     dataType: "json",
+                    contentType: 'application/json;charset=UTF-8',
                     success: function (html) {
-                        $("#ajax-content").empty().append(html);
+                        $("#ajax-content").empty().append(html.data);
                     },
                     error: function () {
                         $("#ajax-content").empty().append("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");

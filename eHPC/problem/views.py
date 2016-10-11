@@ -19,11 +19,33 @@ def view(pid):
                            title=gettext('Problem'),
                            problem=pro)
 
+@problem.route('/<int:pid>/log/', methods=['GET','POST'])
+def running_log(pid):
+    if request.method == 'POST':
+#        print request.form
+        source_code = request.form['source_code']
+        # TODO here.  Get the result.
+        result = dict()
+        result['problem_id'] = pid
+        result['status'] = "Accepted! "
+
+        sleep(2)
+        return jsonify(**result)
+
+@problem.route('/<int:pid>/error/', methods=['GET','POST'])
+def running_error(pid):
+    if request.method == 'POST':
+        source_code = request.form['source_code']
+        # TODO here.  Get the result.
+        result = dict()
+        result['problem_id'] = pid
+        result['status'] = "Accepted! "
+
+        sleep(2)
+        return jsonify(**result)
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 def submit(pid):
-    if request.method == 'POST':
-        print request.form
         source_code = request.form['source_code']
         # TODO here.  Get the result.
         result = dict()

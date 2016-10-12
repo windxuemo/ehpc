@@ -1,6 +1,10 @@
 from flask import render_template, jsonify, request, url_for, abort, redirect
 from . import problem
+<<<<<<< Updated upstream
 from ..models import Program, Choice, Classify
+=======
+from ..models import Program, Choice
+>>>>>>> Stashed changes
 from flask_babel import gettext
 from time import sleep
 
@@ -18,6 +22,16 @@ def show_program():
                            title=gettext('Program Practice'),
                            problems=pro)
 
+<<<<<<< Updated upstream
+=======
+
+@problem.route('/choice/')
+def show_choice():
+    cho = Choice.query.all()
+    return render_template('problem/show_choice.html',
+                           title=gettext('Choice Practice'),
+                           choices=cho)
+>>>>>>> Stashed changes
 
 @problem.route('/choice/')
 def show_choice():
@@ -26,6 +40,7 @@ def show_choice():
     for c in classifies:
         rows.append([c.name, c.choices.count(), c.id])
 
+<<<<<<< Updated upstream
     return render_template('problem/show_choice.html',
                            title=gettext('Choice Practice'),
                            rows=rows)
@@ -46,6 +61,15 @@ def choice_view(cid):
                            title=cho.title,
                            choice=cho)
 
+=======
+@problem.route('/program/<int:pid>/')
+def program_view(pid):
+    pro = Program.query.filter_by(id=pid).first()
+    return render_template('problem/problem_detail.html',
+                           title=pro.title,
+                           problem=pro)
+
+>>>>>>> Stashed changes
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 def submit(pid):

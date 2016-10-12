@@ -1,45 +1,40 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-    <style type="text/css">
-        article {
-            margin-top: 30px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-        }
-
-        .metas-body {
-            margin-top: 7px;
-        }
-
-        .content {
-            font-size: 18px;
-            margin: 10px;
-        }
-    </style>
-
+<script src="{{ url_for('static', filename='bootstrap-markdown/js/markdown.js') }}"></script>
 {% endblock %}
 
-{% block content %}
-    <div id="content-container" class="container" >
-    <article class="article-item">
-        <div class="article-metas clearfix">
-            <div class="pull-left">
-                <div class="date">
-                    <div class="day">{{ article.visitNum }} </div>
-                    <div class="month">hits</div>
-                </div>
-            </div>
-            <div class="metas-body">
-                <h2 class="title">
-                    {{ article.title }}
-                </h2>
-            </div>
-        </div>
-        <div class="content">
-            {{ article.content }}
-        </div>
-    </article>
-    </div>
 
+{% block content %}
+<div class="container article-detail-main">
+      <section class="es-section article-content">
+        <ol class="breadcrumb">
+  <li><a href="/article">资讯频道</a></li>
+    <li class="active">正文</li>
+</ol>        
+    <div class="article-metas">
+  <div class="pull-left">
+    <div class="date">
+      <div class="day">{{ article.createdTime.day }}</div>
+      <div class="month">{{ article.createdTime.month }}月</div>
+    </div>
+  </div>
+  <div class="metas-body">
+    <h2 class="title">{{ article.title }}</h2>
+    <div class="sns">
+      <span class="views-num">
+        <i class="es-icon es-icon-visibility"></i>{{ article.visitNum }}
+      </span>
+
+    </div>
+  </div>
+    </div>        
+    <div id="content" class="article-text">{{ article.content }}</div>
+</div>
+{% endblock %}
+
+{% block footer_ext %}
+<script type="text/javascript">
+    document.getElementById("content").innerHTML = markdown.toHTML(document.getElementById("content").innerHTML)
+</script>
 {% endblock %}

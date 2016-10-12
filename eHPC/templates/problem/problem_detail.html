@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div id="content-container" class="container">
         <div class="row">
@@ -7,7 +11,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3 class="panel-title">{{ problem.id }}. {{ problem.title }}</h3></div>
                     <div class="panel-body">
-                        <p>{{ problem.detail }}</p>
+                        <p>{{ problem.detail | markdown | safe }}</p>
                     </div>
                 </div>
             </div>
@@ -47,24 +51,20 @@
         {#  keep the result #}
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <section class="es-section">
-                    <div class="nav-btn-tab">
-                        <ul class="nav nav-tabs" role="tablist" id="problem-content">
-                            <li role="presentation" class="active"><a
-                                    href="{{ url_for('problem.running_log', pid=problem.id) }}">{{ _('Compiler Result') }}</a>
-                            </li>
-                            <li role="presentation"><a
-                                    href="{{ url_for('problem.running_error', pid=problem.id) }}">{{ _('Run Result') }}</a>
-                            </li>
-                        </ul>
+                <div class="es-section" id="result-show" style="display: none">
+                    <!-- Nav tabs -->
+                    <ul id="program-run-tab" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#compiler" role="tab" data-toggle="tab">编译结果</a>
+                        </li>
+                        <li role="presentation"><a href="#run" role="tab" data-toggle="tab">运行结果</a></li>
+                    </ul>
 
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div id="compiler" role="tabpanel" class="tab-pane active"></div>
+                        <div id="run" role="tabpanel" class="tab-pane"></div>
                     </div>
-
-
-                    <div class="course-detail-content" data-widget-cid="widget-1" id="problem-ajax-content">
-                        <p> {{ _('Empty') }} </p>
-                    </div>
-                </section>
+                </div>
             </div>
         </div>
     </div>
@@ -81,45 +81,29 @@
 
     <script>
         function submit_code() {
-
             document.getElementById('source_code').value = editor.getValue();
-
             var data = $("form").serialize();
-
+            $('#result-show').css("display", 'block');
+            var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>"
+            $("#compiler").empty().append(loading);
+            $('#program-run-tab a:first').tab('show');
             $.ajax({
                 method: "post",
                 cache: false,
                 url: "{{ url_for('problem.submit', pid=problem.id) }}",
                 data: data,
                 success: function (data) {
-                    var res = "<p>" + data.status + "</p>"
-                    $("#problem-ajax-content").html(res);
+                    var compiler_res = "<p>" + data.compiler + "</p>";
+                    var run_res = "<p>" + data.run + "</p>";
+                    $("#compiler").empty().append(compiler_res);
+                    $("#run").html(run_res);
+                },
+                error: function (data) {
+                    $("#compiler").empty().append("<h1> Can't submit somehow....</h1>");
+                    $("#run").html("<h1> Can't submit somehow....</h1>");
                 }
             });
-
-
         }
-
-        $(document).ready(function () {
-            $("#problem-content li a").click(function () {
-                $("#problem-ajax-content").empty().append("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' ></div>");
-                $("#problem-content li").removeClass('active');
-                $(this).parent().addClass('active');
-
-                $.ajax({
-
-                    url: this.href,
-                    dataType: "json",
-                    success: function (html) {
-                        $("#problem-ajax-content").empty().append(html);
-                    },
-                    error: function () {
-                        $("#problem-ajax-content").empty().append("<h2 style='text-align: center'> 无内容或出现错误 </h2>");
-                    },
-                });
-                return false;
-            });
-        });
     </script>
 
 {% endblock %}

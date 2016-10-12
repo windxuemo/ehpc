@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-11 11:28+0800\n"
+"POT-Creation-Date: 2016-10-12 16:05+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,11 +46,15 @@ msgid "Education Practice Platform"
 msgstr ""
 
 #: problem/views.py:11
-msgid "Petition Problem List"
+msgid "Practice Platform"
 msgstr ""
 
-#: problem/views.py:19
-msgid "Problem"
+#: problem/views.py:18
+msgid "Program Practice"
+msgstr ""
+
+#: problem/views.py:26
+msgid "Choice Practice"
 msgstr ""
 
 #: templates/footer.html:4
@@ -77,36 +81,36 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
-#: templates/navbar.html:35
+#: templates/navbar.html:36
 msgid "Job's List"
 msgstr ""
 
-#: templates/navbar.html:38
+#: templates/navbar.html:39
 msgid "Setting"
 msgstr ""
 
-#: templates/navbar.html:40
+#: templates/navbar.html:41
 msgid "Logout"
 msgstr ""
 
-#: templates/navbar.html:44 templates/user/reg.html:6
+#: templates/navbar.html:45 templates/user/reg.html:6
 #: templates/user/signin.html:6 templates/user/signin.html:37
 msgid "Sign In"
 msgstr ""
 
-#: templates/navbar.html:45 templates/user/reg.html:7
+#: templates/navbar.html:46 templates/user/reg.html:7
 #: templates/user/reg.html:64 templates/user/signin.html:7
 #: templates/user/signin.html:46
 msgid "Registration"
 msgstr ""
 
-#: templates/navbar.html:50
+#: templates/navbar.html:51
 msgid "search"
 msgstr ""
 
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
 #: templates/group/all.html:7 templates/group/index.html:6
-#: templates/problem/index.html:16
+#: templates/problem/show_program.html:15
 msgid "Index"
 msgstr ""
 
@@ -174,31 +178,31 @@ msgstr ""
 msgid "Try To Solve The Problem."
 msgstr ""
 
-#: templates/problem/detail.html:40
+#: templates/problem/problem_detail.html:41
 msgid "Submit Solution"
 msgstr ""
 
-#: templates/problem/detail.html:83
-msgid "Submit Result: "
+#: templates/problem/show_program.html:16
+msgid "Practice Center"
 msgstr ""
 
-#: templates/problem/index.html:17
-msgid "All Problems"
+#: templates/problem/show_program.html:17
+msgid "Program Lists"
 msgstr ""
 
-#: templates/problem/index.html:25
+#: templates/problem/show_program.html:25
 msgid "ID"
 msgstr ""
 
-#: templates/problem/index.html:26
+#: templates/problem/show_program.html:26
 msgid "Description"
 msgstr ""
 
-#: templates/problem/index.html:27
+#: templates/problem/show_program.html:27
 msgid "Difficulty"
 msgstr ""
 
-#: templates/problem/index.html:28
+#: templates/problem/show_program.html:28
 msgid "AcceptNum"
 msgstr ""
 
@@ -247,12 +251,10 @@ msgid "Enter new password"
 msgstr ""
 
 #: templates/user/passwd_reset_confirm.html:13
-#: templates/user/setting_passwd.html:30
 msgid "new password"
 msgstr ""
 
 #: templates/user/passwd_reset_confirm.html:18
-#: templates/user/setting_passwd.html:35
 msgid "repeat password"
 msgstr ""
 
@@ -338,9 +340,8 @@ msgstr ""
 msgid "Email Address"
 msgstr ""
 
-#: templates/user/reg.html:40 templates/user/setting_avatar.html:8
-#: templates/user/setting_info.html:9 templates/user/setting_passwd.html:8
-#: templates/user/signin.html:24 templates/user/signin.html:27
+#: templates/user/reg.html:40 templates/user/signin.html:24
+#: templates/user/signin.html:27
 msgid "Password"
 msgstr ""
 
@@ -352,43 +353,55 @@ msgstr ""
 msgid "Submiting..."
 msgstr ""
 
-#: templates/user/setting_avatar.html:7 templates/user/setting_info.html:8
-#: templates/user/setting_passwd.html:7
-msgid "Info"
+#: templates/user/setting_avatar.html:31 templates/user/setting_info.html:23
+#: templates/user/setting_passwd.html:25
+msgid "头像设置"
 msgstr ""
 
-#: templates/user/setting_avatar.html:9 templates/user/setting_info.html:10
-#: templates/user/setting_passwd.html:9
-msgid "Avatar"
+#: templates/user/setting_avatar.html:36
+msgid "上传新的头像"
 msgstr ""
 
-#: templates/user/setting_avatar.html:23
-msgid "upload new avatar"
+#: templates/user/setting_avatar.html:39
+msgid "最大允许512k，支持png格式和jpeg格式"
 msgstr ""
 
-#: templates/user/setting_avatar.html:25
-msgid "maximum 512K, png and jpeg only"
+#: templates/user/setting_avatar.html:48 templates/user/setting_passwd.html:78
+msgid "保存"
 msgstr ""
 
-#: templates/user/setting_avatar.html:34 templates/user/setting_info.html:36
-#: templates/user/setting_passwd.html:43
-msgid "update"
+#: templates/user/setting_info.html:13 templates/user/setting_info.html:31
+#: templates/user/setting_passwd.html:15
+msgid "基础信息"
 msgstr ""
 
-#: templates/user/setting_info.html:24
-msgid "Email"
+#: templates/user/setting_info.html:18 templates/user/setting_passwd.html:20
+#: templates/user/setting_passwd.html:33
+msgid "安全设置"
 msgstr ""
 
-#: templates/user/setting_info.html:31
-msgid "website"
+#: templates/user/setting_info.html:36
+msgid "邮箱"
 msgstr ""
 
-#: templates/user/setting_info.html:32
-msgid "Optional"
+#: templates/user/setting_info.html:49
+msgid "个人站点"
 msgstr ""
 
-#: templates/user/setting_passwd.html:23
-msgid "current password"
+#: templates/user/setting_info.html:63
+msgid "更新"
+msgstr ""
+
+#: templates/user/setting_passwd.html:38
+msgid "当前密码"
+msgstr ""
+
+#: templates/user/setting_passwd.html:51
+msgid "新的密码"
+msgstr ""
+
+#: templates/user/setting_passwd.html:63
+msgid "重复密码"
 msgstr ""
 
 #: templates/user/signin.html:43

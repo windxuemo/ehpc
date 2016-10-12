@@ -17837,3 +17837,15 @@ textarea {
     padding-top: 30px;
 }
 
+.panel-heading h1,
+.panel-heading h2,
+.panel-heading h3{
+    font-size: 18px;
+}
+.panel-body h1,
+.panel-body h2,
+.panel-body h3,
+.panel-body h4,
+.panel-body h5{
+    font-size: 16px;
+}

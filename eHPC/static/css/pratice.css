@@ -1,0 +1,35 @@
+/* pratice css*/
+.practice-list {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.practice-list .practice-item {
+    background-color: #f0f0f0;
+    text-align: center;
+    border-radius: 10px;
+    padding: 30px;
+    height: 450px;
+    margin-bottom: 20px;
+}
+
+.practice-list .practice-item .title {
+    font-size: 18px;
+    color: #3e4450;
+    margin-top: 40px;
+    margin-bottom: 25px;
+}
+
+.practice-list .practice-item .info {
+    color: #98a2b5;
+    line-height: 20px;
+    height: 40px;
+    margin-bottom: 22px;
+    overflow: hidden;
+}
+
+.practice-list .practice-item .bottom {
+    width: 60%;
+    margin: 0 auto;
+}
+

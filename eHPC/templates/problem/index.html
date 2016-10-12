@@ -1,64 +1,47 @@
 {% extends 'base.html' %}
-
 {% block header_ext %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.1/semantic.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.semanticui.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.1/semantic.min.css">
-    <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.semanticui.min.css">
+    <link href="{{ url_for('static', filename='css/pratice.css') }}" rel="stylesheet">
+
 {% endblock %}
 
 {% block content %}
 
-    <div id="content-container" class="container">
-
-        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-            <li><a href="/">{{ _('Index') }}</a></li>
-            <li class="active"><a href="{{ url_for('problem.index') }}">{{ _('All Problems') }}</a></li>
-        </ol>
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <table class="ui celled table" cellspacing="0" id="problem">
-                        <thead>
-                        <tr>
-                            <th>{{ _('ID') }}</th>
-                            <th>{{ _('Description') }}</th>
-                            <th>{{ _('Difficulty') }}</th>
-                            <th>{{ _('AcceptNum') }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for p in problems %}
-                            <tr>
-                                <td><a href="{{ p.id }}">{{ p.id }}</a></td>
-                                <td><a href="{{ p.id }}">{{ p.title }}</a></td>
-                                <td>{{ p.difficulty }}</td>
-                                <td>{{ p.acceptedNum }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+    <section class="practice-list">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="practice-item">
+                        <img src="{{ url_for('static', filename='images/problem/practice_bg_1.png') }}">
+                        <div class="title" href="javascript:;">专项练习</div>
+                        <div class="info">针对性选题，挑战薄弱点，突破自我。</div>
+                        <div class="bottom">
+                            <a class="btn btn-primary" href="{{ url_for('problem.show_choice') }}" data-id="3">开始做题</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="practice-item">
+                        <img src="{{ url_for('static', filename='images/problem/practice_bg_2.png') }}">
+                        <div class="title" href="javascript:;">在线编程</div>
+                        <div class="info">在线编辑代码，实时反馈运行结果。</div>
+                        <div class="bottom">
+                            <a class="btn btn-primary" href="{{ url_for('problem.show_program') }}">开始编程</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="practice-item">
+                        <img src="{{ url_for('static', filename='images/problem/practice_bg_3.png') }}">
+                        <div class="title">竞赛平台</div>
+                        <div class="info"> 组织试题，同台竞技，测出真水平。</div>
+                        <div class="bottom">
+                            <a class="btn  btn-primary"
+                               href="/library/3/testpapers">开始竞赛</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
 {% endblock %}
-
-{% block footer_ext %}
-    <script>
-        $(document).ready(
-                function () {
-                    $('#problem').DataTable({
-                        language: {
-                            url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Chinese.json"
-                        },
-                    });
-                });
-    </script>
-
-
-{% endblock %}
-
-{#problems#}

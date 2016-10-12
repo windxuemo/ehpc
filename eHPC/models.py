@@ -204,11 +204,15 @@ class Post(db.Model):
 
 """ 虚拟实验室模块 """
 
-""" 竞赛平台(OJ) """
+
+""" 试题中心模块
+@Program 对应编程题目
+@Choice 对应选择题目
+"""
 
 
-class Problem(db.Model):
-    __tablename__ = "problems"
+class Program(db.Model):
+    __tablename__ = "programs"
     id = db.Column(db.Integer, primary_key=True)  # 题目 ID
     title = db.Column(db.String(64), nullable=False)  # 题目标题
     detail = db.Column(db.Text(), nullable=False)  # 题目详情
@@ -222,6 +226,15 @@ class Problem(db.Model):
 
     # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
     # TODO
+
+
+class Choice(db.Model):
+    __tablename__ = "choices"
+    id = db.Column(db.Integer, primary_key=True)        # 题目 ID
+    title = db.Column(db.String(64), nullable=False)    # 题目题干
+    detail = db.Column(db.Text(), nullable=False)       # 题目选项: 存储所有选项
+    c_type = db.Column(db.Boolean, nullable=False, default=False)   # 题目类型: 单选或者不定项选择
+    answer = db.Column(db.String(64), nullable=False)
 
 
 """ 其他: 咨询信息 """

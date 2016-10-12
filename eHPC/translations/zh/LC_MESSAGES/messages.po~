@@ -325,7 +325,7 @@ msgstr "eHPC团队"
 
 #: templates/user/passwd_reset_email.html:7
 msgid "Note: replies to this email address are not monitored."
-msgstr "注意: 请勿回复此封邮件。"
+msgstr "注意: "
 
 #: templates/user/passwd_reset_sent.html:6
 msgid "Email Sent"

@@ -61,7 +61,7 @@
                     </div>
                     <div class="panel-body">
                         <ul class="user-avatar-list clearfix">
-                            {% for u in course.students %}
+                            {% for u in course.users %}
                                 <li>
                                     <a class="js-user-card" href="{{ url_for('user.view', uid=u.id) }}">
                                         <img class="avatar-sm" src="{{ u.avatar_url }}">

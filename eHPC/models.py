@@ -75,11 +75,11 @@ def load_user(user_id):
 @Course: 课程实体
 @Lesson: 课时实体
 @Material: 课时资源实体(PDF,PPT,MP4,MP3等资源)
+@course_users: 课程和用户的多对多关系
 """
-
-# course_users = db.Table('group_members',
-#                          db.Column('group_id', db.Integer, db.ForeignKey('users.id')),
-#                          db.Column('user_id', db.Integer, db.ForeignKey('groups.id')))
+course_users = db.Table('course_users',
+                         db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+                         db.Column('course_id', db.Integer, db.ForeignKey('courses.id')))
 
 
 class Course(db.Model):
@@ -101,6 +101,9 @@ class Course(db.Model):
 
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
+    users = db.relationship('User', secondary=course_users,
+                            backref=db.backref('courses', lazy='dynamic'))
+    # 加入该课程的用户, 多对多的关系
     # rates = db.relationship('Rate', backref='course', lazy='dynamic')
 
 
@@ -149,7 +152,6 @@ class Teachers(db.Model):
 
 
 """ 互动社区功能 """
-
 group_members = db.Table('group_members',
                          db.Column('group_id', db.Integer, db.ForeignKey('users.id')),
                          db.Column('user_id', db.Integer, db.ForeignKey('groups.id')))
@@ -157,13 +159,13 @@ group_members = db.Table('group_members',
 
 class Group(db.Model):
     __tablename__ = 'groups'
-    id = db.Column(db.Integer, primary_key=True)  # 讨论组 ID
-    title = db.Column(db.String(64), nullable=False)  # 讨论组名字
-    about = db.Column(db.Text(), nullable=False)  # 讨论组介绍
-    logo = db.Column(db.String(128))  # 讨论组 Logo
+    id = db.Column(db.Integer, primary_key=True)        # 讨论组 ID
+    title = db.Column(db.String(64), nullable=False)    # 讨论组名字
+    about = db.Column(db.Text(), nullable=False)        # 讨论组介绍
+    logo = db.Column(db.String(128))                    # 讨论组 Logo
 
-    memberNum = db.Column(db.Integer, default=0)  # 讨论组成员数目
-    topicNum = db.Column(db.Integer, default=0)  # 讨论组话题数目
+    memberNum = db.Column(db.Integer, default=0)        # 讨论组成员数目
+    topicNum = db.Column(db.Integer, default=0)         # 讨论组话题数目
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # 小组内的话题，一对多的关系

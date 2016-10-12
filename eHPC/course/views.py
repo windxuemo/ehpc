@@ -16,7 +16,6 @@ def index():
 
 @course.route('/<int:cid>/', methods=['GET', 'POST'])
 def view(cid):
-    # TODO
     c = Course.query.filter_by(id=cid).first()
     return render_template('course/detail.html', course=c)
 

@@ -19,7 +19,7 @@ alphanumeric = re.compile(r'^[0-9a-zA-Z\_]*$')
 email_address = re.compile(r'[a-zA-z0-9]+\@[a-zA-Z0-9]+\.+[a-zA-Z]')
 
 
-@user.route('/signin', methods=['GET', 'POST'])
+@user.route('/signin/', methods=['GET', 'POST'])
 def signin():
     if request.method == 'GET':
         if current_user.is_authenticated:
@@ -41,14 +41,14 @@ def signin():
                                    form=_form, message=message)
 
 
-@user.route('/signout')
+@user.route('/signout/')
 @login_required
 def signout():
     logout_user()
     return redirect(request.args.get('next') or url_for('main.index'))
 
 
-@user.route('/register', methods=['GET', 'POST'])
+@user.route('/register/', methods=['GET', 'POST'])
 def reg():
     if request.method == 'GET':
         return render_template('user/reg.html',
@@ -102,13 +102,13 @@ def reg():
             return redirect(request.args.get('next') or url_for('main.index'))
 
 
-@user.route('<int:uid>')
+@user.route('/<int:uid>/')
 def view(uid):
     # TODO
     abort(404)
 
 
-@user.route('/password/reset', methods=['GET', 'POST'])
+@user.route('/password/reset/', methods=['GET', 'POST'])
 def password_reset_request():
     if request.method == 'GET':
         return render_template('user/passwd_reset.html', form=None)
@@ -138,7 +138,7 @@ def password_reset_request():
             return render_template('user/passwd_reset_sent.html')
 
 
-@user.route('/password/reset/<token>', methods=['GET', 'POST'])
+@user.route('/password/reset/<token>/', methods=['GET', 'POST'])
 def password_reset(token):
     if request.method == "GET":
         u = User.verify_token(token)
@@ -173,7 +173,7 @@ def password_reset(token):
             return render_template('user/passwd_reset_done.html', message=reset_result)
 
 
-@user.route('/<int:uid>')
+@user.route('/<int:uid>/')
 def info(uid):
     u = User.query.filter_by(id=uid, deleted=False).first_or_404()
 
@@ -196,7 +196,7 @@ def info(uid):
                            user=u)
 
 
-@user.route("/setting/password", methods=['GET', 'POST'])
+@user.route("/setting/password/", methods=['GET', 'POST'])
 @login_required
 def setting_password():
     if request.method == 'GET':
@@ -230,7 +230,7 @@ def setting_password():
                                    message_success=message_success)
 
 
-@user.route('/setting/info', methods=['GET', 'POST'])
+@user.route('/setting/info/', methods=['GET', 'POST'])
 @login_required
 def setting_info():
     if request.method == 'GET':
@@ -258,7 +258,7 @@ def setting_info():
             return render_template('user/setting_info.html', message_success=message_success)
 
 
-@user.route("/setting/avatar", methods=['GET', 'POST'])
+@user.route("/setting/avatar/", methods=['GET', 'POST'])
 @login_required
 def setting_avatar():
     if request.method == 'GET':

@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request, url_for, abort, redirect
 from . import problem
-from ..models import Program, Choice
+from ..models import Program, Choice, Classify
 from flask_babel import gettext
 from time import sleep
 
@@ -21,18 +21,30 @@ def show_program():
 
 @problem.route('/choice/')
 def show_choice():
-    cho = Choice.query.all()
+    classifies = Classify.query.all()
+    rows = []
+    for c in classifies:
+        rows.append([c.name, c.choices.count(), c.id])
+
     return render_template('problem/show_choice.html',
                            title=gettext('Choice Practice'),
-                           choices=cho)
+                           rows=rows)
 
 
 @problem.route('/program/<int:pid>/')
 def program_view(pid):
     pro = Program.query.filter_by(id=pid).first()
-    return render_template('problem/problem_detail.html',
+    return render_template('problem/program_detail.html',
                            title=pro.title,
                            problem=pro)
+
+
+@problem.route('/choice/<int:cid>/')
+def choice_view(cid):
+    cho = Choice.query.filter_by(id=cid).first()
+    return render_template('problem/choice_detail.html',
+                           title=cho.title,
+                           choice=cho)
 
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])

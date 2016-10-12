@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/pratice.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li><a href="{{ url_for('problem.index') }}">{{ _('Practice Center') }}</a></li>
+            <li class="active"><a href="{{ url_for('problem.show_choice') }}">{{ _('Choice Lists') }}</a></li>
+        </ol>
+        <div class="table-responsive">
+            <table class="table table-subject-title">
+                <thead>
+                <tr>
+                    <th class="col-xs-4 text-left item-first"><span class="mll pll">知识点</span></th>
+                    <th class="col-xs-4 ">题目数量</th>
+                    <th class="col-xs-4 ">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for r in rows %}
+                    <tr>
+                        <td colspan="8" style="padding:0">
+                            <ul class="subject-title-list clearfix">
+                                <li class="clearfix  open ">
+                                    <div class="item col-xs-4 item-first">
+                                        <i class="operate"><em class="circle circle-lg"></em></i>
+                                        <span>{{ r[0] }}</span>
+                                    </div>
+                                    <div class="item col-xs-4">
+                                        {{ r[1] }} 道
+                                    </div>
+                                    <div class="item col-xs-4">
+                                        <a class="js-modal-choicequestions" href="{{ url_for('problem.choice_view', cid=r[2]) }}">
+                                            <i class="exam-icon icon-zuoti color-primary font-20"></i>
+                                        开始做题</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{#rows#}

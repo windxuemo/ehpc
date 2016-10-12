@@ -206,19 +206,20 @@ class Post(db.Model):
 
 
 """ 试题中心模块
-@Program 对应编程题目
-@Choice 对应选择题目
+@Program 对应编程题
+@Choice 对应选择题
+@Classify 选择题目所属的分类
 """
 
 
 class Program(db.Model):
     __tablename__ = "programs"
-    id = db.Column(db.Integer, primary_key=True)  # 题目 ID
-    title = db.Column(db.String(64), nullable=False)  # 题目标题
-    detail = db.Column(db.Text(), nullable=False)  # 题目详情
-    difficulty = db.Column(db.Integer, default=0)  # 题目难度
-    acceptedNum = db.Column(db.Integer, default=0)  # 通过次数
-    submitNum = db.Column(db.Integer, default=0)  # 提交次数
+    id = db.Column(db.Integer, primary_key=True)        # 题目 ID
+    title = db.Column(db.String(64), nullable=False)    # 题目标题
+    detail = db.Column(db.Text(), nullable=False)       # 题目详情
+    difficulty = db.Column(db.Integer, default=0)       # 题目难度
+    acceptedNum = db.Column(db.Integer, default=0)      # 通过次数
+    submitNum = db.Column(db.Integer, default=0)        # 提交次数
 
     # default_code = db.Column(db.Text(), default="")             # 预先设定的代码
 
@@ -227,6 +228,10 @@ class Program(db.Model):
     # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
     # TODO
 
+choice_classifies = db.Table('choice_classifies',
+                             db.Column('choice_id', db.Integer, db.ForeignKey('choices.id')),
+                             db.Column('classify_id', db.Integer, db.ForeignKey('classifies.id')))
+
 
 class Choice(db.Model):
     __tablename__ = "choices"
@@ -234,7 +239,17 @@ class Choice(db.Model):
     title = db.Column(db.String(64), nullable=False)    # 题目题干
     detail = db.Column(db.Text(), nullable=False)       # 题目选项: 存储所有选项
     c_type = db.Column(db.Boolean, nullable=False, default=False)   # 题目类型: 单选或者不定项选择
-    answer = db.Column(db.String(64), nullable=False)
+    answer = db.Column(db.String(64), nullable=False)   # 题目答案
+
+    # 选择题对应的分类, 一个选择题可以属于多个分类, 一个分类可以包括多个选择题, 所以是多对多的对应关系
+    classifies = db.relationship('Classify', secondary=choice_classifies,
+                                 backref=db.backref('choices', lazy='dynamic'))
+
+
+class Classify(db.Model):
+    __tablename__ = "classifies"
+    id = db.Column(db.Integer, primary_key=True)        # 分类 ID
+    name = db.Column(db.String(64), nullable=False)     # 分类名字
 
 
 """ 其他: 咨询信息 """

@@ -2,36 +2,32 @@
 
 {% block header_ext %}
 
-<link href="{{ url_for('static', filename='bootstrap-markdown/css/bootstrap-markdown.min.css') }}" rel="stylesheet">
-<link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.1/semantic.min.css">
-<link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.semanticui.min.css">
-<script src="{{ url_for('static', filename='bootstrap-markdown/js/bootstrap-markdown.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap-markdown/js/markdown.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap-markdown/js/to-markdown.js') }}"></script>
+    <link href="{{ url_for('static', filename='bootstrap-markdown/css/bootstrap-markdown.min.css') }}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.1/semantic.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.semanticui.min.css">
+    <script src="{{ url_for('static', filename='bootstrap-markdown/js/bootstrap-markdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-markdown/js/markdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-markdown/js/to-markdown.js') }}"></script>
 
-<style type="text/css">
-  /* 控件样式的一些微调 */
-  #submit{width: 200px;height: 50px;font-size: 20px;margin-top: 20px;margin-bottom: 20px;}
-</style>
+
 
 {% endblock %}
 
 
 {% block content %}
 
-<div id="content-container" class="container">
-    <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-        <li><a href="/">首页</a></li>
-        <li class="active"><a href="{{url_for('article.post')}}">发布资讯</a></li>
-    </ol>
-    <div class="well">
-    <form action="{{url_for('article.post')}}" method="POST">
-        <input type="text" class="form-control" name='title' placeholder="在此输入标题"><br/>
-        <textarea name="content" data-provide="markdown" rows="30"></textarea>
-        <input class='btn btn-success' id='submit' type='submit'>
-    </form> 
-  </div>
-</div>
-
+    <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li class="active"><a href="{{ url_for('article.post') }}">发布资讯</a></li>
+        </ol>
+        <div class="well">
+            <form action="{{ url_for('article.post') }}" method="POST">
+                <input type="text" class="form-control" name='title' placeholder="在此输入标题"><br/>
+                <textarea name="content" data-provide="markdown" rows="30"></textarea>
+                <input class='btn btn-success' id='submit' type='submit'>
+            </form>
+        </div>
+    </div>
 
 {% endblock %}

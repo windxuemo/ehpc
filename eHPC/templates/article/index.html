@@ -1,63 +1,48 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-<script src="{{ url_for('static', filename='bootstrap-markdown/js/markdown.js') }}"></script>
-<style type="text/css">
-  /* 控件样式的一些微调 */
-  .content img{width: 100%;}
-</style>
+    <script src="{{ url_for('static', filename='bootstrap-markdown/js/markdown.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-    
-    
+
     <div id="content-container" class="container">
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">首页</a></li>
-            <li class="active"><a href="{{url_for('article.index')}}">资讯列表</a></li>
+            <li class="active"><a href="{{ url_for('article.index') }}">资讯列表</a></li>
         </ol>
         {% if article_list %}
-        <div class="article-list-body row">
-            <div class="col-md-10 col-offset-1">
-                <section class="es-section">
-                    <div class="article-list">
-                        {% for article in article_list %}
-                        <article class="article-item">
-                            <div class="article-metas clearfix">
-                                <div class="pull-left">
-                                    <div class="date">
-                                        <div class="day">{{ article.visitNum }}</div>
-                                        <div class="month">hits</div>
+            <div class="article-list-body row">
+                <div class="col-md-10 col-offset-1">
+                    <section class="es-section">
+                        <div class="article-list">
+                            {% for article in article_list %}
+                                <article class="article-item">
+                                    <div class="article-metas clearfix">
+                                        <div class="pull-left">
+                                            <div class="date">
+                                                <div class="day">{{ article.visitNum }}</div>
+                                                <div class="month">hits</div>
+                                            </div>
+                                        </div>
+                                        <div class="metas-body">
+                                            <h2 class="title">
+                                                <a class="link-dark"
+                                                   href="{{ url_for('article.detail', article_id=article.id) }}">{{ article.title | truncate(30) }}</a>
+                                            </h2>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="metas-body">
-                                    <p>
-                                        <a class="link-light">近期资讯</a>
-                                    </p>
-                                    <h2 class="title">
-                                        <a class="link-dark" href="/article/{{ article.id }}">{{ article.title[:40] }}</a>
-                                    </h2>
-                                </div>
-                            </div>
-                            <div class="content">{{ article.content[:300] }}......</div>
-                        </article>
-                        {% endfor %}
-                    </div>
-                </section>
+                                    <div class="content">{{ article.content | markdown | safe | truncate(100) }} </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </section>
+                </div>
             </div>
-        </div>
-    </div>
-    {% else %}
-        <h2>暂无资讯信息</h2>
-    {% endif %}
+            </div>
+        {% else %}
+            <h2>暂无资讯信息</h2>
+        {% endif %}
 {% endblock %}
 
-{% block footer_ext %}
-    <script type="text/javascript">
-        // contentlist = $(".content")
-        // for(var i=0;i<contentlist.length;i++)
-        //     contentlist[i].innerHTML = markdown.toHTML(contentlist[i].innerHTML)
-    </script>
-{% endblock %}
-
-
+{# article #}

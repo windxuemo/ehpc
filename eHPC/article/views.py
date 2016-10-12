@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from flask import render_template, abort, request, redirect, url_for
 from . import article
 from ..models import Article
@@ -11,13 +14,14 @@ def index():
     return render_template('article/index.html', title=gettext('Articles'), article_list=article_list)
 
 
-@article.route('/<article_id>')
+@article.route('/<int:article_id>')
 def detail(article_id):
     detail_article = Article.query.filter_by(id=article_id).first()
     detail_article.visitNum += 1
     db.session.commit()
     return render_template('article/detail.html',
-                           title=gettext('Articles:' + article_id), article=detail_article)
+                           title=detail_article.title[:10],
+                           article=detail_article)
 
 
 @article.route('/post', methods=['POST', 'GET'])

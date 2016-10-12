@@ -9,7 +9,11 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 "POT-Creation-Date: 2016-10-12 22:27+0800\n"
+=======
+"POT-Creation-Date: 2016-10-12 16:05+0800\n"
+>>>>>>> Stashed changes
 =======
 "POT-Creation-Date: 2016-10-12 16:05+0800\n"
 >>>>>>> Stashed changes
@@ -58,7 +62,11 @@ msgid "Program Practice"
 msgstr ""
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: problem/views.py:30
+=======
+#: problem/views.py:26
+>>>>>>> Stashed changes
 =======
 #: problem/views.py:26
 >>>>>>> Stashed changes
@@ -86,10 +94,13 @@ msgid "Community"
 msgstr ""
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: templates/navbar.html:33 templates/user/setting_avatar.html:13
 #: templates/user/setting_info.html:13 templates/user/setting_info.html:31
 #: templates/user/setting_passwd.html:15
 =======
+=======
+>>>>>>> Stashed changes
 #: templates/navbar.html:33
 >>>>>>> Stashed changes
 msgid "Personal"
@@ -100,8 +111,12 @@ msgid "Job's List"
 msgstr ""
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: templates/navbar.html:39 templates/user/setting_avatar.html:9
 #: templates/user/setting_info.html:9 templates/user/setting_passwd.html:11
+=======
+#: templates/navbar.html:39
+>>>>>>> Stashed changes
 =======
 #: templates/navbar.html:39
 >>>>>>> Stashed changes
@@ -130,7 +145,11 @@ msgstr ""
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
 #: templates/group/all.html:7 templates/group/index.html:6
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: templates/problem/show_choice.html:11 templates/problem/show_program.html:15
+=======
+#: templates/problem/show_program.html:15
+>>>>>>> Stashed changes
 =======
 #: templates/problem/show_program.html:15
 >>>>>>> Stashed changes
@@ -202,6 +221,7 @@ msgid "Try To Solve The Problem."
 msgstr ""
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: templates/problem/program_detail.html:41
 msgid "Submit Solution"
 msgstr ""
@@ -212,6 +232,14 @@ msgstr ""
 
 #: templates/problem/show_choice.html:13
 msgid "Choice Lists"
+=======
+#: templates/problem/problem_detail.html:41
+msgid "Submit Solution"
+msgstr ""
+
+#: templates/problem/show_program.html:16
+msgid "Practice Center"
+>>>>>>> Stashed changes
 msgstr ""
 
 #: templates/problem/show_program.html:17
@@ -226,6 +254,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+<<<<<<< Updated upstream
 =======
 #: templates/problem/problem_detail.html:41
 msgid "Submit Solution"
@@ -247,6 +276,8 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 #: templates/problem/show_program.html:27
 msgid "Difficulty"
@@ -302,7 +333,10 @@ msgstr ""
 
 #: templates/user/passwd_reset_confirm.html:13
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: templates/user/setting_passwd.html:51
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 msgid "new password"
@@ -310,7 +344,10 @@ msgstr ""
 
 #: templates/user/passwd_reset_confirm.html:18
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: templates/user/setting_passwd.html:63
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 msgid "repeat password"
@@ -399,10 +436,15 @@ msgid "Email Address"
 msgstr ""
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #: templates/user/reg.html:40 templates/user/setting_avatar.html:18
 #: templates/user/setting_info.html:18 templates/user/setting_passwd.html:20
 #: templates/user/setting_passwd.html:33 templates/user/setting_passwd.html:38
 #: templates/user/signin.html:24 templates/user/signin.html:27
+=======
+#: templates/user/reg.html:40 templates/user/signin.html:24
+#: templates/user/signin.html:27
+>>>>>>> Stashed changes
 =======
 #: templates/user/reg.html:40 templates/user/signin.html:24
 #: templates/user/signin.html:27
@@ -418,6 +460,7 @@ msgstr ""
 msgid "Submiting..."
 msgstr ""
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 #: templates/user/setting_avatar.html:23 templates/user/setting_avatar.html:31
 #: templates/user/setting_info.html:23 templates/user/setting_passwd.html:25
@@ -479,12 +522,60 @@ msgstr ""
 msgid "当前密码"
 msgstr ""
 
+=======
+#: templates/user/setting_avatar.html:31 templates/user/setting_info.html:23
+#: templates/user/setting_passwd.html:25
+msgid "头像设置"
+msgstr ""
+
+#: templates/user/setting_avatar.html:36
+msgid "上传新的头像"
+msgstr ""
+
+#: templates/user/setting_avatar.html:39
+msgid "最大允许512k，支持png格式和jpeg格式"
+msgstr ""
+
+#: templates/user/setting_avatar.html:48 templates/user/setting_passwd.html:78
+msgid "保存"
+msgstr ""
+
+#: templates/user/setting_info.html:13 templates/user/setting_info.html:31
+#: templates/user/setting_passwd.html:15
+msgid "基础信息"
+msgstr ""
+
+#: templates/user/setting_info.html:18 templates/user/setting_passwd.html:20
+#: templates/user/setting_passwd.html:33
+msgid "安全设置"
+msgstr ""
+
+#: templates/user/setting_info.html:36
+msgid "邮箱"
+msgstr ""
+
+#: templates/user/setting_info.html:49
+msgid "个人站点"
+msgstr ""
+
+#: templates/user/setting_info.html:63
+msgid "更新"
+msgstr ""
+
+#: templates/user/setting_passwd.html:38
+msgid "当前密码"
+msgstr ""
+
+>>>>>>> Stashed changes
 #: templates/user/setting_passwd.html:51
 msgid "新的密码"
 msgstr ""
 
 #: templates/user/setting_passwd.html:63
 msgid "重复密码"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 msgstr ""
 

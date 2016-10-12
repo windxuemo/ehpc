@@ -16,9 +16,9 @@
             <li>
                 <a href="{{ url_for('group.index') }}">{{ _('Community') }}</a>
             </li>
-{#            <li>#}
-{#                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Lab') }}</a>#}
-{#            </li>#}
+            {#            <li>#}
+            {#                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Lab') }}</a>#}
+            {#            </li>#}
         </ul>
 
         <div class="navbar-user left ">
@@ -30,9 +30,10 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>
-                     <!--       <li><a href=""><i class="es-icon es-icon-person"></i>{{ _('Personal') }}</a>
+                            <!--       <li><a href=""><i class="es-icon es-icon-person"></i>{{ _('Personal') }}</a>
                             </li>
-                     -->       <li><a href=""><i class="es-icon es-icon-homework"></i>{{ _("Job's List") }}</a>
+                     -->
+                            <li><a href=""><i class="es-icon es-icon-homework"></i>{{ _("Job's List") }}</a>
                             </li>
                             <li><a href="{{ url_for('user.setting_info') }}"><i
                                     class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a></li>

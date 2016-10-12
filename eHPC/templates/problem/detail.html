@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div id="content-container" class="container" >
+    <div id="content-container" class="container">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
@@ -28,45 +28,45 @@
             <div class="row form-group">
                 <div class="col-md-10 col-md-offset-1">
                     <div id="editor"></div>
-		
-		<div class="row form-group">
-                	<div class="col-md-12">
-                    		<div class="pull-right">
-                        		<button id="submit" class="btn btn-primary"
-                                		type="submit">{{ _('Submit Solution') }}
-                        		</button>
-                    		</div>
-                	</div>
-            	</div>
-
-		{#  keep the result #}
-		<section class="es-section">
-         	    <div class="nav-btn-tab">
-            	    	<ul class="nav nav-tabs" role="tablist" id="problem-content">
-                    		<li role="presentation" class="active"><a
-                            		href="{{ url_for('problem.running_log', pid=problem.id) }}">log</a></li>
-                    		<li role="presentation"><a href="{{ url_for('problem.running_error', pid=problem.id) }}">error</a></li>
-               	    	</ul>
-            	    
-		    </div>
-
-
-            	    <div class="course-detail-content" data-widget-cid="widget-1" id="problem-ajax-content">
-                       	<p> Null </p>
-            	    </div>
-        	</section>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-11">
+                    <div class="pull-right">
+                        <button id="submit" class="btn btn-primary"
+                                type="submit">{{ _('Submit Solution') }}
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <input class="hide" name="problem_id" value="{{ problem.id }}">
             <input id="source_code" name="source_code" value="" type="hidden">
-
-	    	
-
-            
         </form>
 
+        {#  keep the result #}
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <section class="es-section">
+                    <div class="nav-btn-tab">
+                        <ul class="nav nav-tabs" role="tablist" id="problem-content">
+                            <li role="presentation" class="active"><a
+                                    href="{{ url_for('problem.running_log', pid=problem.id) }}">{{ _('Compiler Result') }}</a>
+                            </li>
+                            <li role="presentation"><a
+                                    href="{{ url_for('problem.running_error', pid=problem.id) }}">{{ _('Run Result') }}</a>
+                            </li>
+                        </ul>
 
+                    </div>
+
+
+                    <div class="course-detail-content" data-widget-cid="widget-1" id="problem-ajax-content">
+                        <p> {{ _('Empty') }} </p>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
@@ -86,28 +86,28 @@
 
             var data = $("form").serialize();
 
-	    $.ajax({
-		method: "post",
-		cache: false,
-		url: "{{ url_for('problem.submit', pid=problem.id) }}",
-		data: data,
-		success: function (data) {
-				var res = "<p>"+data.status+"</p>"
-				$("#problem-ajax-content").html(res);
-			}
-		});	    
+            $.ajax({
+                method: "post",
+                cache: false,
+                url: "{{ url_for('problem.submit', pid=problem.id) }}",
+                data: data,
+                success: function (data) {
+                    var res = "<p>" + data.status + "</p>"
+                    $("#problem-ajax-content").html(res);
+                }
+            });
 
 
         }
 
-	$(document).ready(function () {
-            	$("#problem-content li a").click(function () {
+        $(document).ready(function () {
+            $("#problem-content li a").click(function () {
                 $("#problem-ajax-content").empty().append("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' ></div>");
                 $("#problem-content li").removeClass('active');
                 $(this).parent().addClass('active');
 
                 $.ajax({
-		    
+
                     url: this.href,
                     dataType: "json",
                     success: function (html) {

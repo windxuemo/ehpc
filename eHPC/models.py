@@ -77,9 +77,9 @@ def load_user(user_id):
 @Material: 课时资源实体(PDF,PPT,MP4,MP3等资源)
 """
 
-course_users = db.Table('group_members',
-                         db.Column('group_id', db.Integer, db.ForeignKey('users.id')),
-                         db.Column('user_id', db.Integer, db.ForeignKey('groups.id')))
+# course_users = db.Table('group_members',
+#                          db.Column('group_id', db.Integer, db.ForeignKey('users.id')),
+#                          db.Column('user_id', db.Integer, db.ForeignKey('groups.id')))
 
 
 class Course(db.Model):

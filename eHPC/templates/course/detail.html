@@ -14,7 +14,7 @@
             </div>
 
             <div class="course-detail-content" data-widget-cid="widget-1" id="ajax-content">
-                <p> {{ course.about }} </p>
+                <p> {{ course.about | markdown | safe }} </p>
             </div>
         </section>
     </div>

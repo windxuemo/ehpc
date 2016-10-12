@@ -98,7 +98,7 @@
                                 <li class="">
                                     <a href="/article/246">
                                         <img class="img-responsive"
-                                             src="/assets/v2/img/article/article_banner_1.jpg?7.1.5">
+                                             src="http://demo.edusoho.com/assets/v2/img/article/article_banner_1.jpg?7.2.4">
                                         <div class="image-overlay"></div>
                                         <div class="title">内容为王--在线教育为老师插上“金色"的翅膀</div>
                                     </a>
@@ -106,28 +106,18 @@
                                 <li class="last">
                                     <a href="/article/238">
                                         <img class="img-responsive"
-                                             src="/assets/v2/img/article/article_banner_2.jpg?7.1.5">
+                                             src="http://demo.edusoho.com/assets/v2/img/article/article_banner_2.jpg?7.2.4">
                                         <div class="image-overlay"></div>
                                         <div class="title">【观察】在线教育，真的可以为教育发展带来新契机吗？</div>
                                     </a>
                                 </li>
                             </ul>
                             <ul class="index-new-article ">
+                                {% for article in articles %}
                                 <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
-                                        class="link-dark" href="/article/246" title="内容为王--在线教育为老师插上“金色&quot;的翅膀">内容为王--在线教育为老师插上“金色"的翅膀</a>
-                                    <span class="date">11-18</span></li>
-                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
-                                        class="link-dark" href="/article/245" title="【观点】“互联网+”上升为国家战略在线教育受青睐">【观点】“互联网+”上升为国家战略在线教育受青睐</a>
-                                    <span class="date">11-18</span></li>
-                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
-                                        class="link-dark" href="/article/244" title="教育部指路“地方高校转型”：校企合作，为地方、行业发展培养人才">教育部指路“地方高校转型”：校企合作，为地方、行业发展培养人才</a>
-                                    <span class="date">11-17</span></li>
-                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
-                                        class="link-dark" href="/article/243" title="【互联网+教育】K12在线教育：需要同步课堂，更需要交互课堂">【互联网+教育】K12在线教育：需要同步课堂，更需要交互课堂</a>
-                                    <span class="date">11-17</span></li>
-                                <li class="last clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
-                                        class="link-dark" href="/article/242" title="2015 Hackthon 杭州站回顾之BugLife篇">2015
-                                    Hackthon 杭州站回顾之BugLife篇</a> <span class="date">11-03</span></li>
+                                        class="link-dark" href="/article/{{ article.id }}" title="{{ article.title }}">{{ article.title }}</a>
+                                    <span class="date">{{ article.createdTime.month }}-{{ article.createdTime.day }}</span></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>

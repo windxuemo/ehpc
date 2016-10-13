@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-13 16:46+0800\n"
+"POT-Creation-Date: 2016-10-13 20:27+0800\n"
 "PO-Revision-Date: 2016-10-08 15:35+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -62,21 +62,21 @@ msgstr "中山大学数据科学与计算机学院"
 msgid "eHPC"
 msgstr ""
 
-#: templates/main/index.html:6 templates/navbar.html:11
+#: templates/main/index.html:46 templates/navbar.html:11
 msgid "Online Courses"
 msgstr "在线课程"
 
-#: templates/navbar.html:14
+#: templates/main/index.html:67 templates/navbar.html:14
 msgid "Examination Center"
 msgstr "试题中心"
 
-#: templates/navbar.html:17
+#: templates/main/index.html:93 templates/navbar.html:17
 msgid "Community"
 msgstr "互动社区"
 
-#: templates/navbar.html:33 templates/user/setting_avatar.html:14
-#: templates/user/setting_info.html:14 templates/user/setting_info.html:48
-#: templates/user/setting_passwd.html:16
+#: templates/navbar.html:33 templates/user/setting_avatar.html:13
+#: templates/user/setting_info.html:13 templates/user/setting_info.html:31
+#: templates/user/setting_passwd.html:15
 msgid "Personal"
 msgstr "个人信息"
 
@@ -84,8 +84,8 @@ msgstr "个人信息"
 msgid "Job's List"
 msgstr "作业列表"
 
-#: templates/navbar.html:39 templates/user/setting_avatar.html:10
-#: templates/user/setting_info.html:10 templates/user/setting_passwd.html:12
+#: templates/navbar.html:39 templates/user/setting_avatar.html:9
+#: templates/user/setting_info.html:9 templates/user/setting_passwd.html:11
 msgid "Setting"
 msgstr "账户设置"
 
@@ -154,29 +154,13 @@ msgstr "回复"
 msgid "Created this topic."
 msgstr "创建话题"
 
-#: templates/main/index.html:9
+#: templates/main/index.html:49
 msgid "Learn HPC."
 msgstr "学习 HPC"
 
-#: templates/main/index.html:19
+#: templates/main/index.html:59
 msgid "More Courses"
 msgstr "更多课程"
-
-#: templates/main/index.html:32
-msgid "Virtual Lab"
-msgstr "虚拟实验室"
-
-#: templates/main/index.html:33
-msgid "Learn ehpc in Lab"
-msgstr "实验室学习 ehpc"
-
-#: templates/main/index.html:39
-msgid "Challenge Yourself!"
-msgstr "挑战自己"
-
-#: templates/main/index.html:40
-msgid "Try To Solve The Problem."
-msgstr "解决问题"
 
 #: templates/problem/program_detail.html:41
 msgid "Submit Solution"
@@ -246,27 +230,21 @@ msgstr "输入邮箱地址"
 msgid "submit"
 msgstr "提交"
 
-#: templates/user/passwd_reset_confirm.html:3
-msgid "reset password confirm"
-msgstr "确认重置密码"
-
-#: templates/user/passwd_reset_confirm.html:10
-msgid "Enter new password"
-msgstr "输入新密码"
-
-#: templates/user/passwd_reset_confirm.html:13
-#: templates/user/setting_passwd.html:77
+#: templates/user/passwd_reset_confirm.html:8
+#: templates/user/setting_passwd.html:51
 msgid "new password"
 msgstr "新密码"
 
-#: templates/user/passwd_reset_confirm.html:18
-#: templates/user/setting_passwd.html:93
+#: templates/user/passwd_reset_confirm.html:15
+#: templates/user/setting_passwd.html:63
 msgid "repeat password"
 msgstr "再次输入新密码"
 
 #: templates/user/passwd_reset_confirm.html:25
-msgid "Confirm"
-msgstr ""
+#: templates/user/setting_avatar.html:48 templates/user/setting_info.html:63
+#: templates/user/setting_passwd.html:78
+msgid "Save"
+msgstr "保存"
 
 #: templates/user/passwd_reset_done.html:2
 #: templates/user/passwd_reset_sent.html:2
@@ -346,9 +324,9 @@ msgstr "字符,数字或者下划线"
 msgid "Email Address"
 msgstr "邮箱地址"
 
-#: templates/user/reg.html:40 templates/user/setting_avatar.html:27
-#: templates/user/setting_info.html:27 templates/user/setting_passwd.html:29
-#: templates/user/setting_passwd.html:51 templates/user/setting_passwd.html:60
+#: templates/user/reg.html:40 templates/user/setting_avatar.html:18
+#: templates/user/setting_info.html:18 templates/user/setting_passwd.html:20
+#: templates/user/setting_passwd.html:33 templates/user/setting_passwd.html:38
 #: templates/user/signin.html:24 templates/user/signin.html:27
 msgid "Password"
 msgstr "密码"
@@ -361,74 +339,18 @@ msgstr "密码确认"
 msgid "Submiting..."
 msgstr "提交中..."
 
-#: templates/user/setting_avatar.html:36 templates/user/setting_avatar.html:48
-#: templates/user/setting_info.html:36 templates/user/setting_passwd.html:39
+#: templates/user/setting_avatar.html:23 templates/user/setting_avatar.html:31
+#: templates/user/setting_info.html:23 templates/user/setting_passwd.html:25
 msgid "Avatar"
 msgstr "头像"
 
-#: templates/user/setting_avatar.html:50 templates/user/setting_info.html:38
-#: templates/user/setting_passwd.html:41
-msgid "头像设置"
-msgstr ""
-
-#: templates/user/setting_avatar.html:62
-msgid "上传新的头像"
-msgstr ""
-
-#: templates/user/setting_avatar.html:65
-msgid "最大允许512k，支持png格式和jpeg格式"
-msgstr ""
-
-#: templates/user/setting_avatar.html:76 templates/user/setting_info.html:95
-#: templates/user/setting_passwd.html:112
-msgid "Save"
-msgstr "保存"
-
-#: templates/user/setting_avatar.html:78 templates/user/setting_passwd.html:114
-msgid "保存"
-msgstr ""
-
-#: templates/user/setting_info.html:20 templates/user/setting_info.html:50
-#: templates/user/setting_passwd.html:22
-msgid "基础信息"
-msgstr ""
-
-#: templates/user/setting_info.html:29 templates/user/setting_passwd.html:32
-#: templates/user/setting_passwd.html:53
-msgid "安全设置"
-msgstr ""
-
-#: templates/user/setting_info.html:57
+#: templates/user/setting_info.html:36
 msgid "Email"
-msgstr ""
+msgstr "邮箱地址"
 
-#: templates/user/setting_info.html:59
-msgid "邮箱"
-msgstr ""
-
-#: templates/user/setting_info.html:74
+#: templates/user/setting_info.html:49
 msgid "Website"
 msgstr "个人主页"
-
-#: templates/user/setting_info.html:76
-msgid "个人站点"
-msgstr ""
-
-#: templates/user/setting_info.html:98
-msgid "更新"
-msgstr ""
-
-#: templates/user/setting_passwd.html:62
-msgid "当前密码"
-msgstr ""
-
-#: templates/user/setting_passwd.html:79
-msgid "新的密码"
-msgstr ""
-
-#: templates/user/setting_passwd.html:95
-msgid "重复密码"
-msgstr ""
 
 #: templates/user/signin.html:43
 msgid "Forget Password"
@@ -672,8 +594,20 @@ msgstr "刚刚"
 #~ msgstr "输入新密码"
 
 #~ msgid "Confirm"
-#~ msgstr "确认"
+#~ msgstr ""
 
 #~ msgid "Articles:"
 #~ msgstr "资讯信息"
+
+#~ msgid "Virtual Lab"
+#~ msgstr "虚拟实验室"
+
+#~ msgid "Learn ehpc in Lab"
+#~ msgstr "实验室学习 ehpc"
+
+#~ msgid "Challenge Yourself!"
+#~ msgstr "挑战自己"
+
+#~ msgid "Try To Solve The Problem."
+#~ msgstr "解决问题"
 

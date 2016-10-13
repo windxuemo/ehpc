@@ -6,21 +6,37 @@
             <div class="col-md-3">
                 <div class="sidenav">
                     <ul class="list-group">
+<<<<<<< HEAD
                         <li class="list-group-heading">{{ _('Setting') }}</li>
 
                         <li class="list-group-item active">
                             <a href="{{ url_for('user.setting_info') }}"><i
                                     class="glyphicon glyphicon-user"></i>{{ _('Personal') }}</a>
+=======
+                        <li class="list-group-heading">个人设置</li>
+
+                        <li class="list-group-item active">
+                            <a href="{{ url_for('user.setting_info') }}"><i
+                                    class="glyphicon glyphicon-user"></i>{{ _('基础信息') }}</a>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                         </li>
 
                         <li class="list-group-item">
                             <a href="{{ url_for('user.setting_password') }}"><i
+<<<<<<< HEAD
                                     class="glyphicon glyphicon-lock"></i>{{ _('Password') }}</a>
+=======
+                                    class="glyphicon glyphicon-lock"></i>{{ _('安全设置') }}</a>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                         </li>
 
                         <li class="list-group-item">
                             <a href="{{ url_for('user.setting_avatar') }}"><i
+<<<<<<< HEAD
                                     class="glyphicon glyphicon-picture"></i>{{ _('Avatar') }}</a>
+=======
+                                    class="glyphicon glyphicon-picture"></i>{{ _('头像设置') }}</a>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                         </li>
                     </ul>
                 </div>
@@ -28,12 +44,20 @@
 
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
+<<<<<<< HEAD
                     <div class="panel-heading">{{ _('Personal') }}</div>
+=======
+                    <div class="panel-heading">{{ _('基础信息') }}</div>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                     <div class="panel-body">
                         <form class="form-horizontal" method="post">
 
                             <div clas="form-group">
+<<<<<<< HEAD
                                 <label class="col-md-2 control-label" for="email">{{ _('Email') }}</label>
+=======
+                                <label class="col-md-2 control-label" for="email">{{ _('邮箱') }}</label>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                                 <div class="col-md-7 controls radios">
                                     <input type="email" id="email" name="email" class="form-control"
                                            value="{{ current_user.email }}">
@@ -46,7 +70,11 @@
                             <br></br>
 
                             <div clas="form-group">
+<<<<<<< HEAD
                                 <label class="col-md-2 control-label" for="website">{{_('Website')}}</label>
+=======
+                                <label class="col-md-2 control-label" for="website">{{ _('个人站点') }}</label>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                                 <div class="col-md-7 controls radios">
                                     <input type="url" id="website" name="website" class="form-control"
                                            value="{{ current_user.website }}">
@@ -54,12 +82,21 @@
                                 </div>
                             </div>
 
+<<<<<<< HEAD
                  	    <br></br>
+=======
+                            <br></br>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                             <br></br>
 
                             <div class="row">
                                 <div class="col-md-7 col-md-offset-8">
+<<<<<<< HEAD
                                     <button type="submit" class="btn btn-primary">{{_('Save')}}</button>
+=======
+                                    <button data-submiting-text="正在更新" type="submit"
+                                            class="btn btn-primary">{{ _('更新') }}</button>
+>>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
                                 </div>
                             </div>
 

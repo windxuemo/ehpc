@@ -1,40 +1,35 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-<script src="{{ url_for('static', filename='bootstrap-markdown/js/markdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap-markdown/js/markdown.js') }}"></script>
 {% endblock %}
 
 
 {% block content %}
-<div class="container article-detail-main">
-      <section class="es-section article-content">
-        <ol class="breadcrumb">
-  <li><a href="/article">资讯频道</a></li>
-    <li class="active">正文</li>
-</ol>        
-    <div class="article-metas">
-  <div class="pull-left">
-    <div class="date">
-      <div class="day">{{ article.createdTime.day }}</div>
-      <div class="month">{{ article.createdTime.month }}月</div>
-    </div>
-  </div>
-  <div class="metas-body">
-    <h2 class="title">{{ article.title }}</h2>
-    <div class="sns">
-      <span class="views-num">
-        <i class="es-icon es-icon-visibility"></i>{{ article.visitNum }}
-      </span>
+    <div class="container article-detail-main" id="content-container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li><a href="{{ url_for('article.index') }}">资讯列表</a></li>
+            <li class="active">{{ article.title | truncate(30) }}</li>
+        </ol>
 
-    </div>
-  </div>
-    </div>        
-    <div id="content" class="article-text">{{ article.content }}</div>
-</div>
-{% endblock %}
+        <section class="es-section article-content">
 
-{% block footer_ext %}
-<script type="text/javascript">
-    document.getElementById("content").innerHTML = markdown.toHTML(document.getElementById("content").innerHTML)
-</script>
+            <div class="article-metas">
+                <div class="pull-left">
+                    <div class="date">
+                        <div class="day">{{ article.createdTime.day }}</div>
+                        <div class="month">{{ article.createdTime.month }}月</div>
+                    </div>
+                </div>
+                <div class="metas-body">
+                    <h2 class="title">{{ article.title }}</h2>
+                    <div class="sns">
+                        <span class="views-num"><i class="es-icon es-icon-visibility"></i>{{ article.visitNum }}</span>
+                    </div>
+                </div>
+            </div>
+            <div id="content" class="article-text">{{ article.content | markdown | safe }}</div>
+        </section>
+    </div>
 {% endblock %}

@@ -6,84 +6,6 @@
             <div class="col-md-3">
                 <div class="sidenav">
                     <ul class="list-group">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                        <li class="list-group-heading">{{ _('Setting') }}</li>
-
-                        <li class="list-group-item active">
-                            <a href="{{ url_for('user.setting_info') }}"><i
-                                    class="glyphicon glyphicon-user"></i>{{ _('Personal') }}</a>
-=======
-                        <li class="list-group-heading">个人设置</li>
-
-                        <li class="list-group-item active">
-                            <a href="{{ url_for('user.setting_info') }}"><i
-                                    class="glyphicon glyphicon-user"></i>{{ _('基础信息') }}</a>
->>>>>>> Stashed changes
-                        </li>
-
-                        <li class="list-group-item">
-                            <a href="{{ url_for('user.setting_password') }}"><i
-<<<<<<< Updated upstream
-                                    class="glyphicon glyphicon-lock"></i>{{ _('Password') }}</a>
-=======
-                                    class="glyphicon glyphicon-lock"></i>{{ _('安全设置') }}</a>
->>>>>>> Stashed changes
-                        </li>
-
-                        <li class="list-group-item">
-                            <a href="{{ url_for('user.setting_avatar') }}"><i
-<<<<<<< Updated upstream
-                                    class="glyphicon glyphicon-picture"></i>{{ _('Avatar') }}</a>
-=======
-                                    class="glyphicon glyphicon-picture"></i>{{ _('头像设置') }}</a>
->>>>>>> Stashed changes
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col-md-9">
-                <div class="panel panel-default panel-col">
-<<<<<<< Updated upstream
-                    <div class="panel-heading">{{ _('Personal') }}</div>
-=======
-                    <div class="panel-heading">{{ _('基础信息') }}</div>
->>>>>>> Stashed changes
-                    <div class="panel-body">
-                        <form class="form-horizontal" method="post">
-
-                            <div clas="form-group">
-<<<<<<< Updated upstream
-                                <label class="col-md-2 control-label" for="email">{{ _('Email') }}</label>
-=======
-                                <label class="col-md-2 control-label" for="email">{{ _('邮箱') }}</label>
->>>>>>> Stashed changes
-                                <div class="col-md-7 controls radios">
-                                    <input type="email" id="email" name="email" class="form-control"
-                                           value="{{ current_user.email }}">
-                                    <div class="help-block" style="display:none;"></div>
-                                </div>
-
-                            </div>
-
-                            <br></br>
-                            <br></br>
-
-                            <div clas="form-group">
-<<<<<<< Updated upstream
-                                <label class="col-md-2 control-label" for="website">{{_('Website')}}</label>
-=======
-                                <label class="col-md-2 control-label" for="website">{{ _('个人站点') }}</label>
->>>>>>> Stashed changes
-                                <div class="col-md-7 controls radios">
-                                    <input type="url" id="website" name="website" class="form-control"
-                                           value="{{ current_user.website }}">
-                                    <div class="help-block" style="display:none;"></div>
-                                </div>
-                            </div>
-
-=======
                         <li class="list-group-heading">个人设置</li>
 
                         <li class="list-group-item active">
@@ -132,23 +54,13 @@
                                 </div>
                             </div>
 
->>>>>>> Stashed changes
                             <br></br>
                             <br></br>
 
                             <div class="row">
                                 <div class="col-md-7 col-md-offset-8">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                                    <button type="submit" class="btn btn-primary">{{_('Save')}}</button>
-=======
                                     <button data-submiting-text="正在更新" type="submit"
                                             class="btn btn-primary">{{ _('更新') }}</button>
->>>>>>> Stashed changes
-=======
-                                    <button data-submiting-text="正在更新" type="submit"
-                                            class="btn btn-primary">{{ _('更新') }}</button>
->>>>>>> Stashed changes
                                 </div>
                             </div>
 

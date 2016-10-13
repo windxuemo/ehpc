@@ -6017,7 +6017,6 @@ a.homework-essay-textarea-pack-up {
 }
 
 .text-line h5 > span {
-    background: #fff;
     padding: 0 40px;
 }
 
@@ -10017,7 +10016,7 @@ textarea {
 .course-list-section {
     position: relative;
     padding-bottom: 20px;
-    background: #fff;
+    background: #f5f8fa;
 }
 
 @media (max-width: 767px) {
@@ -10033,7 +10032,15 @@ textarea {
 
 .introduction-section {
     position: relative;
-    background-color: #46c37b;
+    background: #fff;
+    text-align: center;
+    padding-bottom: 70px;
+}
+
+.introduction-section img {
+    width: 210px;
+    height: 210px;
+    margin: 0 auto;
 }
 
 .introduction-section h3 {
@@ -17849,3 +17856,8 @@ textarea {
 .panel-body .article-text h5{
     font-size: 16px;
 }
+
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+    margin: 0 auto;
+}
+

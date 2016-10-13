@@ -1,5 +1,45 @@
 {% extends 'base.html' %}
+
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}
+
 {% block content %}
+
+    <section class="es-poster swiper-container">
+        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <div class="item active" style="background-color: #3083eb">
+                    <img src="{{ url_for('static', filename="images/carousel_1.jpg") }}" alt="图片1">
+                </div>
+                <div class="item" style="background-color: #0884f6">
+                    <img src="{{ url_for('static', filename="images/carousel_2.jpg") }}" alt="图片2">
+                </div>
+                <div class="item" style="background-color: #2f82ea">
+                    <img src="{{ url_for('static', filename="images/carousel_1.jpg") }}" alt="图片2">
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </section>
+
     <section class="course-list-section open-course-list-section ">
         <div class="container">
             <div class="text-line">
@@ -22,24 +62,27 @@
         </div>
     </section>
 
-    <section class="introduction-section">
+    <section class="introduction-section hidden-xs">
+        <div class="text-line">
+            <h5><span>{{ _('Examination Center') }}</span>
+                <div class="line"></div>
+            </h5>
+            <div class="subtitle">在线编程, 提高水平</div>
+        </div>
         <div class="container">
             <div class="row">
-                <div class="col-xs-6 introduction-item">
-                    <a href="{{ url_for('lab.index') }}" target="_blank">
-                        <img class="img-responsive" src="image/lab.png">
-                    </a>
-                    <h4>{{ _('Virtual Lab') }}</h4>
-                    <h5>{{ _('Learn ehpc in Lab') }}</h5>
+                <div class="col-md-6 col-sm-6">
+                    <a href=""><img src="{{ url_for('static', filename='images/problem/practice_bg_1.png') }}"
+                                    alt="题库" class="img-responsive"></a>
+                    <h4>丰富的题库</h4>
+                    <p>丰富的题库, 方便练习</p>
                 </div>
-                <div class="col-xs-6 introduction-item">
-                    <a href="{{ url_for('problem.index') }}" target="_blank">
-                        <img class="img-responsive" src="image/problems.png">
-                    </a>
-                    <h4>{{ _('Challenge Yourself!') }}</h4>
-                    <h5>{{ _('Try To Solve The Problem.') }}</h5>
+                <div class="col-md-6 col-sm-6">
+                    <a href=""><img src="{{ url_for('static', filename='images/problem/practice_bg_3.png') }}"
+                                    alt="随时随地学习" class="img-responsive"></a>
+                    <h4>公平的竞赛</h4>
+                    <p>一起来比赛</p>
                 </div>
-
             </div>
         </div>
     </section>
@@ -47,7 +90,7 @@
     <section class="dynamic-section ">
         <div class="container">
             <div class="text-line gray">
-                <h5><span>动态</span>
+                <h5><span>{{ _('Community') }}</span>
                     <div class="line"></div>
                 </h5>
                 <div class="subtitle">参与小组，结交更多同学，关注课程动态。</div>
@@ -114,9 +157,11 @@
                             </ul>
                             <ul class="index-new-article ">
                                 {% for article in articles %}
-                                <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
-                                        class="link-dark" href="/article/{{ article.id }}" title="{{ article.title }}">{{ article.title }}</a>
-                                    <span class="date">{{ article.createdTime.month }}-{{ article.createdTime.day }}</span></li>
+                                    <li class=" clearfix"><i class="es-icon es-icon-dot color-primary mrs"></i><a
+                                            class="link-dark" href="/article/{{ article.id }}"
+                                            title="{{ article.title }}">{{ article.title }}</a>
+                                        <span class="date">{{ article.createdTime.month }}-{{ article.createdTime.day }}</span>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         </div>

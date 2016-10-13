@@ -255,6 +255,32 @@ class Classify(db.Model):
     name = db.Column(db.String(64), nullable=False)     # 分类名字
 
 
+class Choice(db.Model):
+    __tablename__ = "choices"
+    id = db.Column(db.Integer, primary_key=True)        # 题目 ID
+    title = db.Column(db.String(64), nullable=False)    # 题目题干
+    detail = db.Column(db.Text(), nullable=False)       # 题目选项: 存储所有选项
+    c_type = db.Column(db.Boolean, nullable=False, default=False)   # 题目类型: 单选或者不定项选择
+    answer = db.Column(db.String(64), nullable=False)
+
+
+class Choice(db.Model):
+    __tablename__ = "choices"
+    id = db.Column(db.Integer, primary_key=True)        # 题目 ID
+    title = db.Column(db.String(64), nullable=False)    # 题目题干
+    detail = db.Column(db.Text(), nullable=False)       # 题目选项: 存储所有选项
+    c_type = db.Column(db.Boolean, nullable=False, default=False)   # 题目类型: 单选或者不定项选择
+    answer = db.Column(db.String(64), nullable=False)
+
+
+class Choice(db.Model):
+    __tablename__ = "choices"
+    id = db.Column(db.Integer, primary_key=True)        # 题目 ID
+    title = db.Column(db.String(64), nullable=False)    # 题目题干
+    detail = db.Column(db.Text(), nullable=False)       # 题目选项: 存储所有选项
+    c_type = db.Column(db.Boolean, nullable=False, default=False)   # 题目类型: 单选或者不定项选择
+    answer = db.Column(db.String(64), nullable=False)
+
 
 """ 其他: 咨询信息 """
 

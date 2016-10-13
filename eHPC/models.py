@@ -205,6 +205,7 @@ class Post(db.Model):
 """ 虚拟实验室模块 """
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 """ 试题中心模块
 <<<<<<< Updated upstream
@@ -215,11 +216,18 @@ class Post(db.Model):
 @Program 对应编程题目
 @Choice 对应选择题目
 >>>>>>> Stashed changes
+=======
+
+""" 试题中心模块
+@Program 对应编程题目
+@Choice 对应选择题目
+>>>>>>> Stashed changes
 """
 
 
 class Program(db.Model):
     __tablename__ = "programs"
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     id = db.Column(db.Integer, primary_key=True)        # 题目 ID
     title = db.Column(db.String(64), nullable=False)    # 题目标题
@@ -238,6 +246,8 @@ class Program(db.Model):
 
 class Program(db.Model):
     __tablename__ = "programs"
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     id = db.Column(db.Integer, primary_key=True)  # 题目 ID
     title = db.Column(db.String(64), nullable=False)  # 题目标题
@@ -276,6 +286,15 @@ class Classify(db.Model):
     __tablename__ = "classifies"
     id = db.Column(db.Integer, primary_key=True)        # 分类 ID
     name = db.Column(db.String(64), nullable=False)     # 分类名字
+
+
+class Choice(db.Model):
+    __tablename__ = "choices"
+    id = db.Column(db.Integer, primary_key=True)        # 题目 ID
+    title = db.Column(db.String(64), nullable=False)    # 题目题干
+    detail = db.Column(db.Text(), nullable=False)       # 题目选项: 存储所有选项
+    c_type = db.Column(db.Boolean, nullable=False, default=False)   # 题目类型: 单选或者不定项选择
+    answer = db.Column(db.String(64), nullable=False)
 
 
 class Choice(db.Model):

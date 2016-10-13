@@ -252,6 +252,7 @@ class Classify(db.Model):
     name = db.Column(db.String(64), nullable=False)     # 分类名字
 
 
+
 """ 其他: 咨询信息 """
 
 

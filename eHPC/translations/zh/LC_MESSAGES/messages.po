@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-12 16:05+0800\n"
+"POT-Creation-Date: 2016-10-12 22:27+0800\n"
 "PO-Revision-Date: 2016-10-08 15:35+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -42,7 +42,7 @@ msgstr "所有群组"
 msgid "Labs"
 msgstr "实验室"
 
-#: main/views.py:12
+#: main/views.py:13
 msgid "Education Practice Platform"
 msgstr "教育实践平台"
 
@@ -54,7 +54,7 @@ msgstr "练习平台"
 msgid "Program Practice"
 msgstr "编程题目"
 
-#: problem/views.py:26
+#: problem/views.py:30
 msgid "Choice Practice"
 msgstr "选择题目"
 
@@ -78,7 +78,9 @@ msgstr "试题中心"
 msgid "Community"
 msgstr "互动社区"
 
-#: templates/navbar.html:33
+#: templates/navbar.html:33 templates/user/setting_avatar.html:13
+#: templates/user/setting_info.html:13 templates/user/setting_info.html:31
+#: templates/user/setting_passwd.html:15
 msgid "Personal"
 msgstr "个人信息"
 
@@ -86,7 +88,8 @@ msgstr "个人信息"
 msgid "Job's List"
 msgstr "作业列表"
 
-#: templates/navbar.html:39
+#: templates/navbar.html:39 templates/user/setting_avatar.html:9
+#: templates/user/setting_info.html:9 templates/user/setting_passwd.html:11
 msgid "Setting"
 msgstr "账户设置"
 
@@ -111,7 +114,7 @@ msgstr "搜索"
 
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
 #: templates/group/all.html:7 templates/group/index.html:6
-#: templates/problem/show_program.html:15
+#: templates/problem/show_choice.html:11 templates/problem/show_program.html:15
 msgid "Index"
 msgstr "首页"
 
@@ -179,13 +182,17 @@ msgstr "挑战自己"
 msgid "Try To Solve The Problem."
 msgstr "解决问题"
 
-#: templates/problem/problem_detail.html:41
+#: templates/problem/program_detail.html:41
 msgid "Submit Solution"
 msgstr "提交代码"
 
-#: templates/problem/show_program.html:16
+#: templates/problem/show_choice.html:12 templates/problem/show_program.html:16
 msgid "Practice Center"
 msgstr "试题中心"
+
+#: templates/problem/show_choice.html:13
+msgid "Choice Lists"
+msgstr ""
 
 #: templates/problem/show_program.html:17
 msgid "Program Lists"
@@ -252,10 +259,12 @@ msgid "Enter new password"
 msgstr "输入新密码"
 
 #: templates/user/passwd_reset_confirm.html:13
+#: templates/user/setting_passwd.html:51
 msgid "new password"
 msgstr "新密码"
 
 #: templates/user/passwd_reset_confirm.html:18
+#: templates/user/setting_passwd.html:63
 msgid "repeat password"
 msgstr "再次输入新密码"
 
@@ -302,21 +311,21 @@ msgstr "点击这里"
 msgid ""
 "Alternatively, you can paste the following link in your browser's address"
 " bar:"
-msgstr ""
+msgstr "或者，您可以将下面这个链接粘贴到您的浏览器地址来访问。"
 
 #: templates/user/passwd_reset_email.html:5
 msgid "If you have not requested a password reset simply ignore this message."
-msgstr ""
+msgstr "如果您没有发送一个重设密码的请求，请忽略这封邮件。"
 
 #: templates/user/passwd_reset_email.html:6
 msgid ""
 "Sincerely, \n"
 " The eHPC Team"
-msgstr ""
+msgstr "eHPC团队"
 
 #: templates/user/passwd_reset_email.html:7
 msgid "Note: replies to this email address are not monitored."
-msgstr "注意: "
+msgstr "注意: 请勿回复此封邮件。"
 
 #: templates/user/passwd_reset_sent.html:6
 msgid "Email Sent"
@@ -324,9 +333,9 @@ msgstr "邮件已发送"
 
 #: templates/user/passwd_reset_sent.html:8
 msgid ""
-"We have sent you an email with a link to reset your password. Please "
-"check your email and click the link to continue."
-msgstr ""
+"We have sent you an email with a link to reset your password.Please check"
+" your email and click the link to continue."
+msgstr "我们已经向您的邮箱发送了一封邮件，请查看您的邮箱并点击邮件内的链接以重设您的密码。"
 
 #: templates/user/reg.html:12 templates/user/signin.html:14
 msgid "Username"
@@ -341,8 +350,10 @@ msgstr "字符,数字或者下划线"
 msgid "Email Address"
 msgstr "邮箱地址"
 
-#: templates/user/reg.html:40 templates/user/signin.html:24
-#: templates/user/signin.html:27
+#: templates/user/reg.html:40 templates/user/setting_avatar.html:18
+#: templates/user/setting_info.html:18 templates/user/setting_passwd.html:20
+#: templates/user/setting_passwd.html:33 templates/user/setting_passwd.html:38
+#: templates/user/signin.html:24 templates/user/signin.html:27
 msgid "Password"
 msgstr "密码"
 
@@ -354,56 +365,23 @@ msgstr "密码确认"
 msgid "Submiting..."
 msgstr "提交中..."
 
-#: templates/user/setting_avatar.html:31 templates/user/setting_info.html:23
-#: templates/user/setting_passwd.html:25
-msgid "头像设置"
-msgstr ""
+#: templates/user/setting_avatar.html:23 templates/user/setting_avatar.html:31
+#: templates/user/setting_info.html:23 templates/user/setting_passwd.html:25
+msgid "Avatar"
+msgstr "头像"
 
-#: templates/user/setting_avatar.html:36
-msgid "上传新的头像"
-msgstr ""
-
-#: templates/user/setting_avatar.html:39
-msgid "最大允许512k，支持png格式和jpeg格式"
-msgstr ""
-
-#: templates/user/setting_avatar.html:48 templates/user/setting_passwd.html:78
-msgid "保存"
-msgstr ""
-
-#: templates/user/setting_info.html:13 templates/user/setting_info.html:31
-#: templates/user/setting_passwd.html:15
-msgid "基础信息"
-msgstr ""
-
-#: templates/user/setting_info.html:18 templates/user/setting_passwd.html:20
-#: templates/user/setting_passwd.html:33
-msgid "安全设置"
-msgstr ""
+#: templates/user/setting_avatar.html:48 templates/user/setting_info.html:62
+#: templates/user/setting_passwd.html:78
+msgid "Save"
+msgstr "保存"
 
 #: templates/user/setting_info.html:36
-msgid "邮箱"
+msgid "Email"
 msgstr ""
 
 #: templates/user/setting_info.html:49
-msgid "个人站点"
-msgstr ""
-
-#: templates/user/setting_info.html:63
-msgid "更新"
-msgstr ""
-
-#: templates/user/setting_passwd.html:38
-msgid "当前密码"
-msgstr ""
-
-#: templates/user/setting_passwd.html:51
-msgid "新的密码"
-msgstr ""
-
-#: templates/user/setting_passwd.html:63
-msgid "重复密码"
-msgstr ""
+msgid "Website"
+msgstr "个人主页"
 
 #: templates/user/signin.html:43
 msgid "Forget Password"
@@ -600,4 +578,47 @@ msgstr "刚刚"
 
 #~ msgid "current password"
 #~ msgstr "当前密码"
+
+#~ msgid ""
+#~ "We have sent you an email with "
+#~ "a link to reset your password. "
+#~ "Please check your email and click "
+#~ "the link to continue."
+#~ msgstr ""
+
+#~ msgid "头像设置"
+#~ msgstr ""
+
+#~ msgid "上传新的头像"
+#~ msgstr ""
+
+#~ msgid "最大允许512k，支持png格式和jpeg格式"
+#~ msgstr ""
+
+#~ msgid "保存"
+#~ msgstr ""
+
+#~ msgid "基础信息"
+#~ msgstr ""
+
+#~ msgid "安全设置"
+#~ msgstr ""
+
+#~ msgid "邮箱"
+#~ msgstr ""
+
+#~ msgid "个人站点"
+#~ msgstr ""
+
+#~ msgid "更新"
+#~ msgstr ""
+
+#~ msgid "当前密码"
+#~ msgstr ""
+
+#~ msgid "新的密码"
+#~ msgstr ""
+
+#~ msgid "重复密码"
+#~ msgstr ""
 

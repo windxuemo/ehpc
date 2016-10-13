@@ -214,21 +214,12 @@ class Post(db.Model):
 
 class Program(db.Model):
     __tablename__ = "programs"
-<<<<<<< HEAD
-
-=======
->>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
     id = db.Column(db.Integer, primary_key=True)        # 题目 ID
     title = db.Column(db.String(64), nullable=False)    # 题目标题
     detail = db.Column(db.Text(), nullable=False)       # 题目详情
     difficulty = db.Column(db.Integer, default=0)       # 题目难度
     acceptedNum = db.Column(db.Integer, default=0)      # 通过次数
     submitNum = db.Column(db.Integer, default=0)        # 提交次数
-<<<<<<< HEAD
-
-
-=======
->>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
 
     # default_code = db.Column(db.Text(), default="")             # 预先设定的代码
 
@@ -261,10 +252,7 @@ class Classify(db.Model):
     name = db.Column(db.String(64), nullable=False)     # 分类名字
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
 """ 其他: 咨询信息 """
 
 

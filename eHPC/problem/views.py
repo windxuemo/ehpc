@@ -30,10 +30,7 @@ def show_choice():
                            title=gettext('Choice Practice'),
                            rows=rows)
 
-<<<<<<< HEAD
-=======
 
->>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
 @problem.route('/program/<int:pid>/')
 def program_view(pid):
     pro = Program.query.filter_by(id=pid).first()
@@ -49,10 +46,8 @@ def choice_view(cid):
                            title=cho.title,
                            choice=cho)
 
-<<<<<<< HEAD
-=======
 
->>>>>>> c270339360b49b53cd76007233eab2564b64dcfd
+
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 def submit(pid):
     source_code = request.form['source_code']

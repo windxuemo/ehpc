@@ -23,14 +23,16 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime(), default=datetime.utcnow)
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    is_superuser = db.Column(db.Boolean, default=False)  # 是否是管理员
-
-    # Personal info
+    # 权限: 0. 管理员, 1. 学生, 2. 老师,
+    permissions = db.Column(db.Integer, default=1, nullable=False)
     website = db.Column(db.String(64), nullable=True)
-    signature = db.Column(db.Text(), nullable=True)
     avatar_url = db.Column(db.String(64),
                            default="http://www.gravatar.com/avatar/")
 
+    # 个人信息, 包括电话号码, 身份证号码, 个人座右铭等。
+    telephone = db.Column(db.String(32))
+    personal_id = db.Column(db.String(32))
+    personal_profile = db.Column(db.Text(), nullable=True)
 
     @property
     def password(self):
@@ -59,12 +61,6 @@ class User(UserMixin, db.Model):
             return User.query.get(uid)
         return None
 
-    # Third part acount
-    # TODO
-    # weibo = db.Column(db.String(64), nullable=True)
-    # qq = db.Column(db.String(64), nullable=True)
-    # weixin = db.Column(db.String(64), nullable=True)
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -85,30 +81,28 @@ course_users = db.Table('course_users',
 class Course(db.Model):
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True, index=True)  # 课程标题
-    subtitle = db.Column(db.String(64), default="")  # 课程副标题
-    about = db.Column(db.Text(), nullable=True)  # 课程简介
+    title = db.Column(db.String(64), unique=True, index=True)   # 课程标题
+    subtitle = db.Column(db.String(64), default="")             # 课程副标题
+    about = db.Column(db.Text(), nullable=True)                 # 课程简介
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    lessonNum = db.Column(db.Integer, nullable=False)  # 课时数
-    studentNum = db.Column(db.Integer, default=0)  # 学生数目
-    # voteNum = db.Column(db.Integer, default=0)
+    lessonNum = db.Column(db.Integer, nullable=False)           # 课时数
+    studentNum = db.Column(db.Integer, default=0)               # 学生数目
 
     # smallPicture, middlePicture, largePicture
-    smallPicture = db.Column(db.String(64))  # 课程小图
-    middlePicture = db.Column(db.String(64))  # 课程中图
-    largePicture = db.Column(db.String(64))  # 课程大图
+    smallPicture = db.Column(db.String(64))                     # 课程小图
+    middlePicture = db.Column(db.String(64))                    # 课程中图
+    largePicture = db.Column(db.String(64))                     # 课程大图
 
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
+    # 加入该课程的用户, 多对多的关系
     users = db.relationship('User', secondary=course_users,
                             backref=db.backref('courses', lazy='dynamic'))
-    # 加入该课程的用户, 多对多的关系
-    # rates = db.relationship('Rate', backref='course', lazy='dynamic')
 
 
 class Lesson(db.Model):
-    """ Every course may have more than one lessons.  One lesson belongs to only one course.
+    """ 一个课程包括多个课时, 每个课时只能属于一个课程。 课程和课时是一对多的关系。
     """
     __tablename__ = 'lessons'
     id = db.Column(db.Integer, primary_key=True)  # 课时 ID
@@ -121,34 +115,15 @@ class Lesson(db.Model):
 
 
 class Material(db.Model):
-    """ Every lesson may have more than one materials.  One material belongs to only one course.
+    """ 一个课时包括多种材料, 每个材料只能属于一个课时。 课时和材料是一对多的关系。
     """
     __tablename__ = 'materials'
     id = db.Column(db.Integer, primary_key=True)        # 资料 ID
     name = db.Column(db.String(64), nullable=False)     # 资料名称
     uri = db.Column(db.String(64), default="")          # 资料路径
-    # size = db.Column(db.Integer)                      # 资料大小
     m_type = db.Column(db.String(64), nullable=False)   # 资料类型
 
     lessonId = db.Column(db.Integer, db.ForeignKey('lessons.id'))  # 所属课时ID
-
-
-'''
-class Teachers(db.Model):
-    __tablename__ = 'teachers'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, index=True)    # 教师名称
-'''
-
-# class Rate(db.Model):
-#     """ Every course may have more than one rates.  One rate belongs to only one course.
-#     """
-#     __tablename__ = 'rates'
-#     id = db.Column(db.Integer, primary_key=True)  # 评价 ID
-#     rating = db.Column(db.Integer, default=0)     # 评分
-#     content = db.Column(db.String(64), nullable=False)  # 评论内容
-#     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
-#     courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
 
 
 """ 互动社区功能 """
@@ -162,7 +137,7 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)        # 讨论组 ID
     title = db.Column(db.String(64), nullable=False)    # 讨论组名字
     about = db.Column(db.Text(), nullable=False)        # 讨论组介绍
-    logo = db.Column(db.String(128))                    # 讨论组 Logo
+    logo = db.Column(db.String(128))                    # 讨论组 Logo 的 URL
 
     memberNum = db.Column(db.Integer, default=0)        # 讨论组成员数目
     topicNum = db.Column(db.Integer, default=0)         # 讨论组话题数目
@@ -200,9 +175,6 @@ class Post(db.Model):
     topicID = db.Column(db.Integer, db.ForeignKey('topics.id'))  # 所属话题的ID
     userID = db.Column(db.Integer, db.ForeignKey('users.id'))  # 回复用户的ID
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
-
-
-""" 虚拟实验室模块 """
 
 
 """ 试题中心模块
@@ -252,8 +224,9 @@ class Classify(db.Model):
     name = db.Column(db.String(64), nullable=False)     # 分类名字
 
 
-
-""" 其他: 咨询信息 """
+""" 咨询信息
+@Article: 用来发布站点公告或者一些资讯、新闻信息。
+"""
 
 
 class Article(db.Model):
@@ -264,3 +237,6 @@ class Article(db.Model):
     visitNum = db.Column(db.Integer, default=0)         # 浏览次数
 
     createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
+
+
+""" 虚拟实验室模块 """

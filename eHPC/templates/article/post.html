@@ -1,33 +1,40 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-
     <link href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.1/semantic.min.css">
-    <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.semanticui.min.css">
     <script src="{{ url_for('static', filename='js/bootstrap-markdown.js') }}"></script>
     <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
     <script src="{{ url_for('static', filename='js/to-markdown.js') }}"></script>
-
-
-
 {% endblock %}
 
-
 {% block content %}
-
     <div id="content-container" class="container">
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">首页</a></li>
             <li class="active"><a href="{{ url_for('article.post') }}">发布资讯</a></li>
         </ol>
-        <div class="well">
-            <form action="{{ url_for('article.post') }}" method="POST">
-                <input type="text" class="form-control" name='title' placeholder="在此输入标题"><br/>
-                <textarea name="content" data-provide="markdown" rows="30"></textarea>
-                <input class='btn btn-success' id='submit' type='submit'>
-            </form>
+
+        <div class="panel panel-default">
+
+            <div class="panel-body">
+                <form action="{{ url_for('article.post') }}" method="POST">
+
+                    <div class="form-group">
+                        <label>文章标题</label>
+                        <input type="text" class="form-control" name='title' placeholder="在此输入标题" required><br/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>文章内容</label>
+                        <textarea name="content" data-provide="markdown" rows="30" required></textarea>
+                    </div>
+
+                    <div class="form-submit text-right">
+                        <input class='btn btn-success' id='submit' type='submit'>
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
-
 {% endblock %}

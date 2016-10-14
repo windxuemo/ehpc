@@ -33,7 +33,7 @@ CREATE TABLE `alembic_version` (
 
 LOCK TABLES `alembic_version` WRITE;
 /*!40000 ALTER TABLE `alembic_version` DISABLE KEYS */;
-INSERT INTO `alembic_version` VALUES ('294d687e76cb');
+INSERT INTO `alembic_version` VALUES ('00f8da978ac1');
 /*!40000 ALTER TABLE `alembic_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,7 +51,7 @@ CREATE TABLE `articles` (
   `visitNum` int(11) DEFAULT NULL,
   `createdTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,7 +60,7 @@ CREATE TABLE `articles` (
 
 LOCK TABLES `articles` WRITE;
 /*!40000 ALTER TABLE `articles` DISABLE KEYS */;
-INSERT INTO `articles` VALUES (1,'并行运算比赛','这是一个比赛',43,'2016-09-12 00:00:00'),(2,'新的资讯','这是一饿新的资讯\n\n![](https://segmentfault.com/img/bVD8e5)',6,'2016-10-07 12:58:48'),(3,'测试',' 这是 Markdown 测试\r\n\r\n[测试](http://selfboot.cn)\r\n\r\n\r\n\r\n- 1\r\n- 2\r\n- 3',7,'2016-10-12 12:42:24'),(4,'新的文章','#测试提交\r\n\r\n## 标题1',20,'2016-10-12 12:45:43');
+INSERT INTO `articles` VALUES (1,'并行运算比赛','这是一个比赛',43,'2016-09-12 00:00:00'),(2,'新的资讯','这是一饿新的资讯\n\n![](https://segmentfault.com/img/bVD8e5)',6,'2016-10-07 12:58:48'),(3,'测试',' 这是 Markdown 测试\r\n\r\n[测试](http://selfboot.cn)\r\n\r\n\r\n\r\n- 1\r\n- 2\r\n- 3',7,'2016-10-12 12:42:24'),(4,'新的文章','#测试提交\r\n\r\n## 标题1',20,'2016-10-12 12:45:43'),(5,'新的资讯信息','这是新的',0,'2016-10-14 08:35:46');
 /*!40000 ALTER TABLE `articles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -424,10 +424,12 @@ CREATE TABLE `users` (
   `is_password_reset_link_valid` tinyint(1) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `date_joined` datetime DEFAULT NULL,
-  `is_superuser` tinyint(1) DEFAULT NULL,
   `website` varchar(64) DEFAULT NULL,
-  `signature` text,
   `avatar_url` varchar(64) DEFAULT NULL,
+  `permissions` int(11) NOT NULL,
+  `personal_id` varchar(32) DEFAULT NULL,
+  `personal_profile` text,
+  `telephone` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_users_email` (`email`),
   UNIQUE KEY `ix_users_username` (`username`)
@@ -440,7 +442,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-10-13 19:58:21','2016-09-29 03:14:30',0,NULL,NULL,'/static/upload/1.png?t=1475844478.0'),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',1,'2016-09-29 03:35:29','2016-09-29 03:35:29',0,NULL,NULL,'http://www.gravatar.com/avatar/'),(3,'test2','pbkdf2:sha1:1000$9BWmBsyH$674d7552827b110e456b5ff7a9c2d1570dccb89f','2@qq.com',1,'2016-09-29 03:36:08','2016-09-29 03:36:08',0,NULL,NULL,'http://www.gravatar.com/avatar/');
+INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-10-13 19:58:21','2016-09-29 03:14:30',NULL,'/static/upload/1.png?t=1475844478.0',0,NULL,NULL,NULL),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',1,'2016-09-29 03:35:29','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL),(3,'test2','pbkdf2:sha1:1000$9BWmBsyH$674d7552827b110e456b5ff7a9c2d1570dccb89f','2@qq.com',1,'2016-09-29 03:36:08','2016-09-29 03:36:08',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -453,4 +455,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-13 20:42:39
+-- Dump completed on 2016-10-14 17:06:04

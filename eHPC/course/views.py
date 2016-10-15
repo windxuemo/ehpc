@@ -1,11 +1,12 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from flask import render_template, abort, jsonify
 from . import course
 from ..models import Course, Material
 from flask_babel import gettext
 from flask_login import current_user
+from ..user.authorize import student_login
+from .. import db
 
 
 @course.route('/')
@@ -21,15 +22,26 @@ def view(cid):
 
 
 @course.route('/join/<int:cid>/')
+@student_login
 def join(cid, u=current_user):
-    # TODO
-    return jsonify(join_in='success')
+    course_joined = Course.query.filter_by(id=cid).first_or_404()
+    course_joined.users.append(u)
+    db.session.commit()
+
+    # 更新在本课堂的学员
+    users_list = render_template('course/widget_course_students.html', course=course_joined)
+    return jsonify(join_in='success', users_list=users_list)
 
 
 @course.route('/exit/<int:cid>/')
+@student_login
 def exit_out(cid, u=current_user):
-    # TODO
-    return jsonify(exit_result='success')
+    course_joined = Course.query.filter_by(id=cid).first_or_404()
+    course_joined.users.remove(u)
+    db.session.commit()
+
+    users_list = render_template('course/widget_course_students.html', course=course_joined)
+    return jsonify(exit_result='success', users_list=users_list)
 
 
 @course.route('/res/<int:mid>/')

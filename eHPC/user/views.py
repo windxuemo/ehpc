@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
 # @Last Modified time: 2016-09-19 14:27:41
-from flask import render_template, redirect, request, url_for, abort, current_app, abort
-from flask_login import login_user, logout_user, login_required, current_user
+from flask import render_template, redirect, request, url_for, current_app, abort
+from flask_login import login_user, logout_user, current_user
+from authorize import student_login
 from flask_babel import gettext
 from flask_paginate import Pagination
 import re
@@ -42,10 +43,11 @@ def signin():
 
 
 @user.route('/signout/')
-@login_required
+@student_login
 def signout():
     logout_user()
-    return redirect(request.args.get('next') or url_for('main.index'))
+    print request
+    return redirect(request.args.get('next') or request.referrer or url_for('main.index'))
 
 
 @user.route('/register/', methods=['GET', 'POST'])
@@ -197,7 +199,7 @@ def info(uid):
 
 
 @user.route("/setting/password/", methods=['GET', 'POST'])
-@login_required
+@student_login
 def setting_password():
     if request.method == 'GET':
         return render_template('user/setting_passwd.html', form=None)
@@ -231,7 +233,7 @@ def setting_password():
 
 
 @user.route('/setting/info/', methods=['GET', 'POST'])
-@login_required
+@student_login
 def setting_info():
     if request.method == 'GET':
         return render_template('user/setting_info.html', form=None)
@@ -259,7 +261,7 @@ def setting_info():
 
 
 @user.route("/setting/avatar/", methods=['GET', 'POST'])
-@login_required
+@student_login
 def setting_avatar():
     if request.method == 'GET':
         return render_template('user/setting_avatar.html', form=None)

@@ -15,10 +15,12 @@ def index():
     return render_template('course/index.html', title=gettext('Courses'), courses=all_courses)
 
 
-@course.route('/<int:cid>/', methods=['GET', 'POST'])
+@course.route('/<int:cid>/')
 def view(cid):
     c = Course.query.filter_by(id=cid).first()
-    return render_template('course/detail.html', course=c)
+    return render_template('course/detail.html',
+                           title=c.title,
+                           course=c)
 
 
 @course.route('/join/<int:cid>/')

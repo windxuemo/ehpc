@@ -15,7 +15,6 @@
         </ol>
 
         <div class="panel panel-default">
-
             <div class="panel-body">
                 <form action="{{ url_for('article.post') }}" method="POST">
 
@@ -26,7 +25,7 @@
 
                     <div class="form-group">
                         <label>文章内容</label>
-                        <textarea name="content" data-provide="markdown" rows="30" required></textarea>
+                        <textarea name="content" data-provide="markdown" id="target-editor" rows="30" required></textarea>
                     </div>
 
                     <div class="form-submit text-right">
@@ -34,7 +33,22 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
+{% endblock %}
+
+{% block footer_ext %}
+
+    <script>
+        (function ($) {
+            $.fn.markdown.messages['cn'] = {
+                'Heading': "输入标题",
+                'Insert Hyperlink': "插入链接",
+                'enter image description here': "输入图片描述",
+                'Insert Image Hyperlink': "插入图片链接",
+                'enter image title here': "插入图片标题",
+            };
+        }(jQuery))
+        $("#target-editor").markdown({language: 'cn'})
+    </script>
 {% endblock %}

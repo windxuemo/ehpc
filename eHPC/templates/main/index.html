@@ -107,7 +107,7 @@
                                 {% for g in groups %}
                                     <div class="media media-group col-md-6 col-sm-4">
                                         <div class="media-left">
-                                            <a href="{{ url_for('group.view', gid=g.id) }}" class="pull-left ">
+                                            <a href="{{ url_for('group.group_view', gid=g.id) }}" class="pull-left ">
                                                 <img src="" alt="{{ g.title }}"
                                                      class="avatar-square-md">
                                             </a>
@@ -115,11 +115,11 @@
                                         <div class="media-body">
                                             <div class="title">
                                                 <a class="gray-darker"
-                                                   href="{{ url_for('group.view', gid=g.id) }}">{{ g.title }}</a>
+                                                   href="{{ url_for('group.group_view', gid=g.id) }}">{{ g.title }}</a>
                                             </div>
                                             <div class="metas">
                                                 <span><i class="es-icon es-icon-people"></i>{{ g.memberNum }}</span>
-                                                <span><i class="es-icon es-icon-textsms"></i>{{ g.topicNum }}</span>
+                                                <span><i class="es-icon es-icon-topic"></i>{{ g.topicNum }}</span>
                                             </div>
                                         </div>
                                     </div>

@@ -5,10 +5,9 @@
 
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">{{ _('Index') }}</a></li>
-            <li><a href="{{ url_for('group.index') }}">{{ _('Group Index') }}</a></li>
-            <li><a href="{{ url_for('group.all') }}">{{ _('All Groups') }}</a></li>
+            <li><a href="{{ url_for('group.index') }}">{{ _('Group') }}</a></li>
+            <li><a href="{{ url_for('group.group_all') }}">{{ _('All Groups') }}</a></li>
         </ol>
-
 
         <div class="row">
             <div class="col-md-9 group-main">
@@ -16,11 +15,11 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ _('All Groups') }}</h3>
                     </div>
-                    {% include 'group/widget_groups.html' %}
+                    {% include 'group/widget_group_lists.html' %}
                 </div>
             </div>
             <div class="col-md-3">
-                {% include 'group/widget_sidebar.html' %}
+                {% include 'group/widget_sidebar_mygroup.html' %}
             </div>
         </div>
     </div>

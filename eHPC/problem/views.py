@@ -47,6 +47,11 @@ def choice_view(cid):
                            choice=cho)
 
 
+@problem.route('/test')
+def test():
+    cho = Choice.query.all()
+    return render_template('problem/test.html', choiceProblem=cho)
+
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 def submit(pid):

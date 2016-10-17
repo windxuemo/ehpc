@@ -7,3 +7,8 @@ __pycache__/
 
 # pycharm files
 .idea/
+
+# cpp code
+*.c
+*.cpp
+*.o

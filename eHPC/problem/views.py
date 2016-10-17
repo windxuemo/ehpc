@@ -52,7 +52,7 @@ def choice_view(cid):
                            choice=cho)
 
 
-@problem.route('/test')
+@problem.route('/test/')
 def test():
     cho = Choice.query.all()
     return render_template('problem/test.html', choiceProblem=cho)

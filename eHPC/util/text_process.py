@@ -15,6 +15,11 @@ def markdown(strs):
     return m.html(strs)
 
 
+@filter_blueprint.app_template_filter('split')
+def split(string, c, n):
+    return string.split(c)[n]
+
+
 def add_user_links_in_content(content):
     """ Replace the @user with the link of the user.
     """

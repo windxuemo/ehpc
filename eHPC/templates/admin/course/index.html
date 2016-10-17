@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <script type="text/javascript">
+    function del(id) {
+    $.ajax({
+        type : "post",
+        url : {{ url_for('admin.index') }},
+        data : {op: 'del', cid: id},
+        async : false,
+        success : function(data){
+                location.reload();
+            }
+        });
+    }
+
+    </script>
+
+    <div class="container" id="content-container">
+        <div class="row row-3-9">
+            <div class="col-md-3">
+                <div class="sidenav">
+                    <ul class="list-group">
+                        <li class="list-group-heading">网站管理</li>
+
+                        <li class="list-group-item active">
+                            <a href="{{ url_for('admin.course') }}">
+                                <i class="glyphicon glyphicon-cog"></i>课程管理</a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="{{ url_for('admin.problem') }}"><i
+                                    class="glyphicon glyphicon-cog"></i>题目管理</a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="{{ url_for('admin.group') }}"><i
+                                    class="glyphicon glyphicon-cog"></i>群组管理</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">
+    <span class="pull-right">
+      <a id="create-course" href="{{ url_for('admin.create') }}" class="btn btn-info btn-sm"><span
+              class="glyphicon glyphicon-plus"></span> 创建课程</a>
+
+    </span>
+                        在教课程
+                    </div>
+                    <div class="panel-body">
+
+                        <table class="table" id="course-table" style="word-break:break-all;">
+                            <thead>
+                            <tr>
+                                <th width="30%">名称</th>
+                                <th>课程数</th>
+                                <th>学生数</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for c in courses %}
+                            <tr>
+                                <td>{{ c.title }}</td>
+                                <td>{{ c.lessonNum }}</td>
+                                <td>{{ c.studentNum }}</td>
+                                <td>{{ c.createdTime }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin.edit', cid=c.id) }}">编辑</a>
+                                    <a onclick="del({{ c.id }})">删除</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

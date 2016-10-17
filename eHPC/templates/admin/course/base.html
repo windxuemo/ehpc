@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#course-create-btn').click(function () {
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.process') }}",
+                    data: {
+                        title: $('#course_title').val(),
+                        subtitle: $('#course_subtitle').val(),
+                        about: $('#course_about').val()
+                    },
+                    success: function (data) {
+                        alert("保存成功");
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <div class="container" id="content-container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="list-group-panel">
+                            <div class="list-group-heading">课程信息</div>
+                            <div class="list-group">
+                                <a class="list-group-item active" href="{{ url_for('admin.create') }}">基本信息</a>
+                                <a class="list-group-item " href="{{ url_for('admin.picture') }}">课程图片</a>
+                                <a class="list-group-item " href="{{ url_for('admin.lesson') }}">课时管理</a>
+                            </div>
+                        </div><!-- /list-group-block -->
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-9">
+
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">基本信息</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" id="course-form">
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">标题</label>
+                                <div class="col-md-8 controls">
+                                    <input id="course_title" name="title" required="required" class="form-control" type="text">
+                                    <div class="help-block" style="display:none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">副标题</label>
+                                <div class="col-md-8 controls">
+                                    <textarea id="course_subtitle" name="subtitle" required="required" class="form-control"></textarea>
+                                    <div class="help-block" style="display:none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">关于</label>
+                                <div class="col-md-8 controls">
+                                    <textarea id="course_about" name="about" required="required" class="form-control"></textarea>
+                                    <div class="help-block" style="display:none;"></div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-8">
+                                <button class="btn btn-fat btn-primary" id="course-create-btn">保存</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

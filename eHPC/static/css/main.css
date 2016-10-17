@@ -3107,8 +3107,8 @@ select:-webkit-autofill {
 }
 
 .loader-inner > span.
-
 nth-child
+
 (
 1
 )
@@ -3672,6 +3672,10 @@ fieldset[disabled] a.btn {
     -moz-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
+}
+
+a.link-grey {
+    color: grey !important;
 }
 
 .link-dark:hover {
@@ -11274,7 +11278,7 @@ textarea {
     float: left;
     width: 570px;
     width: 568px \9;
-    height: 198.75px;   /* Hard Code */
+    height: 198.75px; /* Hard Code */
     padding: 15px 25px;
     background-color: #fff;
 }
@@ -11307,7 +11311,7 @@ textarea {
 .course-detail-header.after .course-operation {
     float: right;
     width: 238px;
-    height: 198.75px;   /* Hard Code */
+    height: 198.75px; /* Hard Code */
 }
 
 @media (max-width: 1199px) {
@@ -17830,7 +17834,7 @@ textarea {
     font-size: 14px;
 }
 
-.content-wrap{
+.content-wrap {
     min-height: 100%;
     margin-bottom: -71px;
     margin-top: -60px;
@@ -17839,21 +17843,22 @@ textarea {
     padding-top: 60px;
 }
 
-.join{
+.join {
     text-align: center;
     padding-top: 30px;
 }
 
 .panel-heading .article-text h1,
 .panel-heading .article-text h2,
-.panel-heading .article-text h3{
+.panel-heading .article-text h3 {
     font-size: 18px;
 }
+
 .panel-body .article-text h1,
 .panel-body .article-text h2,
 .panel-body .article-text h3,
 .panel-body .article-text h4,
-.panel-body .article-text h5{
+.panel-body .article-text h5 {
     font-size: 16px;
 }
 
@@ -17861,3 +17866,24 @@ textarea {
     margin: 0 auto;
 }
 
+.list-post-title-in-topic {
+    font-size: 150%;
+    padding: 5px 0px 15px 0px;
+}
+
+.list-topic-item{
+    padding: 20px 0px 20px 0px;
+}
+
+.list-meta span {
+    margin-right: 20px;
+}
+
+.list-meta span i {
+    padding-right: 5px;
+}
+
+.avatar-middle {
+    width: 48px;
+    height: 48px;
+}

@@ -1,8 +1,12 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Author: xuezaigds@gmail.com
 from flask import render_template, jsonify, request, url_for, abort, redirect
+from flask_login import current_user, login_required
 from . import problem
 from ..models import Program, Choice, Classify
 from flask_babel import gettext
-from time import sleep
+from ..problem.code_process import c_compile, c_run
 
 
 @problem.route('/')
@@ -32,6 +36,7 @@ def show_choice():
 
 
 @problem.route('/program/<int:pid>/')
+@login_required
 def program_view(pid):
     pro = Program.query.filter_by(id=pid).first()
     return render_template('problem/program_detail.html',
@@ -47,15 +52,22 @@ def choice_view(cid):
                            choice=cho)
 
 
-
 @problem.route('/<int:pid>/submit/', methods=['POST'])
+@login_required
 def submit(pid):
     source_code = request.form['source_code']
-    # TODO here.  Get the result.
-    result = dict()
-    result['problem_id'] = pid
-    result['compiler'] = "Compiling... "                # Get the compiler result
-    result['run'] = "Running result... "                # Get the run result
 
-    sleep(2)
+    # TODO here.  Get the result.
+    is_compile_success = [False]
+    compile_out = c_compile(source_code, pid, current_user.id, is_compile_success)
+    run_out = "编译失败!\n程序无法运行..."
+    if is_compile_success[0]:
+        run_out = c_run(pid, current_user.id) or "程序无输出结果"
+
+    result = dict()
+    result['status'] = 'success'
+    result['problem_id'] = pid
+    result['compile_out'] = compile_out
+    result['run_out'] = run_out
+
     return jsonify(**result)

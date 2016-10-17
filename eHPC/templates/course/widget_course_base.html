@@ -25,7 +25,8 @@
 
                     <div class="course-operation clearfix">
                         <div class="student-num hidden-xs">
-                            <i class="es-icon es-icon-people"></i>{{ course.studentNum }} 人
+                            <i class="es-icon es-icon-people"></i>
+                            <span id="student-num">{{ course.studentNum }} </span> 人
                         </div>
 
                         {% if current_user | is_student_user %}
@@ -73,24 +74,33 @@
                 $.ajax({
                     url: this.href,
                     success: function (data) {
-                        /* 目前状态是已经加入了课程, 所以需要变为退出课堂 */
-                        if ($('#course-in').hasClass('btn-primary')) {
-                            $("#course-in").text('退出课程');
-                            $("#course-in").removeClass('btn-primary').addClass('btn-danger');
-                            $("#course-in").attr("href", "{{ url_for('course.exit_out', cid=course.id) }}");
-                            $("#all_students").html(data.users_list)
-                        }
+                        if (data.status = 'success') {
+                            /* 目前状态是已经加入了课程, 所以需要变为退出课堂 */
+                            if ($('#course-in').hasClass('btn-primary')) {
+                                $("#course-in").text('退出课程');
+                                $("#course-in").removeClass('btn-primary').addClass('btn-danger');
+                                $("#course-in").attr("href", "{{ url_for('course.exit_out', cid=course.id) }}");
+                                $("#all_students").html(data.users_list);
+                                $("#student-num").empty().html(data.student_num);
+                            }
 
-                        /* 需要加入课程 */
-                        else {
-                            $("#course-in").text('加入课程');
-                            $("#course-in").removeClass('btn-danger').addClass('btn-primary');
-                            $("#course-in").attr("href", "{{ url_for('course.join', cid=course.id) }}");
-                            $("#all_students").html(data.users_list)
+                            /* 需要加入课程 */
+                            else {
+                                $("#course-in").text('加入课程');
+                                $("#course-in").removeClass('btn-danger').addClass('btn-primary');
+                                $("#course-in").attr("href", "{{ url_for('course.join', cid=course.id) }}");
+                                $("#all_students").html(data.users_list);
+                                $("#student-num").empty().html(data.student_num);
+                            }
                         }
                     },
                     error: function () {
-                        alert('加入课程失败, 请重试');
+                        if ($('#course-in').hasClass('btn-primary')) {
+                            alert('加入课程失败, 请重试');
+                        }
+                        else {
+                            alert('退出课程失败, 请重试');
+                        }
                     }
                 });
                 return false;

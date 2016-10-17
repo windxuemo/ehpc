@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li><a href="{{ url_for('group.index') }}">{{ _('Group') }}</a></li>
+            <li class="active">
+                <a href="{{ url_for('group.group_view', gid=group.id) }}">{{ group.title | truncate(20) }}</a></li>
+        </ol>
+
+        <div class="group-header"
+             style="background:url({{ url_for('static', filename='images/background_group.jpg') }});background-repeat:no-repeat;background-size: 100% 100%;">
+            <div class="media">
+                <div class="media-left">
+                    <a href="{{ url_for('group.group_view', gid=group.id) }}">
+                        <img src="{{ group.logo }}" alt="{{ group.title }}" class="avatar-square-md">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h2 class="media-heading">
+                        {{ group.title }}
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.id | is_user_in_group(group.id) %}
+                                <a id="join-or-exit-group" class="label label-danger mlm"
+                                   href="{{ url_for('group.exit_group', gid=group.id) }}">退出小组</a>
+                            {% else %}
+                                <a id="join-or-exit-group" class="label label-success mlm"
+                                   href="{{ url_for('group.join_group', gid=group.id) }}">加入小组</a>
+                            {% endif %}
+                        {% endif %}
+                    </h2>
+
+                    <div class="media-metas">
+                        <span id="member-num">{{ group.memberNum }}</span>个成员
+                        <span class="mlm">{{ group.topicNum }}</span>个话题
+                        <span class="mlm">创建时间：{{ group.createdTime | natural_time }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="image-overlay image-overlay-o"></div>
+        </div>
+
+        <div class="row">
+            <!-- Group's topics -->
+            <div class="col-md-9 group-main">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">小组介绍</h3></div>
+                    <div class="panel-body">
+                        <div class="well editor-text">
+                            <p>{{ group.about }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ _("Hot Topics") }}</h3>
+                        <a href="{{ url_for('group.topic_all', gid=group.id) }}" class="more">
+                            <i class="es-icon es-icon-morehoriz"></i></a>
+                    </div>
+
+                    {% with latest_topics = hot_topics %}
+                        {% include 'group/widget_topic_list.html' %}
+                    {% endwith %}
+
+                </div>
+            </div>
+            <!-- End of topics -->
+
+            <div class="col-md-3 group-side">
+                {% if current_user.is_authenticated %}
+                    <div class="mbm" id="new-topic">
+                        {% if current_user.id | is_user_in_group(group.id) %}
+                            <a href="{{ url_for('group.topic_new', gid=group.id) }}"
+                               class="btn btn-success btn-xlg btn-block" role="button">
+                                <i class="es-icon es-icon-comment mrs text-xlg"></i>新建话题</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <div id="my-group">
+                    {% include 'group/widget_sidebar_mygroup.html' %}
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">新加组员</h3></div>
+                    <div class="panel-body">
+                        <ul class="user-avatar-list clearfix" id="new-members">
+                        {% include 'group/widget_group_member.html' %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        $(document).ready(function () {
+            $("#join-or-exit-group").click(function () {
+                $.ajax({
+                    url: this.href,
+                    success: function (data) {
+                        if (data.status == 'success') {
+                            /* 目前状态是已经加入了群组, 所以需要变为退出课堂 */
+                            if ($('#join-or-exit-group').hasClass('label-success')) {
+                                $("#join-or-exit-group").text('退出小组');
+                                $("#join-or-exit-group").removeClass('label-success').addClass('label-danger');
+                                $("#join-or-exit-group").attr("href", "{{ url_for('group.exit_group', gid=group.id) }}");
+                                var new_topic = "<a href=\"{{ url_for('group.topic_new', gid=group.id) }}\" class='btn btn-success btn-xlg btn-block' role='button'> <i class='es-icon es-icon-comment mrs text-xlg'></i>新建话题</a>";
+                                $("#new-topic").html(new_topic);
+
+                                <!-- 更新一些相关的信息 -->
+                                $("#member-num").html(data.memberNum);
+                                $("#new-members").empty().html(data.members_html);
+                                $("#my-group").empty().html(data.groups_html);
+                            }
+
+                            /* 需要加入课程 */
+                            else {
+                                $("#join-or-exit-group").text('加入小组');
+                                $("#join-or-exit-group").removeClass('label-danger').addClass('label-success');
+                                $("#join-or-exit-group").attr("href", "{{ url_for('group.join_group', gid=group.id) }}");
+                                $("#new-topic").html("");
+
+                                <!-- 更新一些相关的信息 -->
+                                $("#member-num").html(data.memberNum);
+                                $("#new-members").empty().html(data.members_html);
+                                $("#my-group").empty().html(data.groups_html);
+                            }
+                        }
+                    },
+                    error: function () {
+                        if ($('#join-or-exit-group').hasClass('label-success')) {
+                            alert('加入群组失败, 请重试');
+                        }
+                        else {
+                            alert('退出群组失败, 请重试');
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+{% endblock %}
+
+{# group #}
+{# hot_topics #}

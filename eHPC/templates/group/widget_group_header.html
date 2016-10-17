@@ -2,7 +2,7 @@
      style="background:url({{ url_for('static', filename='image/background_group.jpg') }}); background-repeat: no-repeat;background-size: 100% 100%;">
     <div class="media">
         <div class="media-left">
-            <a href="{{ url_for('group.view', gid=cur_group.id) }}">
+            <a href="{{ url_for('group.group_view', gid=cur_group.id) }}">
                 <img src="{{ cur_group.img_src }}" alt="{{ cur_group.title }}" class="avatar-square-md">
             </a>
         </div>

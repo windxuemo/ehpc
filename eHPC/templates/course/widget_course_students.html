@@ -1,0 +1,23 @@
+<div class="col-lg-3 col-md-4  course-sidebar">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="es-icon es-icon-personadd"></i>
+                最新学员
+            </h3>
+        </div>
+        <div class="panel-body">
+            <ul class="user-avatar-list clearfix">
+                {% for u in course.users %}
+                    <li>
+                        <a class="js-user-card" href="{{ url_for('user.view', uid=u.id) }}">
+                            <img class="avatar-sm" src="{{ u.avatar_url }}">
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{# course #}

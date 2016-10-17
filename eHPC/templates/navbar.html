@@ -16,9 +16,9 @@
             <li>
                 <a href="{{ url_for('group.index') }}">{{ _('Community') }}</a>
             </li>
-            {#            <li>#}
-            {#                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Lab') }}</a>#}
-            {#            </li>#}
+            <li>
+                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Lab') }}</a>
+            </li>
         </ul>
 
         <div class="navbar-user left ">
@@ -30,9 +30,8 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>
-                            <!--       <li><a href=""><i class="es-icon es-icon-person"></i>{{ _('Personal') }}</a>
+                            <li><a href="{{ url_for('user.view', uid=current_user.id) }}"><i class="es-icon es-icon-person"></i>{{ _('Personal Page') }}</a>
                             </li>
-                     -->
                             <li><a href=""><i class="es-icon es-icon-homework"></i>{{ _("Job's List") }}</a>
                             </li>
                             <li><a href="{{ url_for('user.setting_info') }}"><i
@@ -42,8 +41,8 @@
                         </ul>
                     </li>
                 {% else %}
-                    <li class="hidden-xs"><a href="{{ url_for('user.signin') }}">{{ _('Sign In') }}</a></li>
-                    <li class="hidden-xs"><a href="{{ url_for('user.reg') }}">{{ _('Registration') }}</a></li>
+                    <li class="hidden-xs"><a href="{{ url_for('user.signin', next=request.path) }}">{{ _('Sign In') }}</a></li>
+                    <li class="hidden-xs"><a href="{{ url_for('user.reg', next=request.path) }}">{{ _('Registration') }}</a></li>
                 {% endif %}
             </ul>
             <form class="navbar-form navbar-right hidden-xs hidden-sm" action="/search" method="get">

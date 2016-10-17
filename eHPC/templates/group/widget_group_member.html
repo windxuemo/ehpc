@@ -1,0 +1,15 @@
+{% if group.members %}
+    {% for u in group.members[:30] %}
+        <li id="member-{{ u.id }}">
+            <a class="js-user-card" href="{{ url_for('user.view', uid=u.id) }}">
+                <img class="avatar-sm" src="{{ u.avatar_url }}">
+            </a>
+        </li>
+    {% endfor %}
+{% else %}
+    <br>
+    <p class="text-center">该群组还没有任何成员!</p>
+    <br>
+{% endif %}
+
+{# group #}

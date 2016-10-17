@@ -1,0 +1,52 @@
+{% if current_user.is_authenticated %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">我的小组</h3>
+            <a href="{{ url_for('user.view', uid=current_user.id) }}" class="more">
+                <i class="es-icon es-icon-morehoriz"></i></a>
+        </div>
+
+        <div class="panel-body">
+            {% if current_user.groups.all() %}
+                <div class="media-group-list">
+                    {% for g in current_user.groups[:10] %}
+                        <div class="media media-group" id="group-{{ g.id }}">
+                            <div class="media-left">
+                                <a href="{{ url_for('group.group_view', gid=g.id) }}" title="{{ g.title }}">
+                                    <img src="{{ g.logo }}" alt="{{ g.title }}" class="avatar-square-md">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <div class="title">
+                                    <a class="gray-darker" href="{{ url_for('group.group_view', gid=g.id) }}"
+                                       title="{{ g.title }}">{{ g.title }}</a>
+                                </div>
+                                <div class="metas">
+                                    <span><i class="es-icon es-icon-people"></i>{{ g.memberNum }}</span>
+                                    <span><i class="es-icon es-icon-topic"></i>{{ g.topicNum }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <br>
+                <p class="text-center">您目前没有加入任何小组</p>
+                <br>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">我的小组</h3>
+        </div>
+
+        <div class="panel-body">
+            <br>
+            <p class="text-center">你还没有登录，请先<a href="{{ url_for('user.signin', next=request.url) }}"> 登录</a>
+                或<a href="{{ url_for('user.reg', next=request.url) }}"> 注册！</a></p>
+            <br>
+        </div>
+    </div>
+{% endif %}

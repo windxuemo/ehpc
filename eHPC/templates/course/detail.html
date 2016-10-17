@@ -5,8 +5,8 @@
         <section class="es-section">
             <div class="nav-btn-tab">
                 <ul class="nav nav-tabs" role="tablist" id="course-content">
-                    <li role="presentation" class="active"><a
-                            href="{{ url_for('course.detail_course', cid=course.id) }}">课程概览</a></li>
+                    <li role="presentation" class="active">
+                        <a href="{{ url_for('course.detail_course', cid=course.id) }}">课程概览</a></li>
                     <li role="presentation"><a href="{{ url_for('course.detail_lessons', cid=course.id) }}">课时列表</a>
                     </li>
                     </li>

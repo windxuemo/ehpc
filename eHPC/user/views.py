@@ -106,8 +106,10 @@ def reg():
 
 @user.route('/<int:uid>/')
 def view(uid):
-    # TODO
-    abort(404)
+    cur_user = User.query.filter_by(id=uid).first_or_404()
+    return render_template('user/detail.html',
+                           title=gettext('Personal Page'),
+                           user=cur_user)
 
 
 @user.route('/password/reset/', methods=['GET', 'POST'])

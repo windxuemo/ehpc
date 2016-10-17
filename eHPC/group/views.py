@@ -76,6 +76,8 @@ def topic_new(gid):
 @group.route('/topic/<int:tid>/')
 def topic_view(tid):
     cur_topic = Topic.query.filter_by(id=tid).first_or_404()
+    cur_topic.visitNum += 1
+    db.session.commit()
     return render_template('group/topic_detail.html',
                            title=cur_topic.title,
                            topic=cur_topic)
@@ -119,9 +121,12 @@ def create_post(tid):
         cur_topic = Topic.query.filter_by(id=tid).first_or_404()
         post_content = request.form['content']
         post_content = add_user_links_in_content(post_content)
+
         new_post = Post(current_user.id, content=post_content)
         cur_topic.posts.append(new_post)
-        cur_topic.postNum += 1;
+        cur_topic.postNum += 1
+
+        current_user.postNum += 1
         db.session.add(new_post)
         db.session.commit()
 

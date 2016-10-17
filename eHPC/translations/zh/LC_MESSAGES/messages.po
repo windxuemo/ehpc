@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-16 23:06+0800\n"
+"POT-Creation-Date: 2016-10-17 10:11+0800\n"
 "PO-Revision-Date: 2016-10-08 15:35+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -83,7 +83,7 @@ msgstr "互动社区"
 msgid "Virutal Lab"
 msgstr "虚拟实验室"
 
-#: templates/navbar.html:33
+#: templates/navbar.html:33 user/views.py:111
 msgid "Personal Page"
 msgstr "个人主页"
 
@@ -141,7 +141,7 @@ msgstr "热点话题"
 msgid "Hot Groups"
 msgstr "热点群组"
 
-#: templates/group/index.html:23
+#: templates/group/index.html:22
 msgid "Latest Topics"
 msgstr "最新话题"
 
@@ -223,6 +223,14 @@ msgstr "难度"
 #: templates/problem/show_program.html:28
 msgid "AcceptNum"
 msgstr "通过数目"
+
+#: templates/user/detail.html:40
+msgid "Joined Courses"
+msgstr "在学课程"
+
+#: templates/user/detail.html:54
+msgid "Joined Groups"
+msgstr "加入小组"
 
 #: templates/user/panel.html:9
 msgid "The "
@@ -419,11 +427,11 @@ msgstr "用户名只能包含字符、数字和下划线"
 msgid "Username already exists."
 msgstr "已经存在该用户"
 
-#: user/views.py:77 user/views.py:247
+#: user/views.py:77 user/views.py:249
 msgid "Email address can not be empty."
 msgstr "邮箱地址不能为空"
 
-#: user/views.py:79 user/views.py:125 user/views.py:249
+#: user/views.py:79 user/views.py:127 user/views.py:251
 msgid "Email address is invalid."
 msgstr "邮箱地址错误"
 
@@ -431,43 +439,43 @@ msgstr "邮箱地址错误"
 msgid "Email already exists."
 msgstr "邮箱已经被注册"
 
-#: user/views.py:85 user/views.py:158 user/views.py:219
+#: user/views.py:85 user/views.py:160 user/views.py:221
 msgid "Passwords don't match."
 msgstr "密码不匹配"
 
-#: user/views.py:87 user/views.py:160 user/views.py:221
+#: user/views.py:87 user/views.py:162 user/views.py:223
 msgid "Passwords can not be empty."
 msgstr "密码不能为空"
 
-#: user/views.py:123
+#: user/views.py:125
 msgid "The email can not be empty"
 msgstr "邮箱地址不能为空"
 
-#: user/views.py:127
+#: user/views.py:129
 msgid "The email has not be registered"
 msgstr "邮箱还没有注册"
 
-#: user/views.py:195 user/views.py:196
+#: user/views.py:197 user/views.py:198
 msgid "'s Topics"
 msgstr "的话题"
 
-#: user/views.py:230
+#: user/views.py:232
 msgid "Update password done!"
 msgstr "更新密码成功"
 
-#: user/views.py:259
+#: user/views.py:261
 msgid "Update info done!"
 msgstr "成功更新个人信息"
 
-#: user/views.py:272
+#: user/views.py:274
 msgid "No selected file"
 msgstr "没有选中文件"
 
-#: user/views.py:288
+#: user/views.py:290
 msgid "Update avatar done!"
 msgstr "已更新头像"
 
-#: user/views.py:291
+#: user/views.py:293
 msgid "Invalid file"
 msgstr "文件不符合要求"
 
@@ -534,3 +542,4 @@ msgstr "前"
 #: util/time_process.py:37
 msgid "Just now"
 msgstr "刚刚"
+

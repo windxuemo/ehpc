@@ -5,6 +5,7 @@ from . import course
 from ..models import Course, Material
 from flask_babel import gettext
 from flask_login import current_user
+from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from .. import db
 
@@ -25,25 +26,33 @@ def view(cid):
 
 @course.route('/join/<int:cid>/')
 @student_login
+@student_not_in_course
 def join(cid, u=current_user):
     course_joined = Course.query.filter_by(id=cid).first_or_404()
     course_joined.users.append(u)
+    course_joined.studentNum += 1
     db.session.commit()
 
     # 更新在本课堂的学员
     users_list = render_template('course/widget_course_students.html', course=course_joined)
-    return jsonify(join_in='success', users_list=users_list)
+    student_num = course_joined.studentNum
+    return jsonify(status='success', users_list=users_list,
+                   student_num=student_num)
 
 
 @course.route('/exit/<int:cid>/')
 @student_login
+@student_in_course
 def exit_out(cid, u=current_user):
     course_joined = Course.query.filter_by(id=cid).first_or_404()
     course_joined.users.remove(u)
+    course_joined.studentNum -= 1
     db.session.commit()
 
     users_list = render_template('course/widget_course_students.html', course=course_joined)
-    return jsonify(exit_result='success', users_list=users_list)
+    student_num = course_joined.studentNum
+    return jsonify(status='success', users_list=users_list,
+                   student_num=student_num)
 
 
 @course.route('/res/<int:mid>/')

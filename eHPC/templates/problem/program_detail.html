@@ -54,15 +54,18 @@
                 <div class="es-section" id="result-show" style="display: none">
                     <!-- Nav tabs -->
                     <ul id="program-run-tab" class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#compiler" role="tab" data-toggle="tab">编译结果</a>
+                        <li role="presentation" class="active">
+                            <a href="#compiler" role="tab" data-toggle="tab">编译结果</a>
                         </li>
-                        <li role="presentation"><a href="#run" role="tab" data-toggle="tab">运行结果</a></li>
+                        <li role="presentation">
+                            <a href="#run" role="tab" data-toggle="tab">运行结果</a>
+                        </li>
                     </ul>
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div id="compiler" role="tabpanel" class="tab-pane active"></div>
-                        <div id="run" role="tabpanel" class="tab-pane"></div>
+                        <div id="compiler" role="tabpanel" class="tab-pane active" style="white-space: pre"></div>
+                        <div id="run" role="tabpanel" class="tab-pane" style="white-space: pre"></div>
                     </div>
                 </div>
             </div>
@@ -93,14 +96,12 @@
                 url: "{{ url_for('problem.submit', pid=problem.id) }}",
                 data: data,
                 success: function (data) {
-                    var compiler_res = "<p>" + data.compiler + "</p>";
-                    var run_res = "<p>" + data.run + "</p>";
-                    $("#compiler").empty().append(compiler_res);
-                    $("#run").html(run_res);
+                    $("#compiler").empty().append(data.compile_out);
+                    $("#run").empty().html(data.run_out);
                 },
                 error: function (data) {
-                    $("#compiler").empty().append("<h1> Can't submit somehow....</h1>");
-                    $("#run").html("<h1> Can't submit somehow....</h1>");
+                    $("#compiler").empty().append("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
+                    $("#run").html("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
                 }
             });
         }

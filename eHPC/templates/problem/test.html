@@ -285,6 +285,7 @@
         }
         function clockContinue() {//继续计时
             clock = setInterval("updateClock(second)", 100);
+            $("#confirm").attr("class","btn");
         }
 
         var number=1,corNum=0;
@@ -347,7 +348,6 @@
             else
             {
                 var count =0;
-                corNum[number.toString()]=false;
                 for(var i=0;i<corNum.length;i++){
                     if(corNum[(i+1).toString()]==true) count++;
                 }
@@ -363,9 +363,8 @@
 
             $("#myModal").modal('show');
             var count =0;
-            corNum[number.toString()]=false;
             for(var i=0;i<corNum.length;i++){
-                if(corNum[(i+1).toString()]==true) count++;
+                if(corNum[i.toString()]==true) count++;
             }
             $("#ansResult").text("共{{ choiceProblem | count }}题 " + "答对"+count.toString()+"题" + " 用时 " + two_char(h) + ":" + two_char(m) + ":" + two_char(s));
         }

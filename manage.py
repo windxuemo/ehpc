@@ -15,11 +15,5 @@ babel = Babel(app)
 
 manager.add_command('db', MigrateCommand)
 
-
-@app.template_filter('split')
-def split(string, c, n):
-    return string.split(c)[n]
-
-
 if __name__ == '__main__':
     manager.run()

@@ -9,12 +9,15 @@
                     type: "post",
                     url: "{{ url_for('admin.process') }}",
                     data: {
+                        op: "create",
                         title: $('#course_title').val(),
                         subtitle: $('#course_subtitle').val(),
                         about: $('#course_about').val()
                     },
                     success: function (data) {
+                        alert(data);
                         alert("保存成功");
+                        location.href = "{{ url_for('admin.edit') }}" + "?cid=" + data.toString();
                     }
                 });
             });

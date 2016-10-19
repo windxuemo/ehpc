@@ -1,1201 +1,429 @@
 {% extends 'base.html' %}
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/practice.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+    <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock %}
 
 {% block content %}
+    <div id="content-container" class="container">
 
-    <div class="container">
-        <div class="js-special-project special-project">
-            <div class="special-project-sheet js-special-project-sheet ">
-                <div class="btn-group btn-block clearfix hidden-xs ">
-                    <a class="btn js-show-question-result"> <i class="exam-icon icon-chakandaan"></i>
-                        查看答案
-                    </a>
-                </div>
-
-                <div class="btn-group btn-block clearfix js-page-control">
-                    <a class="btn js-prev-btn disabled" href="#carousel-example-generic" role="button"
-                       data-slide="prev">
-                        <i class="exam-icon icon-shangyiti1 mrm font-md"></i>
-                        上一题
-                    </a>
-                    <a class="btn js-next-btn" href="#carousel-example-generic" role="button" data-slide="next">
-                        下一题
-                        <i class="exam-icon icon-xiayiti1 mlm font-md"></i>
-                    </a>
-                </div>
-
-                <div class="panel panel-min hidden-xs">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            答题卡
-                            <span class="color-primary mls js-done-number">0</span>
-                            <span class="color-gray">
-        /
-        <span class="font-sm js-total-number">
-            10
-        </span>
-      </span>
-                        </div>
+        <div class="hidden-xs container">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="progress">
+                        <div class="progress-bar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                     </div>
+                    <div>
+                        已完成 <span class="has-done">0</span><span class="color-gray">/{{ choiceProblem | count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div> <!--进度条-->
 
-                    <div class="panel-body js-sheet-body">
-                        <div class="special-project-sheet-content">
-                            <div class="mbs gray-darker">题号</div>
-                            <div class="special-project-sheet-top clearfix">
+        <div class="container">
+            <div class="special-project">
+
+                <div class="special-project-sheet">
+                    <div class="panel hidden-xs">
+                        <div class="panel-body">
+                            <div class="clock-box">
+                                <div style="width:155px;left: 0;text-align: center">
+                                    <span style="font-size: 17px">用时:</span>
+                                    <span id="clock" class="time-clock">00:00:00</span>
+                                    <!--<input type="hidden" name="usedTime" value="97">-->
+                                </div>
+                                <div class="pause-clock link-dark">
+                                    <a class="btn" onclick="clockPause()">暂停</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--计时器-->
+
+                    <div class="btn-group btn-block clearfix hidden-xs panel">
+                        <div style="padding: 10px">
+                            <div style="margin-left:auto;margin-right:auto;width: 82px">
+                                <a class="btn" onclick="showAnswer()" style="text-align: center">
+                                    查看答案
+                                </a>
+                            </div>
+                        </div>
+                    </div><!--查看答案-->
+
+                    <div class="btn-group btn-block clearfix panel hidden-xs">
+                        <div style="text-align:center;padding: 10px">
+                            <a class="btn disabled" id="lastProblem" onclick="lastOne()">上一题</a>
+                            <a class="btn" id="nextProblem" onclick="nextOne()">下一题</a>
+                        </div>
+                    </div><!--题目切换-->
+                    <a class="btn btn-primary btn-block mtm" onclick="submit()">提交</a>
+                    <!--<div class="panel panel-min hidden-xs">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                答题卡
+                                <span class="color-primary mls js-done-number">0</span>
+                                <span class="color-gray">/<span class="font-sm js-total-number">{{ choiceProblem | count }}</span></span>
+                            </div>
+                        </div>
+
+                        <div class="panel-body js-sheet-body">
+                            <div class="special-project-sheet-content">
+                                <div class="mbs gray-darker">题号</div>
+                                <div class="special-project-sheet-top clearfix">
 
 <span class="circle active circle-sheet js-circle-sheet circle-square circle-md
-" id-number="173" seq-number="1" data-role="objective-question">1</span>
-                                <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
-" id-number="258" seq-number="2" data-role="objective-question">2</span>
-                                <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
-" id-number="178" seq-number="3" data-role="objective-question">3</span>
+" id-number="110" seq-number="1" data-role="objective-question">1</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="109" seq-number="2" data-role="objective-question">2</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="183" seq-number="3" data-role="objective-question">3</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="255" seq-number="4" data-role="objective-question">4</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="181" seq-number="5" data-role="objective-question">5</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="325" seq-number="6" data-role="objective-question">6</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="37" seq-number="7" data-role="objective-question">7</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="111" seq-number="8" data-role="objective-question">8</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="253" seq-number="9" data-role="objective-question">9</span>
+                                    <span class="circle  circle-sheet js-circle-sheet circle-square circle-md
+" id-number="326" seq-number="10" data-role="objective-question">10</span>                                </div>
+                            </div>
+
+                            <div class="special-project-sheet-bottom clearfix">
+                                正确
+                                <span class="circle circle-square circle-xs circle-success"></span>
+                                错误
+                                <span class="circle circle-square circle-xs circle-danger"></span>
+                                未做
+                                <span class="circle circle-square circle-xs"></span>
+                            </div>
+
+                            <a class="btn btn-primary btn-block mtl" data-role="submitconfirm">提交</a>
+
                         </div>
 
-                        <div class="special-project-sheet-bottom clearfix">
-                            正确
-                            <span class="circle circle-square circle-xs circle-success"></span>
-                            错误
-                            <span class="circle circle-square circle-xs circle-danger"></span>
-                            未做
-                            <span class="circle circle-square circle-xs"></span>
+                    </div><!--答题卡-->
+
+                </div><!--右侧栏-->
+
+                <div class="special-project-body">
+                    <div class="panel">
+                        <div class="panel-body">
+
+                            {% for choice in choiceProblem %}
+                                {% if loop.index == 1 %}
+                                    <div id="problem{{loop.index}}">
+                                        <div class="panel-heading media">
+                                            <img class="choice-result-icon" id="choice_correct{{loop.index}}" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                            <img class="choice-result-icon" id="choice_wrong{{loop.index}}" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
+                                            <div class="pull-left">{{loop.index}}. </div>
+                                            <div>
+                                                <span class="color-primary">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        (单选题)
+                                                    {% else %}
+                                                        (多选题)
+                                                    {% endif %}
+                                                </span>
+                                                <span>{{ choice['title'] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="media-body panel-body">
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="1">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="1">
+                                                    {% endif %}
+                                                    A. {{ choice['detail'] | split(';',0) }}
+                                                </div>
+                                            </li>
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="2">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="2">
+                                                    {% endif %}
+                                                    B. {{ choice['detail'] | split(';',1) }}
+                                                </div>
+                                            </li>
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="3">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="3">
+                                                    {% endif %}
+                                                    C. {{ choice['detail'] | split(';',2) }}
+                                                </div>
+                                            </li>
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="4">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="4">
+                                                    {% endif %}
+                                                    D. {{ choice['detail'] | split(';',3) }}
+                                                </div>
+                                            </li>
+                                        </div>
+                                        <div style="text-align: right">
+                                            <a class="btn btn-primary" style="width: 100px" onclick="checkIfCorrect()">
+                                                确认
+                                            </a>
+                                        </div>
+                                        <div id="answer{{loop.index}}" style="margin-top: 20px;display: none" data-value="{{ choice['answer'] }}">参考答案： {{ choice['answer'] }}</div>
+                                    </div>
+                                {% else %}
+                                    <div id="problem{{loop.index}}" style="display: none">
+                                        <div class="panel-heading media">
+                                            <img class="choice-result-icon" id="choice_correct{{loop.index}}" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                            <img class="choice-result-icon" id="choice_wrong{{loop.index}}" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
+                                            <div class="pull-left">{{loop.index}}. </div>
+                                            <div class="media-body">
+                                                <span class="color-primary">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        (单选题)
+                                                    {% else %}
+                                                        (多选题)
+                                                    {% endif %}
+                                                </span>
+                                                <span>{{ choice['title'] }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="media-body panel-body">
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="1">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="1">
+                                                    {% endif %}
+                                                    A. {{ choice['detail'] | split(';',0) }}
+                                                </div>
+                                            </li>
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="2">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="2">
+                                                    {% endif %}
+                                                    B. {{ choice['detail'] | split(';',1) }}
+                                                </div>
+                                            </li>
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="3">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="3">
+                                                    {% endif %}
+                                                    C. {{ choice['detail'] | split(';',2) }}
+                                                </div>
+                                            </li>
+                                            <li class="media">
+                                                <div class="pull-left">
+                                                    {% if choice['c_type'] == 0 %}
+                                                        <input type="radio" name="choice{{ loop.index }}" value="4">
+                                                    {% else %}
+                                                        <input type="checkbox" name="choice{{ loop.index }}" value="4">
+                                                    {% endif %}
+                                                    D. {{ choice['detail'] | split(';',3) }}
+                                                </div>
+                                            </li>
+                                        </div>
+                                        <div style="text-align: right">
+                                            <a class="btn btn-primary" style="width: 100px" onclick="checkIfCorrect()">
+                                                确认
+                                            </a>
+                                        </div>
+                                        <div id="answer{{loop.index}}" style="margin-top: 20px;display: none" data-value="{{ choice['answer'] }}">参考答案： {{ choice['answer'] }}</div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
-
-                        <a class="btn btn-primary btn-block mtl" data-role="submitconfirm">提交</a>
-
                     </div>
-                </div>
+                </div><!--题目区-->
 
             </div>
-
-            <div class="special-project-body">
-                <form id="testpaper-submit-from" action="/library/3/testpaper/submit" method="POST"
-                      novalidate="novalidate" data-widget-cid="widget-3">
-                    <input type="hidden" name="type" value="specify">
-                    <input type="hidden" name="knowledgePointId" value="4">
-                    <input type="hidden" name="seq" value="173,258,178,263,265,33,43,272,250,24">
-                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false"
-                         data-wrap="false">
-                        <div class="carousel-inner" role="listbox">
-                            <div class="item question-list js-question-list   active  " seq-number="1" id-number="173">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">1、</div>
-                                        <div class="media-body"><span class="color-primary">（多选题）</span>
-                                            <span class="long-title">【中】编制“银行存款余额调整表”时，应调整企业银行存款日记账余额的业务是（　ABCD　）。</span>
-                                            <span class="sort-title">【中】编制“银行存款余额调整表”时，应调整企业银行存款日记账余额的业务是（　ABCD　）。</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="173"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="0"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">企业已收，银行未收</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="173"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="1"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="media-body">企业已付，银行未付</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="173"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="2"></span><span
-                                                        class="js-check-answer">C</span>、
-                                                </div>
-                                                <div class="media-body">银行已收，企业未收</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="173"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="3"></span><span
-                                                        class="js-check-answer">D</span>、
-                                                </div>
-                                                <div class="media-body">银行已付，企业未付</div>
-                                            </li>
-
-
-                                        </ul>
-
-                                        <div class="btn-submit-question">
-                                            <a class="btn btn-transparent  btn-block js-submit-question">确认</a>
-                                        </div>
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/173/favorite"
-                                                                               data-ufurl="/library/3/question/173/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/173/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/173/favorite"
-                                           data-ufurl="/library/3/question/173/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">ABCD</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">
-                                                存在未达账项，必须编制“银行存款余额调整表”．未达账项包括以上四种情况。故选ABCD。
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="2" id-number="258">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">2、</div>
-                                        <div class="media-body"><span class="color-primary">（判断题）</span>
-                                            <span class="long-title">【中】利润表和利润分配表均为年度报表。（　错误　）</span>
-                                            <span class="sort-title">【中】利润表和利润分配表均为年度报表。（　错误　）</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-radio-check ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check"><input type="radio" name="258"
-                                                                                             class="hidden"
-                                                                                             data-type="determine"
-                                                                                             value="1"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">正确</div>
-                                            </li>
-                                            <li class="js-radio-check">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="radio" name="258"
-                                                                                              class="hidden"
-                                                                                              data-type="determine"
-                                                                                              value="0"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="meida-body">错误</div>
-                                            </li>
-
-                                        </ul>
-
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/258/favorite"
-                                                                               data-ufurl="/library/3/question/258/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/258/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/258/favorite"
-                                           data-ufurl="/library/3/question/258/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">B</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">无解析
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="3" id-number="178">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">3、</div>
-                                        <div class="media-body"><span class="color-primary">（多选题）</span>
-                                            <span class="long-title">【中】以下有关明细分类科目的表述中，正确的有（　BD　）。</span>
-                                            <span class="sort-title">【中】以下有关明细分类科目的表述中，正确的有（　BD　）。</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-checkbox-check media ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="178"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="0"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目也称一级会计科目</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="178"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="1"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目是对总分类科目作进一步分类的科目</div>
-                                            </li>
-                                            <li class="js-checkbox-check media ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="178"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="2"></span><span
-                                                        class="js-check-answer">C</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目是对会计要素具体内容进行总括分类的科目</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="178"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="3"></span><span
-                                                        class="js-check-answer">D</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目是能提供更加详细更加具体会计信息的科目</div>
-                                            </li>
-
-
-                                        </ul>
-
-                                        <div class="btn-submit-question">
-                                            <a class="btn btn-transparent  btn-block js-submit-question">确认</a>
-                                        </div>
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/178/favorite"
-                                                                               data-ufurl="/library/3/question/178/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/178/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/178/favorite"
-                                           data-ufurl="/library/3/question/178/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">BD</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">
-                                                总分类科目是一级会计科目；总分类科目是对会计要素具体内容进行总括分类的科目。故选BD。
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="4" id-number="263">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">4、</div>
-                                        <div class="media-body"><span class="color-primary">（判断题）</span>
-                                            <span class="long-title">【中】财产清查是为了查明账实是否相符。（　正确　）</span>
-                                            <span class="sort-title">【中】财产清查是为了查明账实是否相符。（　正确　）</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-radio-check  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check"><input type="radio" name="263"
-                                                                                             class="hidden"
-                                                                                             data-type="determine"
-                                                                                             value="1"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">正确</div>
-                                            </li>
-                                            <li class="js-radio-check">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="radio" name="263"
-                                                                                              class="hidden"
-                                                                                              data-type="determine"
-                                                                                              value="0"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="meida-body">错误</div>
-                                            </li>
-
-                                        </ul>
-
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/263/favorite"
-                                                                               data-ufurl="/library/3/question/263/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/263/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/263/favorite"
-                                           data-ufurl="/library/3/question/263/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">A</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">无解析
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="5" id-number="265">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">5、</div>
-                                        <div class="media-body"><span class="color-primary">（判断题）</span>
-                                            <span class="long-title">【中】我国会计核算以人民币为记账本位币。（　正确　）</span>
-                                            <span class="sort-title">【中】我国会计核算以人民币为记账本位币。（　正确　）</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-radio-check  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check"><input type="radio" name="265"
-                                                                                             class="hidden"
-                                                                                             data-type="determine"
-                                                                                             value="1"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">正确</div>
-                                            </li>
-                                            <li class="js-radio-check">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="radio" name="265"
-                                                                                              class="hidden"
-                                                                                              data-type="determine"
-                                                                                              value="0"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="meida-body">错误</div>
-                                            </li>
-
-                                        </ul>
-
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/265/favorite"
-                                                                               data-ufurl="/library/3/question/265/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/265/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/265/favorite"
-                                           data-ufurl="/library/3/question/265/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">A</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">无解析
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="6" id-number="33">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">6、</div>
-                                        <div class="media-body"><span class="color-primary">（多选题）</span>
-                                            <span class="long-title">【中】会计信息的质量要求包括（　ABC　）。</span>
-                                            <span class="sort-title">【中】会计信息的质量要求包括（　ABC　）。</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="33"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="0"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">谨慎性</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="33"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="1"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="media-body">可理解性</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="33"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="2"></span><span
-                                                        class="js-check-answer">C</span>、
-                                                </div>
-                                                <div class="media-body">可靠性</div>
-                                            </li>
-                                            <li class="js-checkbox-check media ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="33"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="3"></span><span
-                                                        class="js-check-answer">D</span>、
-                                                </div>
-                                                <div class="media-body">权责发生制</div>
-                                            </li>
-
-
-                                        </ul>
-
-                                        <div class="btn-submit-question">
-                                            <a class="btn btn-transparent  btn-block js-submit-question">确认</a>
-                                        </div>
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/33/favorite"
-                                                                               data-ufurl="/library/3/question/33/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/33/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/33/favorite"
-                                           data-ufurl="/library/3/question/33/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">ABC</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">会计信息的质量要求包括可靠性、谨慎性、可理解性、实质重于形式等。故选ABC。
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="7" id-number="43">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">7、</div>
-                                        <div class="media-body"><span class="color-primary">（判断题）</span>
-                                            <span class="long-title">【中】编制银行存款余额调节表后，调节后的余额是企业实际可以使用的存款数额。（　正确　）</span>
-                                            <span class="sort-title">【中】编制银行存款余额调节表后，调节后的余额是企业实际可以使用的存款数额。（　正确　）</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-radio-check  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check"><input type="radio" name="43"
-                                                                                             class="hidden"
-                                                                                             data-type="determine"
-                                                                                             value="1"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">正确</div>
-                                            </li>
-                                            <li class="js-radio-check">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="radio" name="43"
-                                                                                              class="hidden"
-                                                                                              data-type="determine"
-                                                                                              value="0"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="meida-body">错误</div>
-                                            </li>
-
-                                        </ul>
-
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/43/favorite"
-                                                                               data-ufurl="/library/3/question/43/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/43/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/43/favorite"
-                                           data-ufurl="/library/3/question/43/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">A</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">无解析
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="8" id-number="272">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">8、</div>
-                                        <div class="media-body"><span class="color-primary">（判断题）</span>
-                                            <span class="long-title">【中】记账时，将借贷方向记错，不会影响借贷双方的平衡关系。（　正确　）</span>
-                                            <span class="sort-title">【中】记账时，将借贷方向记错，不会影响借贷双方的平衡关系。（　正确　）</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-radio-check  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check"><input type="radio" name="272"
-                                                                                             class="hidden"
-                                                                                             data-type="determine"
-                                                                                             value="1"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">正确</div>
-                                            </li>
-                                            <li class="js-radio-check">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="radio" name="272"
-                                                                                              class="hidden"
-                                                                                              data-type="determine"
-                                                                                              value="0"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="meida-body">错误</div>
-                                            </li>
-
-                                        </ul>
-
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/272/favorite"
-                                                                               data-ufurl="/library/3/question/272/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/272/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/272/favorite"
-                                           data-ufurl="/library/3/question/272/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">A</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">无解析
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="9" id-number="250">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">9、</div>
-                                        <div class="media-body"><span class="color-primary">（多选题）</span>
-                                            <span class="long-title">【中】以下有关明细分类科目的表述中，正确的有（　BD　）。</span>
-                                            <span class="sort-title">【中】以下有关明细分类科目的表述中，正确的有（　BD　）。</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-checkbox-check media ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="250"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="0"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目也称一级会计科目</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="250"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="1"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目是对总分类科目作进一步分类的科目</div>
-                                            </li>
-                                            <li class="js-checkbox-check media ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="250"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="2"></span><span
-                                                        class="js-check-answer">C</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目是对会计要素具体内容进行总括分类的科目</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="250"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="3"></span><span
-                                                        class="js-check-answer">D</span>、
-                                                </div>
-                                                <div class="media-body">明细分类科目是能提供更加详细更加具体会计信息的科目</div>
-                                            </li>
-
-
-                                        </ul>
-
-                                        <div class="btn-submit-question">
-                                            <a class="btn btn-transparent  btn-block js-submit-question">确认</a>
-                                        </div>
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/250/favorite"
-                                                                               data-ufurl="/library/3/question/250/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/250/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/250/favorite"
-                                           data-ufurl="/library/3/question/250/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">BD</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">
-                                                总分类科目是一级会计科目；总分类科目是对会计要素具体内容进行总括分类的科目。故选BD。
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="item question-list js-question-list   " seq-number="10" id-number="24">
-                                <div class="panel">
-
-                                    <div class="panel-heading media">
-                                        <img class="question-list-state correct-img"
-                                             src="/bundles/app/webimg/question_2.png?1.1.2">
-                                        <img class="question-list-state error-img"
-                                             src="/bundles/app/webimg/question_1.png?1.1.2">
-                                        <div class="pull-left">10、</div>
-                                        <div class="media-body"><span class="color-primary">（多选题）</span>
-                                            <span class="long-title">【中】造成企业银行存款日记账余额小于银行对账单余额的情形有（　BC　）。</span>
-                                            <span class="sort-title">【中】造成企业银行存款日记账余额小于银行对账单余额的情形有（　BC　）。</span>
-                                            <a class="js-slidetoggle exam-slidetoggle" href="javascript:;">
-    <span class="up-icon">
-      收起 <i class="exam-icon icon-pull-up"></i>
-    </span>
-                                                <span class="down-icon">
-      展开 <i class="exam-icon icon-drop-down"></i>
-    </span>
-                                            </a></div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="question-list-topic">
-                                            <li class="exam-watermark">
-                                                <div class="exam-watermark-content">
-                                                    <span class="exam-watermark-info">独立题库</span>
-                                                </div>
-                                            </li>
-                                            <li class="js-checkbox-check media ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="24"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="0"></span><span
-                                                        class="js-check-answer">A</span>、
-                                                </div>
-                                                <div class="media-body">企业已人账，但银行尚未入账的收入款项</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="24"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="1"></span><span
-                                                        class="js-check-answer">B</span>、
-                                                </div>
-                                                <div class="media-body">企业已人账，但银行尚未人账的支出款项</div>
-                                            </li>
-                                            <li class="js-checkbox-check media  correct-item ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="24"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="2"></span><span
-                                                        class="js-check-answer">C</span>、
-                                                </div>
-                                                <div class="media-body">银行已入账，但企业尚未入账的收入款项</div>
-                                            </li>
-                                            <li class="js-checkbox-check media ">
-                                                <div class="pull-left">
-                                                    <span class="circle circle-check "><input type="checkbox" name="24"
-                                                                                              data-type="choice"
-                                                                                              class="hidden" value="3"></span><span
-                                                        class="js-check-answer">D</span>、
-                                                </div>
-                                                <div class="media-body">银行已入账，但企业尚未人账的支出款项</div>
-                                            </li>
-
-
-                                        </ul>
-
-                                        <div class="btn-submit-question">
-                                            <a class="btn btn-transparent  btn-block js-submit-question">确认</a>
-                                        </div>
-
-                                        <div class="question-list-favorite"><a href="javascript:;"
-                                                                               class="dark-link pull-right js-question-favorite font-sm "
-                                                                               data-furl="/library/3/question/24/favorite"
-                                                                               data-ufurl="/library/3/question/24/unfavorite">
-                                            <span class="open-show"><i
-                                                    class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span>
-                                            <span class="open-close"><i
-                                                    class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span>
-                                        </a>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="panel-body question-list-answers "><a
-                                            class="pull-right dark-link font-sm mll" href="javascript:;"
-                                            data-toggle="modal" data-target="#modal"
-                                            data-url="/library/3/question/24/feedback/create"><i
-                                            class="exam-icon icon-jiucuo mrs"></i>
-                                        纠错
-                                    </a><a href="javascript:;"
-                                           class="dark-link pull-right js-question-favorite font-sm "
-                                           data-furl="/library/3/question/24/favorite"
-                                           data-ufurl="/library/3/question/24/unfavorite"><span class="open-show"><i
-                                            class="glyphicon glyphicon-heart font-md mrs"></i>取消收藏</span><span
-                                            class="open-close"><i
-                                            class="glyphicon glyphicon-heart-empty font-md mrs"></i>收藏本题</span></a>
-                                        正确答案：
-                                        <span class="color-success js-correct-answer">BC</span>；
-                                        <br class="visible-sm">
-                                        你的答案：
-                                        <span class="js-check-answer-show check-answer-show"></span></div>
-                                    <div class="panel-body question-list-analysis">
-                                        <div class="media">
-                                            <div class="pull-left">试题难度：</div>
-                                            <div class="media-body color-warning">一般</div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body question-list-difficulty">
-                                        <div class="media">
-                                            <div class="pull-left">参考解析：</div>
-                                            <div class="media-body gray-darker">
-                                                企业已入账但银行尚未入账的支出款项，银行已入账但企业尚未入账的收入款项，都使得企业有收入但没有记入银行存款日记账中，因此导致了企业银行存款日记账余额小于银行对账单余额。故选BC。
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <input type="hidden" name="_csrf_token" value="QNeDX6UADlDSjRlTMPFmZHvI6V9VxSuZT2ECwpKsj6A">
-                </form>
+        </div>
+
+    </div>
+
+    <script >
+        //答题进度条
+        function setBarWidth(doneNumber) {
+            $(".progress-bar").css("width",(doneNumber/"{{ choiceProblem | count }}"*100).toString() + "%");//更改答题进度条
+            $(".has-done").text(" " + doneNumber.toString());//更改答题数
+        }
+
+        //答题计时器
+        function two_char(n) {//标准化时间格式
+            return n >= 10 ? n : "0" + n;
+        }
+
+        var clock = 0,second = 0, ifClock=false;
+        function updateClock(sec) {//更新时间
+            sec++;
+            var date = new Date(0, 0)
+            date.setSeconds(sec/10);
+            var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
+            $("#clock").text(two_char(h) + ":" + two_char(m) + ":" + two_char(s));
+            second = sec;
+        }
+
+        window.onload = function(){//页面加载完毕时启动计时
+            clock = setInterval("updateClock(second)", 100);
+            ifClock = true;
+        }
+        function clockPause() {//暂停计时
+            clearInterval(clock);
+            ifClock = false;
+            $("#pauseModal").modal({backdrop: 'static', keyboard: false});
+        }
+        function clockContinue() {//继续计时
+            if(ifClock==false)
+            {
+                $("#pauseModal").modal("hide");
+                clock = setInterval("updateClock(second)", 100);
+                ifClock = true;
+            }
+        }
+
+        var number=1,corNum=0;
+        var corNum = [] ;
+        for (var i=0;i<"{{ choiceProblem | count }}";i++)
+        {
+            corNum.push({'key' : (i+1).toString(),
+                'value' : false});
+        }
+        function nextOne() {
+            if(number=={{ choiceProblem | count }}) return;
+            number++;
+            $("#lastProblem").attr("class","btn");
+            $("#problem"+(number-1).toString()).css("display","none");
+            $("#problem"+number.toString()).css("display","block");
+            if(number=={{ choiceProblem | count }}) $("#nextProblem").attr("class","btn disabled");
+        }
+        function lastOne() {
+            if(number==1) return;
+            number--;
+            $("#nextProblem").attr("class","btn");
+            $("#problem"+(number+1).toString()).css("display","none");
+            $("#problem"+number.toString()).css("display","block");
+            if(number==1) $("#lastProblem").attr("class","btn disabled");
+        }
+        function showAnswer() {
+            var temp = $("#answer"+number.toString());
+            temp.css("font-size","20px");
+            if(temp.css("display")=="none"){
+                temp.css("display","block");
+            }
+            else{
+                temp.css("display","none");
+            }
+        }
+        function checkIfCorrect() {
+            var array = {"1":"A","2":"B","3":"C","4":"D"};
+            var your = new Array();
+            $("input[name=choice" + number.toString() + "]:checked").each(function(){
+                your.push(array[$(this).val()]);
+            });
+            if(your.length==0){
+                alert("请至少选择一项");
+                return false;
+            }
+            var temp=your[0].toString();
+            for(var i=1;i<your.length;i++){
+                temp+=","+your[i];
+            }
+            var cor = true;
+            if(temp!=$("#answer"+number.toString()).data('value').toString()) cor = false;
+            if (cor){
+                var count =0;
+                corNum[number.toString()]=true;
+                for(var i=0;i<corNum.length;i++){
+                    if(corNum[(i+1).toString()]==true) count++;
+                }
+                $("#choice_wrong"+number.toString()).css("display","none");
+                $("#choice_correct"+number.toString()).css("display","block");
+                setBarWidth(count);
+                nextOne();
+            }
+            else
+            {
+                var count =0;
+                corNum[number.toString()]=false;
+                for(var i=0;i<corNum.length;i++){
+                    if(corNum[(i+1).toString()]==true) count++;
+                }
+                setBarWidth(count);
+                $("#answer"+number.toString()).css("font-size","20px");
+                $("#answer"+number.toString()).css("display","block");
+                $("#choice_correct"+number.toString()).css("display","none");
+                $("#choice_wrong"+number.toString()).css("display","block");
+            }
+        }
+        function submit() {
+            clearInterval(clock);
+            var date = new Date(0, 0)
+            date.setSeconds(second/10);
+            var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
+
+            $("#submitModal").modal({backdrop: 'static', keyboard: false});
+            var count =0;
+            for(var i=0;i<corNum.length;i++){
+                if(corNum[i.toString()]==true) count++;
+            }
+            $("#ansResult").text("共{{ choiceProblem | count }}题 " + "答对"+count.toString()+"题" + " 用时 " + two_char(h) + ":" + two_char(m) + ":" + two_char(s));
+        }
+        function cancelSubmit() {
+            $("#submitModal").modal('hide');
+        }
+    </script>
+
+    <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">答题结果</h4>
+                </div>
+                <div class="modal-body" id="ansResult"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="cancelSubmit()">关闭</button>
+                </div>
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="pauseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 300px;height: 200px">
+            <div class="modal-content" style="width: 300px;height: 200px">
+                <div class="modal-body btn" style="width: 300px;height: 200px;font-size: 30px;line-height: 140px" onclick="clockContinue()">
+                    点击继续
+                </div>
+            </div>
+        </div>
     </div>
 
+
 {% endblock %}
+
+
+
+
+
+

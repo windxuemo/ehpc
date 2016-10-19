@@ -47,11 +47,11 @@ def program_view(pid):
 
 @problem.route('/choice/<int:cid>/')
 def choice_view(cid):
-    classify_name = Classify.query.filter_by(id=cid).first_or_404()
-    choice_problem = classify_name.choices.all()
+    cur_classify = Classify.query.filter_by(id=cid).first_or_404()
+    choice_problem = cur_classify.choices.all()
 
     return render_template('problem/choice_detail.html',
-                           title=classify_name.name,
+                           title=cur_classify.name,
                            choiceProblem=choice_problem)
 
 

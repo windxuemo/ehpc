@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
     <script type="text/javascript">
-    function del(id) {
-    $.ajax({
-        type : "post",
-        url : {{ url_for('admin.index') }},
-        data : {op: 'del', cid: id},
-        async : false,
-        success : function(data){
-                location.reload();
-            }
-        });
-    }
+
+        function del(obj)
+        {
+            $.ajax({
+                type: "post",
+                url: "{{ url_for('admin.process') }}",
+                data: {op: 'del', id: $(obj).parent().parent().attr('cid')},
+                async: false,
+                success: function (data) {
+                    $(obj).parent().parent().remove();
+                    alert("删除成功");
+                }
+            });
+        }
 
     </script>
 
@@ -26,17 +28,23 @@
 
                         <li class="list-group-item active">
                             <a href="{{ url_for('admin.course') }}">
-                                <i class="glyphicon glyphicon-cog"></i>课程管理</a>
+                                <i class="glyphicon glyphicon-cog"></i>
+                                课程管理
+                            </a>
                         </li>
 
                         <li class="list-group-item">
-                            <a href="{{ url_for('admin.problem') }}"><i
-                                    class="glyphicon glyphicon-cog"></i>题目管理</a>
+                            <a href="{{ url_for('admin.problem') }}">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                题目管理
+                            </a>
                         </li>
 
                         <li class="list-group-item">
-                            <a href="{{ url_for('admin.group') }}"><i
-                                    class="glyphicon glyphicon-cog"></i>群组管理</a>
+                            <a href="{{ url_for('admin.group') }}">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                群组管理
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -44,11 +52,12 @@
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
-    <span class="pull-right">
-      <a id="create-course" href="{{ url_for('admin.create') }}" class="btn btn-info btn-sm"><span
-              class="glyphicon glyphicon-plus"></span> 创建课程</a>
-
-    </span>
+                    <span class="pull-right">
+                        <a id="create-course" href="{{ url_for('admin.create') }}" class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            创建课程
+                        </a>
+                    </span>
                         在教课程
                     </div>
                     <div class="panel-body">
@@ -63,24 +72,21 @@
                                 <th>操作</th>
                             </tr>
                             </thead>
-                            <tbody>
-
+                            <tbody id="tb">
                             {% for c in courses %}
-                            <tr>
-                                <td>{{ c.title }}</td>
-                                <td>{{ c.lessonNum }}</td>
-                                <td>{{ c.studentNum }}</td>
-                                <td>{{ c.createdTime }}</td>
-                                <td>
-                                    <a href="{{ url_for('admin.edit', cid=c.id) }}">编辑</a>
-                                    <a onclick="del({{ c.id }})">删除</a>
-                                </td>
-                            </tr>
+                                <tr cid="{{ c.id }}">
+                                    <td>{{ c.title }}</td>
+                                    <td>{{ c.lessonNum }}</td>
+                                    <td>{{ c.studentNum }}</td>
+                                    <td>{{ c.createdTime }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.edit', cid=c.id) }}">编辑</a>
+                                        <a href="javascript:void(0)" onclick="del(this)">删除</a>
+                                    </td>
+                                </tr>
                             {% endfor %}
-
                             </tbody>
                         </table>
-
 
                     </div>
                 </div>

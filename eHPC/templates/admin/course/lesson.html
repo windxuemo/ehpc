@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container" id="content-container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="list-group-panel">
+                            <div class="list-group-heading">课程信息</div>
+                            <div class="list-group">
+                                <a class="list-group-item " href="{{ url_for('admin.edit', cid=c.id) }}">基本信息</a>
+                                <a class="list-group-item " href="{{ url_for('admin.picture', cid=c.id) }}">课程图片</a>
+                                <a class="list-group-item active" href="{{ url_for('admin.lesson', cid=c.id) }}">课时管理</a>
+                            </div>
+                        </div><!-- /list-group-block -->
+
+                        <div class="list-group-panel">
+                            <div class="list-group">
+                                <a class="list-group-item" href="{{ url_for('admin.index') }}">返回</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-9">
+
+                <div class="panel panel-default panel-col lesson-manage-panel">
+                    <div class="panel-heading" style="position: sticky; top: 0px;">
+                        <div class="pull-right">
+
+                            <button class="btn btn-info btn-sm" id="lesson-create-btn" data-toggle="modal"
+                                    data-target="#modal" data-backdrop="static" data-keyboard="false"
+                                    data-url="/course/1/manage/lesson/create"><i class="glyphicon glyphicon-plus"></i>
+                                课时
+                            </button>
+
+                            <button class="btn btn-info btn-sm" id="lesson-create-btn" data-toggle="modal"
+                                    data-target="#modal" data-backdrop="static" data-keyboard="false"
+                                    data-url="/course/1/manage/lesson/create/testpaper"><i
+                                    class="glyphicon glyphicon-plus"></i> 试卷
+                            </button>
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-success dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <i class="glyphicon glyphicon-plus"></i> 章/节 <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="#" id="chapter-create-btn" data-toggle="modal" data-target="#modal"
+                                           data-backdrop="static" data-keyboard="false"
+                                           data-url="/course/1/manage/chapter/create"><i
+                                                class="glyphicon glyphicon-plus"></i> 添加 章</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" id="chapter-create-btn" data-toggle="modal" data-target="#modal"
+                                           data-backdrop="static" data-keyboard="false"
+                                           data-url="/course/1/manage/chapter/create?type=unit"><i
+                                                class="glyphicon glyphicon-plus"></i> 添加 节</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        课时管理
+                    </div>
+
+
+                    <div class="panel-body">
+                        <ul class="lesson-list sortable-list" id="course-item-list"
+                            data-sort-url="/course/1/manage/lesson/sort">
+
+                            <li class="item-lesson clearfix" id="lesson-1" style="word-break: break-all;">
+                                <div class="item-line"></div>
+                                <div class="item-content">
+
+                                    <i class="fa fa-file-photo-o text-success"></i>
+                                    课时 <span class="number">1</span>：
+                                    aaa
+
+
+                                </div>
+
+                                <div class="item-actions">
+                                    <a class="btn btn-link" data-toggle="modal" data-target="#modal"
+                                       data-backdrop="static"
+                                       data-keyboard="false" data-url="/course/1/manage/lesson/1/edit"
+                                       data-original-title="" title=""><span
+                                            class="glyphicon glyphicon-edit prs"></span>编辑</a>
+                                    <a class="btn btn-link" href="/course/1/learn?preview=1#lesson/1" target="_blank"
+                                       data-original-title="" title=""><span
+                                            class="glyphicon glyphicon-eye-open prs"></span>预览</a>
+                                    <span class="dropdown">
+                    <a class=" dropdown dropdown-toggle dropdown-more" id="dropdown-more" data-toggle="dropdown"
+                       href="#"><span class="glyphicon glyphicon-chevron-down" style="top:4px;margin-right:3px"
+                                      aria-haspopup="true" aria-expanded="false"></span>更多</a>
+
+                    <ul class="dropdown-menu pull-right dropdown-menu-more" role="menu"
+                        style="margin-top:12px;min-width:144px" aria-labelledby="dLabel">
+
+
+                                    <li><a href="javascript:;" data-toggle="modal" data-target="#modal"
+                                           data-url="/course/1/manage/lesson/1/material"><span
+                                            class="glyphicon glyphicon-paperclip prs"></span>添加资料</a></li>
+                            <li class="divider"></li>
+
+                        <li class="hidden ">
+                            <a href="javascript:;" class="publish-lesson-btn"
+                               data-url="/course/1/manage/lesson/1/publish"><span
+                                    class="glyphicon glyphicon-ok-circle prs"></span>发布
+                            </a>
+                        </li>
+
+                        <li class="">
+                            <a href="javascript:;" class="unpublish-lesson-btn"
+                               data-url="/course/1/manage/lesson/1/unpublish"><span
+                                    class="glyphicon glyphicon-remove-circle prs"></span>取消发布
+                            </a>
+                        </li>
+                        <li><a href="javascript:;" class="delete-lesson-btn"
+                               data-url="/course/1/manage/lesson/1/delete"><span
+                                class="glyphicon glyphicon-trash prs"></span>删除</a></li>
+              </ul>
+                </span>
+                                </div>
+                            </li>
+                            <li class="item-lesson clearfix" id="lesson-2" style="word-break: break-all;">
+                                <div class="item-line"></div>
+                                <div class="item-content">
+
+                                    <i class="fa fa-file-photo-o text-success"></i>
+                                    课时 <span class="number">2</span>：
+                                    bbb
+
+
+                                </div>
+
+                                <div class="item-actions">
+                                    <a class="btn btn-link" data-toggle="modal" data-target="#modal"
+                                       data-backdrop="static"
+                                       data-keyboard="false" data-url="/course/1/manage/lesson/2/edit"
+                                       data-original-title="" title=""><span
+                                            class="glyphicon glyphicon-edit prs"></span>编辑</a>
+                                    <a class="btn btn-link" href="/course/1/learn?preview=1#lesson/2" target="_blank"
+                                       data-original-title="" title=""><span
+                                            class="glyphicon glyphicon-eye-open prs"></span>预览</a>
+                                    <span class="dropdown">
+                    <a class=" dropdown dropdown-toggle dropdown-more" id="dropdown-more" data-toggle="dropdown"
+                       href="#"><span class="glyphicon glyphicon-chevron-down" style="top:4px;margin-right:3px"
+                                      aria-haspopup="true" aria-expanded="false"></span>更多</a>
+
+                    <ul class="dropdown-menu pull-right dropdown-menu-more" role="menu"
+                        style="margin-top:12px;min-width:144px" aria-labelledby="dLabel">
+
+
+                                    <li><a href="javascript:;" data-toggle="modal" data-target="#modal"
+                                           data-url="/course/1/manage/lesson/2/material"><span
+                                            class="glyphicon glyphicon-paperclip prs"></span>添加资料</a></li>
+                            <li class="divider"></li>
+
+                        <li class="hidden ">
+                            <a href="javascript:;" class="publish-lesson-btn"
+                               data-url="/course/1/manage/lesson/2/publish"><span
+                                    class="glyphicon glyphicon-ok-circle prs"></span>发布
+                            </a>
+                        </li>
+
+                        <li class="">
+                            <a href="javascript:;" class="unpublish-lesson-btn"
+                               data-url="/course/1/manage/lesson/2/unpublish"><span
+                                    class="glyphicon glyphicon-remove-circle prs"></span>取消发布
+                            </a>
+                        </li>
+                        <li><a href="javascript:;" class="delete-lesson-btn"
+                               data-url="/course/1/manage/lesson/2/delete"><span
+                                class="glyphicon glyphicon-trash prs"></span>删除</a></li>
+              </ul>
+                </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

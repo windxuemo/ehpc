@@ -3,7 +3,7 @@
 from flask import render_template, request, redirect, url_for
 from . import admin
 from ..models import Course
-from ..user.authorize import student_login
+from ..user.authorize import admin_login
 from .. import db
 import os
 

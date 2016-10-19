@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <section class="es-poster swiper-container">
+    <section class="swiper-container">
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
@@ -108,7 +108,7 @@
                                     <div class="media media-group col-md-6 col-sm-4">
                                         <div class="media-left">
                                             <a href="{{ url_for('group.group_view', gid=g.id) }}" class="pull-left ">
-                                                <img src="" alt="{{ g.title }}"
+                                                <img src="{{ g.logo }}" alt="{{ g.title }}"
                                                      class="avatar-square-md">
                                             </a>
                                         </div>

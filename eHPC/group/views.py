@@ -88,7 +88,7 @@ def topic_view(tid):
 def topic_edit(tid):
     cur_topic = Topic.query.filter_by(id=tid).first_or_404()
     if current_user.id != cur_topic.userID:
-        abort(404)
+        abort(403)
     else:
         return render_template('group/topic_edit.html',
                                title=cur_topic.title,
@@ -100,7 +100,7 @@ def topic_edit(tid):
 def topic_update(tid):
     cur_topic = Topic.query.filter_by(id=tid).first_or_404()
     if current_user.id != cur_topic.userID:
-        abort(404)
+        abort(403)
     else:
         content = request.form['content']
         title = request.form['title']
@@ -115,27 +115,24 @@ def topic_update(tid):
 @group.route('/topic/<int:tid>/comment/create/', methods=['POST'])
 @login_required
 def create_post(tid):
-    if request.method != 'POST':
-        abort(404)
-    else:
-        cur_topic = Topic.query.filter_by(id=tid).first_or_404()
-        post_content = request.form['content']
-        post_content = add_user_links_in_content(post_content)
+    cur_topic = Topic.query.filter_by(id=tid).first_or_404()
+    post_content = request.form['content']
+    post_content = add_user_links_in_content(post_content)
 
-        new_post = Post(current_user.id, content=post_content)
-        cur_topic.posts.append(new_post)
-        cur_topic.postNum += 1
+    new_post = Post(current_user.id, content=post_content)
+    cur_topic.posts.append(new_post)
+    cur_topic.postNum += 1
 
-        current_user.postNum += 1
-        db.session.add(new_post)
-        db.session.commit()
+    current_user.postNum += 1
+    db.session.add(new_post)
+    db.session.commit()
 
-        new_post_html = render_template('group/widget_post_detail.html',
-                                        p=new_post,
-                                        index=cur_topic.postNum)
+    new_post_html = render_template('group/widget_post_detail.html',
+                                    p=new_post,
+                                    index=cur_topic.postNum)
 
-        return jsonify(post_html=new_post_html,
-                       post_cnt=cur_topic.postNum)
+    return jsonify(post_html=new_post_html,
+                   post_cnt=cur_topic.postNum)
 
 
 @group.route('/join/<int:gid>/')

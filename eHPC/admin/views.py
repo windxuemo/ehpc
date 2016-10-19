@@ -6,35 +6,23 @@ from ..models import Course
 from ..user.authorize import student_login
 from .. import db
 import os
+from werkzeug.utils import secure_filename
 
 
-@admin.route('/', methods=['POST', 'GET'])
+@admin.route('/')
 def index():
-    if request.method == "POST":
-        if request.form['op'] == 'del':
-            c = Course.query.filter_by(id=request.form['cid']).first()
-            db.session.delete(c)
-            db.session.commit()
-
-    all_courses = Course.query.all()
-    return render_template('admin/course/index.html', courses=all_courses)
+    return redirect(url_for('admin.course'))
 
 
 @admin.route('/course', methods=['POST', 'GET'])
 def course():
-    if request.method == "POST":
-        if request.form['op'] == 'del':
-            c = Course.query.filter_by(id=request.form['cid']).first()
-            db.session.delete(c)
-            db.session.commit()
-
     all_courses = Course.query.all()
     return render_template('admin/course/index.html', courses=all_courses)
 
 
 @admin.route('/course/create')
 def create():
-    return render_template('admin/course/base.html')
+    return render_template('admin/course/create.html')
 
 
 @admin.route('/course/edit')
@@ -45,36 +33,14 @@ def edit():
 
 @admin.route('/course/picture')
 def picture():
-    return render_template('admin/course/picture.html')
+    cour = Course.query.filter_by(id=request.args['cid']).first()
+    return render_template('admin/course/picture.html', c=cour)
 
 
 @admin.route('/course/lesson')
-def lesson(): pass
-
-
-@admin.route('/process', methods=['POST'])
-def process():
-    # for edit
-    if 'id' in request.form:
-        c = Course.query.filter_by(id=request.form['id']).first()
-        c.title = request.form['title']
-        c.subtitle = request.form['subtitle']
-        c.about = request.form['about']
-
-        db.session.add(c)
-        db.session.commit()
-        return redirect(url_for('admin.edit', cid=c.id))
-    # for create
-    else:
-        c = Course(title=request.form['title'], subtitle=request.form['subtitle'], about=request.form['about'])
-        if 'lessonNum' not in request.form:
-            c.lessonNum = 0
-        if 'img' not in request.form:
-            c.smallPicture = 'images/course/noImg.jpg'
-
-        db.session.add(c)
-        db.session.commit()
-        return redirect(url_for('admin.create'))
+def lesson():
+    cour = Course.query.filter_by(id=request.args['cid']).first()
+    return render_template('admin/course/lesson.html', c=cour)
 
 
 @admin.route('/problem')
@@ -85,11 +51,57 @@ def problem(): pass
 def group(): pass
 
 
-@admin.route('/upload')
-def upload():
-    if request.method == 'POST':
-        f = request.files['file']
-        if f:
-            f.save(os.path.join('/static/images/course', f.filename))
-            return redirect(url_for('course.picture'))
+@admin.route('/process', methods=['POST'])
+def process():
+    # for delete
+    if request.form['op'] == 'del':
+        c = Course.query.filter_by(id=request.form['id']).first()
+        db.session.delete(c)
+        db.session.commit()
+        return "finished"
+    # for edit
+    elif request.form['op'] == 'edit':
+        c = Course.query.filter_by(id=request.form['id']).first()
+        c.title = request.form['title']
+        c.subtitle = request.form['subtitle']
+        c.about = request.form['about']
+        db.session.add(c)
+        db.session.commit()
+        return unicode(c.id)
+    # for create
+    elif request.form['op'] == 'create':
+        c = Course(title=request.form['title'])
+        c.subtitle = ""
+        c.about = ""
+        c.lessonNum = 0
+        c.smallPicture = 'images/course/noImg.jpg'
+        db.session.add(c)
+        db.session.commit()
+        return redirect(url_for('admin.edit', cid=unicode(c.id)))
+    # for save picture
+    elif request.form['op'] == 'pic':
+        c = Course.query.filter_by(id=request.form['id']).first()
+        c.smallPicture = os.path.join('images/course', request.form['name'])
+        db.session.add(c)
+        db.session.commit()
+        return unicode(c.id)
+    else:
+        return "error"
 
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+@admin.route('/upload', methods=['POST'])
+def upload():
+    pic = request.files['pic']
+    if pic and allowed_file(pic.filename):
+        filename = secure_filename(pic.filename)
+        pic.save(os.path.join('eHPC/static/images/course', filename))
+        return os.path.join('/static/images/course', filename)
+    return 'error'

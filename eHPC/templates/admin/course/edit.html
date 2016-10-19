@@ -3,12 +3,14 @@
 {% block content %}
 
     <script type="text/javascript">
+
         $(document).ready(function () {
             $('#course-create-btn').click(function () {
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.process') }}",
                     data: {
+                        op: "edit",
                         id: "{{ c.id }}",
                         title: $('#course_title').val(),
                         subtitle: $('#course_subtitle').val(),
@@ -19,7 +21,10 @@
                     }
                 });
             });
+
         });
+
+
 
     </script>
 
@@ -32,11 +37,17 @@
                         <div class="list-group-panel">
                             <div class="list-group-heading">课程信息</div>
                             <div class="list-group">
-                                <a class="list-group-item active" href="{{ url_for('admin.create') }}">基本信息</a>
-                                <a class="list-group-item " href="{{ url_for('admin.picture') }}">课程图片</a>
-                                <a class="list-group-item " href="{{ url_for('admin.lesson') }}">课时管理</a>
+                                <a class="list-group-item active" href="{{ url_for('admin.edit', cid=c.id) }}">基本信息</a>
+                                <a class="list-group-item " href="{{ url_for('admin.picture', cid=c.id) }}">课程图片</a>
+                                <a class="list-group-item " href="{{ url_for('admin.lesson', cid=c.id) }}">课时管理</a>
                             </div>
                         </div><!-- /list-group-block -->
+
+                        <div class="list-group-panel">
+                            <div class="list-group">
+                                <a class="list-group-item" href="{{ url_for('admin.index') }}">返回</a>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -68,7 +79,7 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">关于</label>
                                 <div class="col-md-8 controls">
-                                    <textarea id="course_about" name="about" required="required" class="form-control">{{ c.about }}</textarea>
+                                    <textarea id="course_about" name="about" required="required" class="form-control" style="height: 300px">{{ c.about }}</textarea>
                                     <div class="help-block" style="display:none;"></div>
                                 </div>
                             </div>

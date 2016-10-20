@@ -9,6 +9,7 @@ from flask_babel import gettext
 from ..problem.code_process import c_compile, c_run
 from .. import db
 
+
 @problem.route('/')
 def index():
     return render_template('problem/index.html',

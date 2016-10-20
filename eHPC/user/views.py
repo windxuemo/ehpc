@@ -294,17 +294,4 @@ def setting_avatar():
             return render_template('user/setting_avatar.html', message_fail=message_fail)
 
 
-@user.app_errorhandler(404)
-def voice_404(err):
-    return render_template('404.html'), 404
-
-
-@user.app_errorhandler(403)
-def voice_403(err):
-    return render_template('403.html'), 403
-
-
-@user.app_errorhandler(500)
-def voice_500(err):
-    return render_template('500.html'), 500
 

@@ -46,11 +46,13 @@ def program_view(pid):
 
 @problem.route('/choice/<int:cid>/')
 def choice_view(cid):
-    cho = db.session().query(Choice).\
-        join(choice_classifies, Choice.id == choice_classifies.columns['choice_id']).\
-        filter(choice_classifies.columns['classify_id'] == cid).all()
+    classify_name = Classify.query.filter_by(id=cid).first_or_404()
+    choice_problem = classify_name.choices.all()
+
     return render_template('problem/choice_detail.html',
-                           choiceProblem=cho)
+                           classify_id=classify_name.id,
+                           title=classify_name.name,
+                           choiceProblem=choice_problem)
 
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])

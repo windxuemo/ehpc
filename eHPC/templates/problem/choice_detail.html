@@ -11,6 +11,13 @@
 {% block content %}
     <div id="content-container" class="container">
 
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li><a href="/problems/">试题中心</a></li>
+            <li class="active"><a href="/problems/choice/">选择列表</a></li>
+            <li class="active"><a href="/problems/choice/{{ classify_id }}">{{ title }}</a></li>
+        </ol>
+
         <div class="hidden-xs container">
             <div class="panel">
                 <div class="panel-body">
@@ -273,7 +280,7 @@
             return n >= 10 ? n : "0" + n;
         }
 
-        var clock = 0,second = 0, ifClock=false;
+        var clock = 0,second = 0, ifClock=false, hasDone=0;
         function updateClock(sec) {//更新时间
             sec++;
             var date = new Date(0, 0)
@@ -301,12 +308,12 @@
             }
         }
 
-        var number=1,corNum=0;
-        var corNum = [] ;
+        var number=1;
+        var corNum = {} ,ifHasDone = {};
         for (var i=0;i<"{{ choiceProblem | count }}";i++)
         {
-            corNum.push({'key' : (i+1).toString(),
-                'value' : false});
+            corNum[(i+1).toString()] = false;
+            ifHasDone[(i+1).toString()] =false;
         }
         function nextOne() {
             if(number=={{ choiceProblem | count }}) return;
@@ -350,27 +357,23 @@
             }
             var cor = true;
             if(temp!=$("#answer"+number.toString()).data('value').toString()) cor = false;
+
+            if(!ifHasDone[number.toString()]) {
+                hasDone++;//已完成题目数
+                ifHasDone[number.toString()]=true;
+            }
+
             if (cor){
-                var count =0;
                 corNum[number.toString()]=true;
-                for(var i=0;i<corNum.length;i++){
-                    if(corNum[(i+1).toString()]==true) count++;
-                }
                 $("#choice_wrong"+number.toString()).css("display","none");
                 $("#choice_correct"+number.toString()).css("display","block");
-                setBarWidth(count);
+                setBarWidth(hasDone);
                 nextOne();
             }
             else
             {
-                var count =0;
                 corNum[number.toString()]=false;
-                for(var i=0;i<corNum.length;i++){
-                    if(corNum[(i+1).toString()]==true) count++;
-                }
-                setBarWidth(count);
-                $("#answer"+number.toString()).css("font-size","20px");
-                $("#answer"+number.toString()).css("display","block");
+                setBarWidth(hasDone);
                 $("#choice_correct"+number.toString()).css("display","none");
                 $("#choice_wrong"+number.toString()).css("display","block");
             }
@@ -383,8 +386,8 @@
 
             $("#submitModal").modal({backdrop: 'static', keyboard: false});
             var count =0;
-            for(var i=0;i<corNum.length;i++){
-                if(corNum[i.toString()]==true) count++;
+            for(var i=0;i<"{{ choiceProblem | count }}";i++){
+                if(corNum[(i+1).toString()]==true) count++;
             }
             $("#ansResult").text("共{{ choiceProblem | count }}题 " + "答对"+count.toString()+"题" + " 用时 " + two_char(h) + ":" + two_char(m) + ":" + two_char(s));
         }

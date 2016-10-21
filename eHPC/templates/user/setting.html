@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container" id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sidenav">
+                    <ul class="list-group">
+                        <li class="list-group-heading">{{ _('Setting') }}</li>
+
+                        <li class="list-group-item active" id="setting_info_header">
+                            <a href="{{ url_for('user.setting') }}"><i
+                                    class="glyphicon glyphicon-user"></i>{{ _('Personal') }}</a>
+                        </li>
+
+                        <li class="list-group-item" id="setting_password_header">
+                            <a href="{{ url_for('user.setting') }}"><i
+                                    class="glyphicon glyphicon-lock"></i>{{ _('Password') }}</a>
+                        </li>
+
+                        <li class="list-group-item" id="setting_avatar_header">
+                            <a href="{{ url_for('user.setting') }}"><i
+                                    class="glyphicon glyphicon-picture"></i>{{ _('Avatar') }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">{{ _('Personal') }}</div>
+                    <div class="panel-body">
+
+		        <img id="avatar" style="display:none; margin:0 auto" src="{{ current_user.avatar_url }}">
+
+                        <form class="form-horizontal" method="post" >
+                            <div class="form-group" id="form-group1" style="display:block">
+                                <label class="col-md-2 control-label" style="display:block;" id="label1" for="email">{{ _('Email') }}</label>
+                                <div class="col-md-7">
+                                    <input type="email" id="input1" name="email" class="form-control"
+                                            value="{{ current_user.email }}">
+                                    <div class="help-block" style="display:none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="form-group2" style="display:block">
+                                <label class="col-md-2 control-label" id="label2" for="website">{{ _('Website') }}</label>
+                                <div class="col-md-7">
+                                    <input type="url" id="input2" name="website" class="form-control"
+                                           value="{{ current_user.website }}">
+                                    <div class="help-block" style="display:none;"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" id="form-group3" style="display: none">
+                                <label class="col-md-2 control-label" id="label3" for="website">{{ _('Website') }}</label>
+                                <div class="col-md-7">
+                                    <input type="url" id="input3" name="website" class="form-control"
+                                           value="{{ current_user.website }}">
+                                    <div class="help-block" style="display:none;"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-8">
+                                    <button type="submit" class="btn btn-primary">{{ _('Save') }}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext  %}
+    <script>
+        $(document).ready(function () {
+	    $("#setting_info_header").click(function () {
+		$(this).parent().find(".active").removeClass("active");
+		$("#setting_info_header").addClass("active");
+
+		$(".panel-heading").text("{{_('Personal')}}");
+		
+		$("#avatar").attr("style", "display: none;")
+		
+		$("#label1").text("{{ _('Email') }}");
+		$("#label1").attr("for", "email");
+		$("#label1").attr("style", "display: block;")
+
+		$("#input1").attr({
+		    "style" : "",
+		    "type" : "email",
+		    "name" : "email",
+		    "value" : "{{ current_user.email }}"
+		});
+
+
+		$("#label2").text("{{ _('Website') }}");
+		$("#label2").attr("for", "website");
+
+		$("#input2").attr({
+		    "type" : "url",
+		    "name" : "website",
+		    "value" : "{{ current_user.website }}"
+		});
+
+		$("#form-group1").attr("style", "display: block");
+		$("#form-group2").attr("style", "display: block");
+		$("#form-group3").attr("style", "display: none");
+		
+		return false;
+	    });
+	});
+    
+
+        $(document).ready(function () {
+	    $("#setting_password_header").click(function () {
+		$(this).parent().find(".active").removeClass("active");
+		$("#setting_password_header").addClass("active");
+
+		$(".panel-heading").text("{{_('Password')}}");
+		
+		$("#avatar").attr("style", "display: none;")
+		
+		$("#label1").text("{{ _('Password') }}");
+		$("#label1").attr("for", "old_password");
+		$("#label1").attr("style", "display: block;")
+
+		$("#input1").attr({
+		    "style" : "",
+		    "type" : "password",
+		    "name" : "old_password",
+		    "value" : ""
+		});
+
+
+		$("#label2").text("{{ _('new password') }}");
+		$("#label2").attr("for", "password");
+
+		$("#input2").attr({
+		    "type" : "password",
+		    "name" : "password",
+		    "value" : ""
+		});
+
+
+		$("#label3").text("{{ _('repeat password') }}");
+		$("#label3").attr("for", "password2");
+
+		$("#input3").attr({
+		    "type" : "password",
+		    "name" : "password2",
+		    "value" : ""
+		});
+
+		$("#form-group1").attr("style", "display: block");
+		$("#form-group2").attr("style", "display: block");
+		$("#form-group3").attr("style", "display: block");
+		
+
+		return false;
+	    });
+	});
+
+
+        $(document).ready(function () {
+	    $("#setting_avatar_header").click(function () {
+		$(this).parent().find(".active").removeClass("active");
+		$("#setting_avatar_header").addClass("active");
+
+		$(".panel-heading").text("{{_('Avatar')}}");
+		$(".form-horizontal").attr("enctype","multipart/form-data")
+
+		$("#avatar").attr("style", "display:block; margin:0 atuo;")
+
+		$("#label1").text("上传新的头像");
+		$("#label1").attr("for", "avatar");
+		$("#label1").attr("style", "display:none;")
+
+		$("#input1").attr({
+		    "style" : "border: 0px;",
+		    "type" : "file",
+		    "name" : "file",
+		    "value" : ""
+		});
+
+
+		$("#label2").text("{{ _('new password') }}");
+		$("#label2").attr("for", "password");
+
+		$("#input2").attr({
+		    "type" : "password",
+		    "name" : "password",
+		    "value" : ""
+		});
+
+
+		$("#label3").text("{{ _('repeat password') }}");
+		$("#label3").attr("for", "password2");
+
+		$("#input3").attr({
+		    "type" : "password",
+		    "name" : "password2",
+		    "value" : ""
+		});
+
+		$("#form-group1").attr("style", "display: block");
+		$("#form-group2").attr("style", "display: none");
+		$("#form-group3").attr("style", "display: none");
+		
+
+		return false;
+	    });
+	});
+
+    </script>
+{% endblock %}

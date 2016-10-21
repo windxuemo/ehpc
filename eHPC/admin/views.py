@@ -27,19 +27,19 @@ def create():
 
 @admin.route('/course/edit')
 def edit():
-    cour = Course.query.filter_by(id=request.args['cid']).first()
+    cour = Course.query.filter_by(id=request.args['cid']).first_or_404()
     return render_template('admin/course/edit.html', c=cour)
 
 
 @admin.route('/course/picture')
 def picture():
-    cour = Course.query.filter_by(id=request.args['cid']).first()
+    cour = Course.query.filter_by(id=request.args['cid']).first_or_404()
     return render_template('admin/course/picture.html', c=cour)
 
 
 @admin.route('/course/lesson')
 def lesson():
-    cour = Course.query.filter_by(id=request.args['cid']).first()
+    cour = Course.query.filter_by(id=request.args['cid']).first_or_404()
     return render_template('admin/course/lesson.html', c=cour)
 
 
@@ -55,13 +55,13 @@ def group(): pass
 def process():
     # for delete
     if request.form['op'] == 'del':
-        c = Course.query.filter_by(id=request.form['id']).first()
+        c = Course.query.filter_by(id=request.form['id']).first_or_404()
         db.session.delete(c)
         db.session.commit()
         return "finished"
     # for edit
     elif request.form['op'] == 'edit':
-        c = Course.query.filter_by(id=request.form['id']).first()
+        c = Course.query.filter_by(id=request.form['id']).first_or_404()
         c.title = request.form['title']
         c.subtitle = request.form['subtitle']
         c.about = request.form['about']
@@ -80,7 +80,7 @@ def process():
         return redirect(url_for('admin.edit', cid=unicode(c.id)))
     # for save picture
     elif request.form['op'] == 'pic':
-        c = Course.query.filter_by(id=request.form['id']).first()
+        c = Course.query.filter_by(id=request.form['id']).first_or_404()
         c.smallPicture = os.path.join('images/course', request.form['name'])
         db.session.add(c)
         db.session.commit()

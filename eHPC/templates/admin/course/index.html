@@ -2,24 +2,34 @@
 
 {% block content %}
     <script type="text/javascript">
+        $(document).ready(function () {
 
-        function del(obj)
-        {
-            $.ajax({
-                type: "post",
-                url: "{{ url_for('admin.process') }}",
-                data: {op: 'del', id: $(obj).parent().parent().attr('cid')},
-                async: false,
-                success: function (data) {
-                    $(obj).parent().parent().remove();
-                    alert("删除成功");
-                }
-            });
-        }
+            $("#tb").find("a[name=del-btn]").each(function () {
+                $(this).click(function () {
+                    var obj = this;
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.process') }}",
+                        data: {op: 'del', id: $(obj).parent().parent().data('cid')},
+                        async: false,
+                        success: function (data) {
+                            $(obj).parent().parent().remove();
+                            alert("删除成功");
+                        }
+                    });
+                });
+            })
+        });
 
     </script>
 
     <div class="container" id="content-container">
+
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li><a href="{{ url_for('admin.course') }}">课程管理</a></li>
+        </ol>
+
         <div class="row row-3-9">
             <div class="col-md-3">
                 <div class="sidenav">
@@ -74,14 +84,14 @@
                             </thead>
                             <tbody id="tb">
                             {% for c in courses %}
-                                <tr cid="{{ c.id }}">
+                                <tr data-cid="{{ c.id }}">
                                     <td>{{ c.title }}</td>
                                     <td>{{ c.lessonNum }}</td>
                                     <td>{{ c.studentNum }}</td>
                                     <td>{{ c.createdTime }}</td>
                                     <td>
                                         <a href="{{ url_for('admin.edit', cid=c.id) }}">编辑</a>
-                                        <a href="javascript:void(0)" onclick="del(this)">删除</a>
+                                        <a href="javascript:void(0)" name="del-btn">删除</a>
                                     </td>
                                 </tr>
                             {% endfor %}

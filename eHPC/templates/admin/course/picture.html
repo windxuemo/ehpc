@@ -3,10 +3,11 @@
 {% block content %}
 
     <script type="text/javascript">
+
         $(document).ready(function () {
             $('#course-picture-field').change(function () {
                 $.ajax({
-                    url: "{{ url_for('admin.upload') }}",
+                    url: "{{ url_for('admin.process') }}",
                     type: "post",
                     data: new FormData($('#course-picture-form')[0]),
                     cache: false,
@@ -38,6 +39,12 @@
 
     <div class="container" id="content-container">
 
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li><a href="{{ url_for('admin.course') }}">课程管理</a></li>
+            <li><a href="{{ url_for('admin.picture', cid=c.id) }}">课程图片</a></li>
+        </ol>
+
         <div class="row">
             <div class="col-md-3">
                 <div class="panel panel-default">
@@ -67,8 +74,7 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">课程图片</div>
                     <div class="panel-body">
-                        <form id="course-picture-form" method="post" action="{{ url_for('admin.upload') }}"
-                              enctype="multipart/form-data" target="frameFile">
+                        <form id="course-picture-form" method="post" enctype="multipart/form-data">
 
                             <div class="form-group clearfix">
                                 <div class="col-md-offset-2 col-md-8 controls">
@@ -83,6 +89,8 @@
                                     <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
                                 </div>
                             </div>
+
+                            <input type="hidden" name="op" value="upload_pic">
 
                         </form>
 

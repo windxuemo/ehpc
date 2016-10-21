@@ -4,9 +4,10 @@
 from flask import render_template, jsonify, request, url_for, abort, redirect
 from flask_login import current_user, login_required
 from . import problem
-from ..models import Program, Choice, Classify
+from ..models import Program, Choice, Classify, choice_classifies
 from flask_babel import gettext
 from ..problem.code_process import c_compile, c_run
+from .. import db
 
 
 @problem.route('/')
@@ -46,16 +47,12 @@ def program_view(pid):
 
 @problem.route('/choice/<int:cid>/')
 def choice_view(cid):
-    cho = Choice.query.filter_by(id=cid).first()
+    cur_classify = Classify.query.filter_by(id=cid).first_or_404()
+    choice_problem = cur_classify.choices.all()
+
     return render_template('problem/choice_detail.html',
-                           title=cho.title,
-                           choice=cho)
-
-
-@problem.route('/test/')
-def test():
-    cho = Choice.query.all()
-    return render_template('problem/test.html', choiceProblem=cho)
+                           title=cur_classify.name,
+                           choiceProblem=choice_problem)
 
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])

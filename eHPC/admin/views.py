@@ -2,11 +2,18 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, redirect, url_for, abort, jsonify
 from . import admin
-from ..models import Course, Lesson, Material
-from ..user.authorize import student_login
+from ..models import Course, Lesson, Material, User
+from ..user.authorize import student_login, admin_login
 from .. import db
 import os
 from werkzeug.utils import secure_filename
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt'}
@@ -22,6 +29,18 @@ def index():
     return redirect(url_for('admin.course'))
 
 
+@admin.route('/user', methods=['POST', 'GET'])
+def user():
+    all_users = User.query.all()
+    return render_template('admin/user/index.html', users=all_users)
+
+
+@admin.route('/user/edit')
+def user_edit():
+    u = User.query.filter_by(id=request.args['uid']).first()
+    return render_template('admin/user/edit.html', u=u)
+
+
 @admin.route('/course', methods=['POST', 'GET'])
 def course():
     all_courses = Course.query.all()
@@ -35,20 +54,20 @@ def create():
 
 @admin.route('/course/edit')
 def edit():
-    c = Course.query.filter_by(id=request.args['cid']).first()
-    return render_template('admin/course/edit.html', c=c)
+    cour = Course.query.filter_by(id=request.args['cid']).first_or_404()
+    return render_template('admin/course/edit.html', c=cour)
 
 
 @admin.route('/course/picture')
 def picture():
-    c = Course.query.filter_by(id=request.args['cid']).first()
-    return render_template('admin/course/picture.html', c=c)
+    cour = Course.query.filter_by(id=request.args['cid']).first_or_404()
+    return render_template('admin/course/picture.html', c=cour)
 
 
 @admin.route('/course/lesson')
 def lesson():
-    c = Course.query.filter_by(id=request.args['cid']).first()
-    return render_template('admin/course/lesson.html', c=c, lessons=c.lessons)
+    cour = Course.query.filter_by(id=request.args['cid']).first_or_404()
+    return render_template('admin/course/lesson.html', c=cour)
 
 
 @admin.route('/course/lesson/material')
@@ -69,12 +88,12 @@ def group(): pass
 @admin.route('/process', methods=['POST'])
 def process():
     if request.form['op'] == 'del':
-        c = Course.query.filter_by(id=request.form['id']).first()
+        c = Course.query.filter_by(id=request.form['id']).first_or_404()
         db.session.delete(c)
         db.session.commit()
         return "finished"
     elif request.form['op'] == 'edit':
-        c = Course.query.filter_by(id=request.form['id']).first()
+        c = Course.query.filter_by(id=request.form['id']).first_or_404()
         c.title = request.form['title']
         c.subtitle = request.form['subtitle']
         c.about = request.form['about']
@@ -91,7 +110,7 @@ def process():
         db.session.commit()
         return redirect(url_for('admin.edit', cid=unicode(c.id)))
     elif request.form['op'] == 'pic':
-        c = Course.query.filter_by(id=request.form['id']).first()
+        c = Course.query.filter_by(id=request.form['id']).first_or_404()
         c.smallPicture = os.path.join('images/course', request.form['name'])
         # db.session.add(c)
         db.session.commit()
@@ -150,6 +169,12 @@ def process():
             db.session.delete(m)
             db.session.commit()
         return unicode(c.id)
+    elif request.form['op'] == 'change_permission':
+        u = User.query.filter_by(id=request.form['id']).first()
+        u.permissions = request.form['permission']
+        db.session.add(u)
+        db.session.commit()
+        return redirect(url_for('admin.user', uid=unicode(u.id)))
     else:
         return abort(404)
 

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 {% block content %}
 
@@ -67,7 +67,7 @@
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label">标题</label>
-                                <div class="col-md-8 controls">
+                                <div class="col-md-8">
                                     <input id="course_title" name="title" required="required" class="form-control" type="text" value="{{ c.title }}">
                                     <div class="help-block" style="display:none;"></div>
                                 </div>
@@ -75,7 +75,7 @@
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label">副标题</label>
-                                <div class="col-md-8 controls">
+                                <div class="col-md-8">
                                     <textarea id="course_subtitle" name="subtitle" required="required" class="form-control">{{ c.subtitle }}</textarea>
                                     <div class="help-block" style="display:none;"></div>
                                 </div>
@@ -83,6 +83,7 @@
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label">关于</label>
+
                                 <div class="col-md-8 controls">
                                     <textarea id="course_about" name="about" required="required" class="form-control" style="height: 300px">{{ c.about }}</textarea>
                                     <div class="help-block" style="display:none;"></div>

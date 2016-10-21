@@ -39,8 +39,8 @@ def create_app(config_name):
     app.register_blueprint(course_blueprint, url_prefix='/course')
     from .group import group as group_blueprint
     app.register_blueprint(group_blueprint, url_prefix='/group')
-
-    # By Zou Zhepeng
+    from .problem import problem as problems_blueprint
+    app.register_blueprint(problems_blueprint, url_prefix='/problems')
     from .article import article as article_blueprint
     app.register_blueprint(article_blueprint, url_prefix='/article')
 
@@ -49,7 +49,5 @@ def create_app(config_name):
     app.register_blueprint(lab_blueprint, url_prefix='/lab')
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
-    from .problem import problem as problems_blueprint
-    app.register_blueprint(problems_blueprint, url_prefix='/problems')
 
     return app

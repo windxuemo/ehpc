@@ -199,7 +199,7 @@ def info(uid):
                            pagination=pagination,
                            user=u)
 
-
+'''
 @user.route("/setting/password/", methods=['GET', 'POST'])
 @student_login
 def setting_password():
@@ -233,35 +233,92 @@ def setting_password():
             return render_template("user/setting_passwd.html",
                                    message_success=message_success)
 
-
-@user.route('/setting/info/', methods=['GET', 'POST'])
+'''
+@user.route('/setting/', methods=['GET', 'POST'])
 @student_login
-def setting_info():
+def setting():
     if request.method == 'GET':
-        return render_template('user/setting_info.html', form=None)
+        return render_template('user/setting.html', form=None)
     elif request.method == 'POST':
-        _form = request.form
-        email_addr = _form["email"]
-        web_addr = _form["website"]
+	if "file" in request.files.keys(): 
+	    
+            _file = request.files['file']
+            # If user does not select file, browser also submit a empty part without filename
+            if _file.filename == '':
+                message_fail = gettext('No selected file')
+                return render_template('user/setting.html', message_fail=message_fail)
 
-        message_email = ""
-        if not email_addr:
-            message_email = gettext('Email address can not be empty.')
-        elif not email_address.match(email_addr):
-            message_email = gettext('Email address is invalid.')
+            allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            file_appendix = _file.filename.rsplit('.', 1)[1]
+            if _file and '.' in _file.filename and file_appendix in allowed_extensions:
+                # Resize the image.
+                im = Image.open(_file)
+                im.thumbnail((128, 128), Image.ANTIALIAS)
+                im.save("%s/%d.png" % (upload_folder, current_user.id), 'PNG')
 
-        # TODO
-        # Change the user's email need to verify the old_email addr's ownership
-        if message_email:
-            return render_template("user/setting_info.html", message_email=message_email)
-        else:
-            current_user.website = web_addr
-            current_user.email = email_addr
-            db.session.commit()
-            message_success = gettext('Update info done!')
-            return render_template('user/setting_info.html', message_success=message_success)
+                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], "%d.png" % current_user.id)
+                unique_mark = os.stat(image_path).st_mtime
+                current_user.avatar_url = url_for('static', filename='upload/%d.png' % current_user.id, t=unique_mark)
+                db.session.commit()
+                message_success = gettext('Update avatar done!')
+                return render_template('user/setting.html', message_success=message_success)
+            else:
+                message_fail = gettext("Invalid file")
+                return render_template('user/setting.html', message_fail=message_fail)
 
+	_form = request.form
+	
+	if "email" in _form.keys():
+            email_addr = _form["email"]
+            web_addr = _form["website"]
 
+            message_email = ""
+            if not email_addr:
+                message_email = gettext('Email address can not be empty.')
+            elif not email_address.match(email_addr):
+                message_email = gettext('Email address is invalid.')
+
+            # TODO
+            # Change the user's email need to verify the old_email addr's ownership
+            if message_email:
+                return render_template("user/setting.html", message_email=message_email)
+            else:
+                current_user.website = web_addr
+                current_user.email = email_addr
+                db.session.commit()
+                message_success = gettext('Update info done!')
+                return render_template('user/setting.html', message_success=message_success)
+
+	elif "password" in _form.keys():
+	    
+            cur_password = _form['old_password']
+            new_password = _form['password']
+            new_password_2 = _form['password2']
+
+            message_cur, message_new = "", ""
+            if not cur_password:
+                message_cur = "The old password can not be empty."
+            elif not current_user.verify_password(cur_password):
+                message_cur = "The old password is not correct."
+
+            if new_password != new_password_2:
+                message_new = gettext("Passwords don't match.")
+            elif new_password_2 == "" or new_password == "":
+                message_new = gettext("Passwords can not be empty.")
+
+            if message_cur or message_new:
+                return render_template("user/setting.html", form=_form,
+                                       message_cur=message_cur,
+                                       message_new=message_new)
+            else:
+                current_user.password = new_password
+                db.session.commit()
+                message_success = gettext("Update password done!")
+                return render_template("user/setting.html",
+                                       message_success=message_success)
+		
+'''
 @user.route("/setting/avatar/", methods=['GET', 'POST'])
 @student_login
 def setting_avatar():
@@ -293,18 +350,5 @@ def setting_avatar():
             message_fail = gettext("Invalid file")
             return render_template('user/setting_avatar.html', message_fail=message_fail)
 
-
-@user.app_errorhandler(404)
-def voice_404(err):
-    return render_template('404.html'), 404
-
-
-@user.app_errorhandler(403)
-def voice_403(err):
-    return render_template('403.html'), 403
-
-
-@user.app_errorhandler(500)
-def voice_500(err):
-    return render_template('500.html'), 500
+'''
 

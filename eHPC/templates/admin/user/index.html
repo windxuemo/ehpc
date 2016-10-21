@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container" id="content-container">
+        <div class="row row-3-9">
+            <div class="col-md-3">
+                <div class="sidenav">
+                    <ul class="list-group">
+                        <li class="list-group-heading">网站管理</li>
+
+                        <li class="list-group-item">
+                            <a href="{{ url_for('admin.course') }}">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                课程管理
+                            </a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="{{ url_for('admin.problem') }}">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                题目管理
+                            </a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a href="{{ url_for('admin.group') }}">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                群组管理
+                            </a>
+                        </li>
+
+
+                        <li class="list-group-item active">
+                            <a href="{{ url_for('admin.user') }}">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                用户信息
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">
+                        用户管理
+                    </div>
+                    <div class="panel-body">
+
+                        <table class="table" id="user-table" style="word-break:break-all;">
+                            <thead>
+                            <tr>
+                                <th width="25%">名称</th>
+                                <th width="25%">email</th>
+                                <th>权限</th>
+                                <th>上次登录时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tb">
+                            {% for u in users %}
+                                <tr uid="{{ u.id }}">
+                                    <td>{{ u.username }}</td>
+                                    <td>{{ u.email }}</td>
+                                    <td>{{ u.permissions }}</td>
+                                    <td>{{ u.last_login }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.user_edit', uid=u.id) }}">修改权限</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

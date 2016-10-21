@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 {% block content %}
 
@@ -25,10 +25,15 @@
         });
 
 
-
     </script>
 
     <div class="container" id="content-container">
+
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li><a href="{{ url_for('admin.course') }}">课程管理</a></li>
+            <li><a href="{{ url_for('admin.edit', cid=c.id) }}">基本信息</a></li>
+        </ol>
 
         <div class="row">
             <div class="col-md-3">

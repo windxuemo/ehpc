@@ -194,6 +194,10 @@ select:-webkit-autofill {
     font-size: 18px;
 }
 
+.container .navbar-header{
+    margin-right: 30px;
+}
+
 @media (max-width: 1199px) {
     .content-header .nav.navbar-nav > li > a {
         padding-left: 20px;

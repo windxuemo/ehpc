@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
+
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/practice.css') }}" rel="stylesheet"
           xmlns="http://www.w3.org/1999/html">
     <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet"
           xmlns="http://www.w3.org/1999/html">
-    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">首页</a></li>
             <li><a href="/problems/">试题中心</a></li>
-            <li class="active"><a href="/problems/choice/">选择列表</a></li>
+            <li><a href="/problems/choice/">选择列表</a></li>
             <li class="active"><a href="/problems/choice/{{ classify_id }}">{{ title }}</a></li>
         </ol>
 

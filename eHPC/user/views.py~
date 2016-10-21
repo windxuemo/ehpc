@@ -240,33 +240,7 @@ def setting():
     if request.method == 'GET':
         return render_template('user/setting.html', form=None)
     elif request.method == 'POST':
-	if "file" in request.files.keys(): 
-	    
-            _file = request.files['file']
-            # If user does not select file, browser also submit a empty part without filename
-            if _file.filename == '':
-                message_fail = gettext('No selected file')
-                return render_template('user/setting.html', message_fail=message_fail)
-
-            allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
-            upload_folder = current_app.config['UPLOAD_FOLDER']
-            file_appendix = _file.filename.rsplit('.', 1)[1]
-            if _file and '.' in _file.filename and file_appendix in allowed_extensions:
-                # Resize the image.
-                im = Image.open(_file)
-                im.thumbnail((128, 128), Image.ANTIALIAS)
-                im.save("%s/%d.png" % (upload_folder, current_user.id), 'PNG')
-
-                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], "%d.png" % current_user.id)
-                unique_mark = os.stat(image_path).st_mtime
-                current_user.avatar_url = url_for('static', filename='upload/%d.png' % current_user.id, t=unique_mark)
-                db.session.commit()
-                message_success = gettext('Update avatar done!')
-                return render_template('user/setting.html', message_success=message_success)
-            else:
-                message_fail = gettext("Invalid file")
-                return render_template('user/setting.html', message_fail=message_fail)
-
+		
 	_form = request.form
 	
 	if "email" in _form.keys():
@@ -317,6 +291,33 @@ def setting():
                 message_success = gettext("Update password done!")
                 return render_template("user/setting.html",
                                        message_success=message_success)
+
+	elif "file" in request.files.keys(): 
+	    
+            _file = request.files['file']
+            # If user does not select file, browser also submit a empty part without filename
+            if _file.filename == '':
+                message_fail = gettext('No selected file')
+                return render_template('user/setting.html', message_fail=message_fail)
+
+            allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            file_appendix = _file.filename.rsplit('.', 1)[1]
+            if _file and '.' in _file.filename and file_appendix in allowed_extensions:
+                # Resize the image.
+                im = Image.open(_file)
+                im.thumbnail((128, 128), Image.ANTIALIAS)
+                im.save("%s/%d.png" % (upload_folder, current_user.id), 'PNG')
+
+                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], "%d.png" % current_user.id)
+                unique_mark = os.stat(image_path).st_mtime
+                current_user.avatar_url = url_for('static', filename='upload/%d.png' % current_user.id, t=unique_mark)
+                db.session.commit()
+                message_success = gettext('Update avatar done!')
+                return render_template('user/setting.html', message_success=message_success)
+            else:
+                message_fail = gettext("Invalid file")
+                return render_template('user/setting.html', message_fail=message_fail)
 		
 '''
 @user.route("/setting/avatar/", methods=['GET', 'POST'])

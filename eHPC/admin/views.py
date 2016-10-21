@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, redirect, url_for
 from . import admin
-from ..models import Course
+from ..models import Course, User
 from ..user.authorize import admin_login
 from .. import db
 import os
@@ -13,6 +13,15 @@ from werkzeug.utils import secure_filename
 def index():
     return redirect(url_for('admin.course'))
 
+@admin.route('/user', methods=['POST', 'GET'])
+def user():
+    all_users = User.query.all()
+    return render_template('admin/user/index.html', users=all_users)
+
+@admin.route('/user/edit')
+def user_edit():
+    u = User.query.filter_by(id=request.args['uid']).first()
+    return render_template('admin/user/edit.html', u=u)
 
 @admin.route('/course', methods=['POST', 'GET'])
 def course():
@@ -85,6 +94,12 @@ def process():
         db.session.add(c)
         db.session.commit()
         return unicode(c.id)
+    elif request.form['op'] == 'change_permission':
+        u = User.query.filter_by(id=request.form['id']).first()
+	u.permissions = request.form['permission']
+	db.session.add(u)
+	db.session.commit()
+	return redirect(url_for('admin.user', uid=unicode(u.id)))
     else:
         return "error"
 

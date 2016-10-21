@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, redirect, url_for, abort, jsonify
 from . import admin
-from ..models import Course, Lesson, Material
-from ..user.authorize import student_login
+from ..models import Course, Lesson, Material, User
+from ..user.authorize import student_login, admin_login
 from .. import db
 import os
 from werkzeug.utils import secure_filename
-
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt'}
 
@@ -20,6 +19,18 @@ def allowed_file(filename):
 @admin.route('/')
 def index():
     return redirect(url_for('admin.course'))
+
+
+@admin.route('/user', methods=['POST', 'GET'])
+def user():
+    all_users = User.query.all()
+    return render_template('admin/user/index.html', users=all_users)
+
+
+@admin.route('/user/edit')
+def user_edit():
+    u = User.query.filter_by(id=request.args['uid']).first()
+    return render_template('admin/user/edit.html', u=u)
 
 
 @admin.route('/course', methods=['POST', 'GET'])
@@ -150,6 +161,12 @@ def process():
             db.session.delete(m)
             db.session.commit()
         return unicode(c.id)
+    elif request.form['op'] == 'change_permission':
+        u = User.query.filter_by(id=request.form['id']).first()
+        u.permissions = request.form['permission']
+        db.session.add(u)
+        db.session.commit()
+        return redirect(url_for('admin.user', uid=unicode(u.id)))
     else:
         return abort(404)
 

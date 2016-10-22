@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, redirect, url_for, abort, jsonify
 from . import admin
-from ..models import Course, Lesson, Material, User
+from ..models import Course, Lesson, Material, User, Choice, Classify
 from ..user.authorize import student_login, admin_login
 from .. import db
 import os
@@ -70,7 +70,26 @@ def material():
 
 
 @admin.route('/problem')
-def problem(): pass
+def problem():
+    choice = Choice.query.all()
+    return render_template('admin/problem/choice.html', choices=choice)
+
+
+@admin.route('/problem/choice_problem/')
+def choice_problem():
+    classifies = Classify.query.all()
+    if 'id' in request.args:
+        choice = Choice.query.filter_by(id=request.args['id']).first_or_404()
+        classify_selected = ""
+        for temp in choice.classifies:
+            classify_selected += unicode(temp.id) + u';'
+        classify_selected = classify_selected[:len(classify_selected) - 1]
+
+        options = choice.detail.split(';')
+        return render_template('admin/problem/edit-choice-problem.html', choice=choice,
+                               classifies=classifies, classify_selected=classify_selected, options=options)
+    else:
+        return render_template('admin/problem/add-new-choice-problem.html', classifies=classifies)
 
 
 @admin.route('/group')
@@ -122,6 +141,43 @@ def process():
         c.lessonNum += 1
         db.session.commit()
         return unicode(c.id)
+    elif request.form['op'] == 'create_choice_problem':
+        if request.form['c_type'] == '0':
+            c_type = False
+        else:
+            c_type = True
+        choice = Choice(title=request.form['title'], detail=request.form['detail'],
+                        c_type=c_type, answer=request.form['answer'])
+        classify = request.form.getlist('classify[]')
+        for i in classify:
+            classify = Classify.query.filter_by(id=i).first_or_404()
+            choice.classifies.append(classify)
+        db.session.add(choice)
+        db.session.commit()
+        return unicode(choice.id)
+    elif request.form['op'] == 'edit_choice_problem':
+        choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
+        choice.title = request.form['title']
+        choice.detail = request.form['detail']
+        if request.form['c_type'] == '0':
+            c_type = False
+        else:
+            c_type = True
+        choice.c_type = c_type
+        choice.answer = request.form['answer']
+        classify = request.form.getlist('classify[]')
+        for i in choice.classifies:
+            choice.classifies.remove(i)
+        for i in classify:
+            classify = Classify.query.filter_by(id=i).first_or_404()
+            choice.classifies.append(classify)
+        db.session.commit()
+        return unicode(choice.id)
+    elif request.form['op'] == "del_choice":
+        choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
+        db.session.delete(choice)
+        db.session.commit()
+        return unicode(choice.id)
     elif request.form['op'] == "del_lesson":
         c = Course.query.filter_by(id=request.form['id']).first_or_404()
         l = c.lessons.filter_by(id=request.form['lid']).first_or_404()
@@ -171,6 +227,23 @@ def process():
         return abort(404)
 
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+@admin.route('/upload', methods=['POST'])
+def upload():
+    pic = request.files['pic']
+    if pic and allowed_file(pic.filename):
+        filename = secure_filename(pic.filename)
+        pic.save(os.path.join('eHPC/static/images/course', filename))
+        return os.path.join('/static/images/course', filename)
+    return 'error'
+
 @admin.route('/data', methods=['POST'])
 def data():
     if request.form['type'] == 'lesson':
@@ -178,3 +251,4 @@ def data():
         return jsonify(title=l.title, content=l.content)
     else:
         return abort(404)
+

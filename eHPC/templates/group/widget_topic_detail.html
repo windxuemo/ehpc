@@ -86,8 +86,10 @@
             $('#post-area').on(
                     "click", ".reply-btn",
                     function () {
-                        var user = "{{ current_user.username }}";
-                        $('#content').val($('#content').val() + '@' + user + ' ');
+                        <!-- 找到当前回复按钮对应的用户, 也就是说对谁进行回复, 修复 issue 38 -->
+                        var pre_div = $(this).parent().prev();
+                        var at_user = $(pre_div).find("a.link-grey").text();
+                        $('#content').val($('#content').val() + '@' + at_user + ' ');
                     }
             );
         });

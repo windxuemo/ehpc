@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.22, for osx10.9 (x86_64)
 --
--- Host: localhost    Database: ehpc
+-- Host: localhost    Database: eHPC
 -- ------------------------------------------------------
 -- Server version	5.6.22
 
@@ -283,7 +283,7 @@ CREATE TABLE `lessons` (
 
 LOCK TABLES `lessons` WRITE;
 /*!40000 ALTER TABLE `lessons` DISABLE KEYS */;
-INSERT INTO `lessons` VALUES (1,1,'课程概述','本课程目标',1),(2,2,'课程详细','新的课程',1),(5,NULL,NULL,NULL,NULL),(6,2,'MPI 介绍','新的课时',2),(7,1,'MPI 入门教程','简单入门教程',1);
+INSERT INTO `lessons` VALUES (1,1,'课程概述','本课程目标',1),(2,2,'课程详细','新的课程',1),(6,2,'MPI 介绍','新的课时',2),(7,1,'MPI 入门教程','简单入门教程',1);
 /*!40000 ALTER TABLE `lessons` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -437,7 +437,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_users_email` (`email`),
   UNIQUE KEY `ix_users_username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -446,7 +446,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-10-22 19:45:56','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',2,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,3,1),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',1,'2016-09-29 03:35:29','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',1,'2016-10-24 11:46:55','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477213729.0',2,NULL,'混吃等死不舒服',NULL,0,1),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',1,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',2,NULL,NULL,NULL,1,2),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',1,'2016-10-24 10:57:10','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0);
+INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-10-22 19:45:56','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',2,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,3,1),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-09-29 03:35:29','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-10-24 11:46:55','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477213729.0',1,NULL,'混吃等死不舒服',NULL,0,1),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',2,NULL,NULL,NULL,1,2),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-10-24 10:57:10','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37\', \'wudi27@mail.sysu.edu.cn','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',2,NULL,NULL,NULL,1,1),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-10-19 15:03:29','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,0,NULL,NULL,NULL,0,3);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -459,4 +459,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-24 11:50:52
+-- Dump completed on 2016-10-24 12:34:51

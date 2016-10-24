@@ -16,14 +16,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt'}
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
 @admin.route('/')
 def index():
     return redirect(url_for('admin.course'))
@@ -67,7 +59,7 @@ def picture():
 @admin.route('/course/lesson')
 def lesson():
     cour = Course.query.filter_by(id=request.args['cid']).first_or_404()
-    return render_template('admin/course/lesson.html', c=cour)
+    return render_template('admin/course/lesson.html', c=cour, lessons=cour.lessons)
 
 
 @admin.route('/course/lesson/material')

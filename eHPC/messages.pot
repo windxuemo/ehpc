@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-22 19:14+0800\n"
+"POT-Creation-Date: 2016-10-24 11:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,83 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: article/views.py:14 article/views.py:30
+#: admin/system_views.py:18 templates/admin/navbar.html:6
+msgid "System Admin"
+msgstr ""
+
+#: admin/system_views.py:26
+msgid "User Admin"
+msgstr ""
+
+#: admin/system_views.py:38
+msgid "Successfully modify permission"
+msgstr ""
+
+#: admin/system_views.py:41
+msgid "User Edit"
+msgstr ""
+
+#: admin/system_views.py:49
+msgid "Articles Admin"
+msgstr ""
+
+#: admin/system_views.py:57
+msgid "Create Article"
+msgstr ""
+
+#: admin/system_views.py:99
+msgid "Groups Admin"
+msgstr ""
+
+#: admin/system_views.py:107
+msgid "Create Group"
+msgstr ""
+
+#: admin/teacher_views.py:25
+msgid "Course Admin"
+msgstr ""
+
+#: admin/teacher_views.py:33
+msgid "Create Course"
+msgstr ""
+
+#: admin/teacher_views.py:41
+msgid "Edit Course"
+msgstr ""
+
+#: admin/teacher_views.py:49
+msgid "Course Picture"
+msgstr ""
+
+#: admin/teacher_views.py:57
+msgid "Course Lesson"
+msgstr ""
+
+#: admin/teacher_views.py:70
+msgid "Lesson Material"
+msgstr ""
+
+#: admin/teacher_views.py:78
+msgid "Problem Admin"
+msgstr ""
+
+#: admin/views.py:17 admin/views.py:32
+msgid "Admin Auth"
+msgstr ""
+
+#: admin/views.py:31 user/views.py:39
+msgid "Invalid username or password."
+msgstr ""
+
+#: admin/views.py:47
+msgid "Teacher Setting"
+msgstr ""
+
+#: admin/views.py:60
+msgid "System Setting"
+msgstr ""
+
+#: article/views.py:14
 msgid "Articles"
 msgstr ""
 
@@ -98,19 +174,59 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: templates/navbar.html:44 templates/user/reg.html:6
-#: templates/user/signin.html:6 templates/user/signin.html:35
+#: templates/admin/auth.html:33 templates/navbar.html:44
+#: templates/user/reg.html:6 templates/user/signin.html:6
+#: templates/user/signin.html:28
 msgid "Sign In"
 msgstr ""
 
 #: templates/navbar.html:45 templates/user/reg.html:7
 #: templates/user/reg.html:57 templates/user/signin.html:7
-#: templates/user/signin.html:44
+#: templates/user/signin.html:36
 msgid "Registration"
 msgstr ""
 
 #: templates/navbar.html:50
 msgid "search"
+msgstr ""
+
+#: templates/admin/auth.html:13
+msgid "Admin Page"
+msgstr ""
+
+#: templates/admin/auth.html:18 templates/user/reg.html:12
+#: templates/user/signin.html:13
+msgid "Username"
+msgstr ""
+
+#: templates/admin/auth.html:20 templates/user/reg.html:25
+#: templates/user/reg.html:28 templates/user/signin.html:15
+msgid "Email Address"
+msgstr ""
+
+#: templates/admin/auth.html:23 templates/admin/auth.html:26
+#: templates/user/ajax_setting_passwd.html:2 templates/user/reg.html:36
+#: templates/user/signin.html:18 templates/user/signin.html:21
+msgid "Password"
+msgstr ""
+
+#: templates/admin/navbar.html:9
+msgid "Teacher Admin"
+msgstr ""
+
+#: templates/admin/user/edit.html:17
+msgid "Modify Permission"
+msgstr ""
+
+#: templates/admin/user/edit.html:31
+msgid "Permission"
+msgstr ""
+
+#: templates/admin/user/edit.html:42 templates/user/ajax_setting_avatar.html:23
+#: templates/user/ajax_setting_info.html:35
+#: templates/user/ajax_setting_passwd.html:43
+#: templates/user/passwd_reset_confirm.html:22
+msgid "Save"
 msgstr ""
 
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
@@ -226,28 +342,16 @@ msgstr ""
 msgid "Avatar"
 msgstr ""
 
-#: templates/user/ajax_setting_avatar.html:23
-#: templates/user/ajax_setting_info.html:54
-#: templates/user/ajax_setting_passwd.html:43
-#: templates/user/passwd_reset_confirm.html:22
-msgid "Save"
-msgstr ""
-
 #: templates/user/ajax_setting_info.html:2
 msgid "Personal"
 msgstr ""
 
-#: templates/user/ajax_setting_info.html:32
+#: templates/user/ajax_setting_info.html:15
 msgid "Email"
 msgstr ""
 
-#: templates/user/ajax_setting_info.html:44
+#: templates/user/ajax_setting_info.html:26
 msgid "Website"
-msgstr ""
-
-#: templates/user/ajax_setting_passwd.html:2 templates/user/reg.html:36
-#: templates/user/signin.html:22 templates/user/signin.html:25
-msgid "Password"
 msgstr ""
 
 #: templates/user/ajax_setting_passwd.html:16
@@ -379,17 +483,8 @@ msgid ""
 "check your email and click the link to continue."
 msgstr ""
 
-#: templates/user/reg.html:12 templates/user/signin.html:14
-msgid "Username"
-msgstr ""
-
 #: templates/user/reg.html:15
 msgid "letters,digits,underscore"
-msgstr ""
-
-#: templates/user/reg.html:25 templates/user/reg.html:28
-#: templates/user/signin.html:16
-msgid "Email Address"
 msgstr ""
 
 #: templates/user/reg.html:43
@@ -412,20 +507,16 @@ msgstr ""
 msgid "Avatar Setting"
 msgstr ""
 
-#: templates/user/signin.html:41
+#: templates/user/signin.html:33
 msgid "Forget Password"
 msgstr ""
 
-#: templates/user/signin.html:43
+#: templates/user/signin.html:35
 msgid "Have no account?"
 msgstr ""
 
 #: user/views.py:28 user/views.py:40
 msgid "User Sign In"
-msgstr ""
-
-#: user/views.py:39
-msgid "Invalid username or password."
 msgstr ""
 
 #: user/views.py:55 user/views.py:89
@@ -480,7 +571,7 @@ msgstr ""
 msgid "Update info done!"
 msgstr ""
 
-#: user/views.py:251
+#: user/views.py:251 util/upload_file.py:17
 msgid "No selected file"
 msgstr ""
 
@@ -488,7 +579,7 @@ msgstr ""
 msgid "Update avatar done!"
 msgstr ""
 
-#: user/views.py:272
+#: user/views.py:272 util/upload_file.py:31
 msgid "Invalid file"
 msgstr ""
 
@@ -558,5 +649,17 @@ msgstr ""
 
 #: util/time_process.py:37
 msgid "Just now"
+msgstr ""
+
+#: util/user_manage.py:38
+msgid "Teacher"
+msgstr ""
+
+#: util/user_manage.py:40
+msgid "Student"
+msgstr ""
+
+#: util/user_manage.py:42
+msgid "Administrator"
 msgstr ""
 

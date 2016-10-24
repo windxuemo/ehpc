@@ -5,4 +5,4 @@ from flask_babel import gettext
 
 @lab.route('/')
 def index():
-    return render_template('lab/index.html', title=gettext('Labs'))
+    return render_template('lab/teacher.html', title=gettext('Labs'))

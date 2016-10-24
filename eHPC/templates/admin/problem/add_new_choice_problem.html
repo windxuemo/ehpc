@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}" rel="stylesheet">
@@ -10,7 +10,18 @@
 {% block content %}
     <div class="container" id="content-container">
         <div class="row">
-            <div style="width: 75%;margin: 0 auto">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item active" href="{{ url_for('admin.problem') }}">选择题目</a>
+                        <a class="list-group-item" href="{{ url_for('admin.problem') }}">编程题目</a>
+                    </div>
+                    <div class="list-group">
+                    </div>
+                </div>
+            </div><!--左侧导航栏-->
+
+            <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
                         <span class="pull-right">
@@ -28,120 +39,126 @@
                         题目编辑
                     </div>
 
-                    <div class="panel-body" style="padding-bottom: 0px">
-                        <span class="pull-left" style="line-height: 40px;font-size: 15px;margin-right: 10px">知识点: </span>
+                    <div class="panel-body" style="line-height: 150%;font-size: 15px;margin-top: 10px">
+                        <span class="pull-left">知识点: </span>
                         <span class="pull-left">
                             {% for classify in classifies %}
                                 <span>
-                                    <input type="checkbox" name="choice-classify" data-id="{{ classify["id"] }}">{{ classify["name"] }}</span>
+                                    <input type="checkbox" name="choice-classify"
+                                           data-id="{{ classify["id"] }}">{{ classify["name"] }}</span>
                             {% endfor %}
                         </span>
                     </div>
 
                     <div class="panel-body">
-
                         <div class="form-group">
                             <label>题干</label>
-                            <textarea name="content" data-provide="markdown" id="choice-title" rows="10">{{ choice.title }}</textarea>
+                            <textarea name="content" data-provide="markdown" id="choice-title" rows="10"></textarea>
                         </div>
 
-                        <div id="options">
-                            {% if choice.c_type =='0' %}
-                                {% for option in options %}
-                                    <div class="input-group">
-                                        <span class="input-group-addon" style="width: 8%">
-                                            <input value="{{ loop.index0 | get_char }}" name="option_group" type="radio">&nbsp;&nbsp;{{ loop.index0 | get_char }}</span>
-                                                <input class="form-control" name="options" placeholder="请输入选项内容" type="text" value="{{ option }}">
-                                                <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" title="删除">
-                                                <span class="glyphicon glyphicon-minus"></span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                {% for option in options%}
-                                    <div class="input-group">
-                                        <span class="input-group-addon" style="width: 8%">
-                                            <input value="{{ loop.index0 | get_char }}" name="option_group" type="checkbox">&nbsp;&nbsp;{{ loop.index0 | get_char }}</span>
-                                        <input class="form-control" name="options" placeholder="请输入选项内容" type="text" value="{{ option }}">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" title="删除">
-                                                <span class="glyphicon glyphicon-minus"></span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
+                        <div id="options" style="display: none">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 8%">
+                                    <input value="A" name="option_group" type="radio">&nbsp;&nbsp;A</span>
+                                <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" title="删除">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </span>
+                            </div>
+
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 8%">
+                                    <input value="B" name="option_group" type="radio">&nbsp;&nbsp;B</span>
+                                <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" title="删除">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </span>
+                            </div>
+
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 8%">
+                                    <input value="C" name="option_group" type="radio">&nbsp;&nbsp;C</span>
+                                <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" title="删除">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </span>
+                            </div>
+
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 8%">
+                                    <input value="D" name="option_group" type="radio">&nbsp;&nbsp;D</span>
+                                <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" title="删除">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </span>
+                            </div>
+
                         </div>
 
-                        <button id="add-options" class="btn btn-primary btn-block disabled" style="margin-top: 15px">添加选项</button>
-                        <button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交</button>
+                        <button id="add-options" class="btn btn-primary btn-block disabled" style="margin-top: 15px">
+                            添加选项
+                        </button>
+                        <button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
 
+{% block footer_ext %}
     <script>
         $(document).ready(function () {
-
-            //需编辑题目的知识点id
-            var oldClassifies = "{{ classify_selected }}";
-            oldClassifies = oldClassifies.split(';');
-            for (var i=0;i<oldClassifies.length;i++){
-                $("input[data-id=" + oldClassifies[i] + "]").attr('checked',true);
-            }
-            //需编辑题目的答案
-            var oldAnswer = "{{ choice.answer }}";
-            oldAnswer = oldAnswer.split(',');
-            for (i=0;i<oldAnswer.length;i++){
-                $("#options").find("input[value="+ oldAnswer[i] +"]").attr('checked',true);
-            }
 
             $("#options").find(".btn.btn-default").each(function () {
                 $(this).click(function () {
                     $(this).parent().parent().remove();//移除当前项
                     //修改选项序号
-                    var number=0;
+                    var number = 0;
                     $("#options").find(".input-group-addon").each(function () {
                         var str = $(this).html();
-                        str = str.substr(0,str.length-1) + String.fromCharCode("A".charCodeAt(0) + number);
+                        str = str.substr(0, str.length - 1) + String.fromCharCode("A".charCodeAt(0) + number);
                         $(this).html(str);
                         number++;
                     });
-                    number=0;
+                    number = 0;
                     $("#options").find("input[name=option_group]").each(function () {
                         $(this).val(String.fromCharCode("A".charCodeAt(0) + number));
                         number++;
                     });
                 });
             });
-            {% if choice.c_type %}
-                var c_type = '1';
-            {% else %}
-                var c_type = '0';
-            {% endif %}
+
+            var c_type = '0';
             //单选题
             $("#create-radio").click(function () {
-                $("#options").css("display","none");
+                $("#options").css("display", "none");
                 $("#options").find("input[name=option_group]").each(function () {
-                    $(this).attr("type","radio");
+                    $(this).attr("type", "radio");
                 });
-                $("#options").css("display","block");
+                $("#options").css("display", "block");
                 $("#add-options").attr("class", "btn btn-primary btn-block");
-                c_type='0';
+                c_type = '0';
             });
 
             //多选题
             $("#create-checkbox").click(function () {
-                $("#options").css("display","none");
+                $("#options").css("display", "none");
                 $("#options").find("input[name=option_group]").each(function () {
-                    $(this).attr("type","checkbox");
+                    $(this).attr("type", "checkbox");
                 });
-                $("#options").css("display","block");
+                $("#options").css("display", "block");
                 $("#add-options").attr("class", "btn btn-primary btn-block");
-                c_type='1';
+                c_type = '1';
             });
 
             //添加选项
@@ -155,7 +172,7 @@
                 //修改新选项序号为原来最后一个序号加1
                 t.find(".input-group-addon").each(function () {
                     var str = $(this).html();
-                    str = str.substr(0,str.length-1) + String.fromCharCode(str.charCodeAt(str.length-1) + 1);
+                    str = str.substr(0, str.length - 1) + String.fromCharCode(str.charCodeAt(str.length - 1) + 1);
                     $(this).html(str);
                 });
 
@@ -163,22 +180,22 @@
 
             //保存提交
             $("#save-problem").click(function () {
-                if($("#choice-title").val().length==0) {
+                if ($("#choice-title").val().length == 0) {
                     alert("题干不能为空");
                     return;
                 }
 
-                var choiceDetail = $("#choice-title").val();//题干
+                var choiceTitle = $("#choice-title").val();//题干
 
                 var hasChoiceCorrectAnswer = false;
                 var correctAnswer = [];
                 $("#options").find("input[name=option_group]").each(function () {
-                    if(this.checked==true) {
+                    if (this.checked == true) {
                         correctAnswer.push($(this).val());
                         hasChoiceCorrectAnswer = true;
                     }
                 });
-                if(!hasChoiceCorrectAnswer){
+                if (!hasChoiceCorrectAnswer) {
                     alert("请选择正确答案");
                     return;
                 }
@@ -188,11 +205,11 @@
                 var choices = [];
 
                 $("input[name=options]").each(function () {
-                    if($(this).val()==""){
-                        if(!hasEmptyChoice) alert("请填写所有选项");
+                    if ($(this).val() == "") {
+                        if (!hasEmptyChoice) alert("请填写所有选项");
                         hasEmptyChoice = true;
                     }
-                    else{
+                    else {
                         choices.push($(this).val());
                     }
                 });
@@ -201,22 +218,21 @@
 
                 var classifyId = [];
                 $("input[name=choice-classify]").each(function () {
-                    if(this.checked==true){
+                    if (this.checked == true) {
                         classifyId.push($(this).data('id'));
                     }
                 });
-
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.process') }}",
                     data: {
-                        op: "edit_choice_problem",
-                        id: "{{ choice.id }}",
-                        title: choiceDetail,
+                        op: "create_choice_problem",
+                        title: choiceTitle,
                         detail: choices,
                         c_type: c_type,
                         answer: correctAnswer,
                         classify: classifyId
+
                     },
                     success: function () {
                         //TODO:
@@ -228,8 +244,6 @@
 
         });
     </script>
-
-
 
     <script>
         (function ($) {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-22 19:14+0800\n"
+"POT-Creation-Date: 2016-10-24 11:48+0800\n"
 "PO-Revision-Date: 2016-10-08 15:35+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -18,7 +18,83 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: article/views.py:14 article/views.py:30
+#: admin/system_views.py:18 templates/admin/navbar.html:6
+msgid "System Admin"
+msgstr "站点管理"
+
+#: admin/system_views.py:26
+msgid "User Admin"
+msgstr "用户管理"
+
+#: admin/system_views.py:38
+msgid "Successfully modify permission"
+msgstr "修改权限成功"
+
+#: admin/system_views.py:41
+msgid "User Edit"
+msgstr "用户编辑"
+
+#: admin/system_views.py:49
+msgid "Articles Admin"
+msgstr "资讯管理"
+
+#: admin/system_views.py:57
+msgid "Create Article"
+msgstr "新建文章"
+
+#: admin/system_views.py:99
+msgid "Groups Admin"
+msgstr "群组管理"
+
+#: admin/system_views.py:107
+msgid "Create Group"
+msgstr "新建群组"
+
+#: admin/teacher_views.py:25
+msgid "Course Admin"
+msgstr "课程管理"
+
+#: admin/teacher_views.py:33
+msgid "Create Course"
+msgstr "新建课程"
+
+#: admin/teacher_views.py:41
+msgid "Edit Course"
+msgstr "编辑课程"
+
+#: admin/teacher_views.py:49
+msgid "Course Picture"
+msgstr "课程图片"
+
+#: admin/teacher_views.py:57
+msgid "Course Lesson"
+msgstr "课程课时"
+
+#: admin/teacher_views.py:70
+msgid "Lesson Material"
+msgstr "课时资料"
+
+#: admin/teacher_views.py:78
+msgid "Problem Admin"
+msgstr "题目管理"
+
+#: admin/views.py:17 admin/views.py:32
+msgid "Admin Auth"
+msgstr "后台认证"
+
+#: admin/views.py:31 user/views.py:39
+msgid "Invalid username or password."
+msgstr "用户名或者密码错误"
+
+#: admin/views.py:47
+msgid "Teacher Setting"
+msgstr "教师管理"
+
+#: admin/views.py:60
+msgid "System Setting"
+msgstr "站点管理"
+
+#: article/views.py:14
 msgid "Articles"
 msgstr "所有资讯"
 
@@ -99,20 +175,60 @@ msgstr "账户设置"
 msgid "Logout"
 msgstr "退出登录"
 
-#: templates/navbar.html:44 templates/user/reg.html:6
-#: templates/user/signin.html:6 templates/user/signin.html:35
+#: templates/admin/auth.html:33 templates/navbar.html:44
+#: templates/user/reg.html:6 templates/user/signin.html:6
+#: templates/user/signin.html:28
 msgid "Sign In"
 msgstr "登录"
 
 #: templates/navbar.html:45 templates/user/reg.html:7
 #: templates/user/reg.html:57 templates/user/signin.html:7
-#: templates/user/signin.html:44
+#: templates/user/signin.html:36
 msgid "Registration"
 msgstr "注册"
 
 #: templates/navbar.html:50
 msgid "search"
 msgstr "搜索"
+
+#: templates/admin/auth.html:13
+msgid "Admin Page"
+msgstr "管理员登录"
+
+#: templates/admin/auth.html:18 templates/user/reg.html:12
+#: templates/user/signin.html:13
+msgid "Username"
+msgstr "用户名"
+
+#: templates/admin/auth.html:20 templates/user/reg.html:25
+#: templates/user/reg.html:28 templates/user/signin.html:15
+msgid "Email Address"
+msgstr "邮箱地址"
+
+#: templates/admin/auth.html:23 templates/admin/auth.html:26
+#: templates/user/ajax_setting_passwd.html:2 templates/user/reg.html:36
+#: templates/user/signin.html:18 templates/user/signin.html:21
+msgid "Password"
+msgstr "密码"
+
+#: templates/admin/navbar.html:9
+msgid "Teacher Admin"
+msgstr "教师管理"
+
+#: templates/admin/user/edit.html:17
+msgid "Modify Permission"
+msgstr "修改权限"
+
+#: templates/admin/user/edit.html:31
+msgid "Permission"
+msgstr "权限"
+
+#: templates/admin/user/edit.html:42 templates/user/ajax_setting_avatar.html:23
+#: templates/user/ajax_setting_info.html:35
+#: templates/user/ajax_setting_passwd.html:43
+#: templates/user/passwd_reset_confirm.html:22
+msgid "Save"
+msgstr "保存"
 
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
 #: templates/group/group.html:5 templates/group/group_all.html:7
@@ -227,29 +343,17 @@ msgstr "通过数目"
 msgid "Avatar"
 msgstr "头像"
 
-#: templates/user/ajax_setting_avatar.html:23
-#: templates/user/ajax_setting_info.html:54
-#: templates/user/ajax_setting_passwd.html:43
-#: templates/user/passwd_reset_confirm.html:22
-msgid "Save"
-msgstr "保存"
-
 #: templates/user/ajax_setting_info.html:2
 msgid "Personal"
 msgstr "个人信息"
 
-#: templates/user/ajax_setting_info.html:32
+#: templates/user/ajax_setting_info.html:15
 msgid "Email"
 msgstr "邮箱地址"
 
-#: templates/user/ajax_setting_info.html:44
+#: templates/user/ajax_setting_info.html:26
 msgid "Website"
 msgstr "个人主页"
-
-#: templates/user/ajax_setting_passwd.html:2 templates/user/reg.html:36
-#: templates/user/signin.html:22 templates/user/signin.html:25
-msgid "Password"
-msgstr "密码"
 
 #: templates/user/ajax_setting_passwd.html:16
 msgid "Current Password"
@@ -380,18 +484,9 @@ msgid ""
 "check your email and click the link to continue."
 msgstr ""
 
-#: templates/user/reg.html:12 templates/user/signin.html:14
-msgid "Username"
-msgstr "用户名"
-
 #: templates/user/reg.html:15
 msgid "letters,digits,underscore"
 msgstr "字符,数字或者下划线"
-
-#: templates/user/reg.html:25 templates/user/reg.html:28
-#: templates/user/signin.html:16
-msgid "Email Address"
-msgstr "邮箱地址"
 
 #: templates/user/reg.html:43
 msgid "Password Again"
@@ -413,21 +508,17 @@ msgstr "更改密码"
 msgid "Avatar Setting"
 msgstr "头像设置"
 
-#: templates/user/signin.html:41
+#: templates/user/signin.html:33
 msgid "Forget Password"
 msgstr "忘记密码"
 
-#: templates/user/signin.html:43
+#: templates/user/signin.html:35
 msgid "Have no account?"
 msgstr "没有账户"
 
 #: user/views.py:28 user/views.py:40
 msgid "User Sign In"
 msgstr "用户登录"
-
-#: user/views.py:39
-msgid "Invalid username or password."
-msgstr "用户名或者密码错误"
 
 #: user/views.py:55 user/views.py:89
 msgid "Register Account"
@@ -481,7 +572,7 @@ msgstr "的话题"
 msgid "Update info done!"
 msgstr "成功更新个人信息"
 
-#: user/views.py:251
+#: user/views.py:251 util/upload_file.py:17
 msgid "No selected file"
 msgstr "没有选中文件"
 
@@ -489,7 +580,7 @@ msgstr "没有选中文件"
 msgid "Update avatar done!"
 msgstr "已更新头像"
 
-#: user/views.py:272
+#: user/views.py:272 util/upload_file.py:31
 msgid "Invalid file"
 msgstr "文件不符合要求"
 
@@ -560,4 +651,16 @@ msgstr "前"
 #: util/time_process.py:37
 msgid "Just now"
 msgstr "刚刚"
+
+#: util/user_manage.py:38
+msgid "Teacher"
+msgstr "老师"
+
+#: util/user_manage.py:40
+msgid "Student"
+msgstr "学生"
+
+#: util/user_manage.py:42
+msgid "Administrator"
+msgstr "管理员"
 

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}" rel="stylesheet">
@@ -9,23 +9,28 @@
 
 {% block content %}
     <div id="content-container" class="container">
-        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-            <li><a href="/">首页</a></li>
-            <li class="active"><a href="{{ url_for('article.post') }}">发布资讯</a></li>
-        </ol>
-
         <div class="panel panel-default">
             <div class="panel-body">
-                <form action="{{ url_for('article.post') }}" method="POST">
-
+                <form action="{{ url_for('admin.group_edit', gid=group.id) }}" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label>文章标题</label>
-                        <input type="text" class="form-control" name='title' placeholder="在此输入标题" required><br/>
+                        <label>群组名称</label>
+                        <input type="text" class="form-control" name='title' value="{{ group.title }}" required>
+                        <br>
                     </div>
 
                     <div class="form-group">
-                        <label>文章内容</label>
-                        <textarea name="content" data-provide="markdown" id="target-editor" rows="30" required></textarea>
+                        <label>群组Logo</label>
+                        <br>
+                        <img id="group-picture" src="{{ group.logo }}">
+                        <input name="logo" accept="image/bmp,image/jpeg,image/png" type="file">
+                        <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
+                        <br>
+                    </div>
+
+                    <div class="form-group">
+                        <label>群组介绍</label>
+                        <textarea name="about" data-provide="markdown" id="target-editor" rows="30"
+                                  required>{{ group.about }}</textarea>
                     </div>
 
                     <div class="form-submit text-right">
@@ -38,7 +43,6 @@
 {% endblock %}
 
 {% block footer_ext %}
-
     <script>
         (function ($) {
             $.fn.markdown.messages['cn'] = {
@@ -52,3 +56,5 @@
         $("#target-editor").markdown({language: 'cn'})
     </script>
 {% endblock %}
+
+{# group #}

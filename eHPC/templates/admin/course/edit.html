@@ -2,8 +2,68 @@
 
 {% block content %}
 
-    <script type="text/javascript">
+    <div class="container" id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item active"
+                           href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">基本信息</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" id="course-form">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">标题</label>
+                                <div class="col-md-8">
+                                    <input id="course_title" name="title" required="required" class="form-control"
+                                           type="text" value="{{ c.title }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">副标题</label>
+                                <div class="col-md-8">
+                                    <textarea id="course_subtitle" name="subtitle"
+                                              required class="form-control">{{ c.subtitle }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">关于</label>
+
+                                <div class="col-md-8 controls">
+                                    <textarea id="course_about" name="about" required class="form-control"
+                                              style="height: 300px">{{ c.about }}</textarea>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-8">
+                                <button class="btn btn-fat btn-primary" id="course-create-btn">保存</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script type="text/javascript">
         $(document).ready(function () {
             $('#course-create-btn').click(function () {
                 $.ajax({
@@ -23,86 +83,5 @@
             });
 
         });
-
-
     </script>
-
-    <div class="container" id="content-container">
-
-        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-            <li><a href="/">首页</a></li>
-            <li><a href="{{ url_for('admin.course') }}">课程管理</a></li>
-            <li><a href="{{ url_for('admin.edit', cid=c.id) }}">基本信息</a></li>
-        </ol>
-
-        <div class="row">
-            <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="list-group-panel">
-                            <div class="list-group-heading">课程信息</div>
-                            <div class="list-group">
-                                <a class="list-group-item active" href="{{ url_for('admin.edit', cid=c.id) }}">基本信息</a>
-                                <a class="list-group-item " href="{{ url_for('admin.picture', cid=c.id) }}">课程图片</a>
-                                <a class="list-group-item " href="{{ url_for('admin.lesson', cid=c.id) }}">课时管理</a>
-                            </div>
-                        </div><!-- /list-group-block -->
-
-                        <div class="list-group-panel">
-                            <div class="list-group">
-                                <a class="list-group-item" href="{{ url_for('admin.index') }}">返回</a>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-md-9">
-
-                <div class="panel panel-default panel-col">
-                    <div class="panel-heading">基本信息</div>
-                    <div class="panel-body">
-                        <form class="form-horizontal" id="course-form">
-
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">标题</label>
-                                <div class="col-md-8">
-                                    <input id="course_title" name="title" required="required" class="form-control" type="text" value="{{ c.title }}">
-                                    <div class="help-block" style="display:none;"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">副标题</label>
-                                <div class="col-md-8">
-                                    <textarea id="course_subtitle" name="subtitle" required="required" class="form-control">{{ c.subtitle }}</textarea>
-                                    <div class="help-block" style="display:none;"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">关于</label>
-
-                                <div class="col-md-8 controls">
-                                    <textarea id="course_about" name="about" required="required" class="form-control" style="height: 300px">{{ c.about }}</textarea>
-                                    <div class="help-block" style="display:none;"></div>
-                                </div>
-                            </div>
-
-                        </form>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8">
-                                <button class="btn btn-fat btn-primary" id="course-create-btn">保存</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
 {% endblock %}

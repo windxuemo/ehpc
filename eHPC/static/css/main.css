@@ -59,12 +59,12 @@ body.bg-blank {
     height: 60px;
 }
 
-.list-group-panel .list-group-item.active,
-.list-group-panel .list-group-item.active:hover {
-    background: #f3f3f3;
-    color: #46c37b;
-    font-weight: bold;
-    border-left: 3px solid #46c37b;
+ul.lesson-list{
+    padding-left: 20px;
+}
+
+ul.lesson-list li {
+    list-style-type: none;
 }
 
 .watermark.active {
@@ -194,7 +194,7 @@ select:-webkit-autofill {
     font-size: 18px;
 }
 
-.container .navbar-header{
+.container .navbar-header {
     margin-right: 30px;
 }
 
@@ -3754,4 +3754,32 @@ textarea {
 
 ul#program-run-tab li a {
     padding-left: 0;
+}
+
+/* 后台管理页面 */
+.admin-list {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.admin-list .admin-item {
+    background-color: #f0f0f0;
+    text-align: center;
+    border-radius: 10px;
+    padding: 0 0 30px 0;
+    margin-bottom: 20px;
+}
+
+.admin-list .admin-item .info {
+    color: #98a2b5;
+    line-height: 20px;
+    height: 40px;
+    padding-top: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.admin-list .admin-item .bottom {
+    width: 60%;
+    margin: 0 auto;
 }

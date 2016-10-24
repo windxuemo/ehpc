@@ -8,23 +8,6 @@
                 {{ message_success }}</div>
         {% endif %}
 
-        {#        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modal-info">#}
-        {#            <div class="modal-dialog modal-sm" role="document">#}
-        {#                <div class="modal-content">#}
-        {#                    <div class="modal-header">#}
-        {#                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span#}
-        {#                                aria-hidden="true">&times;</span></button>#}
-        {#                        <h4 class="modal-title text-center" id="gridSystemModalLabel">操作成功</h4>#}
-        {#                    </div>#}
-        {#                    <div class="modal-body">#}
-        {#                        <div class="text-center" role="alert">#}
-        {#                            {{ message_email or message_success }}#}
-        {#                        </div>#}
-        {#                    </div>#}
-        {#                </div>#}
-        {#            </div>#}
-        {#        </div>#}
-
         <form class="form-horizontal" action="{{ url_for('user.setting_info') }}">
             <div class="form-group">
             </div>
@@ -33,7 +16,6 @@
                 <div class="col-md-7">
                     <input type="email" id="email" name="email" class="form-control"
                            value="{{ current_user.email }}">
-                    <div class="help-block" style="display:none;"></div>
                 </div>
                 {% if message_email %}
                     <div class="col-md-offset-3 col-md-12 text-danger">{{ message_email }}</div>
@@ -45,7 +27,6 @@
                 <div class="col-md-7">
                     <input type="url" id="website" name="website" class="form-control"
                            value="{{ current_user.website }}">
-                    <div class="help-block" style="display:none;"></div>
                 </div>
             </div>
 

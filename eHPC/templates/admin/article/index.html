@@ -1,38 +1,38 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
-
     <div class="container" id="content-container">
         <div class="panel panel-default panel-col">
             <div class="panel-heading">
                     <span class="pull-right">
-                        <a id="create-course" href="{{ url_for('admin.course_create') }}" class="btn btn-info btn-sm">
+                        <a id="create-course" href="{{ url_for('admin.article_create') }}" class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-plus"></span>
-                            创建课程
+                            创建资讯
                         </a>
                     </span>
-                在教课程
+                所有资讯
             </div>
+
             <div class="panel-body">
                 <table class="table" id="course-table" style="word-break:break-all;">
                     <thead>
                     <tr>
-                        <th width="30%">名称</th>
-                        <th>课程数</th>
-                        <th>学生数</th>
-                        <th>创建时间</th>
+                        <th width="30%">文章标题</th>
+                        <th>浏览数</th>
+                        <th>最后更新时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody id="tb">
-                    {% for c in courses %}
-                        <tr data-cid="{{ c.id }}">
-                            <td>{{ c.title }}</td>
-                            <td>{{ c.lessonNum }}</td>
-                            <td>{{ c.studentNum }}</td>
-                            <td>{{ c.createdTime }}</td>
+                    {% for a in articles %}
+                        <tr data-cid="{{ a.id }}">
+                            <td>{{ a.title }}</td>
+                            <td>{{ a.visitNum }}</td>
+                            <td>{{ a.updatedTime }}</td>
                             <td>
-                                <a href="{{ url_for('admin.course_edit', cid=c.id) }}">编辑</a>
+                                <a href="{{ url_for('admin.article_edit', aid=a.id) }}">编辑</a>
+                                <span class="divider"> | </span>
+                                <a href="{{ url_for('article.detail', article_id=a.id) }}" target="_blank">预览</a>
                                 <span class="divider"> | </span>
                                 <a href="javascript:void(0)" name="del-btn">删除</a>
                             </td>
@@ -53,9 +53,8 @@
                     var obj = this;
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process') }}",
-                        data: {op: 'del', id: $(obj).parent().parent().data('cid')},
-                        async: false,
+                        url: "{{ url_for('admin.article_delete') }}",
+                        data: {id: $(obj).parent().parent().data('cid')},
                         success: function (data) {
                             $(obj).parent().parent().remove();
                             alert("删除成功");
@@ -66,3 +65,5 @@
         });
     </script>
 {% endblock %}
+
+{# articles #}

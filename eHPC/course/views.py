@@ -57,8 +57,13 @@ def exit_out(cid, u=current_user):
 
 @course.route('/res/<int:mid>/')
 def material(mid):
-    m = Material.query.filter_by(id=mid).first()
-    return render_template('course/material_detail.html', material=m)
+    cur_material = Material.query.filter_by(id=mid).first()
+    cur_lesson = cur_material.lesson
+    cur_course = cur_lesson.course
+    return render_template('course/play_video.html',
+                           title=cur_material.name,
+                           cur_course=cur_course,
+                           cur_material=cur_material)
 
 
 # API to get overview of one course

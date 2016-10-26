@@ -15,9 +15,9 @@ from . import db, login_manager
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
-    email = db.Column(db.String(64), unique=True, index=True)
+    username = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    email = db.Column(db.String(64), unique=True, index=True, nullable=False)
 
     is_password_reset_link_valid = db.Column(db.Boolean, default=True)
     last_login = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -140,6 +140,11 @@ group_members = db.Table('group_members',
 
 
 class Group(db.Model):
+    def __init__(self, title, about):
+        self.title = title
+        self.about = about
+        self.createdTime = datetime.now()
+
     __tablename__ = 'groups'
     id = db.Column(db.Integer, primary_key=True)        # 讨论组 ID
     title = db.Column(db.String(64), nullable=False)    # 讨论组名字
@@ -256,7 +261,7 @@ class Article(db.Model):
     content = db.Column(db.Text(), nullable=False)      # 资讯正文
     visitNum = db.Column(db.Integer, default=0)         # 浏览次数
 
-    createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
+    updatedTime = db.Column(db.DateTime(), default=datetime.utcnow)
 
 
 """ 虚拟实验室模块 """

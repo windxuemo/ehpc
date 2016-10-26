@@ -2,71 +2,20 @@
 
 {% block content %}
 
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            $('#course-picture-field').change(function () {
-                $.ajax({
-                    url: "{{ url_for('admin.process') }}",
-                    type: "post",
-                    data: new FormData($('#course-picture-form')[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        $("#course-picture").attr("src", data);
-                    }
-                });
-            });
-
-            $('#upload-picture-btn').click(function () {
-                $.ajax({
-                    type: "post",
-                    url: "{{ url_for('admin.process') }}",
-                    data: {
-                        op: "pic",
-                        id: "{{ c.id }}",
-                        name: $("#course-picture").attr("src").split('/').pop()
-                    },
-                    success: function (data) {
-                        alert("保存成功");
-                    }
-                });
-            });
-        });
-
-    </script>
-
     <div class="container" id="content-container">
-
-        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-            <li><a href="/">首页</a></li>
-            <li><a href="{{ url_for('admin.course') }}">课程管理</a></li>
-            <li><a href="{{ url_for('admin.picture', cid=c.id) }}">课程图片</a></li>
-        </ol>
 
         <div class="row">
             <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="list-group-panel">
-                            <div class="list-group-heading">课程信息</div>
-                            <div class="list-group">
-                                <a class="list-group-item " href="{{ url_for('admin.edit', cid=c.id) }}">基本信息</a>
-                                <a class="list-group-item active"
-                                   href="{{ url_for('admin.picture', cid=c.id) }}">课程图片</a>
-                                <a class="list-group-item " href="{{ url_for('admin.lesson', cid=c.id) }}">课时管理</a>
-                            </div>
-                        </div><!-- /list-group-block -->
-
-                        <div class="list-group-panel">
-                            <div class="list-group">
-                                <a class="list-group-item" href="{{ url_for('admin.index') }}">返回</a>
-                            </div>
-                        </div>
-
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
                     </div>
-
+                    <div class="list-group">
+                        <a class="list-group-item"
+                           href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
+                    </div>
                 </div>
             </div>
 
@@ -89,9 +38,8 @@
                                     <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
                                 </div>
                             </div>
-
                             <input type="hidden" name="op" value="upload_pic">
-
+                            <input type="hidden" name="id" value="{{ c.id }}">
                         </form>
 
                         <div class="form-group clearfix">
@@ -106,4 +54,39 @@
         </div>
 
     </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#course-picture-field').change(function () {
+                $.ajax({
+                    url: "{{ url_for('admin.process_course') }}",
+                    type: "post",
+                    data: new FormData($('#course-picture-form')[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $("#course-picture").attr("src", data);
+                    }
+                });
+            });
+
+            $('#upload-picture-btn').click(function () {
+                $.ajax({
+                    url: "{{ url_for('admin.process_course') }}",
+                    type: "post",
+                    data: {
+                        op: "pic",
+                        id: "{{ c.id }}",
+                        name: $("#course-picture").attr("src").split('/').pop()
+                    },
+                    success: function (data) {
+                        alert("保存成功");
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import render_template, abort, jsonify
+from flask import render_template, abort, jsonify, current_app
 from . import course
 from ..models import Course, Material
 from flask_babel import gettext
@@ -8,6 +8,7 @@ from flask_login import current_user
 from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from .. import db
+import os
 
 
 @course.route('/')

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-10-17 10:11+0800\n"
+"POT-Creation-Date: 2016-10-24 11:48+0800\n"
 "PO-Revision-Date: 2016-10-08 15:35+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -18,11 +18,87 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: article/views.py:14 article/views.py:30
+#: admin/system_views.py:18 templates/admin/navbar.html:6
+msgid "System Admin"
+msgstr "站点管理"
+
+#: admin/system_views.py:26
+msgid "User Admin"
+msgstr "用户管理"
+
+#: admin/system_views.py:38
+msgid "Successfully modify permission"
+msgstr "修改权限成功"
+
+#: admin/system_views.py:41
+msgid "User Edit"
+msgstr "用户编辑"
+
+#: admin/system_views.py:49
+msgid "Articles Admin"
+msgstr "资讯管理"
+
+#: admin/system_views.py:57
+msgid "Create Article"
+msgstr "新建文章"
+
+#: admin/system_views.py:99
+msgid "Groups Admin"
+msgstr "群组管理"
+
+#: admin/system_views.py:107
+msgid "Create Group"
+msgstr "新建群组"
+
+#: admin/teacher_views.py:25
+msgid "Course Admin"
+msgstr "课程管理"
+
+#: admin/teacher_views.py:33
+msgid "Create Course"
+msgstr "新建课程"
+
+#: admin/teacher_views.py:41
+msgid "Edit Course"
+msgstr "编辑课程"
+
+#: admin/teacher_views.py:49
+msgid "Course Picture"
+msgstr "课程图片"
+
+#: admin/teacher_views.py:57
+msgid "Course Lesson"
+msgstr "课程课时"
+
+#: admin/teacher_views.py:70
+msgid "Lesson Material"
+msgstr "课时资料"
+
+#: admin/teacher_views.py:78
+msgid "Problem Admin"
+msgstr "题目管理"
+
+#: admin/views.py:17 admin/views.py:32
+msgid "Admin Auth"
+msgstr "后台认证"
+
+#: admin/views.py:31 user/views.py:39
+msgid "Invalid username or password."
+msgstr "用户名或者密码错误"
+
+#: admin/views.py:47
+msgid "Teacher Setting"
+msgstr "教师管理"
+
+#: admin/views.py:60
+msgid "System Setting"
+msgstr "站点管理"
+
+#: article/views.py:14
 msgid "Articles"
 msgstr "所有资讯"
 
-#: course/views.py:15
+#: course/views.py:16
 msgid "Courses"
 msgstr "在线课程"
 
@@ -47,23 +123,23 @@ msgstr "实验室"
 msgid "Education Practice Platform"
 msgstr "教育实践平台"
 
-#: problem/views.py:11
+#: problem/views.py:16
 msgid "Practice Platform"
 msgstr "练习平台"
 
-#: problem/views.py:18
+#: problem/views.py:23
 msgid "Program Practice"
 msgstr "编程题目"
 
-#: problem/views.py:30
+#: problem/views.py:35
 msgid "Choice Practice"
 msgstr "选择题目"
 
-#: templates/footer.html:4
+#: templates/admin/footer.html:4 templates/footer.html:4
 msgid "SYSU SDCS"
 msgstr "中山大学数据科学与计算机学院"
 
-#: templates/header.html:7
+#: templates/admin/header.html:7 templates/header.html:7
 msgid "eHPC"
 msgstr ""
 
@@ -83,7 +159,7 @@ msgstr "互动社区"
 msgid "Virutal Lab"
 msgstr "虚拟实验室"
 
-#: templates/navbar.html:33 user/views.py:111
+#: templates/navbar.html:33 user/views.py:109
 msgid "Personal Page"
 msgstr "个人主页"
 
@@ -91,8 +167,7 @@ msgstr "个人主页"
 msgid "Job's List"
 msgstr "作业列表"
 
-#: templates/navbar.html:38 templates/user/setting_avatar.html:9
-#: templates/user/setting_info.html:9 templates/user/setting_passwd.html:11
+#: templates/navbar.html:38 templates/user/setting.html:9 user/views.py:206
 msgid "Setting"
 msgstr "账户设置"
 
@@ -100,20 +175,60 @@ msgstr "账户设置"
 msgid "Logout"
 msgstr "退出登录"
 
-#: templates/navbar.html:44 templates/user/reg.html:6
-#: templates/user/signin.html:6 templates/user/signin.html:37
+#: templates/admin/auth.html:33 templates/navbar.html:44
+#: templates/user/reg.html:6 templates/user/signin.html:6
+#: templates/user/signin.html:28
 msgid "Sign In"
 msgstr "登录"
 
 #: templates/navbar.html:45 templates/user/reg.html:7
-#: templates/user/reg.html:64 templates/user/signin.html:7
-#: templates/user/signin.html:46
+#: templates/user/reg.html:57 templates/user/signin.html:7
+#: templates/user/signin.html:36
 msgid "Registration"
 msgstr "注册"
 
 #: templates/navbar.html:50
 msgid "search"
 msgstr "搜索"
+
+#: templates/admin/auth.html:13
+msgid "Admin Page"
+msgstr "管理员登录"
+
+#: templates/admin/auth.html:18 templates/user/reg.html:12
+#: templates/user/signin.html:13
+msgid "Username"
+msgstr "用户名"
+
+#: templates/admin/auth.html:20 templates/user/reg.html:25
+#: templates/user/reg.html:28 templates/user/signin.html:15
+msgid "Email Address"
+msgstr "邮箱地址"
+
+#: templates/admin/auth.html:23 templates/admin/auth.html:26
+#: templates/user/ajax_setting_passwd.html:2 templates/user/reg.html:36
+#: templates/user/signin.html:18 templates/user/signin.html:21
+msgid "Password"
+msgstr "密码"
+
+#: templates/admin/navbar.html:9
+msgid "Teacher Admin"
+msgstr "教师管理"
+
+#: templates/admin/user/edit.html:17
+msgid "Modify Permission"
+msgstr "修改权限"
+
+#: templates/admin/user/edit.html:31
+msgid "Permission"
+msgstr "权限"
+
+#: templates/admin/user/edit.html:42 templates/user/ajax_setting_avatar.html:23
+#: templates/user/ajax_setting_info.html:35
+#: templates/user/ajax_setting_passwd.html:43
+#: templates/user/passwd_reset_confirm.html:22
+msgid "Save"
+msgstr "保存"
 
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
 #: templates/group/group.html:5 templates/group/group_all.html:7
@@ -164,7 +279,7 @@ msgstr "创建时间"
 #: templates/group/widget_post_detail.html:20
 #: templates/group/widget_topic_detail.html:28
 #: templates/group/widget_topic_detail.html:55
-#: templates/group/widget_topic_detail.html:112
+#: templates/group/widget_topic_detail.html:114
 msgid "Reply"
 msgstr "回复"
 
@@ -224,11 +339,39 @@ msgstr "难度"
 msgid "AcceptNum"
 msgstr "通过数目"
 
+#: templates/user/ajax_setting_avatar.html:2
+msgid "Avatar"
+msgstr "头像"
+
+#: templates/user/ajax_setting_info.html:2
+msgid "Personal"
+msgstr "个人信息"
+
+#: templates/user/ajax_setting_info.html:15
+msgid "Email"
+msgstr "邮箱地址"
+
+#: templates/user/ajax_setting_info.html:26
+msgid "Website"
+msgstr "个人主页"
+
+#: templates/user/ajax_setting_passwd.html:16
+msgid "Current Password"
+msgstr "输入当前密码"
+
+#: templates/user/ajax_setting_passwd.html:25
+msgid "New Password"
+msgstr "输入新的密码"
+
+#: templates/user/ajax_setting_passwd.html:32
+msgid "Repeat Password"
+msgstr "确认新的密码"
+
 #: templates/user/detail.html:40
 msgid "Joined Courses"
 msgstr "在学课程"
 
-#: templates/user/detail.html:54
+#: templates/user/detail.html:60
 msgid "Joined Groups"
 msgstr "加入小组"
 
@@ -264,25 +407,17 @@ msgstr "重置密码"
 msgid "Please enter your email"
 msgstr "输入邮箱地址"
 
-#: templates/user/passwd_reset.html:27
+#: templates/user/passwd_reset.html:25
 msgid "submit"
 msgstr "提交"
 
 #: templates/user/passwd_reset_confirm.html:8
-#: templates/user/setting_passwd.html:51
 msgid "new password"
 msgstr "新密码"
 
-#: templates/user/passwd_reset_confirm.html:15
-#: templates/user/setting_passwd.html:63
+#: templates/user/passwd_reset_confirm.html:14
 msgid "repeat password"
 msgstr "再次输入新密码"
-
-#: templates/user/passwd_reset_confirm.html:25
-#: templates/user/setting_avatar.html:48 templates/user/setting_info.html:63
-#: templates/user/setting_passwd.html:78
-msgid "Save"
-msgstr "保存"
 
 #: templates/user/passwd_reset_done.html:2
 #: templates/user/passwd_reset_sent.html:2
@@ -349,135 +484,109 @@ msgid ""
 "check your email and click the link to continue."
 msgstr ""
 
-#: templates/user/reg.html:12 templates/user/signin.html:14
-msgid "Username"
-msgstr "用户名"
-
-#: templates/user/reg.html:16
+#: templates/user/reg.html:15
 msgid "letters,digits,underscore"
 msgstr "字符,数字或者下划线"
 
-#: templates/user/reg.html:27 templates/user/reg.html:31
-#: templates/user/signin.html:17
-msgid "Email Address"
-msgstr "邮箱地址"
-
-#: templates/user/reg.html:40 templates/user/setting_avatar.html:18
-#: templates/user/setting_info.html:18 templates/user/setting_passwd.html:20
-#: templates/user/setting_passwd.html:33 templates/user/setting_passwd.html:38
-#: templates/user/signin.html:24 templates/user/signin.html:27
-msgid "Password"
-msgstr "密码"
-
-#: templates/user/reg.html:49
+#: templates/user/reg.html:43
 msgid "Password Again"
 msgstr "密码确认"
 
-#: templates/user/reg.html:63
+#: templates/user/reg.html:56
 msgid "Submiting..."
 msgstr "提交中..."
 
-#: templates/user/setting_avatar.html:13 templates/user/setting_info.html:13
-#: templates/user/setting_info.html:31 templates/user/setting_passwd.html:15
-msgid "Personal"
-msgstr "个人信息"
+#: templates/user/setting.html:13
+msgid "Personal Info"
+msgstr "基础信息"
 
-#: templates/user/setting_avatar.html:23 templates/user/setting_avatar.html:31
-#: templates/user/setting_info.html:23 templates/user/setting_passwd.html:25
-msgid "Avatar"
-msgstr "头像"
+#: templates/user/setting.html:18
+msgid "Change Password"
+msgstr "更改密码"
 
-#: templates/user/setting_info.html:36
-msgid "Email"
-msgstr "邮箱地址"
+#: templates/user/setting.html:23
+msgid "Avatar Setting"
+msgstr "头像设置"
 
-#: templates/user/setting_info.html:49
-msgid "Website"
-msgstr "个人主页"
-
-#: templates/user/signin.html:43
+#: templates/user/signin.html:33
 msgid "Forget Password"
 msgstr "忘记密码"
 
-#: templates/user/signin.html:45
+#: templates/user/signin.html:35
 msgid "Have no account?"
 msgstr "没有账户"
 
-#: user/views.py:29 user/views.py:41
+#: user/views.py:28 user/views.py:40
 msgid "User Sign In"
 msgstr "用户登录"
 
-#: user/views.py:40
-msgid "Invalid username or password."
-msgstr "用户名或者密码错误"
-
-#: user/views.py:57 user/views.py:91
+#: user/views.py:55 user/views.py:89
 msgid "Register Account"
 msgstr "注册账户"
 
-#: user/views.py:69
+#: user/views.py:67
 msgid "Username can not be empty."
 msgstr "用户名不能为空"
 
-#: user/views.py:71
+#: user/views.py:69
 msgid "Username can only contain letters digits and underscore."
 msgstr "用户名只能包含字符、数字和下划线"
 
-#: user/views.py:73
+#: user/views.py:71
 msgid "Username already exists."
 msgstr "已经存在该用户"
 
-#: user/views.py:77 user/views.py:249
+#: user/views.py:75 user/views.py:223
 msgid "Email address can not be empty."
 msgstr "邮箱地址不能为空"
 
-#: user/views.py:79 user/views.py:127 user/views.py:251
+#: user/views.py:77 user/views.py:125 user/views.py:225
 msgid "Email address is invalid."
 msgstr "邮箱地址错误"
 
-#: user/views.py:81
+#: user/views.py:79
 msgid "Email already exists."
 msgstr "邮箱已经被注册"
 
-#: user/views.py:85 user/views.py:160 user/views.py:221
+#: user/views.py:83 user/views.py:158 user/views.py:296
 msgid "Passwords don't match."
 msgstr "密码不匹配"
 
-#: user/views.py:87 user/views.py:162 user/views.py:223
+#: user/views.py:85 user/views.py:160 user/views.py:298
 msgid "Passwords can not be empty."
 msgstr "密码不能为空"
 
-#: user/views.py:125
+#: user/views.py:123
 msgid "The email can not be empty"
 msgstr "邮箱地址不能为空"
 
-#: user/views.py:129
+#: user/views.py:127
 msgid "The email has not be registered"
 msgstr "邮箱还没有注册"
 
-#: user/views.py:197 user/views.py:198
+#: user/views.py:195 user/views.py:196
 msgid "'s Topics"
 msgstr "的话题"
 
-#: user/views.py:232
-msgid "Update password done!"
-msgstr "更新密码成功"
-
-#: user/views.py:261
+#: user/views.py:236
 msgid "Update info done!"
 msgstr "成功更新个人信息"
 
-#: user/views.py:274
+#: user/views.py:251 util/upload_file.py:17
 msgid "No selected file"
 msgstr "没有选中文件"
 
-#: user/views.py:290
+#: user/views.py:268
 msgid "Update avatar done!"
 msgstr "已更新头像"
 
-#: user/views.py:293
+#: user/views.py:272 util/upload_file.py:31
 msgid "Invalid file"
 msgstr "文件不符合要求"
+
+#: user/views.py:308
+msgid "Update password done!"
+msgstr "更新密码成功"
 
 #: util/time_process.py:24
 msgid "year"
@@ -542,4 +651,16 @@ msgstr "前"
 #: util/time_process.py:37
 msgid "Just now"
 msgstr "刚刚"
+
+#: util/user_manage.py:38
+msgid "Teacher"
+msgstr "老师"
+
+#: util/user_manage.py:40
+msgid "Student"
+msgstr "学生"
+
+#: util/user_manage.py:42
+msgid "Administrator"
+msgstr "管理员"
 

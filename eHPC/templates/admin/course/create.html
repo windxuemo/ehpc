@@ -4,18 +4,23 @@
 
     <div class="container" id="content-container">
 
-        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-            <li><a href="/">首页</a></li>
-            <li><a href="{{ url_for('admin.course') }}">课程管理</a></li>
-            <li><a href="{{ url_for('admin.create') }}">创建课程</a></li>
-        </ol>
-
         <div class="row">
-            <div class="col-md-offset-2 col-md-8">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item active" href="{{ url_for('admin.course_create') }}">新建课程</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
                 <div class="panel panel-default panel-page">
                     <div class="panel-heading"><h2>创建课程</h2></div>
 
-                    <form id="course-create-form" class="form-horizontal" method="post" action="{{ url_for('admin.process') }}">
+                    <form id="course-create-form" class="form-horizontal" method="post" action="{{ url_for('admin.process_course') }}">
 
                         <div class="form-group">
                             <div class="col-md-2 control-label"><label for="course_title" class="required">标题</label></div>
@@ -27,7 +32,7 @@
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-8 controls">
-                                <input id="course-create-btn" data-submiting-text="正在创建" class="btn btn-fat btn-primary" value="创建" type="submit">
+                                <input id="course-create-btn" class="btn btn-fat btn-primary" value="创建" type="submit">
                             </div>
                         </div>
 

@@ -1,0 +1,80 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+    <div class="container" id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item active" href="{{ url_for('admin.problem') }}">选择题目</a>
+                        <a class="list-group-item" href="{{ url_for('admin.problem') }}">编程题目</a>
+                    </div>
+                    <div class="list-group">
+                    </div>
+                </div>
+            </div><!--左侧导航栏-->
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">
+                    <span class="pull-right">
+                        <a id="create-choice" href="{{ url_for('admin.choice_problem') }}"
+                           class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            创建题目
+                        </a>
+                    </span>
+                        题目列表
+                    </div>
+
+                    <div class="panel-body">
+                        <table class="table" style="word-break:break-all;">
+                            <thead>
+                            <tr>
+                                <th width="10%" style="text-align: center">序号</th>
+                                <th width="70%">名称</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead><!--表格头-->
+                            <tbody id="tb">
+                            {% for choice in choices %}
+                                <tr data-id="{{ choice.id }}">
+                                    <td width="10%" style="text-align: center">{{ loop.index }}</td>
+                                    <td width="70%">{{ choice.title }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.choice_problem', id=choice.id) }}">编辑</a>
+                                        <span class="divider"> | </span>
+                                        <a href="javascript:void(0)" name="del-btn">删除</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody><!--表格主体-->
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        $(document).ready(function () {
+            $("#tb").find("a[name=del-btn]").each(function () {
+                $(this).click(function () {
+                    var obj = this;
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.process_choice') }}",
+                        data: {op: 'del', id: $(obj).parent().parent().data('id')},
+                        success: function (data) {
+                            $(obj).parent().parent().remove();
+                            alert("删除成功");
+                        }
+                    });
+                });
+            })
+        });
+    </script>
+{% endblock %}

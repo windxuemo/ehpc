@@ -8,155 +8,58 @@
 
 {% block content %}
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $("#lesson-create-btn").click(function () {
-                $("#lesson-op-field").val("create_lesson");
-                $("#lesson-title-field").val("");
-                $("#lesson-content-field").val("");
-            });
-
-            $('#lesson-save-btn').click(function () {
-                $.ajax({
-                    type: "post",
-                    url: "{{ url_for('admin.process') }}",
-                    data: new FormData($('#course-lesson-form')[0]),
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        alert("保存成功");
-                        location.reload();
-                    }
-                });
-            });
-        });
-
-        function edit(obj)
-        {
-            $.ajax({
-                type: "post",
-                url: "{{ url_for('admin.data') }}",
-                data: {
-                    type: "lesson",
-                    id: location.href.split('=')[1],
-                    lid: $(obj).parent().parent().attr('lid')
-                },
-                success: function (data) {
-                    $("#lesson-op-field").val("edit_lesson");
-                    $("#lesson-title-field").val(data['title']);
-                    $("#lesson-content-field").val(data['content']);
-                    $("#lesson-id").val($(obj).parent().parent().attr('lid'));
-                }
-            });
-        }
-
-        function del(obj)
-        {
-           $.ajax({
-               type: "post",
-               url: "{{ url_for('admin.process') }}",
-               data: {
-                   op: 'del_lesson',
-                   id: location.href.split('=')[1],
-                   lid: $(obj).parent().parent().attr('lid')
-               },
-               async: false,
-               success: function (data) {
-                   $(obj).parent().parent().remove();
-                   alert("删除成功");
-               }
-           });
-        }
-
-    </script>
-
     <div class="container" id="content-container">
-
-        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
-            <li><a href="/">首页</a></li>
-            <li><a href="{{ url_for('admin.course') }}">课程管理</a></li>
-            <li><a href="{{ url_for('admin.lesson', cid=c.id) }}">课时管理</a></li>
-        </ol>
 
         <div class="row">
             <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="list-group-panel">
-                            <div class="list-group-heading">课程信息</div>
-                            <div class="list-group">
-                                <a class="list-group-item " href="{{ url_for('admin.edit', cid=c.id) }}">基本信息</a>
-                                <a class="list-group-item " href="{{ url_for('admin.picture', cid=c.id) }}">课程图片</a>
-                                <a class="list-group-item active" href="{{ url_for('admin.lesson', cid=c.id) }}">课时管理</a>
-                            </div>
-                        </div>
-                        <!-- /list-group-block -->
-
-                        <div class="list-group-panel">
-                            <div class="list-group">
-                                <a class="list-group-item" href="{{ url_for('admin.index') }}">返回</a>
-                            </div>
-                        </div>
-
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
                     </div>
-
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-9">
-
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading" style="position: sticky; top: 0px;">
                         <div class="pull-right">
-
                             <button class="btn btn-primary btn-sm" id="lesson-create-btn"
                                     data-toggle="modal" data-target="#myModal">
-                                <i class="glyphicon glyphicon-plus"></i> 课时
+                                <i class="glyphicon glyphicon-plus">课时</i>
                             </button>
-
                         </div>
                         课时管理
                     </div>
 
                     <div class="panel-body">
                         <ul class="lesson-list sortable-list" id="course-item-list">
-
                             {% for l in lessons %}
+                                <li class="item-lesson clearfix" data-lid="{{ l.id }}" style="word-break: break-all;">
+                                    <div class="item-content col-md-6">
+                                        <i class="es-icon es-icon-undone"></i>
+                                        课时<span class="number">{{ loop.index }}</span> ：{{ l.title }}
 
-                            <li class="item-lesson clearfix" lid="{{ l.id }}" style="word-break: break-all;">
-                                <div class="item-line"></div>
-                                <div class="item-content"> <i class="fa fa-file-photo-o text-success"></i>
-                                    课时<span class="number">{{ loop.index }}</span> ：{{ l.title }}
-                                </div>
-
-                                <div class="item-actions">
-                                    <a class="btn btn-link" data-toggle="modal" data-target="#myModal" onclick="edit(this)">
-                                        <span class="glyphicon glyphicon-edit prs"></span>
-                                        编辑
-                                    </a>
-                                    <a class="btn btn-link" href="{{ url_for('admin.material', cid=c.id, lid=l.id) }}">
-                                        <span class="glyphicon glyphicon-upload prs"></span>
-                                        上传
-                                    </a>
-                                    <a class="btn btn-link" href="javascript:void(0)" onclick="del(this)">
-                                        <span class="glyphicon glyphicon-eye-open prs"></span>
-                                        删除
-                                    </a>
-
-                                </div>
-                            </li>
-
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-link pull-right" data-toggle="modal" data-target="#myModal"
+                                           name="edit-btn"><i class="es-icon es-icon-edit"></i>编辑</a>
+                                        <a class="btn btn-link pull-right"
+                                           href="{{ url_for('admin.lesson_material', cid=c.id, lid=l.id) }}">
+                                            <i class="es-icon es-icon-fileupdate"></i>上传资料</a>
+                                        <a class="btn btn-link pull-right" href="javascript:void(0)"
+                                           name="del-btn">
+                                            <i class="es-icon es-icon-delete"></i>删除</a>
+                                    </div>
+                                </li>
                             {% endfor %}
-
                         </ul>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -170,7 +73,6 @@
                     <h4 class="modal-title" id="myModalLabel">添加课时</h4>
                 </div>
                 <div class="modal-body">
-
                     <form id="course-lesson-form" class="form-horizontal" enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="col-md-2 control-label">
@@ -186,16 +88,15 @@
                                 <label for="lesson-content-field">内容</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <textarea class="form-control" id="lesson-content-field" name="content" style="height: 200px"></textarea>
+                                <textarea class="form-control" id="lesson-content-field" name="content"
+                                          style="height: 200px"></textarea>
                             </div>
                         </div>
 
                         <input id="lesson-op-field" type="hidden" name="op" value="create_lesson">
                         <input type="hidden" name="id" value="{{ c.id }}">
                         <input id="lesson-id" type="hidden" name="lid">
-
                     </form>
-
                 </div>
 
                 <div class="modal-footer">
@@ -205,6 +106,109 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-
 {% endblock %}
 
+{% block footer_ext %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#lesson-create-btn").click(function () {
+                $("#lesson-op-field").val("create");
+                $("#lesson-title-field").val("");
+                $("#lesson-content-field").val("");
+            });
+
+            $('#lesson-save-btn').click(function () {
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.process_lesson') }}",
+                    data: new FormData($('#course-lesson-form')[0]),
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        alert("保存成功");
+                        location.reload();
+                    }
+                });
+            });
+
+            $("#course-item-list").find("a[name=del-btn]").each(function () {
+                $(this).click(function () {
+                    var obj = this;
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.process_lesson') }}",
+                        data: {
+                            op: 'del',
+                            cid: {{ c.id }},
+                            lid: $(obj).parent().parent().data('lid')
+                        },
+                        async: false,
+                        success: function (data) {
+                            $(obj).parent().parent().remove();
+                            alert("删除成功");
+                        }
+                    });
+                });
+            });
+
+            $("#course-item-list").find("a[name=edit-btn]").each(function () {
+                $(this).click(function () {
+                    var obj = this;
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.process_lesson') }}",
+                        data: {
+                            op: "data",
+                            id: location.href.split('=')[1],
+                            lid: $(obj).parent().parent().data('lid')
+                        },
+                        success: function (data) {
+                            $("#lesson-op-field").val("edit");
+                            $("#lesson-title-field").val(data['title']);
+                            $("#lesson-content-field").val(data['content']);
+                            $("#lesson-id").val($(obj).parent().parent().data('lid'));
+                        }
+                    });
+                });
+            });
+
+        });
+
+        function edit(obj) {
+            $.ajax({
+                type: "post",
+                url: "{{ url_for('admin.process_lesson') }}",
+                data: {
+                    op: "data",
+                    id: location.href.split('=')[1],
+                    lid: $(obj).parent().parent().data('lid')
+                },
+                success: function (data) {
+                    $("#lesson-op-field").val("edit");
+                    $("#lesson-title-field").val(data['title']);
+                    $("#lesson-content-field").val(data['content']);
+                    $("#lesson-id").val($(obj).parent().parent().data('lid'));
+                }
+            });
+        }
+
+        function del(obj) {
+            $.ajax({
+                type: "post",
+                url: "{{ url_for('admin.process_lesson') }}",
+                data: {
+                    op: 'del',
+                    cid: {{ c.id }},
+                    lid: $(obj).parent().parent().data('lid')
+                },
+                async: false,
+                success: function (data) {
+                    $(obj).parent().parent().remove();
+                    alert("删除成功");
+                }
+            });
+        }
+    </script>
+{% endblock %}

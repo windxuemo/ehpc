@@ -22,16 +22,3 @@ def detail(article_id):
     return render_template('article/detail.html',
                            title=detail_article.title[:10],
                            article=detail_article)
-
-
-@article.route('/post', methods=['POST', 'GET'])
-def post():
-    if request.method == 'GET':
-        return render_template('article/post.html', title=gettext('Articles'))
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-        post_article = Article(title=title, content=content)
-        db.session.add(post_article)
-        db.session.commit()
-        return redirect(url_for('article.index'))

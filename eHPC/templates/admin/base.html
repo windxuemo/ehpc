@@ -10,18 +10,22 @@
 
 <body>
 
+{% block admin_header %}
     {% include 'admin/navbar.html' %}
+{% endblock %}
 
-    <div class="content-wrap">
+<div class="content-wrap">
     <!-- content in this page -->
     {% block content %}
     {% endblock %}
-    </div>
+</div>
 
+{% block admin_footer %}
     {% include 'admin/footer.html' %}
-    {% block footer_ext %}{% endblock %}
+{% endblock %}
 
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block footer_ext %}{% endblock %}
+
 </body>
 </html>
 

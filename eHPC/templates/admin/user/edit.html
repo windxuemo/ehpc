@@ -1,82 +1,51 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 {% block content %}
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            $('#course-create-btn').click(function () {
-                $.ajax({
-                    type: "post",
-                    url: "{{ url_for('admin.process') }}",
-                    data: {
-                        op: "change_permission",
-                        id: "{{ u.id }}",
-                        permission: $('#user_permission').val(),
-                    },
-                    success: function (data) {
-                        alert("保存成功");
-                    }
-                });
-            });
-
-        });
-
-
-
-    </script>
-
     <div class="container" id="content-container">
-
         <div class="row">
             <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="list-group-panel">
-                            <div class="list-group-heading">用户管理</div>
-                            <div class="list-group">
-                                <a class="list-group-item active" href="{{ url_for('admin.user_edit', uid=u.id) }}">权限管理</a>
-                            </div>
-                        </div><!-- /list-group-block -->
+                <div class="list-group-panel">
 
-                        <div class="list-group-panel">
-                            <div class="list-group">
-                                <a class="list-group-item" href="{{ url_for('admin.user') }}">返回</a>
-                            </div>
-                        </div>
-
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.user') }}">用户管理</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.user') }}">修改权限</a>
                     </div>
-
                 </div>
             </div>
             <div class="col-md-9">
-
                 <div class="panel panel-default panel-col">
-                    <div class="panel-heading">用户信息</div>
+                    <div class="panel-heading">{{ _('Modify Permission') }}</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="user-form">
+                        {% if message_success %}
+                            <div class="text-center alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                {{ message_success }}</div>
+                        {% endif %}
 
+                        <form class="form-horizontal" action="{{ url_for('admin.user_edit', uid=user.id) }}"
+                              method="post">
                             <div class="form-group">
-                                <label class="col-md-2 control-label">权限</label>
-                                <div class="col-md-8">
-                                    <input id="user_permission" name="permission" required="required" class="form-control" type="text" value="{{ u.permissions }}">
-                                    <div class="help-block" style="display:none;"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-offset-1 col-md-2 control-label">{{ _('Permission') }}</label>
+                                <div class="col-md-7">
+                                    <select class="form-control" name="permission">
+                                        <option value=2>教师</option>
+                                        <option value=1>学生</option>
+                                    </select>
                                 </div>
                             </div>
 
-                        </form>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8">
-                                <button class="btn btn-fat btn-primary" id="course-create-btn">保存</button>
+                            <div class="form-group">
+                                <div class="col-md-offset-9 col-md-7">
+                                    <button type="submit" class="btn btn-primary">{{ _('Save') }}</button>
+                                </div>
                             </div>
-                        </div>
-
+                        </form>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 {% endblock %}

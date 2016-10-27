@@ -1,5 +1,9 @@
 .space {
-    margin: 30px;
+    margin: 20px;
+}
+
+.material {
+    margin: 10px 20px 0 20px;
 }
 
 .video-container {

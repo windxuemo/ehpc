@@ -30,7 +30,7 @@ class Config:
     UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/upload')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-    MAX_CONTENT_LENGTH = 512 * 1024
+    MAX_CONTENT_LENGTH = 512 * 1024 * 1024
 
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')

@@ -191,7 +191,7 @@ def process_material():
         cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
         cur_material = request.files['file']
         filename = secure_filename(cur_material.filename)
-        print(filename)
+
         m = Material(name=filename, m_type=request.form['type'], uri="")
         cur_lesson.materials.append(m)
         db.session.commit()  # get material id
@@ -205,13 +205,15 @@ def process_material():
             db.session.delete(m)
             db.session.commit()
             return jsonify(status="fail", id=cur_lesson.id)
+
     elif request.form['op'] == "del":
         cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
         cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
         seq = request.form.getlist('seq[]')
         for x in seq:
             m = cur_lesson.materials.filter_by(id=x).first_or_404()
-            # cur_lesson.materials.remove(m)
+            # 需要在课时对象中删除该资源
+            cur_lesson.materials.remove(m)
             os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
             db.session.delete(m)
             db.session.commit()

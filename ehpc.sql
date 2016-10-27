@@ -105,7 +105,7 @@ CREATE TABLE `choices` (
   `c_type` tinyint(1) NOT NULL,
   `answer` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +198,7 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'并行计算课','并行计算课学习并行运算的相关知识','# 1. 课程内容体系结构\n\n“并行计算”是“并行算法类教学体系”中的核心内容之一，它是处于并行算法类教学体系中的算法应用基础层次，是面向计算机专业本科高年级学生或从事计算科学的研究生的，是为了适应高性能计算机迅速发展的形势，满足国家培养面向21世纪高科技人才之需求。为此本课程在内容体系上力求有所创新，而在遵循课程自身学科性、系统性和完整性的同时，应充分考虑不同应用领域在并行计算机上求解大型科学工程问题的需求，将并行机体系结构、并行数值计算、并行算法和并行编程等课程的内容有机的整合在一起，在国内形成一门新型的“并行计算”课程。\n \n# 2. 教学内容组织方式与目的\n\n* 教学内容组织方式: 全课程的教学内容组织成为四篇：第一篇为并行计算的硬件基础，包括并行计算机的系统结构模型、当代并行计算机系统介绍和并行计算性能评测；第二篇为并行算法的设计，包括并行算法通用设计策略、基本设计技术和一般设计过程；第三篇为并行数值算法，包括矩阵运算、线性方程组求解和快速傅氏变换；第四篇为并行程序设计，包括并行程序设计基础、共享存储系统并行编程、分布式存储系统并行编程和并行程序设计环境与工具。\n* 教学目的: 本课程以并行计算为主题、要求讲授并行计算的硬件平台（当代并行计算机系统及其结构模型）、软件支撑（并行程序设计）和理论基础（并行算法的设计和并行数值算法）。在内容组织上，强调融并行机结构、并行算法和并行编程为一体，着重讨论并行算法的设计及其实现，并力图反映本学科的最新成就和发展趋势，体现出并行机硬件和软件相结合以及并行算法和并行编程相结合。\n\n# 3.实践性教学的设计与效果\n\n“并行计算”是一门实践性很强的课程，除了系统的课堂理论学习外，还配有足够数量的实践内容，以巩固和加深学生对并行算法理论、设计技术、分析方法和具体实现等各个环节的整体理解。通过课程实践，强化学生“结构—算法—编程”一体化学习方法的意识，充分理解对于求解一个给定问题的任何并行算法，都必须采用某种并行编程语言，最终运行在一台具体的并行计算\n\n根据并行计算课程的要求，其实验教学的要求如下：\n\n- 熟悉三种以上的主流并行计算平台，包括共享存储的多处理机、分布存储的多计算机和目前流行的PC机群，要求学生能够使用上述几种并行计算平台所提供的硬／软件环境及工具来开展自己的实验工作。\n- 掌握至少两种并行程序设计语言标准：即分布存储的MPI和共享存储的OpenMP。对面向大型科学和工程计算的HPF（高性能Fortran）也应尽量了解和熟悉。\n- 选择某些典型的非数值并行算法和数值并行算法，使用上述的并行编程语言标准，至少在PC机群上编程调试、分析和运行它们。\n- 为了入门，选用课程中简单的计算π的样本程序为出发点，通过使用不同的并行程序设计模型和不同的并行编程语言，在不同的硬件编程环境上改造和重现，以便为进一步的实践打下基础。\n\n# 教学大纲\n\n课程名称：并行计算    预修课程：计算机体系结构、数据结构等   开课学期：   总 学 时：60   学 分：   \n大纲撰写人：陈国良、徐云、孙广中  \n\n\n一、教学目标及要求\n\n本课程是为计算机科学与技术专业的高年级本科生开设的专业课，也可作为面向科学和工程计算的非计算机专业的高年级本科生和研究生的选修课程。通过此课程的学习，可使学生了解和掌握计算机学科中以及大型科学与工程问题中的基本的并行与分布计算方法及其软硬基础。\n\n二、教学重点和难点\n\n重点：并行计算机系统结构、模型、互连方式和性能评价，并行计算模型，并行算法设计策略、基本设计技术和PCAM设计方法学，典型的并行数值算法，并行程序设计等。 难点：并行结构模型和计算模型的理解，并行算法基本设计技术，并行数值算法等。\n\n三、教材及主要参考书教材\n\n陈国良，《并行计算：结构，算法，编程》，北京：高教出版社，1999(初版)，2003(修订版)\n 主要参考书：   1.陈国良等，《并行计算机体系结构》，北京：高教出版社，2002    2.陈国良，《并行算法的设计与分析》，北京：高教出版社，2002 (修订版)   3.陈国良等，《并行算法实践》，北京：高教出版社，2003   4.Barry Wilkinson等，陆鑫达等译，《并行程序设计》，北京：机械工业出版社，2001  \n\n四、课程章节及学时分配  \n\n第一部分 并行计算硬件基础  \n 1.并行计算机系统结构和模型 4课时   (1)并行计算机系统结构(PVP、SMP、MPP、DSM、COW)。   (2)并行计算机存储器访问模型(UMA、NUMA、COMA、NORMA)。  \n 2.并行计算机系统互连 4课时  \n (1)系统互连技术(节点内的互连：总线，开关，Buses，switches；节点间的互连：SAN；系统间的互连：LAN，MAN，WAN）。   (2)互连网络拓扑(静态互连网络：LA，RC，MC，TC，HC，CCC；动态互连网络：Buses，crossbar，MINI)。标准网络（FDDI、ATM、SCI）。   \n3.并行系统性能评价 4课时\n (1)加速比（Amdahl负载固定加速定律；Gustafson负载可扩放加速定律；Sun和Ni存储受限加速定律）。 (2)可扩放性（等效率；等速度；平均延迟）。 (3)基准测试程序（数学库；并行库；商业库；SPEC库等）。 第二部分 并行算法的设计 1.并行计算模型(PRAM，APRAM，BSP，LogP，C3)。4课时 2.并行算法的常用设计方法(串行算法的并行化，重新设计一个全新的并行算法，借用其它成熟算法来设计新的并行算法)。6课时 3.并行算法的基本设计技术(划分法，平衡树法，倍增法，分治法，流水线法，破对称法等)。6课时 4.并行算法的一般设计过程(PCAM：划分，通信，组合，映射)。4课时 5.典型并行数值算法(稠密矩阵运算，稀疏线性方程组求解，快速富氏变换等)。10课时 第三部分 并行程序设计 1.并行程序设计模型(自动并行，数据并行，共享变量，消息传递)。2课时 2.共享存储编程(ANSIX3H5，Pthreads，OpenMP，π计算)。4课时 3.消息传递编程(MPI，PVM，π计算)。6课时 4.数据并行编程(HPF，高斯消去法)。4课时 5.并行程序设计环境和工具(向量化的并行化编译器，并行程序性能分析，计算可视化等)。 2课时\n','2016-10-20 00:00:00',14,2,'images/course/8.jpg',NULL,NULL),(2,'课程2','第二个课程','这是的哥','2016-09-20 08:00:00',1,1,'images/course/2.jpg',NULL,NULL),(3,'课程3','这是课堂','内容','2016-09-21 00:00:00',1,1,'images/course/3.jpg',NULL,NULL),(4,'课程4','课程 4','内容','2016-09-22 00:00:00',1,1,'images/course/4.jpg',NULL,NULL),(5,'课程5','这是课堂','内容','2016-09-23 01:00:00',1,1,'images/course/5.jpg',NULL,NULL),(6,'课程6','这是课堂','内容','2016-09-29 01:00:00',0,0,'images/course/6.jpg',NULL,NULL),(7,'课程7','这是课堂7','内容','2016-09-29 08:00:00',0,1,'images/course/7.jpg',NULL,NULL),(9,'MPI 并行编程','','','2016-10-23 08:58:17',0,0,'images/course/noImg.jpg',NULL,NULL);
+INSERT INTO `courses` VALUES (1,'并行计算课','并行计算课学习并行运算的相关知识','# 1. 课程内容体系结构\n\n“并行计算”是“并行算法类教学体系”中的核心内容之一，它是处于并行算法类教学体系中的算法应用基础层次，是面向计算机专业本科高年级学生或从事计算科学的研究生的，是为了适应高性能计算机迅速发展的形势，满足国家培养面向21世纪高科技人才之需求。为此本课程在内容体系上力求有所创新，而在遵循课程自身学科性、系统性和完整性的同时，应充分考虑不同应用领域在并行计算机上求解大型科学工程问题的需求，将并行机体系结构、并行数值计算、并行算法和并行编程等课程的内容有机的整合在一起，在国内形成一门新型的“并行计算”课程。\n \n# 2. 教学内容组织方式与目的\n\n* 教学内容组织方式: 全课程的教学内容组织成为四篇：第一篇为并行计算的硬件基础，包括并行计算机的系统结构模型、当代并行计算机系统介绍和并行计算性能评测；第二篇为并行算法的设计，包括并行算法通用设计策略、基本设计技术和一般设计过程；第三篇为并行数值算法，包括矩阵运算、线性方程组求解和快速傅氏变换；第四篇为并行程序设计，包括并行程序设计基础、共享存储系统并行编程、分布式存储系统并行编程和并行程序设计环境与工具。\n* 教学目的: 本课程以并行计算为主题、要求讲授并行计算的硬件平台（当代并行计算机系统及其结构模型）、软件支撑（并行程序设计）和理论基础（并行算法的设计和并行数值算法）。在内容组织上，强调融并行机结构、并行算法和并行编程为一体，着重讨论并行算法的设计及其实现，并力图反映本学科的最新成就和发展趋势，体现出并行机硬件和软件相结合以及并行算法和并行编程相结合。\n\n# 3.实践性教学的设计与效果\n\n“并行计算”是一门实践性很强的课程，除了系统的课堂理论学习外，还配有足够数量的实践内容，以巩固和加深学生对并行算法理论、设计技术、分析方法和具体实现等各个环节的整体理解。通过课程实践，强化学生“结构—算法—编程”一体化学习方法的意识，充分理解对于求解一个给定问题的任何并行算法，都必须采用某种并行编程语言，最终运行在一台具体的并行计算\n\n根据并行计算课程的要求，其实验教学的要求如下：\n\n- 熟悉三种以上的主流并行计算平台，包括共享存储的多处理机、分布存储的多计算机和目前流行的PC机群，要求学生能够使用上述几种并行计算平台所提供的硬／软件环境及工具来开展自己的实验工作。\n- 掌握至少两种并行程序设计语言标准：即分布存储的MPI和共享存储的OpenMP。对面向大型科学和工程计算的HPF（高性能Fortran）也应尽量了解和熟悉。\n- 选择某些典型的非数值并行算法和数值并行算法，使用上述的并行编程语言标准，至少在PC机群上编程调试、分析和运行它们。\n- 为了入门，选用课程中简单的计算π的样本程序为出发点，通过使用不同的并行程序设计模型和不同的并行编程语言，在不同的硬件编程环境上改造和重现，以便为进一步的实践打下基础。\n\n# 教学大纲\n\n课程名称：并行计算    预修课程：计算机体系结构、数据结构等   开课学期：   总 学 时：60   学 分：   \n大纲撰写人：陈国良、徐云、孙广中  \n\n\n一、教学目标及要求\n\n本课程是为计算机科学与技术专业的高年级本科生开设的专业课，也可作为面向科学和工程计算的非计算机专业的高年级本科生和研究生的选修课程。通过此课程的学习，可使学生了解和掌握计算机学科中以及大型科学与工程问题中的基本的并行与分布计算方法及其软硬基础。\n\n二、教学重点和难点\n\n重点：并行计算机系统结构、模型、互连方式和性能评价，并行计算模型，并行算法设计策略、基本设计技术和PCAM设计方法学，典型的并行数值算法，并行程序设计等。 难点：并行结构模型和计算模型的理解，并行算法基本设计技术，并行数值算法等。\n\n三、教材及主要参考书教材\n\n陈国良，《并行计算：结构，算法，编程》，北京：高教出版社，1999(初版)，2003(修订版)\n 主要参考书：   1.陈国良等，《并行计算机体系结构》，北京：高教出版社，2002    2.陈国良，《并行算法的设计与分析》，北京：高教出版社，2002 (修订版)   3.陈国良等，《并行算法实践》，北京：高教出版社，2003   4.Barry Wilkinson等，陆鑫达等译，《并行程序设计》，北京：机械工业出版社，2001  \n\n四、课程章节及学时分配  \n\n第一部分 并行计算硬件基础  \n 1.并行计算机系统结构和模型 4课时   (1)并行计算机系统结构(PVP、SMP、MPP、DSM、COW)。   (2)并行计算机存储器访问模型(UMA、NUMA、COMA、NORMA)。  \n 2.并行计算机系统互连 4课时  \n (1)系统互连技术(节点内的互连：总线，开关，Buses，switches；节点间的互连：SAN；系统间的互连：LAN，MAN，WAN）。   (2)互连网络拓扑(静态互连网络：LA，RC，MC，TC，HC，CCC；动态互连网络：Buses，crossbar，MINI)。标准网络（FDDI、ATM、SCI）。   \n','2016-10-20 00:00:00',15,2,'images/course/8.jpg',NULL,NULL),(2,'课程2','第二个课程','这是的哥','2016-09-20 08:00:00',1,1,'images/course/2.jpg',NULL,NULL),(3,'课程3','这是课堂','内容','2016-09-21 00:00:00',1,1,'images/course/3.jpg',NULL,NULL),(4,'课程4','课程 4','内容','2016-09-22 00:00:00',1,1,'images/course/4.jpg',NULL,NULL),(5,'课程5','这是课堂','内容','2016-09-23 01:00:00',1,1,'images/course/5.jpg',NULL,NULL),(6,'课程6','这是课堂','内容','2016-09-29 01:00:00',0,0,'images/course/6.jpg',NULL,NULL),(7,'课程7','这是课堂7','内容','2016-09-29 08:00:00',0,1,'images/course/7.jpg',NULL,NULL),(9,'MPI 并行编程','','','2016-10-23 08:58:17',0,0,'images/course/noImg.jpg',NULL,NULL);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -274,7 +274,7 @@ CREATE TABLE `lessons` (
   PRIMARY KEY (`id`),
   KEY `courseId` (`courseId`),
   CONSTRAINT `lessons_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `courses` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,7 +283,7 @@ CREATE TABLE `lessons` (
 
 LOCK TABLES `lessons` WRITE;
 /*!40000 ALTER TABLE `lessons` DISABLE KEYS */;
-INSERT INTO `lessons` VALUES (1,1,'课程概述','本课程目标',1),(2,2,'课程详细','新的课程',1),(6,2,'MPI 介绍','新的课时',2),(7,1,'MPI 入门教程','简单入门教程',1);
+INSERT INTO `lessons` VALUES (1,1,'课程概述','本课程目标',1),(2,2,'课程详细','新的课程',1),(6,2,'MPI 介绍','新的课时',2),(7,1,'MPI 入门教程','简单入门教程',1),(8,1,'MPI 考试','考试',1);
 /*!40000 ALTER TABLE `lessons` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -303,7 +303,7 @@ CREATE TABLE `materials` (
   PRIMARY KEY (`id`),
   KEY `lessonId` (`lessonId`),
   CONSTRAINT `materials_ibfk_1` FOREIGN KEY (`lessonId`) REFERENCES `lessons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +312,7 @@ CREATE TABLE `materials` (
 
 LOCK TABLES `materials` WRITE;
 /*!40000 ALTER TABLE `materials` DISABLE KEYS */;
-INSERT INTO `materials` VALUES (1,'视频资源测试','...',1,'video'),(2,'音频资源','12',1,'audio');
+INSERT INTO `materials` VALUES (1,'视频HelloWorld','course_1/lesson1_material1.mp4',1,'video'),(2,'久石让 音乐','course_1/lesson1_material2.mp3',1,'audio');
 /*!40000 ALTER TABLE `materials` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -446,7 +446,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-10-22 19:45:56','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',2,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,3,1),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-09-29 03:35:29','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-10-24 11:46:55','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477213729.0',1,NULL,'混吃等死不舒服',NULL,0,1),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',2,NULL,NULL,NULL,1,2),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-10-24 10:57:10','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37\', \'wudi27@mail.sysu.edu.cn','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',2,NULL,NULL,NULL,1,1),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-10-19 15:03:29','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,0,NULL,NULL,NULL,0,3);
+INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-10-22 19:45:56','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',1,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,3,1),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-09-29 03:35:29','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-10-27 15:09:26','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477293245.0',2,NULL,'混吃等死不舒服',NULL,0,1),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,2),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-10-25 10:16:45','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,1),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-10-19 15:03:29','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,0,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,1,NULL,NULL,NULL,0,3);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -459,4 +459,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-24 12:34:51
+-- Dump completed on 2016-10-27 15:46:34

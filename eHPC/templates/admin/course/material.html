@@ -42,7 +42,11 @@
                             {% for m in materials %}
                                 <tr data-mid="{{ m.id }}">
                                     <td><input type="checkbox"></td>
+<<<<<<< HEAD
                                     <td><a href="{{ url_for('static', filename="resource/%s"%m.uri) }}">{{ m.name }}</a></td>
+=======
+                                    <td><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></td>
+>>>>>>> f0c24abdb7e07f7ee76cae08eeba1bce21b616b2
                                     <td>{{ m.m_type }}</td>
                                 </tr>
                             {% endfor %}
@@ -69,8 +73,7 @@
                     <h4 class="modal-title" id="myModalLabel">上传文件</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="course-material-form" method="post" action="{{ url_for('admin.process') }}"
-                          enctype="multipart/form-data">
+                    <form id="course-material-form" enctype="multipart/form-data">
 
                         <div class="form-group clearfix">
                             <div class="col-md-2 control-label"><label>类型</label></div>
@@ -78,8 +81,8 @@
                                 <div class="radios">
                                     <label><input name="type" value="video" checked="checked" type="radio"> 视频</label>
                                     <label><input name="type" value="audio" type="radio"> 音频</label>
-                                    <label><input name="type" value="pdf" type="radio"> PDF </label>
-                                    <label><input name="type" value="ppt" type="radio"> PPT</label>
+                                    <label><input name="type" value="description" type="radio"> PDF </label>
+                                    <label><input name="type" value="description" type="radio"> PPT</label>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +94,7 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="op" value="upload_material">
+                        <input type="hidden" name="op" value="upload">
                         <input type="hidden" name="id" value="{{ c.id }}">
                         <input type="hidden" name="lid" value="{{ l.id }}">
 
@@ -127,15 +130,18 @@
 
             $("#upload-material-btn").click(function () {
                 $.ajax({
-                    url: "{{ url_for('admin.process') }}",
+                    url: "{{ url_for('admin.process_material') }}",
                     type: "post",
                     data: new FormData($('#course-material-form')[0]),
                     cache: false,
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        alert(data);
+                        alert("上传成功");
                         location.reload();
+                    },
+                    error: function (data) {
+                        alert("上传失败");
                     }
                 });
             });
@@ -151,9 +157,9 @@
 
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process') }}",
+                    url: "{{ url_for('admin.process_material') }}",
                     data: {
-                        op: "del_material",
+                        op: "del",
                         id: "{{ c.id }}",
                         lid: "{{ l.id }}",
                         seq: array

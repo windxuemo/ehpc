@@ -204,9 +204,9 @@
 
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process') }}",
+                    url: "{{ url_for('admin.process_choice') }}",
                     data: {
-                        op: "create_choice_problem",
+                        op: "create",
                         title: choiceTitle,
                         detail: choices,
                         c_type: c_type,

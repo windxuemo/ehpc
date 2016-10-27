@@ -8,8 +8,10 @@ from .. import db
 import os
 from werkzeug.utils import secure_filename
 from flask_babel import gettext
+from flask import current_app
+from ..util.upload_file import upload_img, upload_material
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt', 'pptx'}
 
 
 def allowed_file(filename):
@@ -91,62 +93,137 @@ def choice_problem():
         classify_selected = classify_selected[:len(classify_selected) - 1]
 
         options = choice.detail.split(';')
-        return render_template('admin/problem/edit_choice_problem.html', choice=choice,
-                               classifies=classifies,
-                               classify_selected=classify_selected,
-                               options=options)
+        return render_template('admin/problem/edit_choice_problem.html', choice=choice, classifies=classifies,
+                               classify_selected=classify_selected, options=options)
     else:
-        return render_template('admin/problem/add_new_choice_problem.html',
-                               classifies=classifies)
+        return render_template('admin/problem/add_new_choice_problem.html', classifies=classifies)
 
 
-@admin.route('/process/', methods=['POST'])
+@admin.route('/process/course/', methods=['POST'])
 @teacher_login
-def process():
-    if request.form['op'] == 'del':
-        c = Course.query.filter_by(id=request.form['id']).first_or_404()
-        db.session.delete(c)
+def process_course():
+    if request.form['op'] == 'create':
+        cur_course = Course(title=request.form['title'], subtitle='', about='', lessonNum=0,
+                            smallPicture='images/course/noImg.jpg')
+        db.session.add(cur_course)
         db.session.commit()
-        return "finished"
+        return redirect(url_for('admin.course_edit', cid=unicode(cur_course.id)))
+    elif request.form['op'] == 'del':
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
+        for l in cur_course.lessons:
+            for m in l.materials:
+                os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+                db.session.delete(m)
+            db.session.delete(l)
+        if os.path.exists(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % cur_course.id)):
+            os.rmdir(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % cur_course.id))
+        os.remove(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % cur_course.id))
+        db.session.delete(cur_course)
+        db.session.commit()
+        return jsonify(status="success", id=cur_course.id)
     elif request.form['op'] == 'edit':
-        c = Course.query.filter_by(id=request.form['id']).first_or_404()
-        c.title = request.form['title']
-        c.subtitle = request.form['subtitle']
-        c.about = request.form['about']
-        # db.session.add(c)
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
+        cur_course.title = request.form['title']
+        cur_course.subtitle = request.form['subtitle']
+        cur_course.about = request.form['about']
         db.session.commit()
-        return unicode(c.id)
-    elif request.form['op'] == 'create':
-        c = Course(title=request.form['title'])
-        c.subtitle = ""
-        c.about = ""
-        c.lessonNum = 0
-        c.smallPicture = 'images/course/noImg.jpg'
-        db.session.add(c)
-        db.session.commit()
-        return redirect(url_for('admin.course_edit', cid=unicode(c.id)))
+        return jsonify(status="success", id=cur_course.id)
     elif request.form['op'] == 'pic':
-        c = Course.query.filter_by(id=request.form['id']).first_or_404()
-        c.smallPicture = os.path.join('images/course', request.form['name'])
-        # db.session.add(c)
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
+        cur_course.smallPicture = os.path.join('images/course', request.form['name'])
         db.session.commit()
-        return unicode(c.id)
+        return unicode(cur_course.id)
     elif request.form['op'] == 'upload_pic':
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
         pic = request.files['pic']
-        if pic and allowed_file(pic.filename):
-            filename = secure_filename(pic.filename)
-            pic.save(os.path.join('eHPC/static/images/course', filename))
+        filename = "cover_%d.png" % cur_course.id
+        cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], filename)
+        status = upload_img(pic, 171, 304, cover_path)
+        print(status)
+        if status[0]:
             return os.path.join('/static/images/course', filename)
         else:
-            return abort(404)
-    elif request.form['op'] == 'create_lesson':
-        l = Lesson(number=request.form['id'], title=request.form['title'], content=request.form['content'])
-        c = Course.query.filter_by(id=request.form['id']).first_or_404()
-        c.lessons.append(l)
-        c.lessonNum += 1
+            return jsonify(status="fail", id=cur_course.id)
+    else:
+        return abort(404)
+
+
+@admin.route('/process/lesson/', methods=['POST'])
+@teacher_login
+def process_lesson():
+    if request.form['op'] == 'create':
+        cur_lesson = Lesson(number=request.form['id'], title=request.form['title'], content=request.form['content'])
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
+        cur_course.lessons.append(cur_lesson)
+        cur_course.lessonNum += 1
         db.session.commit()
-        return unicode(c.id)
-    elif request.form['op'] == 'create_choice_problem':
+        return jsonify(status="success", id=cur_lesson.id)
+    elif request.form['op'] == "del":
+        cur_course = Course.query.filter_by(id=request.form['cid']).first_or_404()
+        cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
+        cur_course.lessons.remove(cur_lesson)
+        cur_course.lessonNum -= 1
+        for m in cur_lesson.materials:
+            os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+            db.session.delete(m)
+        db.session.delete(cur_lesson)
+        db.session.commit()
+        return jsonify(status="success", id=cur_lesson.id)
+    elif request.form['op'] == "edit":
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
+        cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
+        cur_lesson.title = request.form['title']
+        cur_lesson.content = request.form['content']
+        db.session.commit()
+        return jsonify(status="success", id=cur_lesson.id)
+    elif request.form['op'] == 'data':
+        l = Lesson.query.filter_by(id=request.form['lid']).first_or_404()
+        return jsonify(title=l.title, content=l.content)
+    else:
+        return abort(404)
+
+
+@admin.route('/process/material/', methods=['POST'])
+@teacher_login
+def process_material():
+    if request.form['op'] == "upload":
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
+        cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
+        cur_material = request.files['file']
+        filename = secure_filename(cur_material.filename)
+        print(filename)
+        m = Material(name=filename, m_type=request.form['type'], uri="")
+        cur_lesson.materials.append(m)
+        db.session.commit()  # get material id
+        m.uri = os.path.join("course_%d" % cur_course.id,
+                             "lesson%d_material%d." % (cur_lesson.id, m.id) + cur_material.filename.rsplit('.', 1)[1])
+        status = upload_material(cur_material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+        if status:
+            db.session.commit()
+            return jsonify(status="success", id=cur_lesson.id)
+        else:
+            db.session.delete(m)
+            db.session.commit()
+            return jsonify(status="fail", id=cur_lesson.id)
+    elif request.form['op'] == "del":
+        cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
+        cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
+        seq = request.form.getlist('seq[]')
+        for x in seq:
+            m = cur_lesson.materials.filter_by(id=x).first_or_404()
+            # cur_lesson.materials.remove(m)
+            os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+            db.session.delete(m)
+            db.session.commit()
+        return jsonify(status="success", id=cur_lesson.id)
+    else:
+        return abort(404)
+
+
+@admin.route('/process/choice/', methods=['POST'])
+@teacher_login
+def process_choice():
+    if request.form['op'] == 'create':
         if request.form['c_type'] == '0':
             c_type = False
         else:
@@ -160,7 +237,7 @@ def process():
         db.session.add(choice)
         db.session.commit()
         return unicode(choice.id)
-    elif request.form['op'] == 'edit_choice_problem':
+    elif request.form['op'] == 'edit':
         choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
         choice.title = request.form['title']
         choice.detail = request.form['detail']
@@ -178,79 +255,23 @@ def process():
             choice.classifies.append(classify)
         db.session.commit()
         return unicode(choice.id)
-    elif request.form['op'] == "del_choice":
+    elif request.form['op'] == "del":
         choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
         db.session.delete(choice)
         db.session.commit()
         return unicode(choice.id)
-    elif request.form['op'] == "del_lesson":
-        c = Course.query.filter_by(id=request.form['cid']).first_or_404()
-        l = c.lessons.filter_by(id=request.form['lid']).first_or_404()
-        c.lessons.remove(l)
-        c.lessonNum -= 1
-        db.session.delete(l)
-        db.session.commit()
-        return "finished"
-    elif request.form['op'] == "edit_lesson":
-        c = Course.query.filter_by(id=request.form['id']).first_or_404()
-        l = c.lessons.filter_by(id=request.form['lid']).first_or_404()
-        l.title = request.form['title']
-        l.content = request.form['content']
-        db.session.commit()
-        return unicode(c.id)
-    elif request.form['op'] == "upload_material":
-        c = Course.query.filter_by(id=request.form['id']).first_or_404()
-        l = c.lessons.filter_by(id=request.form['lid']).first_or_404()
-        f = request.files['file']
-        if f and allowed_file(f.filename):
-            filename = secure_filename(f.filename)
-            f.save(os.path.join('eHPC/static/upload', filename))
-            m = Material(name=filename, m_type=request.form['type'], uri=os.path.join('static/upload', filename))
-            l.materials.append(m)
-            db.session.commit()
-            return unicode(c.id)
-        else:
-            abort(404)
-    elif request.form['op'] == "del_material":
-        c = Course.query.filter_by(id=request.form['id']).first_or_404()
-        l = c.lessons.filter_by(id=request.form['lid']).first_or_404()
-        seq = request.form.getlist('seq[]')
-        for x in seq:
-            m = l.materials.filter_by(id=x).first_or_404()
-            l.materials.remove(m)
-            os.remove(os.path.join('eHPC/', m.uri))
-            db.session.delete(m)
-            db.session.commit()
-        return unicode(c.id)
     else:
         return abort(404)
 
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp'}
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-@admin.route('/upload/', methods=['POST'])
+@admin.route('/process/user/', methods=['POST'])
 @teacher_login
-def upload():
-    pic = request.files['pic']
-    if pic and allowed_file(pic.filename):
-        filename = secure_filename(pic.filename)
-        pic.save(os.path.join('eHPC/static/images/course', filename))
-        return os.path.join('/static/images/course', filename)
-    return 'error'
-
-
-@admin.route('/data/', methods=['POST'])
-@teacher_login
-def data():
-    if request.form['type'] == 'lesson':
-        l = Lesson.query.filter_by(id=request.form['lid']).first_or_404()
-        return jsonify(title=l.title, content=l.content)
+def process_user():
+    if request.form['op'] == 'change_permission':
+        u = User.query.filter_by(id=request.form['id']).first()
+        u.permissions = request.form['permission']
+        db.session.add(u)
+        db.session.commit()
+        return redirect(url_for('admin.user', uid=unicode(u.id)))
     else:
-        abort(404)
-
+        return abort(404)

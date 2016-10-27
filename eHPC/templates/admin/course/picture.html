@@ -39,6 +39,7 @@
                                 </div>
                             </div>
                             <input type="hidden" name="op" value="upload_pic">
+                            <input type="hidden" name="id" value="{{ c.id }}">
                         </form>
 
                         <div class="form-group clearfix">
@@ -60,7 +61,7 @@
         $(document).ready(function () {
             $('#course-picture-field').change(function () {
                 $.ajax({
-                    url: "{{ url_for('admin.process') }}",
+                    url: "{{ url_for('admin.process_course') }}",
                     type: "post",
                     data: new FormData($('#course-picture-form')[0]),
                     cache: false,
@@ -74,8 +75,8 @@
 
             $('#upload-picture-btn').click(function () {
                 $.ajax({
+                    url: "{{ url_for('admin.process_course') }}",
                     type: "post",
-                    url: "{{ url_for('admin.process') }}",
                     data: {
                         op: "pic",
                         id: "{{ c.id }}",

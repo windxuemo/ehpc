@@ -66,8 +66,8 @@
                     var obj = this;
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process') }}",
-                        data: {op: 'del_choice', id: $(obj).parent().parent().data('id')},
+                        url: "{{ url_for('admin.process_choice') }}",
+                        data: {op: 'del', id: $(obj).parent().parent().data('id')},
                         success: function (data) {
                             $(obj).parent().parent().remove();
                             alert("删除成功");

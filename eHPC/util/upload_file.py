@@ -22,11 +22,36 @@ def upload_img(file_src, des_height, des_width, des_path):
     
     if file_src and '.' in file_src.filename and file_appendix in allowed_extensions:
         im = Image.open(file_src)
-        im.thumbnail((des_height, des_width), Image.ANTIALIAS)
+        # im.thumbnail((des_height, des_width), Image.ANTIALIAS)
+        im.resize((des_height, des_width))
         im.save(des_path, 'PNG')
 
         unique_uri = os.stat(des_path).st_mtime
         return True, unique_uri
+    else:
+        message = gettext("Invalid file")
+        return False, message
+
+
+def upload_material(file_src, des_path):
+    """ 保存 form 表单获取的文件到目标地址 des_path
+
+    成功返回 True
+    失败返回 False, 同时 message 里面携带失败信息.
+    """
+    if file_src.filename == '':
+        message = gettext('No selected file')
+        return False, message
+
+    allowed_extensions = current_app.config['ALLOWED_RESOURCE_EXTENSIONS']
+    file_appendix = file_src.filename.rsplit('.', 1)[1]
+
+    folder = des_path[:des_path.rfind('/')]
+    if file_src and '.' in file_src.filename and file_appendix in allowed_extensions:
+        if not os.path.exists(folder):
+            os.mkdir(folder)
+        file_src.save(des_path)
+        return True
     else:
         message = gettext("Invalid file")
         return False, message

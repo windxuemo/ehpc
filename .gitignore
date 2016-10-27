@@ -12,3 +12,6 @@ __pycache__/
 *.c
 *.cpp
 *.o
+
+# Resource fold
+eHPC/static/resource/*

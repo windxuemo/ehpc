@@ -24,18 +24,6 @@
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
-                        <span class="pull-right">
-                            <a id="create-radio" class="btn btn-primary btn-sm">
-                                <span class="glyphicon glyphicon-plus"></span>
-                                单选题
-                            </a>
-                        </span>
-                        <span class="pull-right" style="margin-right: 10px">
-                            <a id="create-checkbox" class="btn btn-primary btn-sm">
-                                <span class="glyphicon glyphicon-plus"></span>
-                                多选题
-                            </a>
-                        </span>
                         题目编辑
                     </div>
 
@@ -56,10 +44,14 @@
                             <textarea name="content" data-provide="markdown" id="choice-title" rows="10"></textarea>
                         </div>
 
-                        <div id="options" style="display: none">
+                        <div style="margin-bottom: 15px">
+                            <span style="margin-bottom: 0px;font-weight: bold">选项(选中的为本题<span style="color: #1fc231">正确答案</span>)</span>
+                        </div>
+
+                        <div id="options">
                             <div class="input-group">
                                 <span class="input-group-addon" style="width: 8%">
-                                    <input value="A" name="option_group" type="radio">&nbsp;&nbsp;A</span>
+                                    <input value="A" name="option_group" type="checkbox">&nbsp;&nbsp;A</span>
                                 <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" title="删除">
@@ -70,7 +62,7 @@
 
                             <div class="input-group">
                                 <span class="input-group-addon" style="width: 8%">
-                                    <input value="B" name="option_group" type="radio">&nbsp;&nbsp;B</span>
+                                    <input value="B" name="option_group" type="checkbox">&nbsp;&nbsp;B</span>
                                 <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" title="删除">
@@ -81,7 +73,7 @@
 
                             <div class="input-group">
                                 <span class="input-group-addon" style="width: 8%">
-                                    <input value="C" name="option_group" type="radio">&nbsp;&nbsp;C</span>
+                                    <input value="C" name="option_group" type="checkbox">&nbsp;&nbsp;C</span>
                                 <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" title="删除">
@@ -92,7 +84,7 @@
 
                             <div class="input-group">
                                 <span class="input-group-addon" style="width: 8%">
-                                    <input value="D" name="option_group" type="radio">&nbsp;&nbsp;D</span>
+                                    <input value="D" name="option_group" type="checkbox">&nbsp;&nbsp;D</span>
                                 <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" title="删除">
@@ -103,7 +95,7 @@
 
                         </div>
 
-                        <button id="add-options" class="btn btn-primary btn-block disabled" style="margin-top: 15px">
+                        <button id="add-options" class="btn btn-primary btn-block" style="margin-top: 15px">
                             添加选项
                         </button>
                         <button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交
@@ -139,27 +131,6 @@
             });
 
             var c_type = '0';
-            //单选题
-            $("#create-radio").click(function () {
-                $("#options").css("display", "none");
-                $("#options").find("input[name=option_group]").each(function () {
-                    $(this).attr("type", "radio");
-                });
-                $("#options").css("display", "block");
-                $("#add-options").attr("class", "btn btn-primary btn-block");
-                c_type = '0';
-            });
-
-            //多选题
-            $("#create-checkbox").click(function () {
-                $("#options").css("display", "none");
-                $("#options").find("input[name=option_group]").each(function () {
-                    $(this).attr("type", "checkbox");
-                });
-                $("#options").css("display", "block");
-                $("#add-options").attr("class", "btn btn-primary btn-block");
-                c_type = '1';
-            });
 
             //添加选项
             $("#add-options").click(function () {
@@ -219,9 +190,18 @@
                 var classifyId = [];
                 $("input[name=choice-classify]").each(function () {
                     if (this.checked == true) {
-                        classifyId.push($(this).data('id'));
+                        classifyId.push($(this).data('id'));//选择题知识点
                     }
                 });
+
+                var answerCount=0;
+                $("#options").find("input[name=option_group]").each(function () {
+                    if(this.checked==true) answerCount++;
+                });
+
+                if(answerCount==1) c_type='0';//单选
+                else c_type="1";//多选
+
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.process') }}",
@@ -235,7 +215,7 @@
 
                     },
                     success: function () {
-                        //TODO:
+                        window.location.href="{{ url_for('admin.problem') }}"
                     }
                 });
 

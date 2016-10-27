@@ -124,7 +124,7 @@ def process():
         c.smallPicture = 'images/course/noImg.jpg'
         db.session.add(c)
         db.session.commit()
-        return redirect(url_for('admin.edit', cid=unicode(c.id)))
+        return redirect(url_for('admin.course_edit', cid=unicode(c.id)))
     elif request.form['op'] == 'pic':
         c = Course.query.filter_by(id=request.form['id']).first_or_404()
         c.smallPicture = os.path.join('images/course', request.form['name'])

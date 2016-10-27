@@ -42,9 +42,7 @@
                             {% for m in materials %}
                                 <tr data-mid="{{ m.id }}">
                                     <td><input type="checkbox"></td>
-
-                                    <td><a href="{{ url_for('static', filename="resource/%s"%m.uri) }}">{{ m.name }}</a></td>
-
+                                    <td><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></td>
                                     <td>{{ m.m_type }}</td>
                                 </tr>
                             {% endfor %}

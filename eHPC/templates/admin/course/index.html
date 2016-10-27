@@ -53,7 +53,7 @@
                     var obj = this;
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process') }}",
+                        url: "{{ url_for('admin.process_course') }}",
                         data: {op: 'del', id: $(obj).parent().parent().data('cid')},
                         async: false,
                         success: function (data) {
@@ -62,7 +62,7 @@
                         }
                     });
                 });
-            })
+            });
         });
     </script>
 {% endblock %}

@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import render_template, abort, jsonify
+from flask import render_template, abort, jsonify, current_app
 from . import course
 from ..models import Course, Material
 from flask_babel import gettext
@@ -8,6 +8,7 @@ from flask_login import current_user
 from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from .. import db
+import os
 
 
 @course.route('/')
@@ -57,8 +58,13 @@ def exit_out(cid, u=current_user):
 
 @course.route('/res/<int:mid>/')
 def material(mid):
-    m = Material.query.filter_by(id=mid).first()
-    return render_template('course/material_detail.html', material=m)
+    cur_material = Material.query.filter_by(id=mid).first()
+    cur_lesson = cur_material.lesson
+    cur_course = cur_lesson.course
+    return render_template('course/play_video.html',
+                           title=cur_material.name,
+                           cur_course=cur_course,
+                           cur_material=cur_material)
 
 
 # API to get overview of one course

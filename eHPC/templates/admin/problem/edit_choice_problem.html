@@ -193,9 +193,9 @@
 
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process') }}",
+                    url: "{{ url_for('admin.process_choice') }}",
                     data: {
-                        op: "edit_choice_problem",
+                        op: "edit",
                         id: "{{ choice.id }}",
                         title: choiceDetail,
                         detail: choices,
@@ -218,7 +218,7 @@
                 'Insert Hyperlink': "插入链接",
                 'enter image description here': "输入图片描述",
                 'Insert Image Hyperlink': "插入图片链接",
-                'enter image title here': "插入图片标题",
+                'enter image title here': "插入图片标题"
             };
         }(jQuery));
         $("#target-editor").markdown({language: 'cn'})

@@ -71,7 +71,6 @@
                         processData: false,
                         success: function (data) {
                             $("#setting-content").empty().append(data.content);
-                            $("#modal-info").modal();
                         },
                         error: function () {
                             $("#setting-content").empty().append("<h2 style='text-align: center'> 暂时无法进行设置,请稍后重试 </h2>");

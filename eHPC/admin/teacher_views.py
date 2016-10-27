@@ -3,7 +3,7 @@
 from flask import render_template, request, redirect, url_for, abort, jsonify, current_app
 from ..user.authorize import admin_login, teacher_login
 from . import admin
-from ..models import Course, Lesson, Material, User, Choice, Classify, Article
+from ..models import Course, Lesson, Material, User, Choice, Classify, Article, Program
 from .. import db
 import os
 from werkzeug.utils import secure_filename
@@ -81,22 +81,46 @@ def problem():
                            choices=choice)
 
 
-@admin.route('/problem/choice_problem/')
+@admin.route('/problem/choice/create/')
 @teacher_login
-def choice_problem():
+def choice_create():
     classifies = Classify.query.all()
-    if 'id' in request.args:
-        choice = Choice.query.filter_by(id=request.args['id']).first_or_404()
-        classify_selected = ""
-        for temp in choice.classifies:
-            classify_selected += unicode(temp.id) + u';'
-        classify_selected = classify_selected[:len(classify_selected) - 1]
+    return render_template('admin/problem/choice_detail.html', classifies=classifies, op='create')
 
-        options = choice.detail.split(';')
-        return render_template('admin/problem/edit_choice_problem.html', choice=choice, classifies=classifies,
-                               classify_selected=classify_selected, options=options)
-    else:
-        return render_template('admin/problem/add_new_choice_problem.html', classifies=classifies)
+
+@admin.route('/problem/choice/edit/')
+@teacher_login
+def choice_edit():
+    classifies = Classify.query.all()
+    choice = Choice.query.filter_by(id=request.args['id']).first_or_404()
+    classify_selected = ""
+    for temp in choice.classifies:
+        classify_selected += unicode(temp.id) + u';'
+    classify_selected = classify_selected[:len(classify_selected) - 1]
+
+    options = choice.detail.split(';')
+    return render_template('admin/problem/choice_detail.html', choice=choice, classifies=classifies,
+                           classify_selected=classify_selected, options=options, op='edit')
+
+
+@admin.route('/problem/program/')
+@teacher_login
+def program():
+    programs = Program.query.all()
+    return render_template('admin/problem/program.html', programs=programs)
+
+
+@admin.route('/problem/program/create')
+@teacher_login
+def program_create():
+    return render_template('admin/problem/program_detail.html', op='create')
+
+
+@admin.route('/problem/program/edit')
+@teacher_login
+def program_edit():
+    program_problem = Program.query.filter_by(id=request.args['id']).first_or_404()
+    return render_template('admin/problem/program_detail.html', op='edit', program_problem=program_problem)
 
 
 @admin.route('/process/course/', methods=['POST'])
@@ -225,22 +249,26 @@ def process_material():
 @admin.route('/process/choice/', methods=['POST'])
 @teacher_login
 def process_choice():
-    if request.form['op'] == 'create':
+    if request.form['op'] == 'create':  # 创建选择题
+        # 判断选择题类型
         if request.form['c_type'] == '0':
             c_type = False
         else:
             c_type = True
+        # 生成新的选择题
         choice = Choice(title=request.form['title'], detail=request.form['detail'],
                         c_type=c_type, answer=request.form['answer'])
-        classify = request.form.getlist('classify[]')
-        for i in classify:
+        classifies = request.form.getlist('classify[]')
+        for i in classifies:
             classify = Classify.query.filter_by(id=i).first_or_404()
             choice.classifies.append(classify)
+
         db.session.add(choice)
         db.session.commit()
         return unicode(choice.id)
-    elif request.form['op'] == 'edit':
+    elif request.form['op'] == 'edit':  # 编辑选择题
         choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
+
         choice.title = request.form['title']
         choice.detail = request.form['detail']
         if request.form['c_type'] == '0':
@@ -249,19 +277,45 @@ def process_choice():
             c_type = True
         choice.c_type = c_type
         choice.answer = request.form['answer']
-        classify = request.form.getlist('classify[]')
-        for i in choice.classifies:
-            choice.classifies.remove(i)
-        for i in classify:
+        # 修改choice_classifies表
+        l = len(choice.classifies)
+        for i in xrange(l-1, -1, -1):
+            choice.classifies.remove(choice.classifies[i])
+
+        classifies = request.form.getlist('classify[]')
+        for i in classifies:
             classify = Classify.query.filter_by(id=i).first_or_404()
             choice.classifies.append(classify)
         db.session.commit()
         return unicode(choice.id)
-    elif request.form['op'] == "del":
+    elif request.form['op'] == 'del':   # 删除选择题
         choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
         db.session.delete(choice)
         db.session.commit()
         return unicode(choice.id)
+    else:
+        return abort(404)
+
+
+@admin.route('/process/program/', methods=['POST'])
+@teacher_login
+def process_program():
+    if request.form['op'] == 'del':
+        program_to_del = Program.query.filter_by(id=request.form['id']).first_or_404()
+        db.session.delete(program_to_del)
+        db.session.commit()
+        return unicode(program_to_del.id)
+    elif request.form['op'] == 'create':
+        program_to_create = Program(title=request.form['title'], detail=request.form['detail'])
+        db.session.add(program_to_create)
+        db.session.commit()
+        return redirect(url_for('admin.program'))
+    elif request.form['op'] == 'edit':
+        program_to_edit = Program.query.filter_by(id=request.form['id']).first_or_404()
+        program_to_edit.title = request.form['title']
+        program_to_edit.detail = request.form['detail']
+        db.session.commit()
+        return redirect(url_for('admin.program'))
     else:
         return abort(404)
 

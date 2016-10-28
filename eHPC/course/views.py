@@ -55,13 +55,18 @@ def exit_out(cid, u=current_user):
     return jsonify(status='success', users_list=users_list,
                    student_num=student_num)
 
-
 @course.route('/res/<int:mid>/')
 def material(mid):
     cur_material = Material.query.filter_by(id=mid).first()
     cur_lesson = cur_material.lesson
     cur_course = cur_lesson.course
-    return render_template('course/play_video.html',
+    if cur_material.m_type == "description":
+        return render_template('course/play_ppt.html',
+                           title=cur_material.name,
+                           cur_course=cur_course,
+                           cur_material=cur_material)
+    else:
+        return render_template('course/play_video.html',
                            title=cur_material.name,
                            cur_course=cur_course,
                            cur_material=cur_material)

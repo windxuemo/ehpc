@@ -52,6 +52,12 @@
                         </div>
 
                         <div id="options">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 8%">
+                                    <input value="A" name="option_group" type="checkbox">&nbsp;&nbsp;A</span>
+                                <input class="form-control" name="options" placeholder="请输入选项内容" type="text">
+                                <span class="input-group-btn">
+
                             {% if op == 'edit' %}<!--编辑选择题-->
                                 {% for option in options %}
                                     <div class="input-group">
@@ -164,6 +170,7 @@
                 });
             });
             var c_type = '0';
+
             {% if op == 'edit' %}
                 {% if choice.c_type %}
                     c_type = '1';
@@ -237,6 +244,12 @@
                 choices = choices.join(";\n");//选项内容
 
 
+                var classifyId = [];
+                $("input[name=choice-classify]").each(function () {
+                    if (this.checked == true) {
+                        classifyId.push($(this).data('id'));//选择题知识点
+                    }
+                });
 
                 var answerCount=0;
                 $("#options").find("input[name=option_group]").each(function () {
@@ -245,7 +258,6 @@
 
                 if(answerCount==1) c_type='0';//单选
                 else c_type="1";//多选
-
 
                 $.ajax({
                     type: "post",

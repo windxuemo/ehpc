@@ -151,6 +151,7 @@ def process_course():
         cur_course.subtitle = request.form['subtitle']
         cur_course.about = request.form['about']
         db.session.commit()
+
         return jsonify(status="success", id=cur_course.id)
     elif request.form['op'] == 'pic':
         cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()

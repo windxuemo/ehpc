@@ -8,7 +8,7 @@ from ..models import User, Classify, Article, Group
 from .. import db
 from flask_babel import gettext
 import os
-from ..util.upload_file import upload_img
+from ..util.file_manage import upload_img
 
 
 @admin.route('/')

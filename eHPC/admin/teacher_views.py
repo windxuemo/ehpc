@@ -9,7 +9,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask_babel import gettext
 from flask import current_app
-from ..util.upload_file import upload_img, upload_material
+from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt', 'pptx'}
 
@@ -214,18 +214,20 @@ def process_material():
         cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
         cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
         cur_material = request.files['file']
-        filename = secure_filename(cur_material.filename)
+        filename = custom_secure_filename(cur_material.filename)
 
-        m = Material(name=filename, m_type=request.form['type'], uri="")
+        file_type = get_file_type(cur_material.mimetype)
+        m = Material(name=filename, m_type=file_type, uri="")
         cur_lesson.materials.append(m)
         db.session.commit()  # get material id
         m.uri = os.path.join("course_%d" % cur_course.id,
                              "lesson%d_material%d." % (cur_lesson.id, m.id) + cur_material.filename.rsplit('.', 1)[1])
-        status = upload_material(cur_material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
-        if status:
+        status = upload_file(cur_material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+        if status[0]:
             db.session.commit()
             return jsonify(status="success", id=cur_lesson.id)
         else:
+            cur_lesson.materials.remove(m)
             db.session.delete(m)
             db.session.commit()
             return jsonify(status="fail", id=cur_lesson.id)
@@ -235,12 +237,19 @@ def process_material():
         cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
         seq = request.form.getlist('seq[]')
         for x in seq:
-            m = cur_lesson.materials.filter_by(id=x).first_or_404()
+            m = cur_lesson.materials.filter_by(id=x).first()
+            if not m:
+                return jsonify(status="fail", id=cur_lesson.id)
             # 需要在课时对象中删除该资源
             cur_lesson.materials.remove(m)
-            os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
             db.session.delete(m)
             db.session.commit()
+
+            try:
+                os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+            except OSError:
+                pass
+
         return jsonify(status="success", id=cur_lesson.id)
     else:
         return abort(404)

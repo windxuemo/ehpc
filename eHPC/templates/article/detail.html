@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            <div id="content" class="article-text">{{ article.content | markdown | safe }}</div>
+            <div id="content" class="markdown-body article-text">{{ article.content | markdown | safe }}</div>
         </section>
     </div>
 {% endblock %}

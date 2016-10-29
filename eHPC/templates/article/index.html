@@ -14,34 +14,37 @@
             <div class="article-list-body row">
                 <div class="col-md-10 col-offset-1">
                     <section class="es-section">
-                        <div class="article-list">
+                        <ul class="media-list thread-list">
                             {% for article in article_list %}
-                                <article class="article-item">
-                                    <div class="article-metas clearfix">
-                                        <div class="pull-left">
-                                            <div class="date">
-                                                <div class="day">{{ article.visitNum }}</div>
-                                                <div class="month">hits</div>
-                                            </div>
+                                <li class="media">
+                                    <div class="media-left">
+                                        <span class="reply-num">
+                                            <strong> {{ article.visitNum }} </strong> {{ _('Views') }}
+                                        </span>
+                                    </div>
+                                    <div class="media-body pts">
+                                        <div class="media-heading">
+                                            <a class="title gray-darker" style="font-size: 20px"
+                                               href="{{ url_for('article.detail', article_id=article.id) }}">{{ article.title | truncate(50) }}</a>
                                         </div>
-                                        <div class="metas-body">
-                                            <h2 class="title">
-                                                <a class="link-dark"
-                                                   href="{{ url_for('article.detail', article_id=article.id) }}">{{ article.title | truncate(30) }}</a>
-                                            </h2>
+
+                                        <div class="metas">
+                                            <span class="create-time">
+                                                <i class="es-icon es-icon-time"></i>创建于{{ article.updatedTime | natural_time }}</span>
                                         </div>
                                     </div>
-                                    <div class="content">{{ article.content | markdown | safe | truncate(100) }} </div>
-                                </article>
+{#                                    <div class="content-overview markdown-body">{{ article.content | markdown | safe | truncate(100) }} </div>#}
+                                </li>
                             {% endfor %}
-                        </div>
+                        </ul>
                     </section>
                 </div>
             </div>
-            </div>
+
         {% else %}
             <h2>暂无资讯信息</h2>
         {% endif %}
+    </div>
 {% endblock %}
 
 {# article #}

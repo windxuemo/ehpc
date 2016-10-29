@@ -1,12 +1,55 @@
 {% extends "course/widget_material_base.html" %}
 {% block header_ext %}
+    <script src="{{ url_for('static', filename='js/clappr.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-    <!-- ppt -->
+    <!-- 视频 -->
+    <div class="row">
+        <section class="col-md-12 ppt-container">
+            <iframe class="ppt-player" src="/static/js/ViewerJS/index.html#/static/resource/{{cur_material.uri}}"  allowfullscreen webkitallowfullscreen></iframe>
+        </section>
+    </div>
 {% endblock %}
 
 {% block foot_ext %}
+    <script>
+        /* TODO 需要更改 */
+        $(function () {
+            var Accordion = function (el, multiple) {
+                this.el = el || {};
+                this.multiple = multiple || false;
 
+                // Variables privadas
+                var links = this.el.find('.link');
+                // Evento
+                links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+            }
+
+            Accordion.prototype.dropdown = function (e) {
+                var $el = e.data.el;
+                $this = $(this),
+                        $next = $this.next();
+
+                $next.slideToggle();
+                $this.parent().toggleClass('open');
+
+                if (!e.data.multiple) {
+                    $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+                }
+                ;
+            }
+
+            var accordion = new Accordion($('#accordion'), false);
+        });
+
+        $(function () {
+            $('#accordion a').bind('click', function () {
+                $('#accordion a').removeClass('active');
+                $(this).addClass('active');
+            });
+        });
+    </script>
 {% endblock %}
+
 {# cur_material #}

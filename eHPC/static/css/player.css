@@ -16,6 +16,18 @@
     height: auto;
 }
 
+.ppt-container {
+    height: 600px;
+    width: 100%;
+    padding-right: 15px;
+}
+
+.ppt-player {
+    width: 100%;
+    min-height: 100%;
+    margin: 0px;
+}
+
 * {
     margin: 0;
     padding: 0;

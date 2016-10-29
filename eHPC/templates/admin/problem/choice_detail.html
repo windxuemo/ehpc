@@ -144,7 +144,6 @@
                     $("#options").find("input[value=" + oldAnswer[i] + "]").attr('checked', true);
                 }
             {% endif %}
-
             $("#options").find(".btn.btn-default").each(function () {
                 $(this).click(function () {
                     $(this).parent().parent().remove();//移除当前项
@@ -169,13 +168,11 @@
                     c_type = '1';
                 {% endif %}
             {% endif %}
-
             //添加选项
             $("#add-options").click(function () {
                 var temp = $("#options").find(".input-group").last();
                 var t = temp.clone(true);
                 temp.after(t);
-
                 //新选项内容为空
                 t.find("input[name=options]").val("");
                 //修改新选项序号为原来最后一个序号加1
@@ -185,7 +182,6 @@
                     $(this).html(str);
                 });
             });
-
             //保存提交
             $("#save-problem").click(function () {
                 var classifyId = [];
@@ -198,15 +194,11 @@
                     alert("请至少选则一个知识点");
                     return;
                 }
-
-
                 if ($("#choice-title").val().length == 0) {
                     alert("题干不能为空");
                     return;
                 }
-
                 var choiceDetail = $("#choice-title").val();//题干
-
                 var hasChoiceCorrectAnswer = false;
                 var correctAnswer = [];
                 $("#options").find("input[name=option_group]").each(function () {
@@ -220,10 +212,8 @@
                     return;
                 }
                 correctAnswer = correctAnswer.join(",");//正确答案
-
                 var hasEmptyChoice = false;
                 var choices = [];
-
                 $("input[name=options]").each(function () {
                     if ($(this).val() == "") {
                         if (!hasEmptyChoice) alert("请填写所有选项");
@@ -235,18 +225,12 @@
                 });
                 if (hasEmptyChoice) return;
                 choices = choices.join(";\n");//选项内容
-
-
-
                 var answerCount=0;
                 $("#options").find("input[name=option_group]").each(function () {
                     if(this.checked==true) answerCount++;
                 });
-
                 if(answerCount==1) c_type='0';//单选
                 else c_type="1";//多选
-
-
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.process_choice') }}",

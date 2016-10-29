@@ -55,13 +55,13 @@ def exit_out(cid, u=current_user):
     return jsonify(status='success', users_list=users_list,
                    student_num=student_num)
 
-
 @course.route('/res/<int:mid>/')
 def material(mid):
     cur_material = Material.query.filter_by(id=mid).first()
     cur_lesson = cur_material.lesson
     cur_course = cur_lesson.course
-    if cur_material.m_type == "ppt":
+
+    if cur_material.m_type == "ppt" or cur_material.m_type == "pdf":
         return render_template('course/play_ppt.html',
                                title=cur_material.name,
                                cur_course=cur_course,

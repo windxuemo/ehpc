@@ -11,6 +11,7 @@
                             <a href="{{ url_for('course.material', mid=m.id) }}" title="{{ m.name }}">
                                 <i class="es-icon es-icon-undone status-icon"></i>
                                 <span class="title"> {{ m.name }}</span>
+
                                 <span class="course-type">
                                     <i class="{{ m.m_type | get_icon_class }}"></i>
                                 </span>

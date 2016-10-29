@@ -60,16 +60,17 @@ def material(mid):
     cur_material = Material.query.filter_by(id=mid).first()
     cur_lesson = cur_material.lesson
     cur_course = cur_lesson.course
-    if cur_material.m_type == "description":
+
+    if cur_material.m_type == "ppt" or cur_material.m_type == "pdf":
         return render_template('course/play_ppt.html',
-                           title=cur_material.name,
-                           cur_course=cur_course,
-                           cur_material=cur_material)
-    else:
+                               title=cur_material.name,
+                               cur_course=cur_course,
+                               cur_material=cur_material)
+    elif cur_material.m_type == "video" or cur_material.m_type == "audio":
         return render_template('course/play_video.html',
-                           title=cur_material.name,
-                           cur_course=cur_course,
-                           cur_material=cur_material)
+                               title=cur_material.name,
+                               cur_course=cur_course,
+                               cur_material=cur_material)
 
 
 # API to get overview of one course

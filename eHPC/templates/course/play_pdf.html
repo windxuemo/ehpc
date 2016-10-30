@@ -1,0 +1,17 @@
+{% extends "course/widget_material_base.html" %}
+{% block header_ext %}
+{% endblock %}
+
+{% block content %}
+    <!-- pdf -->
+    <div class="col-md-12 course-container">
+        <iframe class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%"
+                src="{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource/'+cur_material.uri) }}"></iframe>
+    </div>
+
+{% endblock %}
+
+{% block foot_ext %}
+
+{% endblock %}
+{# cur_material #}

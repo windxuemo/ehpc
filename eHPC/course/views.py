@@ -61,8 +61,8 @@ def material(mid):
     cur_material = Material.query.filter_by(id=mid).first()
     cur_lesson = cur_material.lesson
     cur_course = cur_lesson.course
-    if cur_material.m_type == "ppt":
-        return render_template('course/play_ppt.html',
+    if cur_material.m_type == "pdf":
+        return render_template('course/play_pdf.html',
                                title=cur_material.name,
                                cur_course=cur_course,
                                cur_material=cur_material)

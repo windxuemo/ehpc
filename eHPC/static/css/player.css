@@ -1,19 +1,27 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
 .space {
     margin: 20px;
 }
 
 .material {
     margin: 10px 20px 0 20px;
+    height: 100%;
 }
 
-.video-container {
-    padding-right: 15px;
-}
-
-.video-player {
+.course-container {
+    height: 100%;
     width: 100%;
-    padding: 5px;
-    height: auto;
+}
+
+.course-player {
+    width: 100%;
+    -height: 100%;
+    margin: 0px;
 }
 
 * {
@@ -153,3 +161,4 @@ h1 a {
     background: #46c37b;
     color: #FFF;
 }
+

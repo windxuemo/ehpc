@@ -1,10 +1,8 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-    <link href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/bootstrap-markdown.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/to-markdown.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -29,7 +27,7 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">基本信息</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="course-form">
+                        <form class="form-horizontal" id="course-form" onsubmit="return validateForm()">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">标题</label>
                                 <div class="col-md-8">
@@ -41,8 +39,7 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">副标题</label>
                                 <div class="col-md-8">
-                                    <textarea id="course_subtitle" name="subtitle"
-                                              required class="form-control">{{ c.subtitle }}</textarea>
+                                    <textarea id="course_subtitle" required="required" name="subtitle" class="form-control">{{ c.subtitle }}</textarea>
                                 </div>
                             </div>
 
@@ -50,18 +47,15 @@
                                 <label class="col-md-2 control-label">关于</label>
 
                                 <div class="col-md-8 controls">
-                                    <textarea id="course_about" name="about" data-provide="markdown"
-                                              required rows="10">{{ c.about }}</textarea>
+                                    <textarea id="course_about" name="about" rows="10">{{ c.about }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-8">
+                                    <button class="btn btn-fat btn-primary" id="submit" type='submit'>保存</button>
                                 </div>
                             </div>
                         </form>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8">
-                                <button class="btn btn-fat btn-primary" id="course-create-btn">保存</button>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -71,10 +65,20 @@
 
 {% block footer_ext %}
     <script type="text/javascript">
-        $(document).ready(function () {
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("course_about"),
+            autosave: true,
+            showIcons: ["code", "table"],
+            tabSize: 4,
+        });
 
-            $('#course-create-btn').click(function () {
-                $.ajax({
+        function validateForm() {
+            var x = simplemde.value();
+            if (x == null || x == "") {
+                alert("请输入课程内容");
+                return false;
+            }
+            $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.process_course') }}",
                     data: {
@@ -82,14 +86,12 @@
                         id: "{{ c.id }}",
                         title: $('#course_title').val(),
                         subtitle: $('#course_subtitle').val(),
-                        about: $('#course_about').val()
+                        about: x
                     },
                     success: function (data) {
                         alert("保存成功");
                     }
-                });
             });
-
-        });
+        }
     </script>
 {% endblock %}

@@ -127,9 +127,14 @@ h1 a {
     transform: rotate(180deg);
 }
 
-/**
- * Submenu
- -----------------------------*/
+/* 播放按钮的大小 */
+.player-poster[data-poster] .play-wrapper[data-poster]{
+    height: 10% !important;
+}
+
+/*
+ * 子菜单
+ */
 .submenu {
     display: none;
     background: white;

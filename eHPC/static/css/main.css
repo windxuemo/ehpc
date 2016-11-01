@@ -110,7 +110,6 @@ select:-webkit-autofill {
 
 .navbar {
     margin-bottom: 0;
-    z-index: 99;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;

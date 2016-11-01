@@ -58,3 +58,4 @@ def system():
                            article_cnt=article_cnt,
                            group_cnt=group_cnt,
                            title=gettext("System Setting"))
+

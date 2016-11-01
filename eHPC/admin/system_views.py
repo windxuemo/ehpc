@@ -15,7 +15,10 @@ from ..util.file_manage import upload_img
 @system_login
 def index():
     return render_template('admin/system.html',
-                           title=gettext("System Admin"))
+                           title=gettext("System Admin"),
+                           user_cnt=User.query.count(),
+                           article_cnt=Group.query.count(),
+                           group_cnt=Group.query.count())
 
 
 @admin.route('/users/')

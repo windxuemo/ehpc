@@ -329,6 +329,7 @@
         }
         function submit() {
             clearInterval(clock);
+            ifClock = false;
             var date = new Date(0, 0)
             date.setSeconds(second/10);
             var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
@@ -341,7 +342,14 @@
             $("#ansResult").text("共{{ choiceProblem | count }}题 " + "答对"+count.toString()+"题" + " 用时 " + two_char(h) + ":" + two_char(m) + ":" + two_char(s));
         }
         function cancelSubmit() {
+            if(ifClock == false){
+                clock = setInterval("updateClock(second)", 100);
+                ifClock = true;
+            }
             $("#submitModal").modal('hide');
+        }
+        function confirmSubmit() {
+            window.location.href="{{ url_for('problem.show_choice') }}"
         }
     </script>
 
@@ -349,12 +357,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel">答题结果</h4>
                 </div>
                 <div class="modal-body" id="ansResult"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="cancelSubmit()">关闭</button>
+                    <button type="button" class="btn btn-default" onclick="confirmSubmit()">确认提交</button>
+                    <button type="button" class="btn btn-default" onclick="cancelSubmit()">继续答题</button>
                 </div>
             </div>
         </div>

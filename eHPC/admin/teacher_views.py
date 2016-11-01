@@ -315,14 +315,14 @@ def process_program():
         db.session.commit()
         return unicode(program_to_del.id)
     elif request.form['op'] == 'create':
-        program_to_create = Program(title=request.form['title'], detail=request.form['detail'])
+        program_to_create = Program(title=request.form['title'], detail=request.form['content'])
         db.session.add(program_to_create)
         db.session.commit()
         return redirect(url_for('admin.program'))
     elif request.form['op'] == 'edit':
         program_to_edit = Program.query.filter_by(id=request.form['id']).first_or_404()
         program_to_edit.title = request.form['title']
-        program_to_edit.detail = request.form['detail']
+        program_to_edit.detail = request.form['content']
         db.session.commit()
         return redirect(url_for('admin.program'))
     else:

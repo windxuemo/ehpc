@@ -1,10 +1,8 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-    <link href="{{ url_for('static', filename='css/bootstrap-markdown.min.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/bootstrap-markdown.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/to-markdown.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +12,7 @@
                 <div class="list-group-panel">
                     <div class="list-group">
                         <a class="list-group-item active" href="{{ url_for('admin.problem') }}">选择题目</a>
-                        <a class="list-group-item" href="{{ url_for('admin.problem') }}">编程题目</a>
+                        <a class="list-group-item" href="{{ url_for('admin.program') }}">编程题目</a>
                     </div>
                     <div class="list-group">
                     </div>
@@ -43,8 +41,7 @@
 
                         <div class="form-group">
                             <label>题干</label>
-                            <textarea name="content" data-provide="markdown" id="choice-title"
-                                      rows="10">{% if op == 'edit' %}{{ choice.title }}{% endif %}</textarea>
+                            <textarea required name="content" id="target-editor">{% if op == 'edit' %}{{ choice.title }}{% endif %}</textarea>
                         </div>
 
                         <div style="margin-bottom: 15px">
@@ -145,6 +142,14 @@
                 }
             {% endif %}
 
+            var simplemde = new SimpleMDE({
+                element: document.getElementById("target-editor"),
+                autosave: true,
+                showIcons: ["code", "table"],
+                tabSize: 4,
+            });
+
+            //删除选项
             $("#options").find(".btn.btn-default").each(function () {
                 $(this).click(function () {
                     $(this).parent().parent().remove();//移除当前项
@@ -199,13 +204,12 @@
                     return;
                 }
 
-
-                if ($("#choice-title").val().length == 0) {
+                if (simplemde.value().length == 0) {
                     alert("题干不能为空");
                     return;
                 }
 
-                var choiceDetail = $("#choice-title").val();//题干
+                var choiceDetail = simplemde.value();//题干
 
                 var hasChoiceCorrectAnswer = false;
                 var correctAnswer = [];
@@ -269,18 +273,5 @@
                 });
             });
         });
-    </script>
-
-    <script>
-        (function ($) {
-            $.fn.markdown.messages['cn'] = {
-                'Heading': "输入标题",
-                'Insert Hyperlink': "插入链接",
-                'enter image description here': "输入图片描述",
-                'Insert Image Hyperlink': "插入图片链接",
-                'enter image title here': "插入图片标题"
-            };
-        }(jQuery));
-        $("#target-editor").markdown({language: 'cn'})
     </script>
 {% endblock %}

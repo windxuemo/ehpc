@@ -29,12 +29,10 @@ class Config:
     PER_PAGE = 10
     UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/upload')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
-    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-    MAX_CONTENT_LENGTH = 512 * 1024 * 1024
-
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
-    ALLOWED_RESOURCE_EXTENSIONS = {'doc', 'pdf', 'video', 'audio', 'ppt', 'img'}
+    MAX_CONTENT_LENGTH = 512 * 1024 * 1024
+    ALLOWED_RESOURCE_EXTENSIONS = set(['pdf', 'video', 'audio'])
 
     @staticmethod
     def init_app(app):

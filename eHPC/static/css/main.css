@@ -3454,7 +3454,7 @@ textarea {
     height: 220px;
     padding: 40px 0;
     background-color: #313131;
-    z-index: 1;
+    z-index: -1;
 }
 
 .user-center-header .mask {

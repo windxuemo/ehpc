@@ -6,17 +6,9 @@ from . import admin
 from ..models import Course, Lesson, Material, User, Choice, Classify, Article, Program
 from .. import db
 import os
-from werkzeug.utils import secure_filename
 from flask_babel import gettext
 from flask import current_app
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'mkv', 'mp3', 'pdf', 'ppt', 'pptx'}
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 @admin.route('/course/', methods=['POST', 'GET'])

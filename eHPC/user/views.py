@@ -14,6 +14,7 @@ from . import user
 from ..models import User
 from ..util.email import send_email
 from .. import db
+from ..util.file_manage import get_file_type
 
 alphanumeric = re.compile(r'^[0-9a-zA-Z\_]*$')
 email_address = re.compile(r'[a-zA-z0-9]+\@[a-zA-Z0-9]+\.+[a-zA-Z]')
@@ -252,10 +253,9 @@ def setting_avatar():
             return jsonify(content=render_template('user/ajax_setting_avatar.html',
                                                    message_fail=message_fail))
 
-        allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
         upload_folder = current_app.config['UPLOAD_FOLDER']
-        file_appendix = _file.filename.rsplit('.', 1)[1]
-        if _file and '.' in _file.filename and file_appendix in allowed_extensions:
+        file_type = get_file_type(_file.mimetype)
+        if _file and '.' in _file.filename and file_type == "img":
             im = Image.open(_file)
             im.thumbnail((128, 128), Image.ANTIALIAS)
             im.save("%s/%d.png" % (upload_folder, current_user.id), 'PNG')

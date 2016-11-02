@@ -141,7 +141,8 @@ def process_course():
             db.session.delete(l)
         if os.path.exists(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % cur_course.id)):
             os.rmdir(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % cur_course.id))
-        os.remove(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % cur_course.id))
+        if os.path.exists(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % cur_course.id)):
+            os.remove(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % cur_course.id))
         db.session.delete(cur_course)
         db.session.commit()
         return jsonify(status="success", id=cur_course.id)
@@ -230,7 +231,7 @@ def process_material():
             cur_lesson.materials.remove(m)
             db.session.delete(m)
             db.session.commit()
-            return jsonify(status="fail", id=cur_lesson.id)
+            return jsonify(status="fail", id=cur_lesson.id, info=status[1])
 
     elif request.form['op'] == "del":
         cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()

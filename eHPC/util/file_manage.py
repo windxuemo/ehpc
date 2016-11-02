@@ -18,13 +18,13 @@ def upload_img(file_src, des_height, des_width, des_path):
         message = gettext('No selected file')
         return False, message
 
-    allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
-    file_appendix = file_src.filename.rsplit('.', 1)[1]
+    allowed_extensions = current_app.config['ALLOWED_RESOURCE_EXTENSIONS']
+    file_type = get_file_type(file_src.mimetype)
 
-    if file_src and '.' in file_src.filename and file_appendix in allowed_extensions:
+    if file_src and '.' in file_src.filename and file_type in allowed_extensions:
         im = Image.open(file_src)
-        # im.thumbnail((des_height, des_width), Image.ANTIALIAS)
-        im.resize((des_height, des_width))
+        # 比例会有问题
+        im = im.resize((des_width, des_height), Image.ANTIALIAS)
         im.save(des_path, 'PNG')
 
         unique_uri = os.stat(des_path).st_mtime
@@ -48,6 +48,8 @@ def upload_file(file_src, des_path):
     file_type = get_file_type(file_src.mimetype)
 
     folder = des_path[:des_path.rfind('/')]
+    print(file_src.mimetype)
+    print(file_type)
 
     if file_src and '.' in file_src.filename and file_type in allowed_extensions:
         if not os.path.exists(folder):
@@ -72,7 +74,12 @@ def get_file_type(form_file_type):
         "video/mp4": "video",
         "audio/mp3": "audio",
         "application/vnd.ms-powerpoint": "ppt",
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation": "ppt"
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation": "ppt",
+        "video/x-matroska": "video",
+        "audio/mpeg": "audio",
+        "image/png": "img",
+        "image/jpeg": "img",
+        "image/bmp": "img"
     }
 
     return file_type_dict.get(form_file_type, "Unknown")

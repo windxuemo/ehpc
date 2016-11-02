@@ -53,7 +53,7 @@
                         {% if lesson.materials.all() %}
                             <ul class="submenu" style="display: block;">
                                 {% for m in lesson.materials %}
-                                    <li><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></li>
+                                    <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></li>
                                 {% endfor %}
                             </ul>
                         {% endif %}

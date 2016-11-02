@@ -34,7 +34,7 @@ class Config:
 
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
-    ALLOWED_RESOURCE_EXTENSIONS = {'mp3', 'mp4', 'pdf', 'opd', 'ppt', 'mkv'}
+    ALLOWED_RESOURCE_EXTENSIONS = {'doc', 'pdf', 'video', 'audio', 'ppt', 'img'}
 
     @staticmethod
     def init_app(app):

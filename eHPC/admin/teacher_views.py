@@ -207,8 +207,11 @@ def process_material():
         cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
         cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
         cur_material = request.files['file']
-        filename = custom_secure_filename(cur_material.filename)
 
+        if not cur_material:
+            return jsonify(status="fail", id=cur_lesson.id, info=u"文件为空")
+
+        filename = custom_secure_filename(cur_material.filename)
         file_type = get_file_type(cur_material.mimetype)
         m = Material(name=filename, m_type=file_type, uri="")
         cur_lesson.materials.append(m)
@@ -244,6 +247,15 @@ def process_material():
                 pass
 
         return jsonify(status="success", id=cur_lesson.id)
+
+    elif request.form['op'] == "type":
+        print(request.form)
+        cur_material = Material.query.filter_by(id=request.form['id']).first_or_404()
+        print(cur_material)
+        if cur_material:
+            return jsonify(status="success", type=cur_material.m_type, uri=cur_material.uri)
+        else:
+            return jsonify(status="fail")
     else:
         return abort(404)
 

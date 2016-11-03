@@ -1,0 +1,133 @@
+{% extends "course/widget_material_base.html" %}
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/clappr.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <!-- pdf -->
+    <div class="col-md-12 course-container" id="pdf-player">
+        <iframe class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%"
+                src="{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource/'+cur_material.uri) }}"></iframe>
+    </div>
+
+    <!-- 视频 -->
+    <div class="col-md-12 course-container" id="video-player">
+        <div id="player" style="height:90%"></div>
+    </div>
+
+{% endblock %}
+
+{% block foot_ext %}
+    <script>
+        $(function () {
+
+            if ("{{ type }}" != 'pdf')
+            {
+                $('#pdf-player').hide();
+                $('#video-player').show();
+                new Clappr.Player({
+                    source: "{{ url_for('static', filename='resource') }}/" +  "{{cur_material.uri}}",
+                    baseUrl: 'http://cdn.clappr.io/latest',
+                    parentId: "#player",
+                    height: "100%",
+                    width: "100%",
+                    mediacontrol: {
+                        seekbar: "#46c37b",
+                        buttons: "#ffffff"
+                    }
+                });
+            }
+
+            var Accordion = function (el, multiple) {
+                this.el = el || {};
+                this.multiple = multiple || false;
+
+                // Variables privadas
+                var links = this.el.find('.link');
+                // Evento
+                links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+            };
+
+            Accordion.prototype.dropdown = function (e) {
+                var $el = e.data.el;
+                $this = $(this);
+                $next = $this.next();
+
+                $next.slideToggle();
+{#                $this.parent().toggleClass('open');#}
+
+{#                if (!e.data.multiple) {#}
+{#                    $el.find('.submenu').not($next).slideUp().parent().removeClass('open');#}
+{#                    $el.find('.submenu').not($next).parent().removeClass('open');#}
+{#                }#}
+            };
+
+            var accordion = new Accordion($('#accordion'), false);
+
+            $('#material{{ cur_material.id }}').parent().parent().addClass('open');
+            $('#material{{ cur_material.id }}').children('a').addClass('active');
+
+
+            $('#accordion').find('a').each(function () {
+                $(this).click(function (evt) {
+                    evt.preventDefault();
+                    var obj = this;
+
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.process_material') }}",
+                        data: {
+                            op: "type",
+                            id: $(this).parent().attr('id').substr(8)
+                        },
+                        success: function (data) {
+
+                            if (data['status'] == 'fail')
+                                return;
+
+                            if (data['type'] == 'pdf')
+                            {
+                                $('#pdf-player').children('iframe').attr('src',
+                                        "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + data['uri']);
+
+                                $('#video-player').hide();
+                                $('#pdf-player').show();
+                            }
+                            else
+                            {
+                                new Clappr.Player({
+                                    source: "{{ url_for('static', filename='resource') }}/" + data['uri'],
+                                    baseUrl: 'http://cdn.clappr.io/latest',
+                                    parentId: "#player",
+                                    height: "100%",
+                                    width: "100%",
+                                    mediacontrol: {
+                                        seekbar: "#46c37b",
+                                        buttons: "#ffffff"
+                                    }
+                                });
+
+                                $('#pdf-player').hide();
+                                $('#video-player').show();
+
+                            }
+
+                            $('.link').parent().removeClass('open');
+                            $(obj).parent().parent().parent().addClass('open');
+
+                            $('#accordion').find('a').removeClass('active');
+                            $(obj).parent().children('a').addClass('active');
+
+                            var id = $(obj).parent().attr('id').substr(8);
+                            window.history.pushState(null, '', "/course/res/" + id + '/');
+                        }
+                    });
+
+                });
+            });
+        });
+
+    </script>
+{% endblock %}
+{# cur_material #}
+

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block header_ext %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.min.css') }}">
+    <script src="{{ url_for('static', filename='js/highlight.min.js') }}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}
+
+{% block content %}
+
+    <div id="content-container" class="container">
+
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li><a href="{{ url_for('problem.index') }}">{{ _('Practice Center') }}</a></li>
+            <li><a href="{{ url_for('problem.show_program') }}">{{ _('Program Lists') }}</a></li>
+            <li><a href="{{ url_for('problem.program_view', pid=problem.id) }}">{{ problem.title }}</a></li>
+            <li class="active"><a href="{{ url_for('problem.show_my_submits', pid=problem.id) }}">我的提交</a></li>
+        </ol>
+
+        <div class="row">
+            <div class="col-md-12">
+                <pre id="view-code"><code class="{{ language }}">{{ code }}</code></pre>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{#code#}

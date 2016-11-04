@@ -3695,6 +3695,20 @@ textarea {
     min-height: 400px;
     min-width: 400px;
     font-size: 14px;
+    border:1px solid #E4ECF3;
+    border-radius: 3px;
+}
+
+#view-code {
+    min-height: 500px;  
+    font-size: 14px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#code-bnt{
+    margin-top: -20px;
+    margin-bottom: 10px;
 }
 
 .content-wrap {

@@ -27,11 +27,11 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">基本信息</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="course-form">
+                        <form class="form-horizontal" id="course-form" onsubmit="return validateForm()">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">标题</label>
                                 <div class="col-md-8">
-                                    <input id="course_title" name="title" required="required" class="form-control"
+                                    <input id="course_title" name="title" required class="form-control"
                                            type="text" value="{{ c.title }}">
                                 </div>
                             </div>
@@ -39,8 +39,8 @@
                             <div class="form-group">
                                 <label class="col-md-2 control-label">副标题</label>
                                 <div class="col-md-8">
-                                    <textarea id="course_subtitle" name="subtitle"
-                                              required class="form-control">{{ c.subtitle }}</textarea>
+                                    <textarea id="course_subtitle" required name="subtitle"
+                                              class="form-control">{{ c.subtitle }}</textarea>
                                 </div>
                             </div>
 
@@ -52,14 +52,12 @@
                                               rows="10">{{ c.about }}</textarea>
                                 </div>
                             </div>
-                        </form>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8">
-                                <button class="btn btn-fat btn-primary" id="course-create-btn">保存</button>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-8">
+                                    <button class="btn btn-fat btn-primary" id="submit" type='submit'>保存</button>
+                                </div>
                             </div>
-                        </div>
-
+                        </form>
                     </div>
                 </div>
             </div>
@@ -71,7 +69,6 @@
 {% block footer_ext %}
     <script type="text/javascript">
         $(document).ready(function () {
-
             var edt = new SimpleMDE({
                 element: $("#course_about")[0],
                 autosave: true,
@@ -81,8 +78,7 @@
             });
 
             $('#course-create-btn').click(function () {
-                if (edt.value() == "")
-                {
+                if (edt.value() == "") {
                     alert("请填写课程简介");
                     return;
                 }

@@ -460,3 +460,27 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-10-30 19:05:16
+
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for submit_problem
+-- ----------------------------
+DROP TABLE IF EXISTS `submit_problem`;
+CREATE TABLE `submit_problem` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `code` text NOT NULL,
+  `language` varchar(255) NOT NULL,
+  `submit_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pid` (`pid`),
+  KEY `uid` (`uid`),
+  CONSTRAINT `submit_problem_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `programs` (`id`),
+  CONSTRAINT `submit_problem_ibfk_2` FOREIGN KEY (`uid`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+SET FOREIGN_KEY_CHECKS=1;

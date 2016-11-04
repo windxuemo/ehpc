@@ -49,7 +49,7 @@
 
                                 <div class="col-md-8 controls">
                                     <textarea id="course_about" name="about" data-provide="markdown"
-                                              required rows="10">{{ c.about }}</textarea>
+                                              rows="10">{{ c.about }}</textarea>
                                 </div>
                             </div>
                         </form>
@@ -72,7 +72,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            new SimpleMDE({
+            var edt = new SimpleMDE({
                 element: $("#course_about")[0],
                 autosave: true,
                 showIcons: ["code", "table"],
@@ -81,6 +81,11 @@
             });
 
             $('#course-create-btn').click(function () {
+                if (edt.value() == "")
+                {
+                    alert("请填写课程简介");
+                    return;
+                }
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.process_course') }}",
@@ -89,7 +94,7 @@
                         id: "{{ c.id }}",
                         title: $('#course_title').val(),
                         subtitle: $('#course_subtitle').val(),
-                        about: $('#course_about').val()
+                        about: edt.value()
                     },
                     success: function (data) {
                         alert("保存成功");

@@ -61,7 +61,6 @@ def material(mid):
     cur_material = Material.query.filter_by(id=mid).first()
     cur_lesson = cur_material.lesson
     cur_course = cur_lesson.course
-    print(cur_material.m_type)
     return render_template('course/player.html',
                            type=cur_material.m_type,
                            title=cur_material.name,

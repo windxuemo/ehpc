@@ -4,28 +4,29 @@
 {% endblock %}
 
 {% block content %}
-    <!-- pdf -->
-    <div class="col-md-12 course-container" id="pdf-player">
-        <iframe class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%"
-                src="{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource/'+cur_material.uri) }}"></iframe>
-    </div>
 
-    <!-- 视频 -->
-    <div class="col-md-12 course-container" id="video-player">
-        <div id="player" style="height:90%"></div>
-    </div>
+    <div id="player-content" class="col-md-12 course-container"></div>
 
 {% endblock %}
 
 {% block foot_ext %}
     <script>
         $(function () {
+            var video_player = '<div id="player" style="height:90%"></div>';
+            var pdf_player = '<iframe id="player" class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%"></iframe>';
+            var clappr = null;
 
-            if ("{{ type }}" != 'pdf')
+            if ("{{ cur_material.m_type }}" == "pdf")
             {
-                $('#pdf-player').hide();
-                $('#video-player').show();
-                new Clappr.Player({
+                $("#player-content").empty().append(pdf_player);
+                $("#player").attr("src",
+                        "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}");
+
+            }
+            else
+            {
+                $("#player-content").empty().append(video_player);
+                clappr = new Clappr.Player({
                     source: "{{ url_for('static', filename='resource') }}/" +  "{{cur_material.uri}}",
                     baseUrl: 'http://cdn.clappr.io/latest',
                     parentId: "#player",
@@ -37,6 +38,7 @@
                     }
                 });
             }
+
 
             var Accordion = function (el, multiple) {
                 this.el = el || {};
@@ -54,12 +56,6 @@
                 $next = $this.next();
 
                 $next.slideToggle();
-{#                $this.parent().toggleClass('open');#}
-
-{#                if (!e.data.multiple) {#}
-{#                    $el.find('.submenu').not($next).slideUp().parent().removeClass('open');#}
-{#                    $el.find('.submenu').not($next).parent().removeClass('open');#}
-{#                }#}
             };
 
             var accordion = new Accordion($('#accordion'), false);
@@ -85,17 +81,19 @@
                             if (data['status'] == 'fail')
                                 return;
 
-                            if (data['type'] == 'pdf')
-                            {
-                                $('#pdf-player').children('iframe').attr('src',
-                                        "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + data['uri']);
+                            if (clappr != null)
+                                clappr.destroy();
 
-                                $('#video-player').hide();
-                                $('#pdf-player').show();
+                            if(data['type'] == "pdf")
+                            {
+                                $("#player-content").empty().append(pdf_player);
+                                $("#player").attr("src",
+                                        "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + data['uri']);
                             }
                             else
                             {
-                                new Clappr.Player({
+                                $("#player-content").empty().append(video_player);
+                                clappr = new Clappr.Player({
                                     source: "{{ url_for('static', filename='resource') }}/" + data['uri'],
                                     baseUrl: 'http://cdn.clappr.io/latest',
                                     parentId: "#player",
@@ -106,10 +104,6 @@
                                         buttons: "#ffffff"
                                     }
                                 });
-
-                                $('#pdf-player').hide();
-                                $('#video-player').show();
-
                             }
 
                             $('.link').parent().removeClass('open');

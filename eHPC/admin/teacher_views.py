@@ -156,7 +156,6 @@ def process_course():
         filename = "cover_%d.png" % cur_course.id
         cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], filename)
         status = upload_img(pic, 171, 304, cover_path)
-        print(status)
         if status[0]:
             return os.path.join('/static/images/course', filename)
         else:
@@ -249,13 +248,11 @@ def process_material():
         return jsonify(status="success", id=cur_lesson.id)
 
     elif request.form['op'] == "type":
-        print(request.form)
         cur_material = Material.query.filter_by(id=request.form['id']).first_or_404()
-        print(cur_material)
         if cur_material:
-            return jsonify(status="success", type=cur_material.m_type, uri=cur_material.uri)
+            return jsonify(status='success', type=cur_material.m_type, uri=cur_material.uri)
         else:
-            return jsonify(status="fail")
+            return jsonify(status='fail')
     else:
         return abort(404)
 

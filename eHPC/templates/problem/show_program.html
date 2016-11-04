@@ -26,6 +26,7 @@
                             <th>{{ _('Description') }}</th>
                             <th>{{ _('Difficulty') }}</th>
                             <th>{{ _('AcceptNum') }}</th>
+                            <th>我的提交次数</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -35,6 +36,11 @@
                                 <td><a href="{{ p.id }}">{{ p.title }}</a></td>
                                 <td>{{ p.difficulty }}</td>
                                 <td>{{ p.acceptedNum }}</td>
+                                {% if p.id in count %}
+                                    <td><a href="{{ url_for('problem.show_my_submits',pid=p.id,uid=current_user.id) }}">{{ count[p.id] }}</a></td>
+                                {% else %}
+                                    <td>0</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -61,3 +67,4 @@
 {% endblock %}
 
 {#problems#}
+{#count数组:记录当前用户每道题的提交次数，作为参数从show_program传递过来#}

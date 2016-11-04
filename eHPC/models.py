@@ -204,6 +204,7 @@ class Post(db.Model):
 
 """ 试题中心模块
 @Program 对应编程题
+@SubmitProblem 对应编程题目提交记录
 @Choice 对应选择题
 @Classify 选择题目所属的分类
 """
@@ -228,6 +229,24 @@ class Program(db.Model):
 choice_classifies = db.Table('choice_classifies',
                              db.Column('choice_id', db.Integer, db.ForeignKey('choices.id')),
                              db.Column('classify_id', db.Integer, db.ForeignKey('classifies.id')))
+
+
+class SubmitProblem(db.Model):
+    def __init__(self, user_id, problem_id, source_code, language):
+        self.uid = user_id
+        self.pid = problem_id
+        self.code = source_code
+        self.language = language
+        self.submit_time = datetime.now()
+
+    __tablename__ = "submit_problem"
+    id = db.Column(db.Integer, primary_key=True)        # 提交记录id
+    pid = db.Column(db.Integer, nullable=False)         # 本次提交的题目ID
+    uid = db.Column(db.Integer, nullable=False)         # 本次提交的用户ID
+    code = db.Column(db.Text())                         # 本次提交的提交代码
+    language = db.Column(db.String(64), nullable=False)    # 本次提交的代码语言
+    submit_time = db.Column(db.DateTime(), default=datetime.utcnow)   # 本次提交的提交时间
+    status = db.Column(db.String(64), nullable=False)   # 本次提交的运行结果
 
 
 class Choice(db.Model):

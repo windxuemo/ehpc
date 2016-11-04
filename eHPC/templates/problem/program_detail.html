@@ -6,20 +6,39 @@
 
 {% block content %}
     <div id="content-container" class="container">
+
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li><a href="{{ url_for('problem.index') }}">{{ _('Practice Center') }}</a></li>
+            <li class="active"><a href="{{ url_for('problem.show_program') }}">{{ _('Program Lists') }}</a></li>
+            <li class="active"><a
+                    href="{{ url_for('problem.program_view',pid=problem.id) }}">{{ problem.title }}</a>
+            </li>
+        </ol>
+
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ problem.id }}. {{ problem.title }}</h3></div>
-                    <div class="panel-body markdown-body">
-                        <p>{{ problem.detail | markdown | safe }}</p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <h1 class="col-md-8 panel-title"
+                            style="font-size: 1.5em;">{{ problem.id }}. {{ problem.title }} </h1>
+                        <div class="pull-right panel-title">
+                            <a class="btn btn-success" href="{{ url_for('problem.show_my_submits', pid=problem.id) }}">我的提交</a>
+                        </div>
+
                     </div>
+
+
+                </div>
+                <div class="panel-body markdown-body">
+                    <p>{{ problem.detail | markdown | safe }}</p>
                 </div>
             </div>
         </div>
 
         <form onsubmit="submit_code(); return false;">
             <div class="row form-group">
-                <div class="col-md-4 col-md-offset-1">
+                <div class="col-md-4">
                     <select class="form-control" id="language">
                         <option value="ace/mode/c_cpp">C</option>
                         <option value="ace/mode/c_cpp">C++</option>
@@ -30,43 +49,38 @@
             </div>
 
             <div class="row form-group">
-                <div class="col-md-10 col-md-offset-1">
-                    <div id="editor"></div>
-                </div>
+                <div id="editor"></div>
             </div>
             <div class="row form-group">
-                <div class="col-md-11">
-                    <div class="pull-right">
-                        <button id="submit" class="btn btn-primary"
-                                type="submit">{{ _('Submit Solution') }}
-                        </button>
-                    </div>
+                <div class="pull-right">
+                    <button id="submit" class="btn btn-primary"
+                            type="submit">{{ _('Submit Solution') }}
+                    </button>
                 </div>
             </div>
 
+            <input class="hide" name="language">
             <input class="hide" name="problem_id" value="{{ problem.id }}">
             <input id="source_code" name="source_code" value="" type="hidden">
         </form>
 
         {#  keep the result #}
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="es-section" id="result-show" style="display: none">
-                    <!-- Nav tabs -->
-                    <ul id="program-run-tab" class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active">
-                            <a href="#compiler" role="tab" data-toggle="tab">编译结果</a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#run" role="tab" data-toggle="tab">运行结果</a>
-                        </li>
-                    </ul>
+            <div class="es-section" id="result-show" style="display: none">
+                <!-- Nav tabs -->
+                <ul id="program-run-tab" class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#compiler" role="tab" data-toggle="tab">编译结果</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#run" role="tab" data-toggle="tab">运行结果</a>
+                    </li>
+                </ul>
 
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div id="compiler" role="tabpanel" class="tab-pane active" style="white-space: pre"></div>
-                        <div id="run" role="tabpanel" class="tab-pane" style="white-space: pre"></div>
-                    </div>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="compiler" role="tabpanel" class="tab-pane active" style="white-space: pre"></div>
+                    <div id="run" role="tabpanel" class="tab-pane" style="white-space: pre"></div>
                 </div>
             </div>
         </div>
@@ -76,6 +90,7 @@
 
 {% block footer_ext %}
     <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+
     <script>
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/tomorrow");
@@ -85,6 +100,7 @@
     <script>
         function submit_code() {
             document.getElementById('source_code').value = editor.getValue();
+            $("input[name=language]").val($("#language").find("option:selected").text());
             var data = $("form").serialize();
             $('#result-show').css("display", 'block');
             var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>"

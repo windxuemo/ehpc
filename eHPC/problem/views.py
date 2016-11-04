@@ -4,7 +4,7 @@
 from flask import render_template, jsonify, request, url_for, abort, redirect
 from flask_login import current_user, login_required
 from . import problem
-from ..models import Program, Choice, Classify, choice_classifies
+from ..models import Program, Classify, SubmitProblem, User
 from flask_babel import gettext
 from ..problem.code_process import c_compile, c_run
 from .. import db
@@ -19,9 +19,39 @@ def index():
 @problem.route('/program/')
 def show_program():
     pro = Program.query.all()
+    submission = SubmitProblem.query.filter_by(uid=current_user.id).all()
+    cnt = {}
+    for i in submission:
+        cnt[i.pid] = 0
+    for i in submission:
+        cnt[i.pid] += 1
     return render_template('problem/show_program.html',
                            title=gettext('Program Practice'),
-                           problems=pro)
+                           problems=pro,
+                           count=cnt)
+
+
+# 新增一个连接到我的提交界面的路由
+@problem.route('/program/submits/<int:pid>/')
+def show_my_submits(pid):
+    my_submits = SubmitProblem.query.filter_by(pid=pid, uid=current_user.id).all()
+    pro = Program.query.filter_by(id=pid).first_or_404()
+    return render_template('problem/show_my_submits.html',
+                           title=gettext('My Submit'),
+                           program=pro,
+                           submits=my_submits)
+
+
+# 查看某一次提交的代码
+@problem.route('/program/submit/<int:sid>/')
+def view_code(sid):
+    cur_submit = SubmitProblem.query.filter_by(id=sid).first_or_404()
+    cur_problem = Program.query.filter_by(id=cur_submit.pid).first_or_404()
+    return render_template('problem/view_code.html',
+                           title=gettext('Program Practice'),
+                           problem=cur_problem,
+                           language=cur_submit.language,
+                           code=cur_submit.code)
 
 
 @problem.route('/choice/')
@@ -39,7 +69,7 @@ def show_choice():
 @problem.route('/program/<int:pid>/')
 @login_required
 def program_view(pid):
-    pro = Program.query.filter_by(id=pid).first()
+    pro = Program.query.filter_by(id=pid).first_or_404()
     return render_template('problem/program_detail.html',
                            title=pro.title,
                            problem=pro)
@@ -59,7 +89,13 @@ def choice_view(cid):
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 @login_required
 def submit(pid):
+    uid = current_user.id
+    problem_id = request.form['problem_id']
     source_code = request.form['source_code']
+    language = request.form['language']
+    submit_problem = SubmitProblem(uid, problem_id, source_code, language)
+    db.session.add(submit_problem)
+    db.session.commit()
 
     # TODO here.  Get the result.
     is_compile_success = [False]
@@ -75,3 +111,4 @@ def submit(pid):
     result['run_out'] = run_out
 
     return jsonify(**result)
+

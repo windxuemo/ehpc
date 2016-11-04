@@ -9,12 +9,12 @@ from flask import url_for
 
 
 @filter_blueprint.app_template_filter('markdown')
-def markdown(strs):
+def markdown(string):
     """ Render the string into html style.
     """
     renderer = m.HtmlRenderer()
     md = m.Markdown(renderer, extensions=('fenced-code',))
-    return md(strs)
+    return md(string)
 
 
 @filter_blueprint.app_template_filter('split')

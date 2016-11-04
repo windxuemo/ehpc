@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li><a href="{{ url_for('problem.index') }}">{{ _('Practice Center') }}</a></li>
+            <li class="active"><a href="{{ url_for('problem.show_program') }}">{{ _('Program Lists') }}</a></li>
+        </ol>
+
+        <div class="row">
+            <div class="panel panel-default">
+            <div class="panel-title">
+
+                <h1> 编程题目 <a href="{{ url_for('problem.program_view', pid=program.id) }}">{{ program.title }}</a> 提交历史</h1>
+            </div>
+                <div class="panel-body">
+                    <table class="table" cellspacing="0" id="my_submits">
+                        <thead>
+                        <tr>
+                            <th>提交时间</th>
+                            <th>提交代码</th>
+                            <th>编程语言</th>
+                            <th>提交结果</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for s in submits %}
+                            <tr>
+                                <td>{{ s.submit_time }}</td>
+                                <td><a href="{{ url_for('problem.view_code', sid=s.id) }}">{{ program.title }}</a></td>
+                                <td>{{ s.language }}</td>
+                                <td>{{ s.status }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{#problems#}
+{#program:从show_program传递过来的参数，表示当前的题目对象#}

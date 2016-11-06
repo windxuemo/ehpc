@@ -240,13 +240,13 @@ class SubmitProblem(db.Model):
         self.submit_time = datetime.now()
 
     __tablename__ = "submit_problem"
-    id = db.Column(db.Integer, primary_key=True)        # 提交记录id
-    pid = db.Column(db.Integer, nullable=False)         # 本次提交的题目ID
-    uid = db.Column(db.Integer, nullable=False)         # 本次提交的用户ID
-    code = db.Column(db.Text())                         # 本次提交的提交代码
-    language = db.Column(db.String(64), nullable=False)    # 本次提交的代码语言
+    id = db.Column(db.Integer, primary_key=True)            # 提交记录id
+    pid = db.Column(db.Integer, nullable=False)             # 本次提交的题目ID
+    uid = db.Column(db.Integer, nullable=False)             # 本次提交的用户ID
+    code = db.Column(db.Text(), nullable=False)             # 本次提交的提交代码
+    language = db.Column(db.String(64), nullable=False)     # 本次提交的代码语言
     submit_time = db.Column(db.DateTime(), default=datetime.utcnow)   # 本次提交的提交时间
-    status = db.Column(db.String(64), nullable=False)   # 本次提交的运行结果
+    status = db.Column(db.String(64))                       # 本次提交的运行结果
 
 
 class Choice(db.Model):

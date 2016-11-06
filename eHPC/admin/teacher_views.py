@@ -247,12 +247,6 @@ def process_material():
 
         return jsonify(status="success", id=cur_lesson.id)
 
-    elif request.form['op'] == "type":
-        cur_material = Material.query.filter_by(id=request.form['id']).first_or_404()
-        if cur_material:
-            return jsonify(status='success', type=cur_material.m_type, uri=cur_material.uri)
-        else:
-            return jsonify(status='fail')
     else:
         return abort(404)
 

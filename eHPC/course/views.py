@@ -1,14 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import render_template, abort, jsonify, current_app
+from flask import render_template, jsonify, request
 from . import course
 from ..models import Course, Material
 from flask_babel import gettext
-from flask_login import current_user
+from flask_login import current_user, login_required
 from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from .. import db
-import os
 
 
 @course.route('/')
@@ -57,6 +56,7 @@ def exit_out(cid, u=current_user):
 
 
 @course.route('/res/<int:mid>/')
+@login_required
 def material(mid):
     cur_material = Material.query.filter_by(id=mid).first()
     cur_lesson = cur_material.lesson
@@ -66,6 +66,17 @@ def material(mid):
                            title=cur_material.name,
                            cur_course=cur_course,
                            cur_material=cur_material)
+
+
+@course.route('/material/', methods=['POST'])
+@login_required
+def get_material_src():
+    if request.form['op'] == "type":
+        cur_material = Material.query.filter_by(id=request.form['id']).first_or_404()
+        if cur_material:
+            return jsonify(status='success', type=cur_material.m_type, uri=cur_material.uri)
+        else:
+            return jsonify(status='fail')
 
 
 # API to get overview of one course

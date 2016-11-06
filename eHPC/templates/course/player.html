@@ -71,7 +71,7 @@
 
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process_material') }}",
+                        url: "{{ url_for('course.get_material_src') }}",
                         data: {
                             op: "type",
                             id: $(this).parent().attr('id').substr(8)

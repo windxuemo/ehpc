@@ -11,12 +11,14 @@
 
         <div class="row">
             <div class="panel panel-default">
-            <div class="panel-title">
+                <div class="panel-title">
 
-                <h1> 编程题目 <a href="{{ url_for('problem.program_view', pid=program.id) }}">{{ program.title }}</a> 提交历史</h1>
-            </div>
+                    <h1 class="text-center"> 编程题目 <a href="{{ url_for('problem.program_view', pid=program.id) }}">{{ program.title }}</a>
+                        提交历史</h1>
+                </div>
                 <div class="panel-body">
-                    <table class="table" cellspacing="0" id="my_submits">
+                    {% if submits %}
+                        <table class="table" cellspacing="0" id="my_submits">
                         <thead>
                         <tr>
                             <th>提交时间</th>
@@ -34,7 +36,10 @@
                                 <td>{{ s.status }}</td>
                             </tr>
                         {% endfor %}
-                        </tbody>
+                    {% else %}
+                        <h3 class="col-md-offset-1 col-md-10  text-center alert alert-warning"> 目前没有提交 </h3>
+                    {% endif %}
+                    </tbody>
                     </table>
                 </div>
             </div>

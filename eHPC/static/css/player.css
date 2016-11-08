@@ -4,13 +4,16 @@ html, body {
     overflow: hidden;
     word-break: break-all;
 }
+body {
+    overflow-y: auto;
+    background-color: rgb(229,229,229)
+}
 
 .space {
     margin: 20px;
 }
 
 .material {
-    margin: 10px 20px 0 20px;
     height: 100%;
 }
 
@@ -20,6 +23,7 @@ html, body {
 }
 
 .course-player {
+    /*border-bottom:15px solid rgb(74,74,74);*/
     width: 100%;
     -height: 100%;
     margin: 0px;
@@ -50,6 +54,8 @@ a {
     border-color: #34a263;
     background-color: #46c37b;
     color: #fff;
+    margin-left: 10px;
+    margin-top: 10px;
 }
 
 .btn {
@@ -68,31 +74,40 @@ h1 a {
     font-size: 16px;
 }
 
+.material .bg-gray {
+    height: 100%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-right: 10px;
+    position: relative;
+    left: 75%;
+}
+
+.material .row {
+    margin:0;
+    position: fixed;
+}
+
+@media (max-width: 992px) {
+    .material .bg-gray {
+        display: none;
+    }
+
+    .material .row {
+        width: 100%;
+    }
+}
+
 .accordion {
     width: 100%;
-    max-width: 360px;
-    /*max-height: 900px !important;*/
-    margin: 30px auto 20px;
+    min-height: 100%;
+    /*max-width: 360px;*/
+    margin: 0 auto;
     background: #FFF;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border: 1px solid gainsboro;
-    border-radius: 5px;
+    border-left: 1px solid gainsboro;
+    border-right: 1px solid gainsboro;
     word-break: break-all;
-    overflow-y: auto;
 }
-
-/*@media (max-width: 1600px) {
-    .accordion {
-        max-height: 700px !important;
-    }
-}
-
-@media (max-width: 1366px) {
-    .accordion {
-        max-height: 600px !important;
-    }
-}*/
 
 .accordion .link {
     cursor: pointer;

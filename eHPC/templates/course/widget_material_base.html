@@ -21,40 +21,40 @@
 </head>
 
 <body>
-<div class="material">
-    <!-- 返回课程按钮:通过 tab='lists'返回课程时直接定位到课时列表中 -->
-    <a class="btn btn-primary" href="{{ url_for('course.view', cid=cur_course.id, tab='lists') }}">
-        <span class="glyphicon glyphicon-chevron-left"></span>返回课程
-    </a>
-    <div class="space"></div>
-    <div class="row" style="height: 100%">
+<div class="material">   
+    <div class="row col-md-9" style="height: 100%">
+        <!-- 返回课程按钮:通过 tab='lists'返回课程时直接定位到课时列表中 -->
+        <a class="btn btn-primary" href="{{ url_for('course.view', cid=cur_course.id, tab='lists') }}">
+            <span class="glyphicon glyphicon-chevron-left"></span>返回课程
+        </a>
+        <div class="space"></div>
         <!-- 左侧播放区域 -->
-        <div class="col-md-9" style="height: 100%">
+        <div style="height: 100%">
             {% block content %}
             {% endblock %}
-        </div>
-        <!-- 右侧目录区域 -->
-        <div class="col-md-3 bg-gray" style="height: 100%">
-            <ul id="accordion" class="accordion">
-                {% for lesson in cur_course.lessons %}
-                    <li>
-                        <div class="link"><i class="glyphicon glyphicon-tags">
-                        </i>课时{{ loop.index }}: {{ lesson.title }}
-                            {% if lesson.materials.all() %}
-                                <i class="glyphicon glyphicon-chevron-down"></i>
-                            {% endif %}
-                        </div>
+        </div>        
+    </div>
+    <!-- 右侧目录区域 -->
+    <div class="col-md-3 bg-gray">
+        <ul id="accordion" class="accordion">
+            {% for lesson in cur_course.lessons %}
+                <li>
+                    <div class="link"><i class="glyphicon glyphicon-tags">
+                    </i>课时{{ loop.index }}: {{ lesson.title }}
                         {% if lesson.materials.all() %}
-                            <ul class="submenu" style="display: block;">
-                                {% for m in lesson.materials %}
-                                    <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></li>
-                                {% endfor %}
-                            </ul>
+                            <i class="glyphicon glyphicon-chevron-down"></i>
                         {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+                    </div>
+                    {% if lesson.materials.all() %}
+                        <ul class="submenu" style="display: block;">
+                            {% for m in lesson.materials %}
+                                <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 

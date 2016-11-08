@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
-from flask import render_template, jsonify, request, url_for, abort, redirect
+from flask import render_template, jsonify, request
 from flask_login import current_user, login_required
 from . import problem
 from ..models import Program, Classify, SubmitProblem, User
@@ -17,6 +17,7 @@ def index():
 
 
 @problem.route('/program/')
+@login_required
 def show_program():
     pro = Program.query.all()
     submission = SubmitProblem.query.filter_by(uid=current_user.id).all()
@@ -33,6 +34,7 @@ def show_program():
 
 # 新增一个连接到我的提交界面的路由
 @problem.route('/program/submits/<int:pid>/')
+@login_required
 def show_my_submits(pid):
     my_submits = SubmitProblem.query.filter_by(pid=pid, uid=current_user.id).all()
     pro = Program.query.filter_by(id=pid).first_or_404()
@@ -44,6 +46,7 @@ def show_my_submits(pid):
 
 # 查看某一次提交的代码
 @problem.route('/program/submit/<int:sid>/')
+@login_required
 def view_code(sid):
     cur_submit = SubmitProblem.query.filter_by(id=sid).first_or_404()
     cur_problem = Program.query.filter_by(id=cur_submit.pid).first_or_404()
@@ -76,6 +79,7 @@ def program_view(pid):
 
 
 @problem.route('/choice/<int:cid>/')
+@login_required
 def choice_view(cid):
     classify_name = Classify.query.filter_by(id=cid).first_or_404()
     choice_problem = classify_name.choices.all()

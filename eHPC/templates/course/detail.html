@@ -5,16 +5,18 @@
         <section class="es-section">
             <div class="nav-btn-tab">
                 <ul class="nav nav-tabs" role="tablist" id="course-content">
-                    <li role="presentation" class="active">
-                        <a href="{{ url_for('course.detail_course', cid=course.id) }}">课程概览</a></li>
-                    <li role="presentation"><a href="{{ url_for('course.detail_lessons', cid=course.id) }}">课时列表</a>
-                    </li>
-                    </li>
+                    <li role="presentation"><a href="#about" role="tab" data-toggle="tab">课程概览</a></li>
+                    <li role="presentation"><a href="#lists" role="tab" data-toggle="tab">课时列表</a></li>
                 </ul>
             </div>
 
-            <div class="markdown-body" id="ajax-content">
-                <p> {{ course.about | markdown | safe }} </p>
+            <!-- Tab panes -->
+            <div class="tab-content markdown-body">
+                <div id="course-about" role="tabpanel" class="tab-pane">
+                    <p>{{ course.about | markdown | safe }}</p>
+                </div>
+                <div id="course-lists" role="tabpanel" class="tab-pane">
+                </div>
             </div>
         </section>
     </div>
@@ -25,23 +27,46 @@
     {{ super() }}
     <script>
         $(document).ready(function () {
+            $("#course-lists").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
+
+            /* 加载课程列表内容 */
+            $.ajax({
+                url: "{{ url_for('course.detail_lessons', cid=course.id) }}",
+                dataType: "json",
+                contentType: 'application/json;charset=UTF-8',
+                success: function (html) {
+                    $("#course-lists").empty().html(html.data);
+                },
+                error: function () {
+                    $("#course-lists").empty().html("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");
+                },
+            });
+            /* 根据tab 参数来指定默认显示的tab选项卡 */
+            var tab = "{{ tab }}";
+            if (tab == "lists") {
+                $("#course-content").removeClass('active');
+                $("#course-content li:nth-child(2)").addClass('active');
+                $("#course-about").removeClass('active');
+                $("#course-lists").addClass('active');
+            }
+            else if (tab == "about") {
+                $("#course-content").removeClass('active');
+                $("#course-content li:nth-child(1)").addClass('active');
+                $("#course-lists").removeClass('active');
+                $("#course-about").addClass('active');
+            }
+
             $("#course-content li a").click(function () {
-                $("#ajax-content").empty().append("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
                 $("#course-content li").removeClass('active');
                 $(this).parent().addClass('active');
-
-                $.ajax({
-                    url: this.href,
-                    dataType: "json",
-                    contentType: 'application/json;charset=UTF-8',
-                    success: function (html) {
-                        $("#ajax-content").empty().append(html.data);
-                    },
-                    error: function () {
-                        $("#ajax-content").empty().append("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");
-                    },
-                });
-                return false;
+                if ($(this).attr('href') == '#about') {
+                    $("#course-lists").removeClass('active');
+                    $("#course-about").addClass('active');
+                }
+                else if ($(this).attr('href') == '#lists') {
+                    $("#course-about").removeClass('active');
+                    $("#course-lists").addClass('active');
+                }
             });
         });
     </script>

@@ -19,8 +19,14 @@ def index():
 @course.route('/<int:cid>/')
 def view(cid):
     c = Course.query.filter_by(id=cid).first()
+    # 指定显示的 Tab 选项卡
+    tab = request.args.get('tab', None)
+    if not tab:
+        tab = "about"
+
     return render_template('course/detail.html',
                            title=c.title,
+                           tab=tab,
                            course=c)
 
 
@@ -77,14 +83,6 @@ def get_material_src():
             return jsonify(status='success', type=cur_material.m_type, uri=cur_material.uri)
         else:
             return jsonify(status='fail')
-
-
-# API to get overview of one course
-@course.route('/<int:cid>/about/')
-def detail_course(cid):
-    c = Course.query.filter_by(id=cid).first()
-    html_content = render_template('course/widget_detail_about.html', course=c)
-    return jsonify(data=html_content)
 
 
 # API to get all lessons info contained in the course

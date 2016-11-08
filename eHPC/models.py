@@ -20,8 +20,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True, nullable=False)
 
     is_password_reset_link_valid = db.Column(db.Boolean, default=True)
-    last_login = db.Column(db.DateTime(), default=datetime.utcnow)
-    date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_login = db.Column(db.DateTime(), default=datetime.now)
+    date_joined = db.Column(db.DateTime(), default=datetime.now)
 
     # 权限: 0. 管理员, 1. 学生, 2. 老师,
     permissions = db.Column(db.Integer, default=1, nullable=False)
@@ -91,7 +91,7 @@ class Course(db.Model):
     title = db.Column(db.String(64), unique=True, index=True)   # 课程标题
     subtitle = db.Column(db.String(64), default="")             # 课程副标题
     about = db.Column(db.Text(), nullable=True)                 # 课程简介
-    createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
+    createdTime = db.Column(db.DateTime(), default=datetime.now)
 
     lessonNum = db.Column(db.Integer, nullable=False)           # 课时数
     studentNum = db.Column(db.Integer, default=0)               # 学生数目
@@ -153,7 +153,7 @@ class Group(db.Model):
 
     memberNum = db.Column(db.Integer, default=0)        # 讨论组成员数目
     topicNum = db.Column(db.Integer, default=0)         # 讨论组话题数目
-    createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
+    createdTime = db.Column(db.DateTime(), default=datetime.now)
 
     # 小组内的话题，一对多的关系
     topics = db.relationship('Topic', backref='group', lazy='dynamic')
@@ -167,7 +167,7 @@ class Topic(db.Model):
         self.userID = user_id
         self.title = title
         self.content = content
-        self.time_created = datetime.now()
+        self.createdTime = datetime.now()
         self.updatedTime = datetime.now()
         self.groupID = group_id
 
@@ -180,8 +180,8 @@ class Topic(db.Model):
     groupID = db.Column(db.Integer, db.ForeignKey('groups.id')) # 所属群组的ID
     userID = db.Column(db.Integer, db.ForeignKey('users.id'))   # 创建用户的ID
 
-    createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
-    updatedTime = db.Column(db.DateTime(), default=datetime.utcnow)
+    createdTime = db.Column(db.DateTime(), default=datetime.now)
+    updatedTime = db.Column(db.DateTime(), default=datetime.now)
 
     # 话题的评论，一对多的关系
     posts = db.relationship('Post', backref='topic', lazy='dynamic')
@@ -199,7 +199,7 @@ class Post(db.Model):
 
     topicID = db.Column(db.Integer, db.ForeignKey('topics.id')) # 所属话题的ID
     userID = db.Column(db.Integer, db.ForeignKey('users.id'))   # 回复用户的ID
-    createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
+    createdTime = db.Column(db.DateTime(), default=datetime.now)
 
 
 """ 试题中心模块
@@ -221,7 +221,7 @@ class Program(db.Model):
 
     # default_code = db.Column(db.Text(), default="")   # 预先设定的代码
 
-    createdTime = db.Column(db.DateTime(), default=datetime.utcnow)
+    createdTime = db.Column(db.DateTime(), default=datetime.now)
 
     # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
     # TODO
@@ -245,7 +245,7 @@ class SubmitProblem(db.Model):
     uid = db.Column(db.Integer, nullable=False)             # 本次提交的用户ID
     code = db.Column(db.Text(), nullable=False)             # 本次提交的提交代码
     language = db.Column(db.String(64), nullable=False)     # 本次提交的代码语言
-    submit_time = db.Column(db.DateTime(), default=datetime.utcnow)   # 本次提交的提交时间
+    submit_time = db.Column(db.DateTime(), default=datetime.now)   # 本次提交的提交时间
     status = db.Column(db.String(64))                       # 本次提交的运行结果
 
 
@@ -280,7 +280,7 @@ class Article(db.Model):
     content = db.Column(db.Text(), nullable=False)      # 资讯正文
     visitNum = db.Column(db.Integer, default=0)         # 浏览次数
 
-    updatedTime = db.Column(db.DateTime(), default=datetime.utcnow)
+    updatedTime = db.Column(db.DateTime(), default=datetime.now)
 
 
 """ 虚拟实验室模块 """

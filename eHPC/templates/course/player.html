@@ -15,13 +15,11 @@
             var video_player = '<div id="player" style="height:90%"></div>';
             var pdf_player = '<iframe id="player" class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%"></iframe>';
             var clappr = null;
-
             if ("{{ cur_material.m_type }}" == "pdf")
             {
                 $("#player-content").empty().append(pdf_player);
                 $("#player").attr("src",
                         "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}");
-
             }
             else
             {
@@ -38,37 +36,27 @@
                     }
                 });
             }
-
-
             var Accordion = function (el, multiple) {
                 this.el = el || {};
                 this.multiple = multiple || false;
-
                 // Variables privadas
                 var links = this.el.find('.link');
                 // Evento
                 links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
             };
-
             Accordion.prototype.dropdown = function (e) {
                 var $el = e.data.el;
                 $this = $(this);
                 $next = $this.next();
-
                 $next.slideToggle();
             };
-
             var accordion = new Accordion($('#accordion'), false);
-
             $('#material{{ cur_material.id }}').parent().parent().addClass('open');
             $('#material{{ cur_material.id }}').children('a').addClass('active');
-
-
             $('#accordion').find('a').each(function () {
                 $(this).click(function (evt) {
                     evt.preventDefault();
                     var obj = this;
-
                     $.ajax({
                         type: "post",
                         url: "{{ url_for('course.get_material_src') }}",
@@ -77,13 +65,10 @@
                             id: $(this).parent().attr('id').substr(8)
                         },
                         success: function (data) {
-
                             if (data['status'] == 'fail')
                                 return;
-
                             if (clappr != null)
                                 clappr.destroy();
-
                             if(data['type'] == "pdf")
                             {
                                 $("#player-content").empty().append(pdf_player);
@@ -105,18 +90,14 @@
                                     }
                                 });
                             }
-
                             $('.link').parent().removeClass('open');
                             $(obj).parent().parent().parent().addClass('open');
-
                             $('#accordion').find('a').removeClass('active');
                             $(obj).parent().children('a').addClass('active');
-
                             var id = $(obj).parent().attr('id').substr(8);
                             window.history.pushState(null, '', "/course/res/" + id + '/');
                         }
                     });
-
                 });
             });
             /*$(document).ready(function () {
@@ -126,8 +107,6 @@
                 $(".accordion").height($(window).height()-80);
             }*/
         });
-
     </script>
 {% endblock %}
 {# cur_material #}
-

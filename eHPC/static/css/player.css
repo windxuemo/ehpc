@@ -107,6 +107,7 @@ h1 a {
     border-left: 1px solid gainsboro;
     border-right: 1px solid gainsboro;
     word-break: break-all;
+    box-shadow: -2px 0px 3px #ddd,2px 0px 3px #ddd;
 }
 
 .accordion .link {

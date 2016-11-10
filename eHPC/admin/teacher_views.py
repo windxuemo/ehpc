@@ -203,29 +203,40 @@ def process_lesson():
 @teacher_login
 def process_material():
     if request.form['op'] == "upload":
+
         cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()
         cur_lesson = cur_course.lessons.filter_by(id=request.form['lid']).first_or_404()
-        cur_material = request.files['file']
-
-        if not cur_material:
-            return jsonify(status="fail", id=cur_lesson.id, info=u"文件为空")
-
-        filename = custom_secure_filename(cur_material.filename)
-        file_type = get_file_type(cur_material.mimetype)
-        m = Material(name=filename, m_type=file_type, uri="")
-        cur_lesson.materials.append(m)
-        db.session.commit()  # get material id
-        m.uri = os.path.join("course_%d" % cur_course.id,
-                             "lesson%d_material%d." % (cur_lesson.id, m.id) + cur_material.filename.rsplit('.', 1)[1])
-        status = upload_file(cur_material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
-        if status[0]:
-            db.session.commit()
+        if request.form['link-type'] == "origin":
+            m_link = request.form['file-link']
+            m_name = request.form['file-name']
+            m_type = request.form['file-type']
+            m = Material(name=m_name,m_type=m_type,uri=m_link)
+            cur_lesson.materials.append(m)
+            db.session.commit()  # get material id
             return jsonify(status="success", id=cur_lesson.id)
+
         else:
-            cur_lesson.materials.remove(m)
-            db.session.delete(m)
-            db.session.commit()
-            return jsonify(status="fail", id=cur_lesson.id, info=status[1])
+            cur_material = request.files['file']
+            if not cur_material:
+                return jsonify(status="fail", id=cur_lesson.id, info=u"文件为空")
+
+            filename = custom_secure_filename(cur_material.filename)
+            file_type = get_file_type(cur_material.mimetype)
+            m = Material(name=filename, m_type=file_type, uri="")
+            cur_lesson.materials.append(m)
+            db.session.commit()  # get material id
+            m.uri = os.path.join("course_%d" % cur_course.id,
+                             "lesson%d_material%d." % (cur_lesson.id, m.id) + cur_material.filename.rsplit('.', 1)[1])
+        
+            status = upload_file(cur_material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+            if status[0]:
+                db.session.commit()
+                return jsonify(status="success", id=cur_lesson.id)
+            else:
+                cur_lesson.materials.remove(m)
+                db.session.delete(m)
+                db.session.commit()
+                return jsonify(status="fail", id=cur_lesson.id, info=status[1])
 
     elif request.form['op'] == "del":
         cur_course = Course.query.filter_by(id=request.form['id']).first_or_404()

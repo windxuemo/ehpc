@@ -29,3 +29,15 @@
     left: 0;
     top: 0;
 }
+
+.choice-options{
+    padding: 5px;
+    cursor: pointer;
+}
+
+.choice-options:hover{
+    background: #E0E0E0;
+    transition: 0.3s;
+    padding: 5px;
+    cursor: pointer;
+}

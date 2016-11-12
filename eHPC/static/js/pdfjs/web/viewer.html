@@ -40,7 +40,14 @@ See https://github.com/adobe-type-tools/cmap-resources
 <script src="l10n.js"></script>
 <script src="../build/pdf.js"></script>
 
-
+<script type="text/javascript">
+    window.onload = function () {
+        document.getElementById("openFile").style.display="none";
+        document.getElementById("print").style.display="none";
+        document.getElementById("download").style.display="none";
+        document.getElementById("viewBookmark").style.display="none";
+    };
+</script>
 
     <script src="debugger.js"></script>
     <script src="viewer.js"></script>

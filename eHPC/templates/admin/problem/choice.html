@@ -6,8 +6,11 @@
             <div class="col-md-3">
                 <div class="list-group-panel">
                     <div class="list-group">
-                        <a class="list-group-item active" href="{{ url_for('admin.problem') }}">选择题目</a>
-                        <a class="list-group-item" href="{{ url_for('admin.program') }}">编程题目</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.problem') }}">选择题</a>
+                        <a class="list-group-item" href="{{ url_for('admin.judge') }}">判断题</a>
+                        <a class="list-group-item" href="{{ url_for('admin.fill') }}">填空题</a>
+                        <a class="list-group-item" href="{{ url_for('admin.essay') }}">问答题</a>
+                        <a class="list-group-item" href="{{ url_for('admin.program') }}">编程题</a>
                     </div>
                     <div class="list-group">
                     </div>
@@ -32,17 +35,19 @@
                             <thead>
                             <tr>
                                 <th width="10%" style="text-align: center">序号</th>
-                                <th width="70%">名称</th>
+                                <th width="40%">名称</th>
+                                <th width="20%">答案</th>
                                 <th>操作</th>
                             </tr>
                             </thead><!--表格头-->
                             <tbody id="tb">
-                            {% for choice in choices %}
-                                <tr data-id="{{ choice.id }}">
+                            {% for q in choices %}
+                                <tr data-id="{{ q.id }}">
                                     <td width="10%" style="text-align: center">{{ loop.index }}</td>
-                                    <td width="70%">{{ choice.title }}</td>
+                                    <td width="40%">{{ q | get_question_content }}</td>
+                                    <td width="20%">{{ q | get_question_solution }}</td>
                                     <td>
-                                        <a href="{{ url_for('admin.choice_edit', id=choice.id) }}">编辑</a>
+                                        <a href="{{ url_for('admin.choice_edit', id=q.id) }}">编辑</a>
                                         <span class="divider"> | </span>
                                         <a href="javascript:void(0)" name="del-btn">删除</a>
                                     </td>
@@ -66,7 +71,7 @@
                     var obj = this;
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process_choice') }}",
+                        url: "{{ url_for('admin.process_practice') }}",
                         data: {op: 'del', id: $(obj).parent().parent().data('id')},
                         success: function (data) {
                             $(obj).parent().parent().remove();

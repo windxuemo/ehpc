@@ -5,6 +5,8 @@
           xmlns="http://www.w3.org/1999/html">
     <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet"
           xmlns="http://www.w3.org/1999/html">
+    <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 {% endblock %}
 
@@ -41,10 +43,9 @@
                                 <div style="width:155px;left: 0;text-align: center">
                                     <span style="font-size: 17px">用时:</span>
                                     <span id="clock" class="time-clock">00:00:00</span>
-                                    <!--<input type="hidden" name="usedTime" value="97">-->
                                 </div>
                                 <div class="pause-clock link-dark">
-                                    <a class="btn" onclick="clockPause()">暂停</a>
+                                    <a class="btn" id="pause">暂停</a>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +54,7 @@
                     <div class="btn-group btn-block clearfix hidden-xs panel">
                         <div style="padding: 10px">
                             <div style="margin-left:auto;margin-right:auto;width: 82px">
-                                <a class="btn" onclick="showAnswer()" style="text-align: center">
+                                <a class="btn" id="show-solution" style="text-align: center">
                                     查看答案
                                 </a>
                             </div>
@@ -62,151 +63,56 @@
 
                     <div class="btn-group btn-block clearfix panel hidden-xs">
                         <div style="text-align:center;padding: 10px">
-                            <a class="btn disabled" id="lastProblem" onclick="lastOne()">上一题</a>
-                            <a class="btn" id="nextProblem" onclick="nextOne()">下一题</a>
+                            <a class="btn disabled" id="lastProblem">上一题</a>
+                            <a class="btn" id="nextProblem">下一题</a>
                         </div>
                     </div><!--题目切换-->
-                    <a class="btn btn-primary btn-block mtm" onclick="submit()">提交</a>
+                    <a class="btn btn-primary btn-block mtm" id="submit">提交</a>
                 </div><!--右侧栏-->
 
                 <div class="special-project-body">
                     <div class="panel">
                         <div class="panel-body">
-
                             {% for choice in choiceProblem %}
-                                {% if loop.index == 1 %}
-                                    <div id="problem{{loop.index}}">
-                                        <div class="panel-heading media">
-                                            <img class="choice-result-icon" id="choice_correct{{loop.index}}" src="/static/images/problem/choice/choice_correct.png" style="display: none">
-                                            <img class="choice-result-icon" id="choice_wrong{{loop.index}}" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
-                                            <div class="pull-left">{{loop.index}}. </div>
-                                            <div>
-                                                <span class="color-primary">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        (单选题)
-                                                    {% else %}
-                                                        (多选题)
-                                                    {% endif %}
-                                                </span>
-                                                <span>{{ choice['title'] }}</span>
-                                            </div>
+                                <div class="panel" data-name="choice" data-id="{{loop.index}}" data-type="{{ choice.type }}" style="display: {% if loop.index != 1 %}none{% endif %}">
+                                    <div class="panel-heading media" style="border-bottom: solid 1px #e1e1e1">
+                                        <img class="choice-result-icon" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                        <img class="choice-result-icon" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
+                                        <div class="pull-left">{{loop.index}}. </div>
+                                        <div>
+                                            <span class="color-primary">
+                                                {% if choice.type == 0 %}
+                                                    (单选题)
+                                                {% elif choice.type == 1 %}
+                                                    (多选题)
+                                                {% elif choice.type == 2 %}
+                                                    (不定向选择)
+                                                {% endif %}
+                                            </span>
+                                            <span>{{ choice | get_question_content }}</span>
                                         </div>
-                                        <div class="media-body panel-body">
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="1">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="1">
-                                                    {% endif %}
-                                                    A. {{ choice['detail'] | split(';',0) }}
-                                                </div>
-                                            </li>
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="2">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="2">
-                                                    {% endif %}
-                                                    B. {{ choice['detail'] | split(';',1) }}
-                                                </div>
-                                            </li>
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="3">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="3">
-                                                    {% endif %}
-                                                    C. {{ choice['detail'] | split(';',2) }}
-                                                </div>
-                                            </li>
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="4">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="4">
-                                                    {% endif %}
-                                                    D. {{ choice['detail'] | split(';',3) }}
-                                                </div>
-                                            </li>
-                                        </div>
-                                        <div style="text-align: right">
-                                            <a class="btn btn-primary" style="width: 100px" onclick="checkIfCorrect()">
-                                                确认
-                                            </a>
-                                        </div>
-                                        <div id="answer{{loop.index}}" style="margin-top: 20px;display: none" data-value="{{ choice['answer'] }}">参考答案： {{ choice['answer'] }}</div>
                                     </div>
-                                {% else %}
-                                    <div id="problem{{loop.index}}" style="display: none">
-                                        <div class="panel-heading media">
-                                            <img class="choice-result-icon" id="choice_correct{{loop.index}}" src="/static/images/problem/choice/choice_correct.png" style="display: none">
-                                            <img class="choice-result-icon" id="choice_wrong{{loop.index}}" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
-                                            <div class="pull-left">{{loop.index}}. </div>
-                                            <div class="media-body">
-                                                <span class="color-primary">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        (单选题)
-                                                    {% else %}
-                                                        (多选题)
-                                                    {% endif %}
-                                                </span>
-                                                <span>{{ choice['title'] }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="media-body panel-body">
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="1">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="1">
-                                                    {% endif %}
-                                                    A. {{ choice['detail'] | split(';',0) }}
-                                                </div>
-                                            </li>
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="2">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="2">
-                                                    {% endif %}
-                                                    B. {{ choice['detail'] | split(';',1) }}
-                                                </div>
-                                            </li>
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="3">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="3">
-                                                    {% endif %}
-                                                    C. {{ choice['detail'] | split(';',2) }}
-                                                </div>
-                                            </li>
-                                            <li class="media">
-                                                <div class="pull-left">
-                                                    {% if choice['c_type'] == 0 %}
-                                                        <input type="radio" name="choice{{ loop.index }}" value="4">
-                                                    {% else %}
-                                                        <input type="checkbox" name="choice{{ loop.index }}" value="4">
-                                                    {% endif %}
-                                                    D. {{ choice['detail'] | split(';',3) }}
-                                                </div>
-                                            </li>
-                                        </div>
-                                        <div style="text-align: right">
-                                            <a class="btn btn-primary" style="width: 100px" onclick="checkIfCorrect()">
-                                                确认
-                                            </a>
-                                        </div>
-                                        <div id="answer{{loop.index}}" style="margin-top: 20px;display: none" data-value="{{ choice['answer'] }}">参考答案： {{ choice['answer'] }}</div>
+
+                                    <div class="media-body panel-body">
+                                        <ul>
+                                            {% for i in range(choice.content | get_json_value('len')) %}
+                                                <li class="media choice-options" data-check="0">
+                                                    <i class="glyphicon glyphicon-ok pull-left" style="margin-top: 3px;display: none"></i>
+                                                    <span data-id="option" style="font-weight: bold">{{ i | get_char }}</span>
+                                                    <span>、 </span>
+                                                    <span>{{ choice.content | get_json_value(i | string) }}</span>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
                                     </div>
-                                {% endif %}
+
+                                    <div style="text-align: right">
+                                        <a class="btn btn-primary" style="width: 100px" data-id="confirm">
+                                            确认
+                                        </a>
+                                    </div>
+                                    <div data-id="solution" style="display: none;font-size: 20px" data-solution="{{ choice.solution }}">参考答案： {{ choice.solution }}</div>
+                                </div>
                             {% endfor %}
                         </div>
                     </div>
@@ -232,7 +138,7 @@
         var clock = 0,second = 0, ifClock=false, hasDone=0;
         function updateClock(sec) {//更新时间
             sec++;
-            var date = new Date(0, 0)
+            var date = new Date(0, 0);
             date.setSeconds(sec/10);
             var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
             $("#clock").text(two_char(h) + ":" + two_char(m) + ":" + two_char(s));
@@ -242,115 +148,136 @@
         window.onload = function(){//页面加载完毕时启动计时
             clock = setInterval("updateClock(second)", 100);
             ifClock = true;
-        }
-        function clockPause() {//暂停计时
-            clearInterval(clock);
-            ifClock = false;
-            $("#pauseModal").modal({backdrop: 'static', keyboard: false});
-        }
-        function clockContinue() {//继续计时
-            if(ifClock==false)
-            {
-                $("#pauseModal").modal("hide");
-                clock = setInterval("updateClock(second)", 100);
-                ifClock = true;
-            }
-        }
+        };
 
-        var number=1;
-        var corNum = {} ,ifHasDone = {};
-        for (var i=0;i<"{{ choiceProblem | count }}";i++)
-        {
-            corNum[(i+1).toString()] = false;
-            ifHasDone[(i+1).toString()] =false;
-        }
-        function nextOne() {
-            if(number=={{ choiceProblem | count }}) return;
-            number++;
-            $("#lastProblem").attr("class","btn");
-            $("#problem"+(number-1).toString()).css("display","none");
-            $("#problem"+number.toString()).css("display","block");
-            if(number=={{ choiceProblem | count }}) $("#nextProblem").attr("class","btn disabled");
-        }
-        function lastOne() {
-            if(number==1) return;
-            number--;
-            $("#nextProblem").attr("class","btn");
-            $("#problem"+(number+1).toString()).css("display","none");
-            $("#problem"+number.toString()).css("display","block");
-            if(number==1) $("#lastProblem").attr("class","btn disabled");
-        }
-        function showAnswer() {
-            var temp = $("#answer"+number.toString());
-            temp.css("font-size","20px");
-            if(temp.css("display")=="none"){
-                temp.css("display","block");
-            }
-            else{
-                temp.css("display","none");
-            }
-        }
-        function checkIfCorrect() {
-            var array = {"1":"A","2":"B","3":"C","4":"D"};
-            var your = new Array();
-            $("input[name=choice" + number.toString() + "]:checked").each(function(){
-                your.push(array[$(this).val()]);
+        $(document).ready(function () {
+            $('#pause').click(function () {
+                clearInterval(clock);
+                ifClock = false;
+                $("#pauseModal").modal({backdrop: 'static', keyboard: false});
             });
-            if(your.length==0){
-                alert("请至少选择一项");
-                return false;
-            }
-            var temp=your[0].toString();
-            for(var i=1;i<your.length;i++){
-                temp+=","+your[i];
-            }
-            var cor = true;
-            if(temp!=$("#answer"+number.toString()).data('value').toString()) cor = false;
 
-            if(!ifHasDone[number.toString()]) {
-                hasDone++;//已完成题目数
-                ifHasDone[number.toString()]=true;
-            }
+            $('#continue').click(function () {
+                if(ifClock==false)
+                {
+                    $("#pauseModal").modal("hide");
+                    clock = setInterval("updateClock(second)", 100);
+                    ifClock = true;
+                }
+            });
 
-            if (cor){
-                corNum[number.toString()]=true;
-                $("#choice_wrong"+number.toString()).css("display","none");
-                $("#choice_correct"+number.toString()).css("display","block");
-                setBarWidth(hasDone);
-                nextOne();
-            }
-            else
+            $('div[data-name=choice][data-type="0"]').find('.choice-options').click(function () {
+                $(this).parent().find('.choice-options').each(function () {
+                    $(this).data('check','0');
+                    $(this).find('i').hide();
+                });
+                $(this).data('check','1');
+                $(this).find('i').show();
+            });
+
+            $('div[data-name=choice][data-type!="0"]').find('.choice-options').click(function () {
+                if($(this).data('check') == '0'){
+                    $(this).data('check','1');
+                    $(this).find('i').show();
+                }
+                else{
+                    $(this).data('check','0');
+                    $(this).find('i').hide();
+                }
+            });
+
+            var number=1;
+            var corNum = {} ,ifHasDone = {};
+            for (var i=0;i<"{{ choiceProblem | count }}";i++)
             {
-                corNum[number.toString()]=false;
-                setBarWidth(hasDone);
-                $("#choice_correct"+number.toString()).css("display","none");
-                $("#choice_wrong"+number.toString()).css("display","block");
+                corNum[(i+1).toString()] = false;
+                ifHasDone[(i+1).toString()] =false;
             }
-        }
-        function submit() {
-            clearInterval(clock);
-            ifClock = false;
-            var date = new Date(0, 0)
-            date.setSeconds(second/10);
-            var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
 
-            $("#submitModal").modal({backdrop: 'static', keyboard: false});
-            var count =0;
-            for(var i=0;i<"{{ choiceProblem | count }}";i++){
-                if(corNum[(i+1).toString()]==true) count++;
-            }
-            $("#ansResult").text("共{{ choiceProblem | count }}题 " + "答对"+count.toString()+"题" + " 用时 " + two_char(h) + ":" + two_char(m) + ":" + two_char(s));
-        }
-        function cancelSubmit() {
-            if(ifClock == false){
-                clock = setInterval("updateClock(second)", 100);
-                ifClock = true;
-            }
-            $("#submitModal").modal('hide');
-        }
-        function confirmSubmit() {
-            window.location.href="{{ url_for('problem.show_choice') }}"
-        }
+            $('#nextProblem').click(function () {
+                if(number=={{ choiceProblem | count }}) return;
+                number++;
+                $('#lastProblem').removeClass('disabled');
+                $('div[data-id=' + (number-1).toString() + ']').hide();
+                $('div[data-id=' + number.toString() + ']').show();
+                if(number=={{ choiceProblem | count }}) $(this).addClass("disabled");
+            });
+
+            $('#lastProblem').click(function () {
+                if(number==1) return;
+                number--;
+                $('#nextProblem').removeClass('disabled');
+                $('div[data-id=' + (number+1).toString() + ']').hide();
+                $('div[data-id=' + number.toString() + ']').show();
+                if(number==1) $(this).addClass("disabled");
+            });
+
+            $('#show-solution').click(function () {
+                $('div[data-id=' + number.toString() + ']').find('div[data-id=solution]').toggle();
+            });
+
+            $('a[data-id=confirm]').click(function () {
+                var your_solution = [];
+                $(this).parent().parent().find('.choice-options').each(function () {
+                    if($(this).data('check')=='1'){
+                        var temp = $(this).find('span[data-id=option]').eq(0).text();
+                        your_solution.push(temp);
+                    }
+                });
+                if(your_solution.length==0){
+                    alert("请至少选择一项");
+                    return false;
+                }
+                your_solution = your_solution.join(';');
+
+                if(!ifHasDone[number.toString()]) {
+                    hasDone++;//已完成题目数
+                    ifHasDone[number.toString()]=true;
+                }
+
+                var correct_solution = $($(this).parent().parent().find('div[data-id=solution]')[0]).data('solution');
+
+                if(your_solution==correct_solution){
+                    corNum[number.toString()]=true;
+                    $(this).parent().parent().find('img[data-id=choice_wrong]').hide();
+                    $(this).parent().parent().find('img[data-id=choice_correct]').show();
+                    setBarWidth(hasDone);
+                }
+                else{
+                    corNum[number.toString()]=false;
+                    setBarWidth(hasDone);
+                    $(this).parent().parent().find('img[data-id=choice_wrong]').show();
+                    $(this).parent().parent().find('img[data-id=choice_correct]').hide();
+                }
+            });
+
+            $('#submit').click(function () {
+                clearInterval(clock);
+                ifClock = false;
+                var date = new Date(0, 0)
+                date.setSeconds(second/10);
+                var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
+                $("#submitModal").modal({backdrop: 'static', keyboard: false});
+                var correct_num =0;
+                for(var i=0;i<"{{ choiceProblem | count }}";i++){
+                    if(corNum[(i+1).toString()]==true) correct_num++;
+                }
+                $("#ansResult").text("共 {{ choiceProblem | count }} 题 " + "答对 "+ correct_num.toString()
+                        + " 题" + " 用时 " + two_char(h) + ":" + two_char(m) + ":" + two_char(s));
+            });
+
+            $('#confirm-submit').click(function () {
+                window.location.href="{{ url_for('problem.show_choice') }}";
+            });
+
+            $('#cancel-submit').click(function () {
+                if(ifClock == false){
+                    clock = setInterval("updateClock(second)", 100);
+                    ifClock = true;
+                }
+                $("#submitModal").modal('hide');
+            });
+        });
     </script>
 
     <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -361,8 +288,8 @@
                 </div>
                 <div class="modal-body" id="ansResult"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" onclick="confirmSubmit()">确认提交</button>
-                    <button type="button" class="btn btn-default" onclick="cancelSubmit()">继续答题</button>
+                    <button type="button" class="btn btn-default" id="confirm-submit">确认提交</button>
+                    <button type="button" class="btn btn-default" id="cancel-submit">继续答题</button>
                 </div>
             </div>
         </div>
@@ -372,14 +299,12 @@
     <div class="modal fade" id="pauseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width: 300px;height: 200px">
             <div class="modal-content" style="width: 300px;height: 200px">
-                <div class="modal-body btn" style="width: 300px;height: 200px;font-size: 30px;line-height: 140px" onclick="clockContinue()">
+                <div class="modal-body btn" style="width: 300px;height: 200px;font-size: 30px;line-height: 140px" id="continue">
                     点击继续
                 </div>
             </div>
         </div>
     </div>
-
-
 {% endblock %}
 
 

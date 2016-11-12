@@ -7,6 +7,7 @@
                 <ul class="nav nav-tabs" role="tablist" id="course-content">
                     <li role="presentation"><a href="#about" role="tab" data-toggle="tab">课程概览</a></li>
                     <li role="presentation"><a href="#lists" role="tab" data-toggle="tab">课时列表</a></li>
+                    <li role="presentation"><a href="#test" role="tab" data-toggle="tab">课堂试卷</a></li>
                 </ul>
             </div>
 
@@ -15,7 +16,31 @@
                 <div id="course-about" role="tabpanel" class="tab-pane">
                     <p>{{ course.about | markdown | safe }}</p>
                 </div>
+
                 <div id="course-lists" role="tabpanel" class="tab-pane">
+                </div>
+
+                <div id="course-test" role="tabpanel" class="tab-pane">
+                    <div class="course-detail-content" data-widget-cid="widget-1">
+                        <div class="es-piece">
+                            <div class="piece-body">
+                                <ul class="period-list" id="course-item-list">
+                                    {% for p in papers %}
+                                        <li class="period" data-paper_id="{{ p.id }}">
+                                            <a href="{{ url_for('course.paper_detail', pid=p.id) }}" title="{{ p.title }}">
+                                                <i class="es-icon es-icon-undone"></i>
+                                                <span class="title"> {{ p.title }}</span>
+
+                                                <span class="course-type">
+                                                    <i class="es-icon es-icon-check"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -28,7 +53,6 @@
     <script>
         $(document).ready(function () {
             $("#course-lists").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
-
             /* 加载课程列表内容 */
             $.ajax({
                 url: "{{ url_for('course.detail_lessons', cid=course.id) }}",
@@ -39,7 +63,7 @@
                 },
                 error: function () {
                     $("#course-lists").empty().html("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");
-                },
+                }
             });
             /* 根据tab 参数来指定默认显示的tab选项卡 */
             var tab = "{{ tab }}";
@@ -47,13 +71,22 @@
                 $("#course-content").removeClass('active');
                 $("#course-content li:nth-child(2)").addClass('active');
                 $("#course-about").removeClass('active');
+                $('#course-test').removeClass('active');
                 $("#course-lists").addClass('active');
             }
             else if (tab == "about") {
                 $("#course-content").removeClass('active');
                 $("#course-content li:nth-child(1)").addClass('active');
                 $("#course-lists").removeClass('active');
+                $('#course-test').removeClass('active');
                 $("#course-about").addClass('active');
+            }
+            else if (tab == "test"){
+                $("#course-content").removeClass('active');
+                $("#course-content li:nth-child(3)").addClass('active');
+                $("#course-lists").removeClass('active');
+                $("#course-about").removeClass('active');
+                $('#course-test').addClass('active');
             }
 
             $("#course-content li a").click(function () {
@@ -61,12 +94,20 @@
                 $(this).parent().addClass('active');
                 if ($(this).attr('href') == '#about') {
                     $("#course-lists").removeClass('active');
+                    $('#course-test').removeClass('active');
                     $("#course-about").addClass('active');
                 }
                 else if ($(this).attr('href') == '#lists') {
                     $("#course-about").removeClass('active');
+                    $('#course-test').removeClass('active');
                     $("#course-lists").addClass('active');
                 }
+                else if ($(this).attr('href') == '#test') {
+                    $("#course-lists").removeClass('active');
+                    $("#course-about").removeClass('active');
+                    $('#course-test').addClass('active');
+                }
+
             });
         });
     </script>

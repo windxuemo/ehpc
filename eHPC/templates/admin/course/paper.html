@@ -17,10 +17,10 @@
                         <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
                     </div>
                     <div class="list-group">
-                        <a class="list-group-item" href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_paper', cid=c.id) }}">试卷管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', cid=cour.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=cour.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', cid=cour.id) }}">课时管理</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_paper', cid=cour.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -29,32 +29,30 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading" style="position: sticky; top: 0px;">
                         <div class="pull-right">
-                            <button class="btn btn-primary btn-sm" id="lesson-create-btn"
+                            <button class="btn btn-primary btn-sm" id="paper-create-btn"
                                     data-toggle="modal" data-target="#myModal">
-                                <i class="glyphicon glyphicon-plus">课时</i>
+                                <i class="glyphicon glyphicon-plus">试卷</i>
                             </button>
                         </div>
                         课时管理
                     </div>
 
                     <div class="panel-body">
-                        <ul class="lesson-list sortable-list" id="course-item-list">
-                            {% for l in lessons %}
-                                <li class="item-lesson clearfix" data-lid="{{ l.id }}" style="word-break: break-all;">
+                        <ul class="lesson-list sortable-list" id="paper-item-list">
+                            {% for p in papers %}
+                                <li class="item-lesson clearfix" data-pid="{{ p.id }}" style="word-break: break-all;">
                                     <div class="item-content col-md-6">
-                                        <i class="es-icon es-icon-undone"></i>
-                                        课时<span class="number">{{ loop.index }}</span> ：{{ l.title }}
-
+                                        <i class="es-icon es-icon-undone"></i>试卷
+                                            <span class="number">{{ loop.index }}</span> ：{{ p.title }}
                                     </div>
                                     <div class="col-md-6">
                                         <a class="btn btn-link pull-right" data-toggle="modal" data-target="#myModal"
-                                           name="edit-btn"><i class="es-icon es-icon-edit"></i>编辑</a>
-                                        <a class="btn btn-link pull-right"
-                                           href="{{ url_for('admin.lesson_material', cid=c.id, lid=l.id) }}">
-                                            <i class="es-icon es-icon-fileupdate"></i>上传资料</a>
-                                        <a class="btn btn-link pull-right" href="javascript:void(0)"
-                                           name="del-btn">
+                                           name="edit-btn">
+                                            <i class="es-icon es-icon-edit"></i>编辑</a>
+                                        <a class="btn btn-link pull-right" href="javascript:void(0)" name="del-btn">
                                             <i class="es-icon es-icon-delete"></i>删除</a>
+                                        <a class="btn btn-link pull-right" href="{{ url_for('admin.paper_edit', cid=cour.id, pid=p.id) }}" name="edt-btn">
+                                            <i class="es-icon es-icon-addbox"></i>题目</a>
                                     </div>
                                 </li>
                             {% endfor %}
@@ -71,38 +69,38 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">添加课时</h4>
+                    <h4 class="modal-title" id="myModalLabel">添加试卷</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="course-lesson-form" class="form-horizontal" enctype="multipart/form-data">
+                    <form id="course-paper-form" class="form-horizontal" enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="col-md-2 control-label">
-                                <label for="lesson-title-field">标题</label>
+                                <label for="paper-title-field">标题</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <input id="lesson-title-field" class="form-control" name="title" type="text">
+                                <input id="paper-title-field" class="form-control" name="title" type="text">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-2 control-label">
-                                <label for="lesson-content-field">内容</label>
+                                <label for="paper-content-field">简介</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <textarea class="form-control" id="lesson-content-field" name="content"
+                                <textarea class="form-control" id="paper-content-field" name="content"
                                           style="height: 200px"></textarea>
                             </div>
                         </div>
 
-                        <input id="lesson-op-field" type="hidden" name="op" value="create_lesson">
-                        <input type="hidden" name="id" value="{{ c.id }}">
-                        <input id="lesson-id-field" type="hidden" name="lid">
+                        <input id="paper-op-field" type="hidden" name="op" value="create_lesson">
+                        <input type="hidden" name="cid" value="{{ cour.id }}">
+                        <input id="paper-id-field" type="hidden" name="pid">
                     </form>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="lesson-save-btn" type="button" class="btn btn-primary">保存</button>
+                    <button id="paper-save-btn" type="button" class="btn btn-primary">保存</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -113,59 +111,75 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#lesson-create-btn").click(function () {
-                $("#lesson-op-field").val("create");
-                $("#lesson-title-field").val("");
-                $("#lesson-content-field").val("");
+
+            $("#paper-create-btn").click(function () {
+                $("#paper-op-field").val("create");
+                $("#paper-title-field").val("");
+                $("#paper-content-field").val("");
             });
 
-            $('#lesson-save-btn').click(function () {
+            $('#paper-save-btn').click(function () {
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process_lesson') }}",
-                    data: new FormData($('#course-lesson-form')[0]),
+                    url: "{{ url_for('admin.process_paper') }}",
+                    data: new FormData($('#course-paper-form')[0]),
                     cache: false,
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        alert("保存成功");
-                        location.reload();
+                        if (data["status"] == "success")
+                        {
+                            alert("保存成功");
+                            location.reload();
+                        }
+                        else
+                        {
+                            alert("保存失败");
+                        }
                     }
                 });
             });
 
-            $("#course-item-list").find("a[name=del-btn]").click(function () {
+            $("#paper-item-list").find("a[name=del-btn]").click(function () {
                 var obj = this;
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process_lesson') }}",
+                    url: "{{ url_for('admin.process_paper') }}",
                     data: {
                         op: 'del',
-                        cid: {{ c.id }},
-                        lid: $(obj).parent().parent().data('lid')
+                        cid: {{ cour.id }},
+                        pid: $(obj).parent().parent().data('pid')
                     },
                     async: false,
                     success: function (data) {
-                        $(obj).parent().parent().remove();
-                        alert("删除成功");
+                        if (data["status"] == "success")
+                        {
+                            $(obj).parent().parent().remove();
+                            alert("删除成功");
+                        }
+                        else
+                        {
+                            alert("删除失败");
+                        }
+
                     }
                 });
             });
 
-            $("#course-item-list").find("a[name=edit-btn]").click(function () {
+            $("#paper-item-list").find("a[name=edit-btn]").click(function () {
                 var obj = this;
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.process_lesson') }}",
                     data: {
                         op: "data",
-                        lid: $(obj).parent().parent().data('lid')
+                        pid: $(obj).parent().parent().data('pid')
                     },
                     success: function (data) {
-                        $("#lesson-op-field").val("edit");
-                        $("#lesson-title-field").val(data['title']);
-                        $("#lesson-content-field").val(data['content']);
-                        $("#lesson-id-field").val($(obj).parent().parent().data('lid'));
+                        $("#paper-op-field").val("edit");
+                        $("#paper-title-field").val(data['title']);
+                        $("#paper-content-field").val(data['content']);
+                        $("#paper-id-field").val($(obj).parent().parent().data('pid'));
                     }
                 });
             });

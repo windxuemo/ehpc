@@ -1,5 +1,9 @@
 {% extends 'admin/base.html' %}
 
+{% block header_ext %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container" id="content-container">
 
@@ -13,6 +17,7 @@
                         <a class="list-group-item" href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
                         <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
                         <a class="list-group-item active" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', cid=c.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -159,8 +164,6 @@
 
 {% endblock %}
 {% block footer_ext %}
-
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

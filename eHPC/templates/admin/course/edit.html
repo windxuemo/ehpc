@@ -19,6 +19,7 @@
                            href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
                         <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
                         <a class="list-group-item" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', cid=c.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -27,7 +28,7 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">基本信息</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="course-form" onsubmit="return validateForm()">
+                        <form class="form-horizontal" id="course-form">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">标题</label>
                                 <div class="col-md-8">
@@ -52,12 +53,14 @@
                                               rows="10">{{ c.about }}</textarea>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-offset-2 col-md-8">
-                                    <button class="btn btn-fat btn-primary" id="submit" type='submit'>保存</button>
-                                </div>
-                            </div>
                         </form>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-8">
+                                <button class="btn btn-fat btn-primary" id="course-create-btn" type='submit'>保存</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

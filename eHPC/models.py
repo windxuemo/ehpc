@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from . import db, login_manager
+import json
 
 """ 用户管理模块 """
 
@@ -226,10 +227,6 @@ class Program(db.Model):
     # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
     # TODO
 
-choice_classifies = db.Table('choice_classifies',
-                             db.Column('choice_id', db.Integer, db.ForeignKey('choices.id')),
-                             db.Column('classify_id', db.Integer, db.ForeignKey('classifies.id')))
-
 
 class SubmitProblem(db.Model):
     def __init__(self, user_id, problem_id, source_code, language):
@@ -249,17 +246,48 @@ class SubmitProblem(db.Model):
     status = db.Column(db.String(64))                       # 本次提交的运行结果
 
 
-class Choice(db.Model):
-    __tablename__ = "choices"
-    id = db.Column(db.Integer, primary_key=True)        # 题目 ID
-    title = db.Column(db.String(64), nullable=False)    # 题目题干
-    detail = db.Column(db.Text(), nullable=False)       # 题目选项: 存储所有选项
-    c_type = db.Column(db.Boolean, nullable=False, default=False)   # 题目类型: 单选或者不定项选择
-    answer = db.Column(db.String(64), nullable=False)   # 题目答案
+question_classifies = db.Table('question_classifies',
+                               db.Column('question_id', db.Integer, db.ForeignKey('questions.id'), primary_key=True),
+                               db.Column('classify_id', db.Integer, db.ForeignKey('classifies.id'), primary_key=True))
 
-    # 选择题对应的分类, 一个选择题可以属于多个分类, 一个分类可以包括多个选择题, 所以是多对多的对应关系
-    classifies = db.relationship('Classify', secondary=choice_classifies,
-                                 backref=db.backref('choices', lazy='dynamic'))
+
+class PaperQuestion(db.Model):
+    __tablename__ = "paper_question"
+    question_id = db.Column(db.Integer, db.ForeignKey('questions.id'), primary_key=True)
+    paper_id = db.Column(db.Integer, db.ForeignKey('papers.id'), primary_key=True)
+    point = db.Column(db.Integer, nullable=False)
+
+    papers = db.relationship('Paper', backref=db.backref('questions', lazy='dynamic', cascade="delete, delete-orphan"))
+    questions = db.relationship('Question', backref=db.backref('papers', lazy='dynamic', cascade="delete, delete-orphan"))
+
+
+paper_course = db.Table('paper_course',
+                        db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
+                        db.Column('paper_id', db.Integer, db.ForeignKey('papers.id'), primary_key=True))
+
+
+class Question(db.Model):
+    __tablename__ = "questions"
+    id = db.Column(db.Integer, primary_key=True)               # 题目 ID
+    type = db.Column(db.Integer, nullable=False)               # 题目类别
+    content = db.Column(db.String(2048), nullable=False)       # 题干(选择题包括选项)
+    solution = db.Column(db.String(512), nullable=False)       # 题目答案
+    analysis = db.Column(db.String(1024), default="")          # 答案解析
+
+    classifies = db.relationship('Classify', secondary=question_classifies,
+                                 backref=db.backref('questions', lazy='dynamic'))
+
+
+class Paper(db.Model):
+    def __init__(self, title, about):
+        self.title = title
+        self.about = about
+
+    __tablename__ = "papers"
+    id = db.Column(db.Integer, primary_key=True)        # 试卷 ID
+    title = db.Column(db.String(128), nullable=False)   # 试卷标题
+    about = db.Column(db.String(128), nullable=False)   # 试卷简介
+    courses = db.relationship('Course', secondary=paper_course, backref=db.backref('papers', lazy='dynamic'))
 
 
 class Classify(db.Model):

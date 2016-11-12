@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, jsonify, request
 from . import course
-from ..models import Course, Material
+from ..models import Course, Material, Paper, Question
 from flask_babel import gettext
 from flask_login import current_user, login_required
 from ..course.course_util import student_not_in_course, student_in_course
@@ -24,10 +24,13 @@ def view(cid):
     if not tab:
         tab = "about"
 
+    paper_of_course = c.papers.all()
+
     return render_template('course/detail.html',
                            title=c.title,
                            tab=tab,
-                           course=c)
+                           course=c,
+                           papers=paper_of_course)
 
 
 @course.route('/join/<int:cid>/')
@@ -92,3 +95,31 @@ def detail_lessons(cid):
     all_lessons = c.lessons
     html_content = render_template('course/widget_detail_lessons.html', lessons=all_lessons)
     return jsonify(data=html_content)
+
+
+@course.route('/paper/<int:pid>/show')
+def paper_detail(pid):
+    paper = Paper.query.filter_by(id=pid).first_or_404()
+    return render_template('course/paper_detail.html', paper=paper)
+
+
+@course.route('/paper/<int:pid>/result', methods=['POST'])
+def paper_result(pid):
+    result = {}
+    correct_num = [0, 0, 0, 0, 0, 0]
+    paper = Paper.query.filter_by(id=pid).first_or_404()
+    your_solution = request.form
+    for key, value in your_solution.items():
+        sol = ""
+        q_type = 0
+        for i in paper.questions:
+            if i.question_id == int(key) and i.questions.type != 5:
+                sol = i.questions.solution
+                q_type = i.questions.type
+                break
+        if sol != "" and value == sol:
+            result[key] = 'T'
+            correct_num[q_type] += 1
+        else:
+            result[key] = 'F'
+    return jsonify(status='success', result=result, correct_num=correct_num)

@@ -4,10 +4,11 @@
 from flask import render_template, jsonify, request
 from flask_login import current_user, login_required
 from . import problem
-from ..models import Program, Classify, SubmitProblem, User
+from ..models import Program, Classify, SubmitProblem, Question
 from flask_babel import gettext
 from ..problem.code_process import c_compile, c_run
 from .. import db
+from sqlalchemy import or_
 
 
 @problem.route('/')
@@ -59,10 +60,11 @@ def view_code(sid):
 
 @problem.route('/choice/')
 def show_choice():
-    classifies = Classify.query.all()
+    classifies = Classify.query.all()   # 知识点
     rows = []
     for c in classifies:
-        rows.append([c.name, c.choices.count(), c.id])
+        temp = c.questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).count()
+        rows.append([c.name, temp, c.id])
 
     return render_template('problem/show_choice.html',
                            title=gettext('Choice Practice'),
@@ -82,7 +84,7 @@ def program_view(pid):
 @login_required
 def choice_view(cid):
     classify_name = Classify.query.filter_by(id=cid).first_or_404()
-    choice_problem = classify_name.choices.all()
+    choice_problem = classify_name.questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).all()
 
     return render_template('problem/choice_detail.html',
                            classify_id=classify_name.id,

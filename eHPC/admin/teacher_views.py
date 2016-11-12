@@ -3,12 +3,14 @@
 from flask import render_template, request, redirect, url_for, abort, jsonify, current_app
 from ..user.authorize import admin_login, teacher_login
 from . import admin
-from ..models import Course, Lesson, Material, User, Choice, Classify, Article, Program
+from ..models import Course, Lesson, Material, User, Article
+from ..models import Classify, Program, Paper, Question, PaperQuestion
 from .. import db
-import os
+import os, json
 from flask_babel import gettext
 from flask import current_app
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
+from sqlalchemy import or_
 
 
 @admin.route('/course/', methods=['POST', 'GET'])
@@ -64,35 +66,111 @@ def lesson_material(cid, lid):
                            title=gettext('Lesson Material'))
 
 
+@admin.route('/course/<int:cid>/paper/')
+@teacher_login
+def course_paper(cid):
+    curr_cour = Course.query.filter_by(id=cid).first_or_404()
+    return render_template('admin/course/paper.html', cour=curr_cour,
+                           papers=curr_cour.papers,
+                           title=gettext('Course Paper'))
+
+
+@admin.route('/course/<int:cid>/paper/<int:pid>/edit/')
+@teacher_login
+def paper_edit(cid, pid):
+    curr_cour = Course.query.filter_by(id=cid).first_or_404()
+    curr_paper = curr_cour.papers.filter_by(id=pid).first_or_404()
+    return render_template('admin/course/question.html', course=curr_cour, paper=curr_paper)
+
+
 @admin.route('/problem/')
 @teacher_login
 def problem():
-    choice = Choice.query.all()
+    return redirect(url_for("admin.choice"))
+
+
+@admin.route('/problem/choice')
+@teacher_login
+def choice():
+    choices = Question.query.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).all()
     return render_template('admin/problem/choice.html',
                            title=gettext('Problem Admin'),
-                           choices=choice)
+                           choices=choices)
 
 
 @admin.route('/problem/choice/create/')
 @teacher_login
 def choice_create():
     classifies = Classify.query.all()
-    return render_template('admin/problem/choice_detail.html', classifies=classifies, op='create')
+    return render_template('admin/problem/choice_detail.html', classifies=classifies, op='create', mode='practice')
 
 
 @admin.route('/problem/choice/edit/')
 @teacher_login
 def choice_edit():
-    classifies = Classify.query.all()
-    choice = Choice.query.filter_by(id=request.args['id']).first_or_404()
-    classify_selected = ""
-    for temp in choice.classifies:
-        classify_selected += unicode(temp.id) + u';'
-    classify_selected = classify_selected[:len(classify_selected) - 1]
+    curr_choice = Question.query.filter_by(id=request.args['id']).first_or_404()
+    return render_template('admin/problem/choice_detail.html',  op='edit', classifies=Classify.query.all(), choice=curr_choice, mode='practice')
 
-    options = choice.detail.split(';')
-    return render_template('admin/problem/choice_detail.html', choice=choice, classifies=classifies,
-                           classify_selected=classify_selected, options=options, op='edit')
+
+@admin.route('/problem/judge/')
+@teacher_login
+def judge():
+    judges = Question.query.filter_by(type=4)
+    return render_template('admin/problem/judge.html', judges=judges)
+
+
+@admin.route('/problem/judge/create/')
+@teacher_login
+def judge_create():
+    return render_template('admin/problem/judge_detail.html', op='create', classifies=Classify.query.all(), mode='practice')
+
+
+@admin.route('/problem/judge/edit/<int:qid>/')
+@teacher_login
+def judge_edit(qid):
+    curr_judge = Question.query.filter_by(id=qid).first_or_404()
+    return render_template('admin/problem/judge_detail.html', op='edit', curr_judge=curr_judge, classifies=Classify.query.all(), mode='practice')
+
+
+@admin.route('/problem/fill/')
+@teacher_login
+def fill():
+    fills = Question.query.filter_by(type=3)
+    return render_template('admin/problem/fill.html', fills=fills)
+
+
+@admin.route('/problem/fill/create/')
+@teacher_login
+def fill_create():
+    return render_template('admin/problem/fill_detail.html', op='create', classifies=Classify.query.all(), mode='practice')
+
+
+@admin.route('/problem/fill/edit/<int:qid>/')
+@teacher_login
+def fill_edit(qid):
+    curr_fill = Question.query.filter_by(id=qid).first_or_404()
+    return render_template('admin/problem/fill_detail.html', op='edit', curr_fill=curr_fill, classifies=Classify.query.all(), mode='practice')
+
+
+@admin.route('/problem/essay/')
+@teacher_login
+def essay():
+    essays = Question.query.filter_by(type=5)
+    return render_template('admin/problem/essay.html', essays=essays)
+
+
+@admin.route('/problem/essay/create/')
+@teacher_login
+def essay_create():
+    return render_template('admin/problem/essay_detail.html', op='create', classifies=Classify.query.all(), mode='practice')
+
+
+@admin.route('/problem/essay/edit/<int:qid>/')
+@teacher_login
+def essay_edit(qid):
+    curr_essay = Question.query.filter_by(id=qid).first_or_404()
+    return render_template('admin/problem/essay_detail.html', op='edit',
+                           curr_essay=curr_essay, classifies=Classify.query.all(), mode='practice')
 
 
 @admin.route('/problem/program/')
@@ -102,17 +180,89 @@ def program():
     return render_template('admin/problem/program.html', programs=programs)
 
 
-@admin.route('/problem/program/create')
+@admin.route('/problem/program/create/')
 @teacher_login
 def program_create():
     return render_template('admin/problem/program_detail.html', op='create')
 
 
-@admin.route('/problem/program/edit')
+@admin.route('/problem/program/edit/')
 @teacher_login
 def program_edit():
     program_problem = Program.query.filter_by(id=request.args['id']).first_or_404()
     return render_template('admin/problem/program_detail.html', op='edit', program_problem=program_problem)
+
+
+@admin.route('/paper/<int:pid>/choice/create/')
+@teacher_login
+def paper_choice_create(pid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    return render_template('admin/problem/choice_detail.html',  op='create',
+                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
+
+
+@admin.route('/paper/<int:pid>/choice/edit/<qid>/')
+@teacher_login
+def paper_choice_edit(pid, qid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    curr_choice = curr_paper.questions.filter_by(question_id=qid).first_or_404()
+    return render_template('admin/problem/choice_detail.html',  op='edit', choice=curr_choice.questions,
+                           classifies=Classify.query.all(),  mode='paper', curr_paper=curr_paper,
+                           point=curr_choice.point)
+
+
+@admin.route('/paper/<int:pid>/judge/create/')
+@teacher_login
+def paper_judge_create(pid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    return render_template('admin/problem/judge_detail.html', op='create',
+                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
+
+
+@admin.route('/paper/<int:pid>/judge/edit/<int:qid>/')
+@teacher_login
+def paper_judge_edit(pid, qid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    curr_judge = curr_paper.questions.filter_by(question_id=qid).first_or_404()
+    return render_template('admin/problem/judge_detail.html', op='edit', curr_judge=curr_judge.questions,
+                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper,
+                           point=curr_judge.point)
+
+
+@admin.route('/paper/<int:pid>/fill/create/')
+@teacher_login
+def paper_fill_create(pid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    return render_template('admin/problem/fill_detail.html', op='create',
+                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
+
+
+@admin.route('/paper/<int:pid>/fill/edit/<int:qid>/')
+@teacher_login
+def paper_fill_edit(pid, qid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    curr_fill = curr_paper.questions.filter_by(question_id=qid).first_or_404()
+    return render_template('admin/problem/fill_detail.html', op='edit', curr_fill=curr_fill.questions,
+                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper,
+                           point=curr_fill.point)
+
+
+@admin.route('/paper/<int:pid>/essay/create/')
+@teacher_login
+def paper_essay_create(pid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    return render_template('admin/problem/essay_detail.html', op='create',
+                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
+
+
+@admin.route('/paper/<int:pid>/essay/edit/<int:qid>/')
+@teacher_login
+def paper_essay_edit(pid, qid):
+    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
+    curr_essay = curr_paper.questions.filter_by(question_id=qid).first_or_404()
+    return render_template('admin/problem/essay_detail.html', op='edit', curr_essay=curr_essay.questions,
+                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper,
+                           point=curr_essay.point)
 
 
 @admin.route('/process/course/', methods=['POST'])
@@ -262,53 +412,123 @@ def process_material():
         return abort(404)
 
 
-@admin.route('/process/choice/', methods=['POST'])
+@admin.route('/process/practice/', methods=['POST'])
 @teacher_login
-def process_choice():
-    if request.form['op'] == 'create':  # 创建选择题
-        # 判断选择题类型
-        if request.form['c_type'] == '0':
-            c_type = False
-        else:
-            c_type = True
-        # 生成新的选择题
-        choice = Choice(title=request.form['title'], detail=request.form['detail'],
-                        c_type=c_type, answer=request.form['answer'])
+def process_practice():
+    print(request.form)
+    if request.form['op'] == 'create':
+        curr_question = Question(type=request.form['type'], content=request.form['content'],
+                                 solution=request.form['solution'], analysis=request.form['analysis'])
+
+        classifies = request.form.getlist('classify')
+        for x in classifies:
+            curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
+
+        db.session.add(curr_question)
+        db.session.commit()
+        return redirect(url_for('admin.' + request.referrer.split('/')[-3]))
+    elif request.form['op'] == 'edit':
+        curr_question = Question.query.filter_by(id=request.form['id']).first_or_404()
+        curr_question.content = request.form['content']
+        curr_question.solution = request.form['solution']
+        curr_question.analysis = request.form['analysis']
+
+        for x in xrange(len(curr_question.classifies)):
+            curr_question.classifies.pop(0)
+        classifies = request.form.getlist('classify')
+        for x in classifies:
+            curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
+
+        db.session.commit()
+        return redirect(url_for('admin.' + request.referrer.split('/')[-4]))
+    elif request.form['op'] == 'del':
+        curr_question = Question.query.filter_by(id=request.form['id']).first_or_404()
+        db.session.delete(curr_question)
+        db.session.commit()
+        return jsonify(status="success", id=curr_question.id)
+    else:
+        return abort(404)
+
+
+@admin.route('/process/paper/', methods=['POST'])
+@teacher_login
+def process_paper():
+    if request.form['op'] == 'create':
+        curr_paper = Paper(title=request.form['title'], about=request.form['content'])
+        curr_course = Course.query.filter_by(id=request.form['cid']).first_or_404()
+        curr_course.papers.append(curr_paper)
+        db.session.add(curr_paper)
+        db.session.commit()
+        return jsonify(status="success", id=curr_paper.id)
+    elif request.form['op'] == "del":
+        curr_course = Course.query.filter_by(id=request.form['cid']).first_or_404()
+        curr_paper = curr_course.papers.filter_by(id=request.form['pid']).first_or_404()
+        curr_course.papers.remove(curr_paper)
+        db.session.delete(curr_paper)
+        db.session.commit()
+        return jsonify(status="success", id=curr_paper.id)
+    elif request.form['op'] == "edit":
+        curr_course = Course.query.filter_by(id=request.form['cid']).first_or_404()
+        curr_paper = curr_course.papers.filter_by(id=request.form['pid']).first_or_404()
+        curr_paper.title = request.form['title']
+        curr_paper.about = request.form['content']
+        db.session.commit()
+        return jsonify(status="success", id=curr_paper.id)
+    elif request.form['op'] == 'data':
+        curr_paper = Paper.query.filter_by(id=request.form['pid']).first_or_404()
+        return jsonify(title=curr_paper.title, content=curr_paper.about)
+    else:
+        return abort(404)
+
+
+@admin.route('/process/question/', methods=['POST'])
+@teacher_login
+def process_question():
+    print(request.form)
+    if request.form['op'] == 'create':
+        curr_paper = Paper.query.filter_by(id=request.form['pid']).first_or_404()
+        curr_question = Question(type=request.form['type'], content=request.form['content'],
+                                 solution=request.form['solution'], analysis=request.form['analysis'])
+        aux = PaperQuestion(point=request.form['point'])
+        aux.questions = curr_question
+        curr_paper.questions.append(aux)
+
+        classifies = request.form.getlist('classify')
+        for x in classifies:
+            curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
+
+        db.session.add(curr_question)
+        db.session.add(aux)
+        db.session.commit()
+        return jsonify(status="success", id=curr_paper.id)
+    elif request.form['op'] == 'edit':
+        curr_paper = Paper.query.filter_by(id=request.form['pid']).first_or_404()
+        aux = curr_paper.questions.filter_by(question_id=request.form['id']).first_or_404()
+        aux.point = request.form['point']
+        curr_question = aux.questions
+        curr_question.content = request.form['content']
+        curr_question.solution = request.form['solution']
+        curr_question.analysis = request.form['analysis']
+
+        for x in xrange(len(curr_question.classifies)):
+            curr_question.classifies.pop(0)
         classifies = request.form.getlist('classify[]')
-        for i in classifies:
-            classify = Classify.query.filter_by(id=i).first_or_404()
-            choice.classifies.append(classify)
+        for x in classifies:
+            curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
 
-        db.session.add(choice)
         db.session.commit()
-        return unicode(choice.id)
-    elif request.form['op'] == 'edit':  # 编辑选择题
-        choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
-
-        choice.title = request.form['title']
-        choice.detail = request.form['detail']
-        if request.form['c_type'] == '0':
-            c_type = False
-        else:
-            c_type = True
-        choice.c_type = c_type
-        choice.answer = request.form['answer']
-        # 修改choice_classifies表
-        l = len(choice.classifies)
-        for i in xrange(l-1, -1, -1):
-            choice.classifies.remove(choice.classifies[i])
-
-        classifies = request.form.getlist('classify[]')
-        for i in classifies:
-            classify = Classify.query.filter_by(id=i).first_or_404()
-            choice.classifies.append(classify)
+        return jsonify(status="success", id=curr_paper.id)
+    elif request.form['op'] == 'del':
+        curr_paper = Paper.query.filter_by(id=request.form['pid']).first_or_404()
+        seq = request.form.getlist('seq[]')
+        for x in seq:
+            aux = curr_paper.questions.filter_by(question_id=x).first_or_404()
+            curr_paper.questions.remove(aux)
+            curr_question = aux.questions
+            db.session.delete(curr_question)
+            db.session.delete(aux)
         db.session.commit()
-        return unicode(choice.id)
-    elif request.form['op'] == 'del':   # 删除选择题
-        choice = Choice.query.filter_by(id=request.form['id']).first_or_404()
-        db.session.delete(choice)
-        db.session.commit()
-        return unicode(choice.id)
+        return jsonify(status="success", id=curr_paper.id)
     else:
         return abort(404)
 

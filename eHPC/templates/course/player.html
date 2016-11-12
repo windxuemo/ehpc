@@ -13,7 +13,7 @@
     <script>
         $(function () {
             var video_player = '<div id="player" style="height:90%"></div>';
-            var pdf_player = '<iframe id="player" class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%"></iframe>';
+            var pdf_player = '<iframe id="player" class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%" allowfullscreen></iframe>';
             var clappr = null;
             if ("{{ cur_material.m_type }}" == "pdf")
             {

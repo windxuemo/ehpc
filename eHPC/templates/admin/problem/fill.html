@@ -8,9 +8,9 @@
                     <div class="list-group">
                         <a class="list-group-item" href="{{ url_for('admin.problem') }}">选择题</a>
                         <a class="list-group-item" href="{{ url_for('admin.judge') }}">判断题</a>
-                        <a class="list-group-item" href="{{ url_for('admin.fill') }}">填空题</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.fill') }}">填空题</a>
                         <a class="list-group-item" href="{{ url_for('admin.essay') }}">问答题</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.program') }}">编程题</a>
+                        <a class="list-group-item" href="{{ url_for('admin.program') }}">编程题</a>
                     </div>
                     <div class="list-group">
                     </div>
@@ -21,7 +21,7 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
                     <span class="pull-right">
-                        <a id="create-program" href="{{ url_for('admin.program_create') }}"
+                        <a id="create-program" href="{{ url_for('admin.fill_create') }}"
                            class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-plus"></span>
                             创建题目
@@ -35,21 +35,19 @@
                             <thead>
                             <tr>
                                 <th width="10%" style="text-align: center">序号</th>
-                                <th width="40%">名称</th>
-                                <th width="10%" style="text-align: center">难度</th>
-                                <th width="20%">创建时间</th>
+                                <th width="40%">题干</th>
+                                <th width="20%">答案</th>
                                 <th>操作</th>
                             </tr>
                             </thead><!--表格头-->
                             <tbody id="tb">
-                            {% for program in programs %}
-                                <tr data-id="{{ program.id }}">
+                            {% for q in fills %}
+                                <tr data-id="{{ q.id }}">
                                     <td width="10%" style="text-align: center">{{ loop.index }}</td>
-                                    <td width="40%">{{ program.title }}</td>
-                                    <td width="10%" style="text-align: center">{{ program.difficulty }}</td>
-                                    <td width="20%">{{ program.createdTime }}</td>
+                                    <td width="40%">{{ q | get_question_content }}</td>
+                                    <td width="20%">{{ q | get_question_solution}}</td>
                                     <td>
-                                        <a href="{{ url_for('admin.program_edit', id=program.id) }}">编辑</a>
+                                        <a href="{{ url_for('admin.fill_edit', qid=q.id) }}">编辑</a>
                                         <span class="divider"> | </span>
                                         <a href="javascript:void(0)" name="del-btn">删除</a>
                                     </td>
@@ -73,11 +71,18 @@
                     var obj = this;
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process_program') }}",
+                        url: "{{ url_for('admin.process_practice') }}",
                         data: {op: 'del', id: $(obj).parent().parent().data('id')},
                         success: function (data) {
-                            $(obj).parent().parent().remove();
-                            alert("删除成功");
+                            if(data["status"] == "success")
+                            {
+                                $(obj).parent().parent().remove();
+                                alert("删除成功");
+                            }
+                            else
+                            {
+                                alert("删除失败");
+                            }
                         }
                     });
                 });

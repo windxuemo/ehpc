@@ -4,6 +4,10 @@
 -- ------------------------------------------------------
 -- Server version	5.6.22
 
+DROP DATABASE IF EXISTS `ehpc`;
+CREATE DATABASE `ehpc`;
+USE `ehpc`;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -65,60 +69,6 @@ INSERT INTO `articles` VALUES (6,'C++ 编译过程','简单地说，一个编译
 UNLOCK TABLES;
 
 --
--- Table structure for table `choice_classifies`
---
-
-DROP TABLE IF EXISTS `choice_classifies`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `choice_classifies` (
-  `choice_id` int(11) DEFAULT NULL,
-  `classify_id` int(11) DEFAULT NULL,
-  KEY `choice_id` (`choice_id`),
-  KEY `classify_id` (`classify_id`),
-  CONSTRAINT `choice_classifies_ibfk_1` FOREIGN KEY (`choice_id`) REFERENCES `choices` (`id`),
-  CONSTRAINT `choice_classifies_ibfk_2` FOREIGN KEY (`classify_id`) REFERENCES `classifies` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `choice_classifies`
---
-
-LOCK TABLES `choice_classifies` WRITE;
-/*!40000 ALTER TABLE `choice_classifies` DISABLE KEYS */;
-INSERT INTO `choice_classifies` VALUES (2,1),(2,2),(3,1),(5,2),(1,2),(1,1);
-/*!40000 ALTER TABLE `choice_classifies` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `choices`
---
-
-DROP TABLE IF EXISTS `choices`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `choices` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(64) NOT NULL,
-  `detail` text NOT NULL,
-  `c_type` tinyint(1) NOT NULL,
-  `answer` varchar(64) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `choices`
---
-
-LOCK TABLES `choices` WRITE;
-/*!40000 ALTER TABLE `choices` DISABLE KEYS */;
-INSERT INTO `choices` VALUES (1,'题目 1','这是 A;\n这是 B;\n这是 C;\n这是 D',0,'A'),(2,'题目 2','A选项;\nB选项;\nC选项;\nD选项',0,'D'),(3,'题目 3','A选项;\nB选项;\nC选项;\nD选项;',1,'A,B,C,D'),(5,'创建了一个新的题目','答案 A;\n答案 B;\n答案 C;\n答案 D',0,'A');
-/*!40000 ALTER TABLE `choices` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `classifies`
 --
 
@@ -140,6 +90,159 @@ LOCK TABLES `classifies` WRITE;
 /*!40000 ALTER TABLE `classifies` DISABLE KEYS */;
 INSERT INTO `classifies` VALUES (1,'MPI'),(2,'并行计算'),(3,'超算特点');
 /*!40000 ALTER TABLE `classifies` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `question`
+--
+
+DROP TABLE IF EXISTS `questions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `questions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` tinyint NOT NULL,
+  `content` varchar(2048) NOT NULL,
+  `solution` varchar(512) NOT NULL,
+  `analysis` varchar(1024) DEFAULT '',
+  PRIMARY KEY (`id`),
+  INDEX `idx_type`(`type`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `questions`
+--
+
+LOCK TABLES `questions` WRITE;
+/*!40000 ALTER TABLE `questions` DISABLE KEYS */;
+INSERT INTO `questions` VALUES
+  (1, 0, '{"title": "选择题1", "len": 4, "0": "这是A", "1": "这是B", "2": "这是C", "3": "这是D"}', 'A', '解析1'),
+  (2, 1, '{"title": "选择题2", "len": 5, "0": "这是A", "1": "这是B", "2": "这是C", "3": "这是D", "4": "这是E"}', 'A;B;E', '解析2'),
+  (3, 2, '{"title": "选择题3", "len": 4, "0": "这是A", "1": "这是B", "2": "这是C", "3": "这是D"}', 'A;B', '解析3'),
+  (4, 3, '填*空*题1, 填*空*题2', '{"len": 2, "0": "答案1", "1": "答案2"}', '解析4'),
+  (5, 4, '判断题1', '0', '解析5'),
+  (6, 5, '问答题1', '问答题答案', '解析6'),
+  (7, 0, '{"title": "选择题5", "len": 4, "0": "这是A", "1": "这是B", "2": "这是C", "3": "这是D"}', 'A', '解析7'),
+  (8, 0, '{"title": "选择题6", "len": 4, "0": "这是A", "1": "这是B", "2": "这是C", "3": "这是D"}', 'A', '解析8');
+/*!40000 ALTER TABLE `questions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `question_classifies`
+--
+
+DROP TABLE IF EXISTS `question_classifies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `question_classifies` (
+  `question_id` int(11),
+  `classify_id` int(11),
+  KEY `question_id` (`question_id`),
+  KEY `classify_id` (`classify_id`),
+  CONSTRAINT `question_classifies_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`),
+  CONSTRAINT `question_classifies_ibfk_2` FOREIGN KEY (`classify_id`) REFERENCES `classifies` (`id`),
+  PRIMARY KEY (`question_id`, `classify_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `question_classifies`
+--
+
+LOCK TABLES `question_classifies` WRITE;
+/*!40000 ALTER TABLE `question_classifies` DISABLE KEYS */;
+INSERT INTO `question_classifies` VALUES (2,1),(2,2),(3,1),(5,2),(1,2),(1,1),(4,1),(6,3),(7,2),(8,1);
+/*!40000 ALTER TABLE `question_classifies` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `papers`
+--
+
+DROP TABLE IF EXISTS `papers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `papers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(128) NOT NULL,
+  `about` varchar(128) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `papers`
+--
+
+LOCK TABLES `papers` WRITE;
+/*!40000 ALTER TABLE `papers` DISABLE KEYS */;
+INSERT INTO `papers` VALUES (1,'测验1','这是测验1'),(2,'测验2','这是测验2'),(3,'测验3','这是测验3');
+/*!40000 ALTER TABLE `papers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `paper_question`
+--
+
+DROP TABLE IF EXISTS `paper_question`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `paper_question` (
+  `question_id` INT(11),
+  `paper_id` INT(11),
+  `point` INT(11) NOT NULL,
+  KEY `question_id` (`question_id`),
+  KEY `paper_id` (`paper_id`),
+  CONSTRAINT `paper_question_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`),
+  CONSTRAINT `paper_question_ibfk_2` FOREIGN KEY (`paper_id`) REFERENCES `papers` (`id`),
+  PRIMARY KEY (`question_id`, `paper_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paper_question`
+--
+
+LOCK TABLES `paper_question` WRITE;
+/*!40000 ALTER TABLE `paper_question` DISABLE KEYS */;
+INSERT INTO `paper_question` VALUES (1, 1, 20);
+INSERT INTO `paper_question` VALUES (2, 1, 20);
+INSERT INTO `paper_question` VALUES (3, 1, 20);
+INSERT INTO `paper_question` VALUES (4, 1, 20);
+INSERT INTO `paper_question` VALUES (5, 1, 20);
+INSERT INTO `paper_question` VALUES (6, 1, 20);
+INSERT INTO `paper_question` VALUES (7, 1, 20);
+INSERT INTO `paper_question` VALUES (8, 1, 20);
+/*!40000 ALTER TABLE `paper_question` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `paper_course`
+--
+
+DROP TABLE IF EXISTS `paper_course`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `paper_course` (
+  `course_id` INT(11),
+  `paper_id` INT(11),
+  KEY `course_id` (`course_id`),
+  KEY `paper_id` (`paper_id`),
+  CONSTRAINT `paper_course_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
+  CONSTRAINT `paper_course_ibfk_2` FOREIGN KEY (`paper_id`) REFERENCES `papers` (`id`),
+  PRIMARY KEY (`course_id`, `paper_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paper_course`
+--
+
+LOCK TABLES `paper_course` WRITE;
+/*!40000 ALTER TABLE `paper_course` DISABLE KEYS */;
+INSERT INTO `paper_course` VALUES (1,1),(1,2),(1,3);
+/*!40000 ALTER TABLE `paper_course` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -487,5 +590,11 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+
+
+
+
 
 -- Dump completed on 2016-11-08 14:11:07

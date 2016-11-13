@@ -88,10 +88,10 @@
 
             $("#form").submit(function (evt) {
                 var array = edt1.value().split('*');
-                var solution = {};
-                solution["len"] = array.length / 2;
+                var solution = {}, count = 0;
                 for (var i = 1; i < array.length; i += 2)
-                    solution[i.toString()] = array[i];
+                    solution[(count++).toString()] = array[i];
+                solution["len"] = count;
 
                 $("#solution-editor").val(JSON.stringify(solution));
             });
@@ -113,15 +113,11 @@
                             classify.push($(this).val());
                     });
 
-                var array = edt1.value().split('*');
-                var solution = {};
-                solution["len"] = 0;
-                for (var i = 1; i < array.length; i += 2)
-                {
-                    solution[i.toString()] = array[i];
-                    solution["len"]++;
-                }
-
+                    var array = edt1.value().split('*');
+                    var solution = {}, count = 0;
+                    for (var i = 1; i < array.length; i += 2)
+                        solution[(count++).toString()] = array[i];
+                    solution["len"] = count;
 
                     $.ajax({
                         type: "post",

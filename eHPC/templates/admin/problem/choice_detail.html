@@ -45,60 +45,59 @@
                             {% if op == 'edit' %}<input type="hidden" name="id" value="{{ choice.id }}">{% endif %}
                         </form>
 
-                        <form>
-                            <div class="form-group">
-                                <label>题干</label>
-                                <textarea name="content" id="target-editor">{% if op == 'edit' %}
-                                    {{ choice | get_question_content }}{% endif %}</textarea>
-                            </div>
+                        <div class="form-group">
+                            <label>题干</label>
+                            <textarea name="content" id="target-editor">{% if op == 'edit' %}
+                                {{ choice | get_question_content }}{% endif %}</textarea>
+                        </div>
 
-                            <div style="margin-bottom: 15px">
-                                <span style="margin-bottom: 0;font-weight: bold">选项(选中的为本题<span style="color: #1fc231">正确答案</span>)</span>
-                                <input type="checkbox" name="if-undef"><span>是否为不定项选择</span>
-                            </div>
+                        <div style="margin-bottom: 15px">
+                            <span style="margin-bottom: 0;font-weight: bold">选项(选中的为本题<span style="color: #1fc231">正确答案</span>)</span>
+                            <input type="checkbox" name="if-undef"><span>是否为不定项选择</span>
+                        </div>
 
-                            <div id="options">
-                                {% if op == 'edit' %}<!--编辑选择题-->
-                                    {% for i in range(choice.content | get_json_value('len')) %}
-                                        <div class="input-group" style="margin-top: 5px">
-                                            <span class="input-group-addon" style="width: 8%">
-                                                <input value="{{ loop.index0 | get_char }}" name="option_index"
-                                                       type="checkbox">&nbsp;&nbsp;{{ loop.index0 | get_char }}</span>
-                                            <input class="form-control" name="options" placeholder="请输入选项内容" type="text"
-                                                   value="{{ choice.content | get_json_value(i | string) }}">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button" title="删除">
-                                                    <span class="glyphicon glyphicon-minus"></span>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    {% endfor %}
-                                    {% else %}<!--创建选择题-->
-                                    {% for i in range(4) %}
-                                        <div class="input-group" style="margin-top: 5px">
-                                            <span class="input-group-addon" style="width: 8%"><input value="{{ i }}"
-                                                                                                     name="option_index"
-                                                                                                     type="checkbox">&nbsp;&nbsp;{{ i | get_char }}</span>
-                                            <input class="form-control" name="options" placeholder="请输入选项内容"
-                                                   type="text">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button" title="删除">
-                                                    <span class="glyphicon glyphicon-minus"></span>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                            <button id="add-options" class="btn btn-primary btn-block" style="margin-top: 15px">
-                                添加选项
-                            </button>
-                            <div class="form-group" style="margin-top:20px">
-                                <label>答案解析</label>
-                                <textarea name="analysis" id="analysis-editor">{% if op == 'edit' %}
-                                    {{ choice.analysis }}{% endif %}</textarea>
-                            </div>
-                        </form>
+                        <div id="options">
+                            {% if op == 'edit' %}<!--编辑选择题-->
+                                {% for i in range(choice.content | get_json_value('len')) %}
+                                    <div class="input-group" style="margin-top: 5px">
+                                        <span class="input-group-addon" style="width: 8%">
+                                            <input value="{{ loop.index0 | get_char }}" name="option_index"
+                                                   type="checkbox">&nbsp;&nbsp;{{ loop.index0 | get_char }}</span>
+                                        <input class="form-control" name="options" placeholder="请输入选项内容" type="text"
+                                               value="{{ choice.content | get_json_value(i | string) }}">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" title="删除">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                                {% else %}<!--创建选择题-->
+                                {% for i in range(4) %}
+                                    <div class="input-group" style="margin-top: 5px">
+                                        <span class="input-group-addon" style="width: 8%"><input value="{{ i }}"
+                                                                                                 name="option_index"
+                                                                                                 type="checkbox">&nbsp;&nbsp;{{ i | get_char }}</span>
+                                        <input class="form-control" name="options" placeholder="请输入选项内容"
+                                               type="text">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" title="删除">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <button id="add-options" class="btn btn-primary btn-block" style="margin-top: 15px">
+                            添加选项
+                        </button>
+                        <div class="form-group" style="margin-top:20px">
+                            <label>答案解析</label>
+                            <textarea name="analysis" id="analysis-editor">{% if op == 'edit' %}
+                                {{ choice.analysis }}{% endif %}</textarea>
+                        </div>
+
                         <button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交
                         </button>
                     </div>

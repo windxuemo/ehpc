@@ -204,7 +204,7 @@ class Post(db.Model):
 
 
 """ 试题中心模块
-@Program 对应编程题
+@Program 对应在线编程题
 @SubmitProblem 对应编程题目提交记录
 @Choice 对应选择题
 @Classify 选择题目所属的分类
@@ -224,11 +224,9 @@ class Program(db.Model):
 
     createdTime = db.Column(db.DateTime(), default=datetime.now)
 
-    # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
-    # TODO
-
 
 class SubmitProblem(db.Model):
+    # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
     def __init__(self, user_id, problem_id, source_code, language):
         self.uid = user_id
         self.pid = problem_id

@@ -69,6 +69,7 @@ def lesson_material(cid, lid):
 @admin.route('/course/<int:cid>/paper/')
 @teacher_login
 def course_paper(cid):
+    """ 课程cid 的试卷管理入口页面 """
     curr_cour = Course.query.filter_by(id=cid).first_or_404()
     return render_template('admin/course/paper.html', cour=curr_cour,
                            papers=curr_cour.papers,
@@ -78,6 +79,7 @@ def course_paper(cid):
 @admin.route('/course/<int:cid>/paper/<int:pid>/edit/')
 @teacher_login
 def paper_edit(cid, pid):
+    """ 课程cid 的试卷 pid 对应的题目列表入口页面 """
     curr_cour = Course.query.filter_by(id=cid).first_or_404()
     curr_paper = curr_cour.papers.filter_by(id=pid).first_or_404()
     return render_template('admin/course/question.html', course=curr_cour, paper=curr_paper)
@@ -92,6 +94,7 @@ def problem():
 @admin.route('/problem/choice')
 @teacher_login
 def choice():
+    """ 题库中选择题目的入口页面 """
     choices = Question.query.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).all()
     return render_template('admin/problem/choice.html',
                            title=gettext('Problem Admin'),
@@ -101,20 +104,30 @@ def choice():
 @admin.route('/problem/choice/create/')
 @teacher_login
 def choice_create():
+    """ 在题库添加选择题 """
     classifies = Classify.query.all()
-    return render_template('admin/problem/choice_detail.html', classifies=classifies, op='create', mode='practice')
+    return render_template('admin/problem/choice_detail.html',
+                           classifies=classifies,
+                           op='create',
+                           mode='practice')
 
 
 @admin.route('/problem/choice/edit/')
 @teacher_login
 def choice_edit():
+    """ 题库中选择题的编辑页面 """
     curr_choice = Question.query.filter_by(id=request.args['id']).first_or_404()
-    return render_template('admin/problem/choice_detail.html',  op='edit', classifies=Classify.query.all(), choice=curr_choice, mode='practice')
+    return render_template('admin/problem/choice_detail.html',
+                           op='edit',
+                           classifies=Classify.query.all(),
+                           choice=curr_choice,
+                           mode='practice')
 
 
 @admin.route('/problem/judge/')
 @teacher_login
 def judge():
+    """ 题库中判断题的入口页面 """
     judges = Question.query.filter_by(type=4)
     return render_template('admin/problem/judge.html', judges=judges)
 
@@ -122,19 +135,29 @@ def judge():
 @admin.route('/problem/judge/create/')
 @teacher_login
 def judge_create():
-    return render_template('admin/problem/judge_detail.html', op='create', classifies=Classify.query.all(), mode='practice')
+    """ 在题库添加判断题 """
+    return render_template('admin/problem/judge_detail.html',
+                           op='create',
+                           classifies=Classify.query.all(),
+                           mode='practice')
 
 
 @admin.route('/problem/judge/edit/<int:qid>/')
 @teacher_login
 def judge_edit(qid):
+    """ 题库中判断的编辑页面 """
     curr_judge = Question.query.filter_by(id=qid).first_or_404()
-    return render_template('admin/problem/judge_detail.html', op='edit', curr_judge=curr_judge, classifies=Classify.query.all(), mode='practice')
+    return render_template('admin/problem/judge_detail.html',
+                           op='edit',
+                           curr_judge=curr_judge,
+                           classifies=Classify.query.all(),
+                           mode='practice')
 
 
 @admin.route('/problem/fill/')
 @teacher_login
 def fill():
+    """ 题库中填空题的入口页面 """
     fills = Question.query.filter_by(type=3)
     return render_template('admin/problem/fill.html', fills=fills)
 
@@ -142,19 +165,29 @@ def fill():
 @admin.route('/problem/fill/create/')
 @teacher_login
 def fill_create():
-    return render_template('admin/problem/fill_detail.html', op='create', classifies=Classify.query.all(), mode='practice')
+    """ 在题库添加选择题 """
+    return render_template('admin/problem/fill_detail.html',
+                           op='create',
+                           classifies=Classify.query.all(),
+                           mode='practice')
 
 
 @admin.route('/problem/fill/edit/<int:qid>/')
 @teacher_login
 def fill_edit(qid):
+    """ 题库中选择题目的编辑页面 """
     curr_fill = Question.query.filter_by(id=qid).first_or_404()
-    return render_template('admin/problem/fill_detail.html', op='edit', curr_fill=curr_fill, classifies=Classify.query.all(), mode='practice')
+    return render_template('admin/problem/fill_detail.html',
+                           op='edit',
+                           curr_fill=curr_fill,
+                           classifies=Classify.query.all(),
+                           mode='practice')
 
 
 @admin.route('/problem/essay/')
 @teacher_login
 def essay():
+    """ 题库中问答题的入口页面 """
     essays = Question.query.filter_by(type=5)
     return render_template('admin/problem/essay.html', essays=essays)
 
@@ -162,20 +195,26 @@ def essay():
 @admin.route('/problem/essay/create/')
 @teacher_login
 def essay_create():
-    return render_template('admin/problem/essay_detail.html', op='create', classifies=Classify.query.all(), mode='practice')
+    """ 在题库添加问答题 """
+    return render_template('admin/problem/essay_detail.html',
+                           op='create',
+                           classifies=Classify.query.all(), mode='practice')
 
 
 @admin.route('/problem/essay/edit/<int:qid>/')
 @teacher_login
 def essay_edit(qid):
+    """ 题库中问答题目的编辑页面 """
     curr_essay = Question.query.filter_by(id=qid).first_or_404()
     return render_template('admin/problem/essay_detail.html', op='edit',
-                           curr_essay=curr_essay, classifies=Classify.query.all(), mode='practice')
+                           curr_essay=curr_essay,
+                           classifies=Classify.query.all(), mode='practice')
 
 
 @admin.route('/problem/program/')
 @teacher_login
 def program():
+    """ 题库中编程题的入口页面 """
     programs = Program.query.all()
     return render_template('admin/problem/program.html', programs=programs)
 
@@ -183,12 +222,14 @@ def program():
 @admin.route('/problem/program/create/')
 @teacher_login
 def program_create():
+    """ 在题库添加编程题 """
     return render_template('admin/problem/program_detail.html', op='create')
 
 
 @admin.route('/problem/program/edit/')
 @teacher_login
 def program_edit():
+    """ 题库中编程题目的编辑页面 """
     program_problem = Program.query.filter_by(id=request.args['id']).first_or_404()
     return render_template('admin/problem/program_detail.html', op='edit', program_problem=program_problem)
 
@@ -224,8 +265,12 @@ def paper_judge_create(pid):
 def paper_judge_edit(pid, qid):
     curr_paper = Paper.query.filter_by(id=pid).first_or_404()
     curr_judge = curr_paper.questions.filter_by(question_id=qid).first_or_404()
-    return render_template('admin/problem/judge_detail.html', op='edit', curr_judge=curr_judge.questions,
-                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper,
+    return render_template('admin/problem/judge_detail.html',
+                           op='edit',
+                           curr_judge=curr_judge.questions,
+                           classifies=Classify.query.all(),
+                           mode='paper',
+                           curr_paper=curr_paper,
                            point=curr_judge.point)
 
 
@@ -233,8 +278,11 @@ def paper_judge_edit(pid, qid):
 @teacher_login
 def paper_fill_create(pid):
     curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    return render_template('admin/problem/fill_detail.html', op='create',
-                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
+    return render_template('admin/problem/fill_detail.html',
+                           op='create',
+                           classifies=Classify.query.all(),
+                           mode='paper',
+                           curr_paper=curr_paper)
 
 
 @admin.route('/paper/<int:pid>/fill/edit/<int:qid>/')
@@ -242,8 +290,12 @@ def paper_fill_create(pid):
 def paper_fill_edit(pid, qid):
     curr_paper = Paper.query.filter_by(id=pid).first_or_404()
     curr_fill = curr_paper.questions.filter_by(question_id=qid).first_or_404()
-    return render_template('admin/problem/fill_detail.html', op='edit', curr_fill=curr_fill.questions,
-                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper,
+    return render_template('admin/problem/fill_detail.html',
+                           op='edit',
+                           curr_fill=curr_fill.questions,
+                           classifies=Classify.query.all(),
+                           mode='paper',
+                           curr_paper=curr_paper,
                            point=curr_fill.point)
 
 
@@ -484,7 +536,6 @@ def process_paper():
 @admin.route('/process/question/', methods=['POST'])
 @teacher_login
 def process_question():
-    print(request.form)
     if request.form['op'] == 'create':
         curr_paper = Paper.query.filter_by(id=request.form['pid']).first_or_404()
         curr_question = Question(type=request.form['type'], content=request.form['content'],

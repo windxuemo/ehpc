@@ -23,11 +23,11 @@ def is_join_course(user_id, course_id):
 @filter_blueprint.app_template_filter('get_icon_class')
 def get_icon_class(resource_type="audio"):
     type_class_dict = dict()
-    type_class_dict['audio'] = "es-icon es-icon-audioclass"  # 音频资料
-    type_class_dict['video'] = "es-icon es-icon-videoclass"  # 视频资料
-    type_class_dict['ppt'] = "es-icon es-icon-description"  # PPT,PDF 资料
-    type_class_dict['pdf'] = "es-icon es-icon-description"  # PPT,PDF 资料
-    type_class_dict['graphic'] = "es-icon es-icon-graphicclass"  # 图文资料
+    type_class_dict['audio'] = "es-icon es-icon-audioclass"         # 音频资料
+    type_class_dict['video'] = "es-icon es-icon-videoclass"         # 视频资料
+    type_class_dict['ppt'] = "es-icon es-icon-description"          # PPT,PDF 资料
+    type_class_dict['pdf'] = "es-icon es-icon-description"          # PPT,PDF 资料
+    type_class_dict['graphic'] = "es-icon es-icon-graphicclass"     # 图文资料
     return type_class_dict[resource_type]
 
 
@@ -46,9 +46,7 @@ def split_fill(string):
 
 @filter_blueprint.app_template_filter('get_fill_solution_len')
 def get_fill_solution_len(string):
-    print(string)
     temp = json.loads(string)
-    print(temp)
     result = []
     for i in range(temp['len']):
         result.append(str(len(temp[str(i)])))
@@ -72,7 +70,7 @@ def get_total_point(paper_question, q_type=-1):
 def get_question_number(paper_question, q_type=-1):
     result = 0
     if q_type == -1:
-        for pq in paper_question:
+        for _ in paper_question:
             result += 1
     else:
         for pq in paper_question:

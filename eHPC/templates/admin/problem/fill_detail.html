@@ -113,14 +113,14 @@
                             classify.push($(this).val());
                     });
 
-                    var array = edt1.value().split('*');
-                    var solution = {};
-                    solution["len"] = 0;
-                    for (var i = 1; i < array.length; i += 2)
-                    {
-                        solution[i.toString()] = array[i];
-                        solution["len"]++;
-                    }
+                var array = edt1.value().split('*');
+                var solution = {};
+                solution["len"] = 0;
+                for (var i = 1; i < array.length; i += 2)
+                {
+                    solution[i.toString()] = array[i];
+                    solution["len"]++;
+                }
 
 
                     $.ajax({

@@ -84,28 +84,29 @@
             <div id="paper-nav">
                 <ul class="nav nav-pills">
                     <li data-id="nav">
-                        <a href="#question-single-choice">单选题</a>
+                        <a href="#head-single">单选题</a>
                     </li>
                     <li data-id="nav">
-                        <a href="#question-multiple-choice">多选题</a>
+                        <a href="#head-multiple">多选题</a>
                     </li>
                     <li data-id="nav">
-                        <a href="#question-uncertain-choice">不定项选择</a>
+                        <a href="#head-uncertain">不定项选择</a>
                     </li>
                     <li data-id="nav">
-                        <a href="#question-fill">填空题</a>
+                        <a href="#head-fill">填空题</a>
                     </li>
                     <li data-id="nav">
-                        <a href="#question-judge">判断题</a>
+                        <a href="#head-judge">判断题</a>
                     </li>
                     <li data-id="nav">
-                        <a href="#question-essay">问答题</a>
+                        <a href="#head-essay">问答题</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="row">
             <div class="col-md-9">
+                <div id="head-single"></div>
                 <div class="panel panel-default" id="question-single-choice">
                     <div class="panel-heading">
                         <strong>单选题</strong>
@@ -119,6 +120,8 @@
                                 <div name="question" style="margin-bottom: 20px;font-size: 14px"
                                      data-id="{{ pq.question_id }}" data-point="{{ pq.point }}" data-type="{{ pq.questions.type }}">
                                     <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+                                        <img class="pull-left" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                        <img class="pull-left" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
                                         <div style="float: left;width: 4%;margin-right: 10px;text-align: center;">
                                             <div style="font-size: 12px;color: #aaa;border: solid 1px #ccc;padding: 0px 1px;border-radius: 5px;background: #f6f6f6;display: inline-block">
                                                 {{ pq.point }}分
@@ -144,14 +147,16 @@
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                    <div class="panel-footer" style="display: none"></div>
+                                    <div class="panel-footer" style="display: none">
+                                        <span>正确答案 <strong data-id="correct-sol"></strong></span>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
 
                 </div>
-
+                <div id="head-multiple"></div>
                 <div class="panel panel-default" id="question-multiple-choice">
                     <div class="panel-heading">
                         <strong>多选题</strong>
@@ -165,6 +170,8 @@
                                 <div name="question" style="margin-bottom: 20px;font-size: 14px"
                                      data-id="{{ pq.question_id }}" data-point="{{ pq.point }}" data-type="{{ pq.questions.type }}">
                                     <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+                                        <img class="pull-left" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                        <img class="pull-left" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
                                         <div style="float: left;width: 4%;margin-right: 10px;text-align: center;">
                                             <div style="font-size: 12px;color: #aaa;border: solid 1px #ccc;padding: 0px 1px;border-radius: 5px;background: #f6f6f6;display: inline-block">
                                                 {{ pq.point }}分
@@ -190,13 +197,15 @@
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                    <div class="panel-footer" style="display: none"></div>
+                                    <div class="panel-footer" style="display: none">
+                                        <span>正确答案 <strong data-id="correct-sol"></strong></span>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
                 </div>
-
+                <div id="head-uncertain"></div>
                 <div class="panel panel-default" id="question-uncertain-choice">
                     <div class="panel-heading">
                         <strong>不定项选择</strong>
@@ -210,6 +219,8 @@
                                 <div name="question" style="margin-bottom: 20px;font-size: 14px"
                                      data-id="{{ pq.question_id }}" data-point="{{ pq.point }}" data-type="{{ pq.questions.type }}">
                                     <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+                                        <img class="pull-left" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                        <img class="pull-left" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
                                         <div style="float: left;width: 4%;margin-right: 10px;text-align: center;">
                                             <div style="font-size: 12px;color: #aaa;border: solid 1px #ccc;padding: 0px 1px;border-radius: 5px;background: #f6f6f6;display: inline-block">
                                                 {{ pq.point }}分
@@ -235,13 +246,15 @@
                                             {% endfor %}
                                         </ul>
                                     </div>
-                                    <div class="panel-footer" style="display: none"></div>
+                                    <div class="panel-footer" style="display: none">
+                                        <span>正确答案 <strong data-id="correct-sol"></strong></span>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
                 </div>
-
+                <div id="head-fill"></div>
                 <div class="panel panel-default" id="question-fill">
                     <div class="panel-heading">
                         <strong>填空题</strong>
@@ -255,6 +268,8 @@
                                 <div name='question' style="margin-bottom: 20px;font-size: 14px"
                                      data-id="{{ pq.question_id }}" data-point="{{ pq.point }}" data-type="{{ pq.questions.type }}">
                                     <div class="panel-heading media">
+                                        <img class="pull-left" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                        <img class="pull-left" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
                                         <div style="float: left;width: 4%;margin-right: 10px;text-align: center;">
                                             <div style="font-size: 12px;color: #aaa;border: solid 1px #ccc;padding: 0px 1px;border-radius: 5px;background: #f6f6f6;display: inline-block">
                                                 {{ pq.point }}分
@@ -270,13 +285,15 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="panel-footer" style="display: none"></div>
+                                    <div class="panel-footer" style="display: none">
+                                        <span>正确答案 <strong data-id="correct-sol"></strong></span>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
                 </div>
-
+                <div id="head-judge"></div>
                 <div class="panel panel-default" id="question-judge">
                     <div class="panel-heading">
                         <strong>判断题</strong>
@@ -290,6 +307,8 @@
                                 <div name='question' style="margin-bottom: 20px;font-size: 14px"
                                      data-id="{{ pq.question_id }}" data-point="{{ pq.point }}" data-type="{{ pq.questions.type }}">
                                     <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+                                        <img class="pull-left" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                        <img class="pull-left" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
                                         <div style="float: left;width: 4%;margin-right: 10px;text-align: center;">
                                             <div style="font-size: 12px;color: #aaa;border: solid 1px #ccc;padding: 0px 1px;border-radius: 5px;background: #f6f6f6;display: inline-block">
                                                 {{ pq.point }}分
@@ -319,13 +338,15 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="panel-footer" style="display: none"></div>
+                                    <div class="panel-footer" style="display: none">
+                                        <span>正确答案 <strong data-id="correct-sol"></strong></span>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
                 </div>
-
+                <div id="head-essay"></div>
                 <div class="panel panel-default" id="question-essay">
                     <div class="panel-heading">
                         <strong>问答题</strong>
@@ -339,6 +360,8 @@
                                 <div name="question" style="margin-bottom: 20px;font-size: 14px"
                                      data-id="{{ pq.question_id }}" data-point="{{ pq.point }}" data-type="{{ pq.questions.type }}">
                                     <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+                                        <img class="pull-left" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+                                        <img class="pull-left" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
                                         <div style="float: left;width: 4%;margin-right: 10px;text-align: center;">
                                             <div style="font-size: 12px;color: #aaa;border: solid 1px #ccc;padding: 0px 1px;border-radius: 5px;background: #f6f6f6;display: inline-block">
                                                 {{ pq.point }}分
@@ -353,19 +376,22 @@
                                     <div class="panel-body media-body">
                                         <textarea name="content" id="target-editor"></textarea>
                                     </div>
-                                    <div class="panel-footer" style="display: none"></div>
+                                    <div class="panel-footer" style="display: none">
+                                        <span>正确答案 <strong data-id="correct-sol"></strong></span>
+                                    </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
                 </div>
+                <div id="footer-paper" style="height: 500px"></div>
             </div>
             <div class="col-md-3">
                 <div class="panel panel-default" id="paper-card">
                     <div class="panel-heading"></div>
                     <div class="panel-body">
                         {% for i in range(paper.questions | get_question_number ) %}
-                            <a href="#q{{ loop.index }}" style="margin: 5px" class="btn btn-default btn-index"
+                            <a style="margin: 5px" class="btn btn-default btn-index"
                                data-id="{{ loop.index }}">{{ loop.index }}</a>
                         {% endfor %}
                     </div>
@@ -378,7 +404,10 @@
     </div>
 
     <script>
-        var paper_card = $($('#paper-card').find('.panel-body')[0]);
+        $('#paper-card').find('a').click(function () {
+            $("html,body").animate({scrollTop:$('#q'+$(this).data('id')).offset().top - 70}, 300);
+        });
+
         var question_id = 1;
         $("span[data-id=single-num-id]").each(function () {
             $(this).text(question_id);
@@ -442,6 +471,33 @@
                 }
             });
 
+            var nav_chosen = null;
+            $('.nav-pills').find('li[data-id=nav]').click(function () {
+                if (nav_chosen != null) {
+                    nav_chosen.removeClass('active');
+                }
+                nav_chosen = $(this);
+                nav_chosen.addClass('active');
+            });
+
+            $(window).scroll(function () {
+                var a = [$('#head-single'), $('#head-multiple'), $('#head-uncertain'), $('#head-fill'), $('#head-judge')
+                        , $('#head-essay'), $('#footer-paper')];
+                var current;
+                for(var i=0;i<6;i++){
+                    if($(window).scrollTop()+100>=a[i].offset().top && $(window).scrollTop()<a[i+1].offset().top-100){
+                        current = i;
+                        break;
+                    }
+                }
+                if (nav_chosen != null){
+                    nav_chosen.removeClass('active');
+                }
+                nav_chosen = $('.nav-pills').find('li[data-id=nav]').eq(i);
+                nav_chosen.addClass('active');
+            });
+
+
             $('#question-single-choice').find('ul[data-id=choice-options]').find('li').click(function () {
                 var flag = false;
                 if($(this).data('check')=='1'){
@@ -480,15 +536,6 @@
                 });
                 $(this).data('check', '1');
                 $(this).find('i').show();
-            });
-
-            var nav_chosen = null;
-            $('.nav-pills').find('li[data-id=nav]').click(function () {
-                if (nav_chosen != null) {
-                    nav_chosen.removeClass('active');
-                }
-                nav_chosen = $(this);
-                nav_chosen.addClass('active');
             });
 
             $('#submit-solution').click(function () {
@@ -567,6 +614,10 @@
                                     var point = $('div[name=question][data-id=' + t.toString() + ']').eq(0).data('point');
                                     point = Number(point);
                                     points[Number($('div[name=question][data-id=' + t.toString() + ']').eq(0).data('type'))] += point;
+                                    $('div[name=question][data-id=' + t.toString() + ']').find('img[data-id=choice_correct]').show();
+                                }
+                                else{
+                                    $('div[name=question][data-id=' + t.toString() + ']').find('img[data-id=choice_wrong]').show();
                                 }
                             }
 
@@ -578,7 +629,15 @@
 
                             $('#result').show();
 
+                            for(var k in data['solution']){
+                                var sol = $('div[data-id=' + k + ']').find('strong[data-id=correct-sol]').eq(0);
+                                sol.css('color','#70d445');
+                                sol.text(data['solution'][k]);
+                                sol.parent().parent().show();
+                            }
+                            $('#submit-solution').hide();
                             $("html,body").animate({scrollTop:0}, 300);
+
                         }
                     }
                 })

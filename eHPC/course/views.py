@@ -8,6 +8,7 @@ from flask_login import current_user, login_required
 from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from .. import db
+import json
 
 
 @course.route('/')
@@ -107,19 +108,38 @@ def paper_detail(pid):
 def paper_result(pid):
     result = {}
     correct_num = [0, 0, 0, 0, 0, 0]
+    solution = {}
     paper = Paper.query.filter_by(id=pid).first_or_404()
     your_solution = request.form
     for key, value in your_solution.items():
         sol = ""
-        q_type = 0
+        q_type = -1
         for i in paper.questions:
-            if i.question_id == int(key) and i.questions.type != 5:
-                sol = i.questions.solution
-                q_type = i.questions.type
-                break
-        if sol != "" and value == sol:
+            if i.question_id == int(key):
+                if i.questions.type == 5:
+                    solution[key] = i.questions.solution
+                    q_type = 5
+                else:
+                    sol = i.questions.solution
+                    q_type = i.questions.type
+
+                    if i.questions.type == 3:
+                        ts = json.loads(sol)
+                        temp = []
+                        for j in range(ts['len']):
+                            temp.append(ts[str(j)])
+                        sol = ";".join(temp)
+                        solution[key] = sol
+                    elif i.questions.type == 4:
+                        solution[key] = u"正确" if sol == 1 else u"错误"
+                    else:
+                        solution[key] = sol
+                    break
+
+        if q_type != 5 and value == sol:
             result[key] = 'T'
             correct_num[q_type] += 1
-        else:
+        elif q_type != 5:
             result[key] = 'F'
-    return jsonify(status='success', result=result, correct_num=correct_num)
+    print result
+    return jsonify(status='success', result=result, correct_num=correct_num, solution=solution)

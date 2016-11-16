@@ -467,7 +467,6 @@ def process_material():
 @admin.route('/process/practice/', methods=['POST'])
 @teacher_login
 def process_practice():
-    print(request.form)
     if request.form['op'] == 'create':
         curr_question = Question(type=request.form['type'], content=request.form['content'],
                                  solution=request.form['solution'], analysis=request.form['analysis'])
@@ -481,6 +480,7 @@ def process_practice():
         return redirect(url_for('admin.' + request.referrer.split('/')[-3]))
     elif request.form['op'] == 'edit':
         curr_question = Question.query.filter_by(id=request.form['id']).first_or_404()
+        curr_question.type = request.form['type']
         curr_question.content = request.form['content']
         curr_question.solution = request.form['solution']
         curr_question.analysis = request.form['analysis']
@@ -542,14 +542,14 @@ def process_question():
                                  solution=request.form['solution'], analysis=request.form['analysis'])
         aux = PaperQuestion(point=request.form['point'])
         aux.questions = curr_question
+        db.session.add(aux)
         curr_paper.questions.append(aux)
 
-        classifies = request.form.getlist('classify')
+        classifies = request.form.getlist('classify[]')
         for x in classifies:
             curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
 
         db.session.add(curr_question)
-        db.session.add(aux)
         db.session.commit()
         return jsonify(status="success", id=curr_paper.id)
     elif request.form['op'] == 'edit':
@@ -557,6 +557,7 @@ def process_question():
         aux = curr_paper.questions.filter_by(question_id=request.form['id']).first_or_404()
         aux.point = request.form['point']
         curr_question = aux.questions
+        curr_question.type = request.form['type']
         curr_question.content = request.form['content']
         curr_question.solution = request.form['solution']
         curr_question.analysis = request.form['analysis']

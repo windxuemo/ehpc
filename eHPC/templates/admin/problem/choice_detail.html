@@ -47,8 +47,7 @@
 
                         <div class="form-group">
                             <label>题干</label>
-                            <textarea name="content" id="target-editor">{% if op == 'edit' %}
-                                {{ choice | get_question_content }}{% endif %}</textarea>
+                            <textarea name="content" id="target-editor">{% if op == 'edit' %}{{ choice | get_question_content }}{% endif %}</textarea>
                         </div>
 
                         <div style="margin-bottom: 15px">
@@ -61,7 +60,7 @@
                                 {% for i in range(choice.content | get_json_value('len')) %}
                                     <div class="input-group" style="margin-top: 5px">
                                         <span class="input-group-addon" style="width: 8%">
-                                            <input value="{{ loop.index0 | get_char }}" name="option_index"
+                                            <input value="{{ i }}" name="option_index"
                                                    type="checkbox">&nbsp;&nbsp;{{ loop.index0 | get_char }}</span>
                                         <input class="form-control" name="options" placeholder="请输入选项内容" type="text"
                                                value="{{ choice.content | get_json_value(i | string) }}">
@@ -94,8 +93,7 @@
                         </button>
                         <div class="form-group" style="margin-top:20px">
                             <label>答案解析</label>
-                            <textarea name="analysis" id="analysis-editor">{% if op == 'edit' %}
-                                {{ choice.analysis }}{% endif %}</textarea>
+                            <textarea name="analysis" id="analysis-editor">{% if op == 'edit' %}{{ choice.analysis }}{% endif %}</textarea>
                         </div>
 
                         <button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交
@@ -120,7 +118,7 @@
                 var oldAnswer = "{{ choice.solution }}";
                 oldAnswer = oldAnswer.split(';');
                 for (i = 0; i < oldAnswer.length; i++) {
-                    $("#options").find("input[value=" + oldAnswer[i] + "]").attr('checked', true);
+                    $("#options").find("input[value=" + (oldAnswer[i].charCodeAt(0)-'A'.charCodeAt(0)).toString() + "]").attr('checked', true);
                 }
                 //需编辑题目,是否为不定项
                 var type = {{ choice.type }};
@@ -164,8 +162,7 @@
                     });
                     number = 0;
                     $("#options").find("input[name=option_index]").each(function () {
-                        $(this).val(String.fromCharCode("A".charCodeAt(0) + number));
-                        number++;
+                        $(this).val(number++);
                     });
                 });
             });
@@ -178,6 +175,8 @@
 
                 //新选项内容为空
                 t.find("input[name=options]").val("");
+                var v = t.find('input[name=option_index]');
+                v.val((Number(v.val())+1).toString());
                 //修改新选项序号为原来最后一个序号加1
                 t.find(".input-group-addon").each(function () {
                     var str = $(this).html();
@@ -211,7 +210,7 @@
                 $("#options").find("input[name=option_index]").each(function () {
                     if (this.checked == true) {
                         count++;
-                        solution.push($(this).val());
+                        solution.push(String.fromCharCode((Number($(this).val()) + 'A'.charCodeAt(0))));
                     }
                 });
                 if (count == 0) {
@@ -225,7 +224,6 @@
 
                 solution = solution.join(';'); //答案
 
-
                 var content = {};   //题干+选项
                 content['title'] = choiceDetail;
                 content['len'] = $("#options").find("input[name=option_index]").length;
@@ -236,7 +234,7 @@
                         alert("请填写所有选项");
                         hasEmptyChoice = true;
                     }
-                    content[$(this).parent().find('input[name=option_index]').eq(0).val().charCodeAt(0) - 'A'.charCodeAt()] = $(this).val();
+                    content[$(this).parent().find('input[name=option_index]').eq(0).val().toString()] = $(this).val();
                 });
                 if (hasEmptyChoice) return;
 
@@ -253,7 +251,7 @@
                     var doc = '<div class="form-group"><label>分值&nbsp&nbsp</label><input class="form-control" ' +
                             'id="point" name="point" style="width:50px;height:30px;display:inline;margin-top:10px;"></div>';
                 {% else %}
-                    var doc = '<div class="form-group"><label>分值&nbsp&nbsp</label><input class="form-control" value={{ point }}' +
+                    var doc = '<div class="form-group"><label>分值&nbsp&nbsp</label><input class="form-control" value="{{ point }}" ' +
                             'id="point" name="point" style="width:50px;height:30px;display:inline;margin-top:10px;"></div>';
                 {% endif %}
                 $("#classify").append(doc);
@@ -283,7 +281,7 @@
                     $("#options").find("input[name=option_index]").each(function () {
                         if (this.checked == true) {
                             count++;
-                            solution.push($(this).val());
+                            solution.push(String.fromCharCode((Number($(this).val()) + 'A'.charCodeAt(0))));
                         }
                     });
                     if (count == 0) {
@@ -297,7 +295,6 @@
 
                     solution = solution.join(';'); //答案
 
-
                     var content = {};   //题干+选项
                     content['title'] = choiceDetail;
                     content['len'] = $("#options").find("input[name=option_index]").length;
@@ -308,7 +305,7 @@
                             alert("请填写所有选项");
                             hasEmptyChoice = true;
                         }
-                        content[$(this).parent().find('input[name=option_index]').eq(0).val().charCodeAt(0) - 'A'.charCodeAt()] = $(this).val();
+                        content[$(this).parent().find('input[name=option_index]').eq(0).val().toString()] = $(this).val();
                     });
                     if (hasEmptyChoice) return;
 

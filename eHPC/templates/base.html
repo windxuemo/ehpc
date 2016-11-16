@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <head>
-        {% include 'header.html' %}
-    </head>
+    {% include 'header.html' %}
 
     {% block header_ext %}
     {% endblock %}
 
 <body>
 
-    {% include 'navbar.html' %}
+{% include 'navbar.html' %}
 
-    <div class="content-wrap">
+<div class="content-wrap">
     <!-- content in this page -->
     {% block content %}
     {% endblock %}
-    </div>
+</div>
 
-    {% include 'footer.html' %}
-    {% block footer_ext %}{% endblock %}
+{% include 'footer.html' %}
+{% block footer_ext %}{% endblock %}
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, abort
 from flask_login import current_user, login_required
 from . import problem
 from ..models import Program, Classify, SubmitProblem, Question
@@ -82,20 +82,25 @@ def program_view(pid):
 @login_required
 def question_view(cid, question_type):
     classify_name = Classify.query.filter_by(id=cid).first_or_404()
-    questions = None
+
+    practices = None;
     if question_type == 'choice':
-        questions = classify_name.questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).all()
+        practices = classify_name.questions.filter(or_(Question.type == 0,
+                                                       Question.type == 1, Question.type == 2)).all()
     elif question_type == 'fill':
-        questions = classify_name.questions.filter_by(type=3).all()
+        practices = classify_name.questions.filter_by(type=3).all()
     elif question_type == 'judge':
-        questions = classify_name.questions.filter_by(type=4).all()
+        practices = classify_name.questions.filter_by(type=4).all()
     elif question_type == 'essay':
-        questions = classify_name.questions.filter_by(type=5).all()
+        practices = classify_name.questions.filter_by(type=5).all()
+    else:
+        abort(404)
+
     return render_template('problem/practice_detail.html',
                            classify_id=classify_name.id,
                            title=classify_name.name,
-                           practices=questions,
-                           type=question_type)
+                           practices=practices,
+                           q_type=question_type)
 
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])

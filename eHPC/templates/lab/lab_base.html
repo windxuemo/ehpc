@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>
+        {% block title %}{% if title %}{{ title }}{% endif %}-{{ _('Challenges') }}{% endblock %}
+    </title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    {% block header_ext %}
+    {% endblock %}
+
+<body>
+<!-- 导航栏目开始 -->
+<nav class="content-header navbar" id="challenge-head">
+    <div class="navbar-header">
+        <a href="{{ url_for('main.index') }}" class="navbar-brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
+        </a>
+    </div>
+
+    <nav class="collapse navbar-collapse">
+        <div class="navbar-user left">
+            <ul class="nav navbar-nav clearfix hidden-xs">
+                <li>
+                    <a href="#progress" id="learn-progress">学习进度</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('group.index') }}">社区讨论</a>
+                </li>
+            </ul>
+            <ul class="nav user-nav">
+                <li class="user-avatar-li nav-hover">
+                    <a href="javascript:;" class="dropdown-toggle">
+                        <img class="avatar-xs" src="{{ current_user.avatar_url }}">
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>
+                        <li><a href="{{ url_for('user.view', uid=current_user.id) }}"><i
+                                class="es-icon es-icon-person"></i>{{ _('Personal Page') }}</a>
+                        </li>
+                        <li><a href=""><i class="es-icon es-icon-homework"></i>{{ _("Job's List") }}</a>
+                        </li>
+                        <li><a href=""><i class="es-icon es-icon-homework"></i>学习进度</a></li>
+                        <li><a href="{{ url_for('user.setting') }}"><i
+                                class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a></li>
+                        <li><a href="{{ url_for('user.signout') }}"><i
+                                class="es-icon es-icon-power"></i>{{ _('Logout') }}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </nav>
+</nav>
+<!-- 导航栏目结束 -->
+
+<div class="content-wrap" id="challenge-body">
+    <!-- 页面元素 -->
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% block footer_ext %}{% endblock %}
+</body>
+</html>

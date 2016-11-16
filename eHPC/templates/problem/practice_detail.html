@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-    <link href="{{ url_for('static', filename='css/practice.css') }}" rel="stylesheet"
-          xmlns="http://www.w3.org/1999/html">
-    <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet"
-          xmlns="http://www.w3.org/1999/html">
-    <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet"
-          xmlns="http://www.w3.org/1999/html">
+    <link href="{{ url_for('static', filename='css/practice.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
@@ -71,19 +68,19 @@
                 <div class="special-project-body">
                     <div class="panel">
                         <div class="panel-body">
-                        {% if type == 'choice' %}
+                        {% if q_type== 'choice' %}
                             {% with choices=practices %}
                                 {% include 'problem/widget_choice_detail.html' %}
                             {% endwith %}
-                        {% elif type == 'fill' %}
+                        {% elif q_type== 'fill' %}
                             {% with fills=practices %}
                                 {% include 'problem/widget_fill_detail.html' %}
                             {% endwith %}
-                        {% elif type == 'judge' %}
+                        {% elif q_type== 'judge' %}
                             {% with judges=practices %}
                                 {% include 'problem/widget_judge_detail.html' %}
                             {% endwith %}
-                        {% elif type == 'essay' %}
+                        {% elif q_type== 'essay' %}
                             {% with essays=practices %}
                                 {% include 'problem/widget_essay_detail.html' %}
                             {% endwith %}
@@ -98,6 +95,7 @@
 {% endblock %}
 
 
-
-
-
+{# classify_id #}
+{# title #}
+{# practices #}
+{# q_type #}

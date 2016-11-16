@@ -1,0 +1,59 @@
+{% extends "lab/lab_base.html" %}
+
+{% block content %}
+    <div id="challenge-left">
+        <!--Challenge的内容展示-->
+        <div class="markdown-body">
+            <p class="text-center text-xlarge"> {{ title }}</p>
+            <hr>
+            {{ c_content | markdown | safe }}
+        </div>
+        <br>
+        <hr>
+        <div id="player-content" class="col-md-12 material-container"></div>
+    </div>
+
+    <div id="challenge-right">
+        <!--Challenge的题目展示-->
+
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        var js_material_type = "{{ cur_material.m_type }}";
+        var js_pdf_src = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
+        var js_material_src = "{{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
+
+        $(function () {
+            var video_player = '<div id="player" style="height:90%"></div>';
+            var pdf_player = '<iframe id="player" class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%" allowfullscreen></iframe>';
+            var clappr = null;
+            if (js_material_type == "pdf") {
+                $("#player-content").empty().append(pdf_player);
+                $("#player").attr("src", js_pdf_src);
+            }
+            else {
+                $("#player-content").empty().append(video_player);
+                clappr = new Clappr.Player({
+                    source: js_material_src,
+                    baseUrl: 'http://cdn.clappr.io/latest',
+                    parentId: "#player",
+                    height: "100%",
+                    width: "100%",
+                    mediacontrol: {
+                        seekbar: "#46c37b",
+                        buttons: "#ffffff"
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='js/clappr.min.js') }}"></script>
+{% endblock %}
+
+{# cur_material #}
+{# knowledge #}
+{# q_type #}
+{# practices #}

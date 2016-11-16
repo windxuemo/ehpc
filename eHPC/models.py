@@ -146,12 +146,12 @@ class Comment(db.Model):
     """
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)  # 评论 ID
-    rank = db.Column(db.Integer)                 # 评价等级
-    content = db.Column(db.String(2048))          # 课时标题
+    rank = db.Column(db.Integer)                  # 评价等级
+    content = db.Column(db.String(2048))          # 评价内容
     createdTime = db.Column(db.DateTime(), default=datetime.now)
 
-    courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
-    userId = db.Column(db.Integer, db.ForeignKey('users.id'))  # 所属课程ID
+    courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))   # 所属课程ID
+    userId = db.Column(db.Integer, db.ForeignKey('users.id'))       # 所属用户ID
 
 
 """ 互动社区功能 """
@@ -224,10 +224,13 @@ class Post(db.Model):
 
 
 """ 试题中心模块
-@Program 对应在线编程题
-@SubmitProblem 对应编程题目提交记录
-@Choice 对应选择题
-@Classify 选择题目所属的分类
+@Program:           对应在线编程题
+@SubmitProblem:     对应编程题目提交记录
+@Choice:            对应选择题
+@Classify:          选择题目所属的分类
+@PaperQuestion:     试卷和题目是多对多的关系, 并且试卷中的题目有自己的分值, 因此需要建一个关联表
+@Paper:             试卷实体
+@Question:          选择题, 填空题, 判断题等题型
 """
 
 
@@ -275,13 +278,16 @@ class PaperQuestion(db.Model):
     paper_id = db.Column(db.Integer, db.ForeignKey('papers.id'), primary_key=True)
     point = db.Column(db.Integer, nullable=False)
 
-    papers = db.relationship('Paper', backref=db.backref('questions', lazy='dynamic', cascade="delete, delete-orphan"))
-    questions = db.relationship('Question', backref=db.backref('papers', lazy='dynamic', cascade="delete, delete-orphan"))
+    papers = db.relationship('Paper', backref=db.backref('questions',
+                                                         lazy='dynamic', cascade="delete, delete-orphan"))
+    questions = db.relationship('Question', backref=db.backref('papers',
+                                                               lazy='dynamic', cascade="delete, delete-orphan"))
 
 
 class Question(db.Model):
     __tablename__ = "questions"
     id = db.Column(db.Integer, primary_key=True)               # 题目 ID
+    # 0:单选题 1:多选题 2:不定项选择题 3: 填空题 4: 判断题 5: 问答题
     type = db.Column(db.Integer, nullable=False)               # 题目类别
     content = db.Column(db.String(2048), nullable=False)       # 题干(选择题包括选项)
     solution = db.Column(db.String(512), nullable=False)       # 题目答案
@@ -324,4 +330,50 @@ class Article(db.Model):
     updatedTime = db.Column(db.DateTime(), default=datetime.now)
 
 
-""" 虚拟实验室模块 """
+""" 虚拟实验室模块
+@Knowledge: 需要练习的技能
+@Challenge: 一个技能中的一个小任务模块
+@Progress: 记录用户学习某个知识的进度, 多对多的一个关系
+"""
+
+
+class Knowledge(db.Model):
+    __tablename__ = "knowledges"
+    id = db.Column(db.Integer, primary_key=True)        # 技能 ID
+    title = db.Column(db.String(1024), nullable=False)  # 技能标题
+    content = db.Column(db.Text(), default=None)        # 技能简介
+
+    # 一个技能对应了很多任务, 一对多的关系。
+    challenges = db.relationship('Challenge', backref='knowledge', lazy='dynamic')
+
+
+class Challenge(db.Model):
+    __tablename__ = "challenges"
+    id = db.Column(db.Integer, primary_key=True)        # 任务 ID
+    title = db.Column(db.String(1024), default=None)    # 技能标题
+    content = db.Column(db.Text(), default=None)        # 知识点图文内容
+
+    # 所属技能ID以及对应技能下任务的次序, 可以唯一确定一个任务
+    knowledgeId = db.Column(db.Integer, db.ForeignKey('knowledges.id'))
+    knowledgeNum = db.Column(db.Integer, default=1)
+
+    # 每一个任务可能有一个教学材料, 如果 materialID == -1, 则表示没有材料, 纯图文内容。
+    materialID = db.Column(db.Integer, default=-1)      # 对应的教学材料的ID
+
+    # 每一个任务有一个测试题目
+    # 对应题目的类型0:单选题 1:多选题 2:不定项选择题 3: 填空题 4: 判断题 5: 问答题 6: 编程题目
+    question_type = db.Column(db.Integer, nullable=False)
+    questionID = db.Column(db.Integer, nullable=False)  # 对应题目的ID
+
+
+class Progress(db.Model):
+    __tablename__ = "progress"
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)                # 用户 ID
+    knowledge_id = db.Column(db.Integer, db.ForeignKey('knowledges.id'), primary_key=True)      # 技能 ID
+    cur_progress = db.Column(db.Integer, default=1)     # 用户 user_id 在知识点 knowledge_id 上已经完成的最后一个任务
+
+    knowledge = db.relationship('Knowledge', backref=db.backref('users',
+                                                                lazy='dynamic', cascade="delete, delete-orphan"))
+    user = db.relationship('User', backref=db.backref('knowledges',
+                                                      lazy='dynamic', cascade="delete, delete-orphan"))

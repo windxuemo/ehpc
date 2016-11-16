@@ -9,104 +9,18 @@
 
 {% endblock %}
 
-{% block foot_ext %}
+{% block footer_ext %}
     <script>
-        $(function () {
-            var video_player = '<div id="player" style="height:90%"></div>';
-            var pdf_player = '<iframe id="player" class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%" allowfullscreen></iframe>';
-            var clappr = null;
-            if ("{{ cur_material.m_type }}" == "pdf")
-            {
-                $("#player-content").empty().append(pdf_player);
-                $("#player").attr("src",
-                        "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}");
-            }
-            else
-            {
-                $("#player-content").empty().append(video_player);
-                clappr = new Clappr.Player({
-                    source: "{{ url_for('static', filename='resource') }}/" +  "{{cur_material.uri}}",
-                    baseUrl: 'http://cdn.clappr.io/latest',
-                    parentId: "#player",
-                    height: "100%",
-                    width: "100%",
-                    mediacontrol: {
-                        seekbar: "#46c37b",
-                        buttons: "#ffffff"
-                    }
-                });
-            }
-            var Accordion = function (el, multiple) {
-                this.el = el || {};
-                this.multiple = multiple || false;
-                // Variables privadas
-                var links = this.el.find('.link');
-                // Evento
-                links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
-            };
-            Accordion.prototype.dropdown = function (e) {
-                var $el = e.data.el;
-                $this = $(this);
-                $next = $this.next();
-                $next.slideToggle();
-            };
-            var accordion = new Accordion($('#accordion'), false);
-            $('#material{{ cur_material.id }}').parent().parent().addClass('open');
-            $('#material{{ cur_material.id }}').children('a').addClass('active');
-            $('#accordion').find('a').each(function () {
-                $(this).click(function (evt) {
-                    evt.preventDefault();
-                    var obj = this;
-                    $.ajax({
-                        type: "post",
-                        url: "{{ url_for('course.get_material_src') }}",
-                        data: {
-                            op: "type",
-                            id: $(this).parent().attr('id').substr(8)
-                        },
-                        success: function (data) {
-                            if (data['status'] == 'fail')
-                                return;
-                            if (clappr != null)
-                                clappr.destroy();
-                            if(data['type'] == "pdf")
-                            {
-                                $("#player-content").empty().append(pdf_player);
-                                $("#player").attr("src",
-                                        "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + data['uri']);
-                            }
-                            else
-                            {
-                                $("#player-content").empty().append(video_player);
-                                clappr = new Clappr.Player({
-                                    source: "{{ url_for('static', filename='resource') }}/" + data['uri'],
-                                    baseUrl: 'http://cdn.clappr.io/latest',
-                                    parentId: "#player",
-                                    height: "100%",
-                                    width: "100%",
-                                    mediacontrol: {
-                                        seekbar: "#46c37b",
-                                        buttons: "#ffffff"
-                                    }
-                                });
-                            }
-                            $('.link').parent().removeClass('open');
-                            $(obj).parent().parent().parent().addClass('open');
-                            $('#accordion').find('a').removeClass('active');
-                            $(obj).parent().children('a').addClass('active');
-                            var id = $(obj).parent().attr('id').substr(8);
-                            window.history.pushState(null, '', "/course/res/" + id + '/');
-                        }
-                    });
-                });
-            });
-            /*$(document).ready(function () {
-                $(".accordion").height($(window).height()-80);
-            });
-            window.onresize = function adapt_height() {
-                $(".accordion").height($(window).height()-80);
-            }*/
-        });
+        var js_material_selector = '#material' + '{{ cur_material.id }}';
+        var js_material_type = "{{ cur_material.m_type }}";
+        var js_pdf_src = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
+        var js_pdf_data = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/";
+
+        var js_material_src = "{{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
+        var js_material_data = "{{ url_for('static', filename='resource') }}/";
+
+        var js_ajax_url = "{{ url_for('course.get_material_src') }}";
     </script>
+    <script src="{{ url_for('static', filename='js/course/player.js') }}"></script>
 {% endblock %}
 {# cur_material #}

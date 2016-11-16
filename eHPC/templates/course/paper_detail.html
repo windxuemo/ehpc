@@ -454,7 +454,17 @@
             autosave: true,
             showIcons: ["code", "table"],
             tabSize: 4,
-            spellChecker: false
+            spellChecker: false,
+            status: ["lines", "words", "cursor",
+                {onUpdate: function () {
+                var temp = $('textarea[name=content]').parent().parent().find('span[data-id=essay-num-id]').text();
+                if (essay.value() != ""){
+                    $('#paper-card').find('a[data-id=' + temp + ']').addClass('active');
+                }
+                else{
+                    $('#paper-card').find('a[data-id=' + temp + ']').removeClass('active');
+                }
+            }}]
         });
 
         $(document).ready(function () {
@@ -516,6 +526,21 @@
                     $(this).data('check', '1');
                     $(this).find('i').show();
                 }
+
+                flag = false;
+                $(this).parent().children().each(function () {
+                    if($(this).data('check') == '1' ){
+                        flag = true;
+                    }
+                });
+
+                var temp = $(this).parent().parent().parent().find('span[data-id=single-num-id]').text();
+                if(flag){
+                    $('#paper-card').find('a[data-id=' + temp + ']').addClass('active');
+                }
+                else{
+                    $('#paper-card').find('a[data-id=' + temp + ']').removeClass('active');
+                }
             });
 
             $('#question-multiple-choice, #question-uncertain-choice').find('ul[data-id=choice-options]').find('li').click(function () {
@@ -527,16 +552,79 @@
                     $(this).data('check', '0');
                     $(this).find('i').hide();
                 }
+
+                var flag = false;
+                $(this).parent().children().each(function () {
+                    if($(this).data('check') == '1' ){
+                        flag = true;
+                    }
+                });
+
+                var temp = $(this).parent().parent().parent().find('span[data-id=multiple-num-id], span[data-id=uncertain-num-id]').text();
+                if(flag){
+                    $('#paper-card').find('a[data-id=' + temp + ']').addClass('active');
+                }
+                else{
+                    $('#paper-card').find('a[data-id=' + temp + ']').removeClass('active');
+                }
+
             });
 
             $('ul[data-id=judge-options]').find('li').click(function () {
+                var flag = false;
+                if($(this).data('check')=='1'){
+                    flag = true;
+                }
+
                 $(this).parent().children().each(function () {
                     $(this).data('check', '0');
                     $(this).find('i').hide();
                 });
-                $(this).data('check', '1');
-                $(this).find('i').show();
+
+                if(flag){
+                    $(this).data('check', '0');
+                    $(this).find('i').hide();
+                }
+                else{
+                    $(this).data('check', '1');
+                    $(this).find('i').show();
+                }
+
+                flag = false;
+                $(this).parent().children().each(function () {
+                    if($(this).data('check') == '1' ){
+                        flag = true;
+                    }
+                });
+
+                var temp = $(this).parent().parent().parent().find('span[data-id=judge-num-id]').text();
+                if(flag){
+                    $('#paper-card').find('a[data-id=' + temp + ']').addClass('active');
+                }
+                else{
+                    $('#paper-card').find('a[data-id=' + temp + ']').removeClass('active');
+                }
             });
+
+            $('.fill-input').keyup(function () {
+                var flag = false;
+                $(this).parent().find('.fill-input').each(function () {
+                    if($(this).val() != ""){
+                        flag = true;
+                        return false;
+                    }
+                });
+
+                var temp = $(this).parent().parent().find('span[data-id=fill-num-id]').text();
+                if(flag){
+                    $('#paper-card').find('a[data-id=' + temp + ']').addClass('active');
+                }
+                else{
+                    $('#paper-card').find('a[data-id=' + temp + ']').removeClass('active');
+                }
+            });
+
+
 
             $('#submit-solution').click(function () {
                 var your_answer = {};

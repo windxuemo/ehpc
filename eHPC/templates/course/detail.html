@@ -1,5 +1,10 @@
 {% extends 'course/widget_course_base.html' %}
 
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/jquery.raty.js') }}"></script>
+{% endblock %}
+
+
 {% block course_page %}
     <div class="col-lg-9 col-md-8  course-detail-main">
         <section class="es-section">
@@ -8,6 +13,7 @@
                     <li role="presentation"><a href="#about" role="tab" data-toggle="tab">课程概览</a></li>
                     <li role="presentation"><a href="#lists" role="tab" data-toggle="tab">课时列表</a></li>
                     <li role="presentation"><a href="#test" role="tab" data-toggle="tab">课堂试卷</a></li>
+                    <li role="presentation"><a href="#comment" role="tab" data-toggle="tab">课堂评价</a></li>
                 </ul>
             </div>
 
@@ -42,6 +48,34 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="course-comment" role="tabpanel" class="tab-pane">
+                    {% if user.id %}
+                        <div id="comment-edit-block">
+                            <div class="form-group controls">
+                                评分： <span id="raty"></span>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="comment-editor" class="form-control" rows="8" name="content" ></textarea>
+                            </div>
+                            <div class="form-group clearfix">
+                                <div class="pull-right">
+                                    <button id="comment-save-btn" class="btn btn-primary">保存</button>
+                                    <button id="comment-cancel-btn" class="btn btn-info">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="re-edit" class="form-group clearfix">
+                            <div class="pull-left" style="margin-left: 20px">
+                                评分： <span id="show-raty"></span>
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn btn-primary">重新评价</button>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div id="comment-list"></div>
+                </div>
             </div>
         </section>
     </div>
@@ -52,6 +86,8 @@
     {{ super() }}
     <script>
         $(document).ready(function () {
+            var op = "create";
+
             $("#course-lists").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
             /* 加载课程列表内容 */
             $.ajax({
@@ -65,6 +101,30 @@
                     $("#course-lists").empty().html("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");
                 }
             });
+
+            $("#comment-list").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
+            /* 加载课程评论内容 */
+            $.ajax({
+                url: "{{ url_for('course.process_comment') }}",
+                type: "post",
+                data: {
+                    op: "data",
+                    cid: "{{ course.id }}"
+                },
+                success: function (data) {
+                    $("#comment-list").empty().html(data["html"]);
+                    if(data['edit'])
+                    {
+                        $("#comment-edit-block").hide();
+                        $("#re-edit").show();
+                        op = "edit";
+                    }
+                },
+                error: function () {
+                    $("#comment-list").empty().html("<h2 style='text-align: center'> 课程评论为空或者出现其他错误 </h2>");
+                }
+            });
+
             /* 根据tab 参数来指定默认显示的tab选项卡 */
             var tab = "{{ tab }}";
             if (tab == "lists") {
@@ -72,6 +132,7 @@
                 $("#course-content li:nth-child(2)").addClass('active');
                 $("#course-about").removeClass('active');
                 $('#course-test').removeClass('active');
+                $('#course-comment').removeClass('active');
                 $("#course-lists").addClass('active');
             }
             else if (tab == "about") {
@@ -79,14 +140,24 @@
                 $("#course-content li:nth-child(1)").addClass('active');
                 $("#course-lists").removeClass('active');
                 $('#course-test').removeClass('active');
+                $('#course-comment').removeClass('active');
                 $("#course-about").addClass('active');
             }
-            else if (tab == "test"){
+            else if (tab == "test") {
                 $("#course-content").removeClass('active');
                 $("#course-content li:nth-child(3)").addClass('active');
                 $("#course-lists").removeClass('active');
                 $("#course-about").removeClass('active');
+                $('#course-comment').removeClass('active');
                 $('#course-test').addClass('active');
+            }
+            else if (tab == "comment") {
+                $("#course-content").removeClass('active');
+                $("#course-content li:nth-child(4)").addClass('active');
+                $("#course-lists").removeClass('active');
+                $("#course-about").removeClass('active');
+                $("#course-test").removeClass('active');
+                $('#course-comment').addClass('active');
             }
 
             $("#course-content li a").click(function () {
@@ -95,18 +166,79 @@
                 if ($(this).attr('href') == '#about') {
                     $("#course-lists").removeClass('active');
                     $('#course-test').removeClass('active');
+                    $('#course-comment').removeClass('active');
                     $("#course-about").addClass('active');
                 }
                 else if ($(this).attr('href') == '#lists') {
                     $("#course-about").removeClass('active');
                     $('#course-test').removeClass('active');
+                    $('#course-comment').removeClass('active');
                     $("#course-lists").addClass('active');
                 }
                 else if ($(this).attr('href') == '#test') {
                     $("#course-lists").removeClass('active');
                     $("#course-about").removeClass('active');
+                    $('#course-comment').removeClass('active');
                     $('#course-test').addClass('active');
                 }
+                else if ($(this).attr('href') == '#comment') {
+                    $("#course-lists").removeClass('active');
+                    $("#course-about").removeClass('active');
+                    $('#course-test').removeClass('active');
+                    $('#course-comment').addClass('active');
+                }
+                $("#raty").raty({
+                    starOff: "{{ url_for('static', filename='images/star-off.png') }}",
+                    starOn: "{{ url_for('static', filename='images/star-on.png') }}"
+                });
+
+                $("#show-raty").raty({
+                    starOff: "{{ url_for('static', filename='images/star-off.png') }}",
+                    starOn: "{{ url_for('static', filename='images/star-on.png') }}",
+                    readOnly: true,
+                    score: {{ course.rank | round }}
+                });
+
+                $("#comment-save-btn").click(function () {
+                    $.ajax({
+                        url: "{{ url_for('course.process_comment') }}",
+                        type: "post",
+                        data :{
+                            op: op,
+                            rank: $("#raty").raty("score") ? $("#raty").raty("score") : 0,
+                            content: $("#comment-editor").val(),
+                            courseId: "{{ course.id }}"
+                        },
+                        success: function (data) {
+                            alert("提交成功");
+                            $.ajax({
+                                url: "{{ url_for('course.process_comment') }}",
+                                type: "post",
+                                data: {
+                                    op: "data",
+                                    cid: "{{ course.id }}"
+                                },
+                                success: function (data) {
+                                    $("#comment-list").empty().html(data["html"]);
+                                    $("#comment-editor").val("");
+                                    $("#comment-edit-block").hide();
+                                    $("#re-edit").show();
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $("#comment-cancel-btn").click(function () {
+                    $("#comment-editor").val("");
+                    $("#comment-edit-block").hide();
+                    $("#re-edit").show();
+                });
+
+                $("#re-edit").find("button").click(function () {
+                    $("#re-edit").hide();
+                    $("#comment-edit-block").show();
+                });
 
             });
         });

@@ -42,6 +42,9 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', backref='user', lazy='dynamic')
     postNum = db.Column(db.Integer, default=0, nullable=False)
 
+    comments = db.relationship('Comment', backref='user', lazy='dynamic')
+    commentNum = db.Column(db.Integer, default=0, nullable=False)
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -102,8 +105,11 @@ class Course(db.Model):
     middlePicture = db.Column(db.String(64))                    # 课程中图
     largePicture = db.Column(db.String(64))                     # 课程大图
 
+    rank = db.Column(db.Float, default=0)                     # 课程评分
+
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
+    comments = db.relationship('Comment', backref='course', lazy='dynamic')
     # 加入该课程的用户, 多对多的关系
     users = db.relationship('User', secondary=course_users,
                             backref=db.backref('courses', lazy='dynamic'))
@@ -114,9 +120,9 @@ class Lesson(db.Model):
     """
     __tablename__ = 'lessons'
     id = db.Column(db.Integer, primary_key=True)  # 课时 ID
-    number = db.Column(db.Integer)      # 课时所在课程的编号
-    title = db.Column(db.String(64))    # 课时标题
-    content = db.Column(db.Text())      # 课时正文
+    number = db.Column(db.Integer)                # 课时所在课程的编号
+    title = db.Column(db.String(64))              # 课时标题
+    content = db.Column(db.Text())                # 课时正文
     courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
 
     materials = db.relationship('Material', backref='lesson', lazy='dynamic')
@@ -132,6 +138,19 @@ class Material(db.Model):
     m_type = db.Column(db.String(64), nullable=False)   # 资料类型
 
     lessonId = db.Column(db.Integer, db.ForeignKey('lessons.id'))  # 所属课时ID
+
+
+class Comment(db.Model):
+    """ 一个课程包括多个评论, 每个评论只能属于一个课程。 课程和评论是一对多的关系。
+    """
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)  # 评论 ID
+    rank = db.Column(db.Integer)                 # 评价等级
+    content = db.Column(db.String(2048))          # 课时标题
+    createdTime = db.Column(db.DateTime(), default=datetime.now)
+
+    courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
+    userId = db.Column(db.Integer, db.ForeignKey('users.id'))  # 所属课程ID
 
 
 """ 互动社区功能 """

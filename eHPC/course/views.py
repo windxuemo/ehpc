@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, jsonify, request
 from . import course
-from ..models import Course, Material, Paper, Question
+from ..models import Course, Material, Paper, Question, Comment, User
 from flask_babel import gettext
 from flask_login import current_user, login_required
 from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from .. import db
 import json
+from datetime import datetime
 
 
 @course.route('/')
@@ -31,6 +32,7 @@ def view(cid):
                            title=c.title,
                            tab=tab,
                            course=c,
+                           user=current_user,
                            papers=paper_of_course)
 
 
@@ -98,13 +100,13 @@ def detail_lessons(cid):
     return jsonify(data=html_content)
 
 
-@course.route('/paper/<int:pid>/show')
+@course.route('/paper/<int:pid>/show/')
 def paper_detail(pid):
     paper = Paper.query.filter_by(id=pid).first_or_404()
     return render_template('course/paper_detail.html', paper=paper)
 
 
-@course.route('/paper/<int:pid>/result', methods=['POST'])
+@course.route('/paper/<int:pid>/result/', methods=['POST'])
 def paper_result(pid):
     result = {}
     correct_num = [0, 0, 0, 0, 0, 0]
@@ -143,3 +145,33 @@ def paper_result(pid):
             result[key] = 'F'
     print result
     return jsonify(status='success', result=result, correct_num=correct_num, solution=solution)
+
+
+@course.route('/process/comment/', methods=['POST'])
+def process_comment():
+    if request.form['op'] == 'create':
+        curr_comment = Comment(rank=request.form['rank'], content=request.form['content'])
+        db.session.add(curr_comment)
+        curr_course = Course.query.filter_by(id=request.form['courseId']).first_or_404()
+        curr_course.rank = (curr_course.rank * curr_course.comments.count() + int(request.form['rank'])) / (curr_course.comments.count() + 1)
+        curr_course.comments.append(curr_comment)
+        current_user.comments.append(curr_comment)
+        current_user.commentNum += 1
+        db.session.commit()
+        return jsonify(status='success')
+    elif request.form['op'] == 'edit':
+        curr_comment = current_user.comments.filter_by(courseId=request.form['courseId']).first_or_404()
+        curr_course = Course.query.filter_by(id=request.form['courseId']).first_or_404()
+        curr_course.rank = (curr_course.rank * curr_course.comments.count() - curr_comment.rank + int(request.form['rank'])) / curr_course.comments.count()
+        curr_comment.rank = request.form['rank']
+        curr_comment.content = request.form['content']
+        curr_comment.createdTime = datetime.now()
+        db.session.commit()
+        return jsonify(status='success')
+    elif request.form['op'] == 'data':
+        curr_course = Course.query.filter_by(id=request.form['cid']).first()
+        count = current_user.comments.filter_by(courseId=request.form['cid']).count()
+        return jsonify(status='success', edit=(count == 1),
+                       html=render_template('course/widget_course_comment.html', course=curr_course, user=current_user))
+    else:
+        return jsonify(status='fail')

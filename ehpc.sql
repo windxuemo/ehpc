@@ -290,6 +290,7 @@ CREATE TABLE `courses` (
   `smallPicture` varchar(64) DEFAULT NULL,
   `middlePicture` varchar(64) DEFAULT NULL,
   `largePicture` varchar(64) DEFAULT NULL,
+  `rank` float(3,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_courses_title` (`title`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
@@ -301,7 +302,7 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'并行计算课','并行计算课学习并行运算的相关知识','# 1. 课程内容体系结构\n\n“并行计算”是“并行算法类教学体系”中的核心内容之一，它是处于并行算法类教学体系中的算法应用基础层次，是面向计算机专业本科高年级学生或从事计算科学的研究生的，是为了适应高性能计算机迅速发展的形势，满足国家培养面向21世纪高科技人才之需求。为此本课程在内容体系上力求有所创新，而在遵循课程自身学科性、系统性和完整性的同时，应充分考虑不同应用领域在并行计算机上求解大型科学工程问题的需求，将并行机体系结构、并行数值计算、并行算法和并行编程等课程的内容有机的整合在一起，在国内形成一门新型的“并行计算”课程。\n \n# 2. 教学内容组织方式与目的\n\n* 教学内容组织方式: 全课程的教学内容组织成为四篇：第一篇为并行计算的硬件基础，包括并行计算机的系统结构模型、当代并行计算机系统介绍和并行计算性能评测；第二篇为并行算法的设计，包括并行算法通用设计策略、基本设计技术和一般设计过程；第三篇为并行数值算法，包括矩阵运算、线性方程组求解和快速傅氏变换；第四篇为并行程序设计，包括并行程序设计基础、共享存储系统并行编程、分布式存储系统并行编程和并行程序设计环境与工具。\n* 教学目的: 本课程以并行计算为主题、要求讲授并行计算的硬件平台（当代并行计算机系统及其结构模型）、软件支撑（并行程序设计）和理论基础（并行算法的设计和并行数值算法）。在内容组织上，强调融并行机结构、并行算法和并行编程为一体，着重讨论并行算法的设计及其实现，并力图反映本学科的最新成就和发展趋势，体现出并行机硬件和软件相结合以及并行算法和并行编程相结合。\n\n# 3.实践性教学的设计与效果\n\n“并行计算”是一门实践性很强的课程，除了系统的课堂理论学习外，还配有足够数量的实践内容，以巩固和加深学生对并行算法理论、设计技术、分析方法和具体实现等各个环节的整体理解。通过课程实践，强化学生“结构—算法—编程”一体化学习方法的意识，充分理解对于求解一个给定问题的任何并行算法，都必须采用某种并行编程语言，最终运行在一台具体的并行计算\n\n根据并行计算课程的要求，其实验教学的要求如下：\n\n- 熟悉三种以上的主流并行计算平台，包括共享存储的多处理机、分布存储的多计算机和目前流行的PC机群，要求学生能够使用上述几种并行计算平台所提供的硬／软件环境及工具来开展自己的实验工作。\n- 掌握至少两种并行程序设计语言标准：即分布存储的MPI和共享存储的OpenMP。对面向大型科学和工程计算的HPF（高性能Fortran）也应尽量了解和熟悉。\n- 选择某些典型的非数值并行算法和数值并行算法，使用上述的并行编程语言标准，至少在PC机群上编程调试、分析和运行它们。\n- 为了入门，选用课程中简单的计算π的样本程序为出发点，通过使用不同的并行程序设计模型和不同的并行编程语言，在不同的硬件编程环境上改造和重现，以便为进一步的实践打下基础。','2016-10-20 00:00:00',15,3,'images/course/8.jpg',NULL,NULL),(2,'课程2','第二个课程','这是的哥','2016-09-20 08:00:00',1,1,'images/course/2.jpg',NULL,NULL),(3,'课程3','这是课堂','内容','2016-09-21 00:00:00',1,1,'images/course/3.jpg',NULL,NULL),(4,'课程4','课程 4','内容','2016-09-22 00:00:00',1,1,'images/course/4.jpg',NULL,NULL),(5,'课程5','这是课堂','内容','2016-09-23 01:00:00',1,1,'images/course/5.jpg',NULL,NULL),(6,'课程6','这是课堂','内容','2016-09-29 01:00:00',0,0,'images/course/6.jpg',NULL,NULL),(7,'课程7','这是课堂7','内容','2016-09-29 08:00:00',0,1,'images/course/7.jpg',NULL,NULL),(9,'MPI 并行编程','','','2016-10-23 08:58:17',0,0,'images/course/noImg.jpg',NULL,NULL);
+INSERT INTO `courses` VALUES (1,'并行计算课','并行计算课学习并行运算的相关知识','# 1. 课程内容体系结构\n\n“并行计算”是“并行算法类教学体系”中的核心内容之一，它是处于并行算法类教学体系中的算法应用基础层次，是面向计算机专业本科高年级学生或从事计算科学的研究生的，是为了适应高性能计算机迅速发展的形势，满足国家培养面向21世纪高科技人才之需求。为此本课程在内容体系上力求有所创新，而在遵循课程自身学科性、系统性和完整性的同时，应充分考虑不同应用领域在并行计算机上求解大型科学工程问题的需求，将并行机体系结构、并行数值计算、并行算法和并行编程等课程的内容有机的整合在一起，在国内形成一门新型的“并行计算”课程。\n \n# 2. 教学内容组织方式与目的\n\n* 教学内容组织方式: 全课程的教学内容组织成为四篇：第一篇为并行计算的硬件基础，包括并行计算机的系统结构模型、当代并行计算机系统介绍和并行计算性能评测；第二篇为并行算法的设计，包括并行算法通用设计策略、基本设计技术和一般设计过程；第三篇为并行数值算法，包括矩阵运算、线性方程组求解和快速傅氏变换；第四篇为并行程序设计，包括并行程序设计基础、共享存储系统并行编程、分布式存储系统并行编程和并行程序设计环境与工具。\n* 教学目的: 本课程以并行计算为主题、要求讲授并行计算的硬件平台（当代并行计算机系统及其结构模型）、软件支撑（并行程序设计）和理论基础（并行算法的设计和并行数值算法）。在内容组织上，强调融并行机结构、并行算法和并行编程为一体，着重讨论并行算法的设计及其实现，并力图反映本学科的最新成就和发展趋势，体现出并行机硬件和软件相结合以及并行算法和并行编程相结合。\n\n# 3.实践性教学的设计与效果\n\n“并行计算”是一门实践性很强的课程，除了系统的课堂理论学习外，还配有足够数量的实践内容，以巩固和加深学生对并行算法理论、设计技术、分析方法和具体实现等各个环节的整体理解。通过课程实践，强化学生“结构—算法—编程”一体化学习方法的意识，充分理解对于求解一个给定问题的任何并行算法，都必须采用某种并行编程语言，最终运行在一台具体的并行计算\n\n根据并行计算课程的要求，其实验教学的要求如下：\n\n- 熟悉三种以上的主流并行计算平台，包括共享存储的多处理机、分布存储的多计算机和目前流行的PC机群，要求学生能够使用上述几种并行计算平台所提供的硬／软件环境及工具来开展自己的实验工作。\n- 掌握至少两种并行程序设计语言标准：即分布存储的MPI和共享存储的OpenMP。对面向大型科学和工程计算的HPF（高性能Fortran）也应尽量了解和熟悉。\n- 选择某些典型的非数值并行算法和数值并行算法，使用上述的并行编程语言标准，至少在PC机群上编程调试、分析和运行它们。\n- 为了入门，选用课程中简单的计算π的样本程序为出发点，通过使用不同的并行程序设计模型和不同的并行编程语言，在不同的硬件编程环境上改造和重现，以便为进一步的实践打下基础。','2016-10-20 00:00:00',15,3,'images/course/8.jpg',NULL,NULL,3),(2,'课程2','第二个课程','这是的哥','2016-09-20 08:00:00',1,1,'images/course/2.jpg',NULL,NULL,0),(3,'课程3','这是课堂','内容','2016-09-21 00:00:00',1,1,'images/course/3.jpg',NULL,NULL,0),(4,'课程4','课程 4','内容','2016-09-22 00:00:00',1,1,'images/course/4.jpg',NULL,NULL,0),(5,'课程5','这是课堂','内容','2016-09-23 01:00:00',1,1,'images/course/5.jpg',NULL,NULL,0),(6,'课程6','这是课堂','内容','2016-09-29 01:00:00',0,0,'images/course/6.jpg',NULL,NULL,0),(7,'课程7','这是课堂7','内容','2016-09-29 08:00:00',0,1,'images/course/7.jpg',NULL,NULL,0),(9,'MPI 并行编程','','','2016-10-23 08:58:17',0,0,'images/course/noImg.jpg',NULL,NULL,0);
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -417,6 +418,44 @@ LOCK TABLES `materials` WRITE;
 /*!40000 ALTER TABLE `materials` DISABLE KEYS */;
 INSERT INTO `materials` VALUES (1,'视频HelloWorld','course_1/lesson1_material1.mp4',1,'video'),(2,'久石让 音乐','course_1/lesson1_material2.mp3',1,'audio'),(56,'algo-quicksheet.pdf','course_1/lesson1_material56.pdf',1,'pdf'),(57,'斯坦福大学公开课_：机器学习课程_机器学习的动机与应用.mp4','course_1/lesson2_material57.mp4',2,'video'),(58,'partI.pdf','course_1/lesson2_material58.pdf',2,'pdf'),(59,'partII.pdf','course_1/lesson2_material59.pdf',2,'pdf'),(60,'partIII.pdf','course_1/lesson2_material60.pdf',2,'pdf'),(61,'outline.pdf','course_1/lesson2_material61.pdf',2,'pdf'),(63,'HTTP协议详解_-_小坦克_-_博客园.pdf','course_1/lesson7_material63.pdf',7,'pdf'),(64,'LDA数学八卦.pdf','course_1/lesson7_material64.pdf',7,'pdf'),(65,'利用insert，update和delete注入获取数据___WooYun知识库.pdf','course_1/lesson7_material65.pdf',7,'pdf'),(66,'machine_learning.pdf','course_1/lesson8_material66.pdf',8,'pdf'),(67,'第二章_贪心法.pdf','course_1/lesson8_material67.pdf',8,'pdf'),(68,'第四章_动态规划－作业.pdf','course_1/lesson8_material68.pdf',8,'pdf'),(69,'课堂交流作业_.pdf','course_1/lesson8_material69.pdf',8,'pdf'),(70,'DBtest.pdf','course_1/lesson1_material70.pdf',1,'pdf'),(71,'Data_Mining_Concepts_and_Techniques_3rd_Edition.pdf','course_1/lesson1_material71.pdf',1,'pdf');
 /*!40000 ALTER TABLE `materials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lessons`
+--
+
+DROP TABLE IF EXISTS `comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rank` int(11) DEFAULT NULL,
+  `content` varchar(2048) DEFAULT NULL,
+  `createdTime` datetime DEFAULT NULL,
+  `courseId` int(11) DEFAULT NULL,
+  `userId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `courseId` (`courseId`),
+  KEY `userId` (`userId`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `courses` (`id`),
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `users` (`id`)
+
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lessons`
+--
+
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+INSERT INTO `comments` VALUES
+  (1,5,'评价1','2016-11-18 00:00:00',1,1),
+  (2,4,'评价2','2016-11-18 00:00:00',1,2),
+  (3,3,'评价3','2016-11-18 00:00:00',1,3),
+  (4,2,'评价4','2016-11-18 00:00:00',1,4),
+  (5,1,'评价5','2016-11-18 00:00:00',1,5);
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -566,6 +605,7 @@ CREATE TABLE `users` (
   `telephone` varchar(32) DEFAULT NULL,
   `topicNum` int(11) NOT NULL,
   `postNum` int(11) NOT NULL,
+  `commentNum` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_users_email` (`email`),
   UNIQUE KEY `ix_users_username` (`username`)
@@ -578,7 +618,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-11-07 19:54:49','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',1,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,4,1),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-09-29 03:35:29','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-11-06 23:03:18','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477293245.0',2,NULL,'混吃等死不舒服',NULL,0,1),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,2),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-10-25 10:16:45','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,1),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-11-08 10:43:39','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,2,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,1,NULL,NULL,NULL,0,3);
+INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-11-07 19:54:49','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',1,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,4,1,0),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-09-29 03:35:29','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0,0),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-11-06 23:03:18','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477293245.0',2,NULL,'混吃等死不舒服',NULL,0,1,5),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,2,0),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-10-25 10:16:45','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,1,0),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-11-08 10:43:39','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,2,0,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,1,NULL,NULL,NULL,0,3,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

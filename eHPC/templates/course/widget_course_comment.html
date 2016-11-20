@@ -1,0 +1,21 @@
+{% for comment in course.comments.order_by('-createdTime') %}
+    <div class="media">
+        <a class="pull-left js-user-card" href="/user/{{ comment.user.id }}">
+            <img class="media-object avatar-sm" src="{{ comment.user.avatar_url }}">
+        </a>
+        <div class="media-body" style="border-bottom: 1px solid #f5f5f5;padding-bottom: 15px;">
+            <div>
+                <a class="link-dark " href="/user/{{ comment.user.id }}">{{ comment.user.username }}</a>
+                <span style="margin-left: 10px;color: #919191;font-size: 14px"> {{ comment.createdTime }} </span>
+            </div>
+            <div>
+                {% for i in range(comment.rank) %}
+                    <i class="es-icon es-icon-star color-warning"></i>
+                {% endfor %}
+            </div>
+            <div>
+                {{ comment.content }}
+            </div>
+        </div>
+    </div>
+{% endfor %}

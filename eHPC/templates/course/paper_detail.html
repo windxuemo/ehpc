@@ -92,10 +92,11 @@
 {% block footer_ext %}
     <script>
         //错误题目数量为：总题目数量-答对题目数量
-        var wrong_num = [];
+        var wrong_num = [0, 0, 0, 0, 0, 0];
         {% for i in range(6) %}
             wrong_num[{{ i }}] += {{ paper.questions | get_question_number(i) }};
         {% endfor %}
+        var post_to = "{{ url_for('course.paper_result', pid=paper.id) }}";
     </script>
     <script src="{{ url_for('static', filename='js/course/paper_detail.js') }}"></script>
 

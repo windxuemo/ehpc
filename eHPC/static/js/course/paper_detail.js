@@ -289,7 +289,7 @@ $(document).ready(function () {
 
         //提交部分逻辑
         $.ajax({
-            url: "{{ url_for('course.paper_result', pid=paper.id) }}",
+            url: post_to,
             type: "post",
             dataType: "json",
             data: your_answer,
@@ -303,15 +303,15 @@ $(document).ready(function () {
                         count++;
                     });
 
+                    for (var i=0;i<6;i++){
+                        wrong_num[i] -= data['correct_num'][i.toString()];
+                    }
+
                     count = 0;
                     $('#result').find('.text-danger').find('small').each(function () {
                         $(this).text(wrong_num[count]);
                         count++;
                     });
-
-                    for (var i=0;i<6;i++){
-                        wrong_num.push(-data['correct_num'][i.toString()]);
-                    }
 
                     //每种题型得到的分数
                     var points = [0, 0, 0, 0, 0, 0];
@@ -345,6 +345,7 @@ $(document).ready(function () {
                     }
                     $('#submit-solution').addClass('disabled');//提交按钮不可点击
                     $('#submit-solution').hide();//隐藏提交按钮
+
                     $("html,body").animate({scrollTop:0}, 300);//回到试卷顶部查看结果
                 }
                 else {

@@ -88,127 +88,115 @@ def paper_edit(cid, pid):
 @admin.route('/problem/')
 @teacher_login
 def problem():
-    return redirect(url_for("admin.choice"))
+    return redirect(url_for("admin.question", q_type='choice'))
 
 
-@admin.route('/problem/choice')
+@admin.route('/problem/<q_type>')
 @teacher_login
-def choice():
-    """ 题库中选择题目的入口页面 """
-    choices = Question.query.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).all()
-    return render_template('admin/problem/choice.html',
-                           title=gettext('Problem Admin'),
-                           choices=choices)
+def question(q_type):
+    if q_type == 'choice':
+        choices = Question.query.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2))
+        return render_template('admin/problem/question.html',
+                               questions=choices,
+                               type='choice')
+
+    elif q_type == 'judge':
+        judges = Question.query.filter_by(type=4)
+        return render_template('admin/problem/question.html',
+                               questions=judges,
+                               type='judge')
+
+    elif q_type == 'fill':
+        fills = Question.query.filter_by(type=3)
+        return render_template('admin/problem/question.html',
+                               questions=fills,
+                               type='fill')
+
+    elif q_type == 'essay':
+        essays = Question.query.filter_by(type=5)
+        return render_template('admin/problem/question.html',
+                               questions=essays,
+                               type='essay')
 
 
-@admin.route('/problem/choice/create/')
+@admin.route('/problem/<q_type>/create/')
 @teacher_login
-def choice_create():
-    """ 在题库添加选择题 """
-    classifies = Classify.query.all()
-    return render_template('admin/problem/choice_detail.html',
-                           classifies=classifies,
-                           op='create',
-                           mode='practice')
+def question_create(q_type):
+    if q_type == 'choice':
+        return render_template('admin/problem/question_detail.html',
+                               classifies=Classify.query.all(),
+                               op='create',
+                               mode='practice',
+                               type='choice')
+    elif q_type == 'judge':
+        return render_template('admin/problem/question_detail.html',
+                               op='create',
+                               classifies=Classify.query.all(),
+                               mode='practice',
+                               type='judge')
+
+    elif q_type == 'fill':
+        return render_template('admin/problem/question_detail.html',
+                               op='create',
+                               classifies=Classify.query.all(),
+                               mode='practice',
+                               type='fill')
+
+    elif q_type == 'essay':
+        return render_template('admin/problem/question_detail.html',
+                               op='create',
+                               classifies=Classify.query.all(),
+                               mode='practice',
+                               type='essay')
 
 
-@admin.route('/problem/choice/edit/')
+@admin.route('/problem/<q_type>/edit/<int:qid>')
 @teacher_login
-def choice_edit():
-    """ 题库中选择题的编辑页面 """
-    curr_choice = Question.query.filter_by(id=request.args['id']).first_or_404()
-    return render_template('admin/problem/choice_detail.html',
-                           op='edit',
-                           classifies=Classify.query.all(),
-                           choice=curr_choice,
-                           mode='practice')
+def question_edit(q_type, qid):
 
+    curr_question = Question.query.filter_by(id=qid).first_or_404()
+    curr_classifies = {}
 
-@admin.route('/problem/judge/')
-@teacher_login
-def judge():
-    """ 题库中判断题的入口页面 """
-    judges = Question.query.filter_by(type=4)
-    return render_template('admin/problem/judge.html', judges=judges)
+    index = 0
+    for c in curr_question.classifies:
+        curr_classifies[index] = c.id
+        index += 1
 
+    if q_type == 'choice':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               classifies=Classify.query.all(),
+                               question=curr_question,
+                               mode='practice',
+                               type='choice',
+                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
 
-@admin.route('/problem/judge/create/')
-@teacher_login
-def judge_create():
-    """ 在题库添加判断题 """
-    return render_template('admin/problem/judge_detail.html',
-                           op='create',
-                           classifies=Classify.query.all(),
-                           mode='practice')
+    elif q_type == 'judge':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               question=curr_question,
+                               classifies=Classify.query.all(),
+                               mode='practice',
+                               type='judge',
+                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
 
+    elif q_type == 'fill':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               question=curr_question,
+                               classifies=Classify.query.all(),
+                               mode='practice',
+                               type='fill',
+                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
 
-@admin.route('/problem/judge/edit/<int:qid>/')
-@teacher_login
-def judge_edit(qid):
-    """ 题库中判断的编辑页面 """
-    curr_judge = Question.query.filter_by(id=qid).first_or_404()
-    return render_template('admin/problem/judge_detail.html',
-                           op='edit',
-                           curr_judge=curr_judge,
-                           classifies=Classify.query.all(),
-                           mode='practice')
-
-
-@admin.route('/problem/fill/')
-@teacher_login
-def fill():
-    """ 题库中填空题的入口页面 """
-    fills = Question.query.filter_by(type=3)
-    return render_template('admin/problem/fill.html', fills=fills)
-
-
-@admin.route('/problem/fill/create/')
-@teacher_login
-def fill_create():
-    """ 在题库添加选择题 """
-    return render_template('admin/problem/fill_detail.html',
-                           op='create',
-                           classifies=Classify.query.all(),
-                           mode='practice')
-
-
-@admin.route('/problem/fill/edit/<int:qid>/')
-@teacher_login
-def fill_edit(qid):
-    """ 题库中选择题目的编辑页面 """
-    curr_fill = Question.query.filter_by(id=qid).first_or_404()
-    return render_template('admin/problem/fill_detail.html',
-                           op='edit',
-                           curr_fill=curr_fill,
-                           classifies=Classify.query.all(),
-                           mode='practice')
-
-
-@admin.route('/problem/essay/')
-@teacher_login
-def essay():
-    """ 题库中问答题的入口页面 """
-    essays = Question.query.filter_by(type=5)
-    return render_template('admin/problem/essay.html', essays=essays)
-
-
-@admin.route('/problem/essay/create/')
-@teacher_login
-def essay_create():
-    """ 在题库添加问答题 """
-    return render_template('admin/problem/essay_detail.html',
-                           op='create',
-                           classifies=Classify.query.all(), mode='practice')
-
-
-@admin.route('/problem/essay/edit/<int:qid>/')
-@teacher_login
-def essay_edit(qid):
-    """ 题库中问答题目的编辑页面 """
-    curr_essay = Question.query.filter_by(id=qid).first_or_404()
-    return render_template('admin/problem/essay_detail.html', op='edit',
-                           curr_essay=curr_essay,
-                           classifies=Classify.query.all(), mode='practice')
+    elif q_type == 'essay':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               question=curr_question,
+                               classifies=Classify.query.all(),
+                               mode='practice',
+                               type='essay',
+                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
 
 
 @admin.route('/problem/program/')
@@ -234,87 +222,96 @@ def program_edit():
     return render_template('admin/problem/program_detail.html', op='edit', program_problem=program_problem)
 
 
-@admin.route('/paper/<int:pid>/choice/create/')
+@admin.route('/paper/<int:pid>/<q_type>/create/')
 @teacher_login
-def paper_choice_create(pid):
+def paper_question_create(pid, q_type):
     curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    return render_template('admin/problem/choice_detail.html',  op='create',
-                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
+    if q_type == 'choice':
+        return render_template('admin/problem/question_detail.html',
+                               op='create',
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               type='choice')
+    elif q_type == 'judge':
+        return render_template('admin/problem/question_detail.html',
+                               op='create',
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               type='judge')
+
+    elif q_type == 'fill':
+        return render_template('admin/problem/question_detail.html',
+                               op='create',
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               type='fill')
+
+    elif q_type == 'essay':
+        return render_template('admin/problem/question_detail.html',
+                               op='create',
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               type='essay')
 
 
-@admin.route('/paper/<int:pid>/choice/edit/<qid>/')
+@admin.route('/paper/<int:pid>/<q_type>/edit/<qid>/')
 @teacher_login
-def paper_choice_edit(pid, qid):
+def paper_question_edit(pid, q_type, qid):
     curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    curr_choice = curr_paper.questions.filter_by(question_id=qid).first_or_404()
-    return render_template('admin/problem/choice_detail.html',  op='edit', choice=curr_choice.questions,
-                           classifies=Classify.query.all(),  mode='paper', curr_paper=curr_paper,
-                           point=curr_choice.point)
+    curr_question = curr_paper.questions.filter_by(question_id=qid).first_or_404()
 
+    curr_classifies = []
+    for c in curr_question.classifies:
+        curr_classifies.append(c.id)
+    print(curr_classifies)
 
-@admin.route('/paper/<int:pid>/judge/create/')
-@teacher_login
-def paper_judge_create(pid):
-    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    return render_template('admin/problem/judge_detail.html', op='create',
-                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
+    if q_type == 'choice':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               question=curr_question.questions,
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               point=curr_question.point,
+                               type='choice',
+                               curr_classifies=curr_classifies)
 
+    if q_type == 'judge':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               curr_judge=curr_question.questions,
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               point=curr_question.point,
+                               type='judge',
+                               curr_classifies=curr_classifies)
 
-@admin.route('/paper/<int:pid>/judge/edit/<int:qid>/')
-@teacher_login
-def paper_judge_edit(pid, qid):
-    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    curr_judge = curr_paper.questions.filter_by(question_id=qid).first_or_404()
-    return render_template('admin/problem/judge_detail.html',
-                           op='edit',
-                           curr_judge=curr_judge.questions,
-                           classifies=Classify.query.all(),
-                           mode='paper',
-                           curr_paper=curr_paper,
-                           point=curr_judge.point)
+    if q_type == 'fill':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               curr_fill=curr_question.questions,
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               point=curr_question.point,
+                               type='fill',
+                               curr_classifies=curr_classifies)
 
-
-@admin.route('/paper/<int:pid>/fill/create/')
-@teacher_login
-def paper_fill_create(pid):
-    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    return render_template('admin/problem/fill_detail.html',
-                           op='create',
-                           classifies=Classify.query.all(),
-                           mode='paper',
-                           curr_paper=curr_paper)
-
-
-@admin.route('/paper/<int:pid>/fill/edit/<int:qid>/')
-@teacher_login
-def paper_fill_edit(pid, qid):
-    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    curr_fill = curr_paper.questions.filter_by(question_id=qid).first_or_404()
-    return render_template('admin/problem/fill_detail.html',
-                           op='edit',
-                           curr_fill=curr_fill.questions,
-                           classifies=Classify.query.all(),
-                           mode='paper',
-                           curr_paper=curr_paper,
-                           point=curr_fill.point)
-
-
-@admin.route('/paper/<int:pid>/essay/create/')
-@teacher_login
-def paper_essay_create(pid):
-    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    return render_template('admin/problem/essay_detail.html', op='create',
-                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper)
-
-
-@admin.route('/paper/<int:pid>/essay/edit/<int:qid>/')
-@teacher_login
-def paper_essay_edit(pid, qid):
-    curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    curr_essay = curr_paper.questions.filter_by(question_id=qid).first_or_404()
-    return render_template('admin/problem/essay_detail.html', op='edit', curr_essay=curr_essay.questions,
-                           classifies=Classify.query.all(), mode='paper', curr_paper=curr_paper,
-                           point=curr_essay.point)
+    if q_type == 'essay':
+        return render_template('admin/problem/question_detail.html',
+                               op='edit',
+                               curr_essay=curr_question.questions,
+                               classifies=Classify.query.all(),
+                               mode='paper',
+                               curr_paper=curr_paper,
+                               point=curr_question.point,
+                               type='essay',
+                               curr_classifies=curr_classifies)
 
 
 @admin.route('/process/course/', methods=['POST'])
@@ -545,13 +542,13 @@ def process_question():
         db.session.add(aux)
         curr_paper.questions.append(aux)
 
-        classifies = request.form.getlist('classify[]')
+        classifies = request.form.getlist('classify')
         for x in classifies:
             curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
 
         db.session.add(curr_question)
         db.session.commit()
-        return jsonify(status="success", id=curr_paper.id)
+        return redirect(url_for('admin.paper_edit', cid=curr_paper.course.id, pid=curr_paper.id))
     elif request.form['op'] == 'edit':
         curr_paper = Paper.query.filter_by(id=request.form['pid']).first_or_404()
         aux = curr_paper.questions.filter_by(question_id=request.form['id']).first_or_404()
@@ -564,12 +561,13 @@ def process_question():
 
         for x in xrange(len(curr_question.classifies)):
             curr_question.classifies.pop(0)
-        classifies = request.form.getlist('classify[]')
+        classifies = request.form.getlist('classify')
         for x in classifies:
             curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
 
         db.session.commit()
-        return jsonify(status="success", id=curr_paper.id)
+
+        return redirect(url_for('admin.paper_edit', cid=curr_paper.course.id, pid=curr_paper.id))
     elif request.form['op'] == 'del':
         curr_paper = Paper.query.filter_by(id=request.form['pid']).first_or_404()
         seq = request.form.getlist('seq[]')

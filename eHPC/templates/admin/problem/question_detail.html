@@ -1,0 +1,69 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    {% include 'admin/problem/widget_header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="container" id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                {% with type=type %}
+                    {% include 'admin/problem/widget_nav_left.html' %}
+                {% endwith %}
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    {% include 'admin/problem/widget_question_edit.html' %}
+                    <div class="panel-body">
+                        {% with op=op, classifies=classifies, mode=mode, curr_paper=curr_paper if mode == 'paper' else none %}
+                            {% if type == 'choice' %}
+                                {% with choice=question %}
+                                    {% include 'admin/problem/widget_choice_detail.html' %}
+                                {% endwith %}
+                            {% elif type == 'fill' %}
+                                {% with fill=question %}
+                                    {% include 'admin/problem/widget_fill_detail.html' %}
+                                {% endwith %}
+                            {% elif type == 'judge' %}
+                                {% with judge=question %}
+                                    {% include 'admin/problem/widget_judge_detail.html' %}
+                                {% endwith %}
+                            {% elif type == 'essay' %}
+                                {% with essay=question %}
+                                    {% include 'admin/problem/widget_essay_detail.html' %}
+                                {% endwith %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        {% if op == 'edit' %}
+            var op = "{{ op }}";
+            var data = {{ curr_classifies | safe }};
+            {% if type == 'choice' %}
+                var oldAnswer = "{{ question.solution }}";
+                var type = {{ question.type }};
+            {% endif %}
+            {% if type == 'judge' %}
+                var sol = {{ question.solution }};
+            {% endif %}
+        {% endif %}
+    </script>
+    {% if type == 'choice' %}
+        <script src="{{ url_for('static', filename='js/admin/problem/choice_detail.js') }}"></script>
+    {% elif type == 'fill' %}
+        <script src="{{ url_for('static', filename='js/admin/problem/fill_detail.js') }}"></script>
+    {% elif type == 'judge' %}
+        <script src="{{ url_for('static', filename='js/admin/problem/judge_detail.js') }}"></script>
+    {% elif type == 'essay' %}
+        <script src="{{ url_for('static', filename='js/admin/problem/essay_detail.js') }}"></script>
+    {% endif %}
+{% endblock %}

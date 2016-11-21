@@ -167,7 +167,10 @@ CREATE TABLE `papers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(128) NOT NULL,
   `about` varchar(128) NOT NULL,
-  PRIMARY KEY (`id`)
+  `courseId` int(11) ,
+  PRIMARY KEY (`id`),
+  KEY `courseId`(`courseId`),
+  CONSTRAINT `papers_ibfk_1` FOREIGN KEY (`courseId`) REFERENCES `courses` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -177,7 +180,7 @@ CREATE TABLE `papers` (
 
 LOCK TABLES `papers` WRITE;
 /*!40000 ALTER TABLE `papers` DISABLE KEYS */;
-INSERT INTO `papers` VALUES (1,'测验1','这是测验1'),(2,'测验2','这是测验2'),(3,'测验3','这是测验3');
+INSERT INTO `papers` VALUES (1,'测验1','这是测验1',1),(2,'测验2','这是测验2',1),(3,'测验3','这是测验3',1);
 /*!40000 ALTER TABLE `papers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,34 +218,6 @@ INSERT INTO `paper_question` VALUES (6, 1, 20);
 INSERT INTO `paper_question` VALUES (7, 1, 20);
 INSERT INTO `paper_question` VALUES (8, 1, 20);
 /*!40000 ALTER TABLE `paper_question` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `paper_course`
---
-
-DROP TABLE IF EXISTS `paper_course`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `paper_course` (
-  `course_id` INT(11),
-  `paper_id` INT(11),
-  KEY `course_id` (`course_id`),
-  KEY `paper_id` (`paper_id`),
-  CONSTRAINT `paper_course_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
-  CONSTRAINT `paper_course_ibfk_2` FOREIGN KEY (`paper_id`) REFERENCES `papers` (`id`),
-  PRIMARY KEY (`course_id`, `paper_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `paper_course`
---
-
-LOCK TABLES `paper_course` WRITE;
-/*!40000 ALTER TABLE `paper_course` DISABLE KEYS */;
-INSERT INTO `paper_course` VALUES (1,1),(1,2),(1,3);
-/*!40000 ALTER TABLE `paper_course` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

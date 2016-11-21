@@ -1,0 +1,21 @@
+{% for judge in essays %}
+    <div class="panel" data-name="essay" data-id="{{loop.index}}" data-type="{{ judge.type }}" style="display: {% if loop.index != 1 %}none{% endif %}">
+        {% with question=judge %}
+            <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+                {% with index=loop.index %}
+                    {% include 'problem/widget_practice_title.html' %}
+                {% endwith %}
+            </div>
+            <div class="panel-body media-body">
+                {% include 'course/widget_paper_question_detail.html' %}
+            </div>
+        {% endwith %}
+
+        <div style="text-align: right">
+            <a class="btn btn-primary" style="width: 100px" data-id="confirm">
+                确认
+            </a>
+        </div>
+        <div data-id="solution" style="display: none;font-size: 20px">参考答案： {{ judge.solution }}</div>
+    </div>
+{% endfor %}

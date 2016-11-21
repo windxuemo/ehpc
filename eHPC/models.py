@@ -109,6 +109,7 @@ class Course(db.Model):
 
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
+    papers = db.relationship('Paper', backref='course', lazy='dynamic')
     comments = db.relationship('Comment', backref='course', lazy='dynamic')
     # 加入该课程的用户, 多对多的关系
     users = db.relationship('User', secondary=course_users,
@@ -278,11 +279,6 @@ class PaperQuestion(db.Model):
     questions = db.relationship('Question', backref=db.backref('papers', lazy='dynamic', cascade="delete, delete-orphan"))
 
 
-paper_course = db.Table('paper_course',
-                        db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
-                        db.Column('paper_id', db.Integer, db.ForeignKey('papers.id'), primary_key=True))
-
-
 class Question(db.Model):
     __tablename__ = "questions"
     id = db.Column(db.Integer, primary_key=True)               # 题目 ID
@@ -304,7 +300,7 @@ class Paper(db.Model):
     id = db.Column(db.Integer, primary_key=True)        # 试卷 ID
     title = db.Column(db.String(128), nullable=False)   # 试卷标题
     about = db.Column(db.String(128), nullable=False)   # 试卷简介
-    courses = db.relationship('Course', secondary=paper_course, backref=db.backref('papers', lazy='dynamic'))
+    courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))
 
 
 class Classify(db.Model):

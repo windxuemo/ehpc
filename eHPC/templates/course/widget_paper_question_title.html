@@ -1,0 +1,22 @@
+<img class="pull-left" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
+<img class="pull-left" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
+<div style="float: left;width: 4%;margin-right: 10px;text-align: center;">
+    <div style="font-size: 12px;color: #aaa;border: solid 1px #ccc;padding: 0px 1px;border-radius: 5px;background: #f6f6f6;display: inline-block">
+        {{ point }}分
+    </div>
+</div>
+<div class="pull-right" style="margin-bottom: 5px;width: 94%">
+    <span data-id="num-id" style="font-weight: bold"></span>
+    <span>、 </span>
+    {% if question.type == 0 or question.type == 1 or question.type == 2%}
+        <span>{{ question | get_question_content }}</span>
+    {% elif question.type == 3%}
+        <span data-id="fill-id">
+            {{ question.content | split_fill | safe }}
+            <span data-id="fill-solution-len-id"
+                  style="display: none">{{ question.solution | get_fill_solution_len }}</span>
+        </span>
+    {% elif question.type == 4 or question.type == 5%}
+        <span>{{ question.content }}</span>
+    {% endif %}
+</div>

@@ -1,0 +1,55 @@
+ <div class="media-body">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th></th>
+                <th>单选题
+                    <small class="text-muted">({{ paper.questions | get_question_number(0) }})</small>
+                </th>
+                <th>多选题
+                    <small class="text-muted">({{ paper.questions | get_question_number(1) }})</small>
+                </th>
+                <th>不定项选择
+                    <small class="text-muted">({{ paper.questions | get_question_number(2) }})</small>
+                </th>
+                <th>填空题
+                    <small class="text-muted">({{ paper.questions | get_question_number(3) }})</small>
+                </th>
+                <th>判断题
+                    <small class="text-muted">({{ paper.questions | get_question_number(4) }})</small>
+                </th>
+                <th>问答题
+                    <small class="text-muted">({{ paper.questions | get_question_number(5) }})</small>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>答对</th>
+                <td><span class="text-success"><small></small></span></td>
+                <td><span class="text-success"><small></small></span></td>
+                <td><span class="text-success"><small></small></span></td>
+                <td><span class="text-success"><small></small></span></td>
+                <td><span class="text-success"><small></small></span></td>
+                <td rowspan="3" style="vertical-align: middle;text-align: center"><span class="text-success" style="font-size:40px">?</span></td>
+            </tr>
+            <tr>
+                <th>答错</th>
+                <td><span class="text-danger"><small></small></span></td>
+                <td><span class="text-danger"><small></small></span></td>
+                <td><span class="text-danger"><small></small></span></td>
+                <td><span class="text-danger"><small></small></span></td>
+                <td><span class="text-danger"><small></small></span></td>
+            <tr>
+                <th>得分</th>
+                <td><span class="text-score"><small></small></span></td>
+                <td><span class="text-score"><small></small></span></td>
+                <td><span class="text-score"><small></small></span></td>
+                <td><span class="text-score"><small></small></span></td>
+                <td><span class="text-score"><small></small></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

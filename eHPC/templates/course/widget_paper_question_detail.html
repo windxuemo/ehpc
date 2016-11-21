@@ -1,0 +1,9 @@
+{% if question.type == 0 or question.type == 1 or question.type == 2%}
+    {% with choice=question %}
+        {% include 'course/widget_paper_choice_options.html' %}
+    {% endwith %}
+{% elif question.type == 4 %}
+    {% include 'course/widget_paper_judge_options.html' %}
+{% elif question.type == 5 %}
+    <textarea name="content" data-id="target-editor"></textarea>
+{% endif %}

@@ -1,0 +1,37 @@
+<div class="panel-heading">
+    <span class="pull-right">
+        <a id="create-choice" href="{{ create }}"
+           class="btn btn-primary btn-sm">
+            <span class="glyphicon glyphicon-plus"></span>
+            创建题目
+        </a>
+    </span>
+    题目列表
+</div>
+
+<div class="panel-body">
+    <table class="table" style="word-break:break-all;">
+        <thead>
+        <tr>
+            <th width="10%" style="text-align: center">序号</th>
+            <th width="40%">名称</th>
+            <th width="20%">答案</th>
+            <th>操作</th>
+        </tr>
+        </thead><!--表格头-->
+        <tbody id="tb">
+        {% for q in questions %}
+            <tr data-id="{{ q.id }}">
+                <td width="10%" style="text-align: center">{{ loop.index }}</td>
+                <td width="40%">{{ q | get_question_content }}</td>
+                <td width="20%">{{ q | get_question_solution }}</td>
+                <td>
+                    <a href="{{ url_for('admin.question_edit', q_type=q_type, qid=q.id) }}">编辑</a>
+                    <span class="divider"> | </span>
+                    <a href="javascript:void(0)" name="del-btn">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody><!--表格主体-->
+    </table>
+</div>

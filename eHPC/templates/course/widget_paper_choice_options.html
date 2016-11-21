@@ -1,0 +1,12 @@
+<ul data-id="choice-options">
+    {% for i in range( choice.content | get_json_value('len') ) %}
+        <li class="media choice-options" data-check="0">
+            <i class="glyphicon glyphicon-ok pull-left" style="margin-top: 3px;display: none"></i>
+            <span data-id="option" style="font-weight: bold">{{ i | get_char }}</span>
+            <span>、 </span>
+            <span>{{ choice.content | get_json_value(i | string) }}</span>
+        </li>
+    {% endfor %}
+</ul>
+
+

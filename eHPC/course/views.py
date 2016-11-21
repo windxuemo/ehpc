@@ -103,7 +103,11 @@ def detail_lessons(cid):
 @course.route('/paper/<int:pid>/show/')
 def paper_detail(pid):
     paper = Paper.query.filter_by(id=pid).first_or_404()
-    return render_template('course/paper_detail.html', paper=paper)
+    head_id = ['head-single', 'head-multiple', 'head-uncertain', 'head-fill', 'head-judge', 'head-essay']
+    name = [u'单选题', u'多选题', u'不定项选择', u'填空题', u'判断题', u'问答题']
+    div_id = ['question-single-choice', 'question-multiple-choice', 'question-uncertain-choice',
+              'question-fill', 'question-judge', 'question-essay']
+    return render_template('course/paper_detail.html', paper=paper, head_id=head_id, name=name, div_id=div_id)
 
 
 @course.route('/paper/<int:pid>/result/', methods=['POST'])

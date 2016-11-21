@@ -4,18 +4,10 @@
     <div class="container" id="content-container">
         <div class="row">
             <div class="col-md-3">
-                <div class="list-group-panel">
-                    <div class="list-group">
-                        <a class="list-group-item" href="{{ url_for('admin.problem') }}">选择题</a>
-                        <a class="list-group-item" href="{{ url_for('admin.judge') }}">判断题</a>
-                        <a class="list-group-item" href="{{ url_for('admin.fill') }}">填空题</a>
-                        <a class="list-group-item" href="{{ url_for('admin.essay') }}">问答题</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.program') }}">编程题</a>
-                    </div>
-                    <div class="list-group">
-                    </div>
-                </div>
-            </div><!--左侧导航栏-->
+                {% with type='program' %}
+                    {% include 'admin/problem/widget_nav_left.html' %}
+                {% endwith %}
+            </div>
 
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">

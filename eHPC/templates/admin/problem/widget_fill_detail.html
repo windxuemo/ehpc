@@ -1,0 +1,32 @@
+<form action="{{ url_for('admin.process_question') if mode == 'paper' else url_for('admin.process_practice') }}" method="post" id="form">
+    {% with classifies=classifies %}
+        {% include 'admin/problem/widget_question_classifies.html' %}
+    {% endwith %}
+
+    {% if mode == 'paper' %}
+        {% with op = op %}
+            {% include 'admin/problem/widget_question_point.html' %}
+        {% endwith %}
+    {% endif %}
+
+    <div class="form-group">
+        <label>题干</label>
+        <div>需要填空的地方请使用斜体表示</div>
+        <textarea name="content" id="content-editor">{% if op == 'edit' %}{{ fill.content }}{% endif %}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label>答案解析</label>
+        <textarea name="analysis" id="analysis-editor">{% if op == 'edit' %}{{ fill.analysis }}{% endif %}</textarea>
+    </div>
+    <input id="solution-editor" type="hidden" name="solution" value="">
+    <input type="hidden" name="type" value="3">
+    <input type="hidden" name="op" value="{{ op }}">
+    {% if op == 'edit' %}
+        <input type="hidden" name="id" value="{{ fill.id }}">
+    {% endif %}
+    {% if mode == 'paper' %}
+        <input type="hidden" name="pid" value="{{ curr_paper.id }}">
+    {% endif %}
+    <input id="save" type="submit" class="btn btn-primary btn-block" style="margin-top: 15px" value="保存提交">
+</form>

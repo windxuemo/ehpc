@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block header_ext %}
+    {% with type=type  %}
+        {% include 'problem/widget_practice_header.html' %}
+    {% endwith %}
+{% endblock %}
+
+{% block content %}
+    <div id="content-container" class="container">
+
+        {% with type=type, classify_id=classify_id, title=title %}
+            {% include 'problem/widget_practice_nav.html' %}
+        {% endwith %}
+
+        {% with questions=practices %}
+            {% include 'problem/widget_progress_bar.html' %}
+        {% endwith %}
+
+        <div class="container">
+            <div class="special-project">
+
+                {% with count = practices | count %}
+                    {% include 'problem/widget_practice_card.html' %}
+                {% endwith %}
+
+                <div class="special-project-body">
+                    <div class="panel">
+                        <div class="panel-body">
+                        {% if type == 'choice' %}
+                            {% with choices=practices %}
+                                {% include 'problem/widget_choice_detail.html' %}
+                            {% endwith %}
+                        {% elif type == 'fill' %}
+                            {% with fills=practices %}
+                                {% include 'problem/widget_fill_detail.html' %}
+                            {% endwith %}
+                        {% elif type == 'judge' %}
+                            {% with judges=practices %}
+                                {% include 'problem/widget_judge_detail.html' %}
+                            {% endwith %}
+                        {% elif type == 'essay' %}
+                            {% with essays=practices %}
+                                {% include 'problem/widget_essay_detail.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        </div>
+                    </div>
+                </div><!--题目区-->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">答题结果</h4>
+                </div>
+                <div class="modal-body" id="ansResult"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="confirm-submit">确认提交</button>
+                    <button type="button" class="btn btn-default" id="cancel-submit">继续答题</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="pauseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 300px;height: 200px">
+            <div class="modal-content" style="width: 300px;height: 200px">
+                <div class="modal-body btn" style="width: 300px;height: 200px;font-size: 30px;line-height: 140px" id="continue">
+                    点击继续
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        var practice_count = {{ practices | count }};
+        var address = "{{ url_for('problem.show_question') }}";
+    </script>
+
+    <script src="{{ url_for('static', filename='js/problem/utility_func.js') }}" ></script>;
+    <script src="{{ url_for('static', filename='js/problem/practice_card.js') }}" ></script>;
+
+    {% if type == 'choice' %}
+        <script src="{{ url_for('static', filename='js/problem/choice_detail.js') }}"></script>
+    {% elif type == 'fill' %}
+        <script src="{{ url_for('static', filename='js/problem/fill_detail.js') }}"></script>
+    {% elif type == 'judge' %}
+        <script src="{{ url_for('static', filename='js/problem/judge_detail.js') }}"></script>
+    {% elif type == 'essay' %}
+        <script src="{{ url_for('static', filename='js/problem/essay_detail.js') }}"></script>
+    {% endif %}
+{% endblock %}
+
+
+
+

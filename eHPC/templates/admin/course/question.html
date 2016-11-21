@@ -23,13 +23,13 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
                         <div class="pull-right">
-                            <a href="{{ url_for('admin.paper_choice_create', pid=paper.id) }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='choice') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>选择题</a>
-                            <a href="{{ url_for('admin.paper_judge_create', pid=paper.id) }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='judge') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>判断题</a>
-                            <a href="{{ url_for('admin.paper_fill_create', pid=paper.id) }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='fill') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>填空题</a>
-                            <a href="{{ url_for('admin.paper_essay_create', pid=paper.id) }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='essay') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>问答题</a>
                         </div>
                         题目管理
@@ -55,7 +55,7 @@
                                     <td>{{ q.questions | get_question_type }}</td>
                                     <td>{{ q.point }}</td>
                                     <td>
-                                        <a href="{{ url_for('admin.paper_'+ q.questions | get_question_id + '_edit', qid=q.questions.id, pid=paper.id) }}">
+                                        <a href="{{ url_for('admin.paper_question_edit', qid=q.questions.id, pid=paper.id, q_type = q.questions | get_question_id) }}">
                                             <span class="glyphicon glyphicon-edit"></span>编辑</a>
                                     </td>
                                 </tr>

@@ -1,0 +1,4 @@
+<strong>{{ name }}</strong>
+<small class="text-muted">共 {{ paper.questions | get_question_number(type) }}
+    题，总计 {{ paper.questions | get_total_point(type) }} 分
+</small>

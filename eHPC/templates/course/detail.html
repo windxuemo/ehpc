@@ -86,7 +86,7 @@
     {{ super() }}
     <script>
         $(document).ready(function () {
-            var op = "create";
+            var op = "";
 
             $("#course-lists").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
             /* 加载课程列表内容 */
@@ -113,11 +113,22 @@
                 },
                 success: function (data) {
                     $("#comment-list").empty().html(data["html"]);
-                    if(data['edit'])
+                    if (data["state"] == 0)
+                    {
+                        $("#comment-edit-block").show();
+                        $("#re-edit").hide();
+                        op = "create";
+                    }
+                    else if (data["state"] == 1)
                     {
                         $("#comment-edit-block").hide();
                         $("#re-edit").show();
                         op = "edit";
+                    }
+                    else
+                    {
+                        $("#comment-edit-block").hide();
+                        $("#re-edit").hide();
                     }
                 },
                 error: function () {
@@ -189,14 +200,16 @@
                 }
                 $("#raty").raty({
                     starOff: "{{ url_for('static', filename='images/star-off.png') }}",
-                    starOn: "{{ url_for('static', filename='images/star-on.png') }}"
+                    starOn: "{{ url_for('static', filename='images/star-on.png') }}",
+                    starHalf: "{{ url_for('static', filename='images/star-half.png') }}"
                 });
 
                 $("#show-raty").raty({
                     starOff: "{{ url_for('static', filename='images/star-off.png') }}",
                     starOn: "{{ url_for('static', filename='images/star-on.png') }}",
+                    starHalf: "{{ url_for('static', filename='images/star-half.png') }}",
                     readOnly: true,
-                    score: {{ course.rank | round }}
+                    score: {{ course.rank }}
                 });
 
                 $("#comment-save-btn").click(function () {
@@ -225,6 +238,9 @@
                                     $("#re-edit").show();
                                 }
                             });
+                            $("#raty").raty("score", 0);
+                            $("#show-raty").raty("set", { "score": data["rank"] });
+                            op = "edit";
                         }
                     });
                 });

@@ -150,6 +150,8 @@ def paper_result(pid):
 @course.route('/process/comment/', methods=['POST'])
 def process_comment():
     if request.form['op'] == 'create':
+        if current_user.is_anonymous:
+            return jsonify(status='fail')
         curr_comment = Comment(rank=request.form['rank'], content=request.form['content'])
         db.session.add(curr_comment)
         curr_course = Course.query.filter_by(id=request.form['courseId']).first_or_404()
@@ -158,8 +160,10 @@ def process_comment():
         current_user.comments.append(curr_comment)
         current_user.commentNum += 1
         db.session.commit()
-        return jsonify(status='success')
+        return jsonify(status='success', rank=curr_course.rank)
     elif request.form['op'] == 'edit':
+        if current_user.is_anonymous:
+            return jsonify(status='fail')
         curr_comment = current_user.comments.filter_by(courseId=request.form['courseId']).first_or_404()
         curr_course = Course.query.filter_by(id=request.form['courseId']).first_or_404()
         curr_course.rank = (curr_course.rank * curr_course.comments.count() - curr_comment.rank + int(request.form['rank'])) / curr_course.comments.count()
@@ -167,11 +171,14 @@ def process_comment():
         curr_comment.content = request.form['content']
         curr_comment.createdTime = datetime.now()
         db.session.commit()
-        return jsonify(status='success')
+        return jsonify(status='success', rank=curr_course.rank)
     elif request.form['op'] == 'data':
         curr_course = Course.query.filter_by(id=request.form['cid']).first()
-        count = current_user.comments.filter_by(courseId=request.form['cid']).count()
-        return jsonify(status='success', edit=(count == 1),
+        if current_user.is_anonymous:
+            state = 2
+        else:
+            state = 1 if current_user.comments.filter_by(courseId=request.form['cid']).count() > 0 else 0
+        return jsonify(status='success', state=state,
                        html=render_template('course/widget_course_comment.html', course=curr_course, user=current_user))
     else:
         return jsonify(status='fail')

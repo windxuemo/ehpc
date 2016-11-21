@@ -154,35 +154,41 @@ def paper_result(pid):
 @course.route('/process/comment/', methods=['POST'])
 def process_comment():
     if request.form['op'] == 'create':
-        if current_user.is_anonymous:
-            return jsonify(status='fail')
+        curr_course = Course.query.filter_by(id=request.form['courseId']).first_or_404()
+        if current_user.is_anonymous or current_user not in curr_course.users:
+            return jsonify(status='fail', info=u'用户未登录或未加入该课程')
         curr_comment = Comment(rank=request.form['rank'], content=request.form['content'])
         db.session.add(curr_comment)
-        curr_course = Course.query.filter_by(id=request.form['courseId']).first_or_404()
         curr_course.rank = (curr_course.rank * curr_course.comments.count() + int(request.form['rank'])) / (curr_course.comments.count() + 1)
         curr_course.comments.append(curr_comment)
         current_user.comments.append(curr_comment)
         current_user.commentNum += 1
         db.session.commit()
-        return jsonify(status='success', rank=curr_course.rank)
+        return jsonify(status='success', rank=curr_course.rank,
+                       html=render_template('course/widget_course_comment.html', course=curr_course, user=current_user))
     elif request.form['op'] == 'edit':
-        if current_user.is_anonymous:
-            return jsonify(status='fail')
-        curr_comment = current_user.comments.filter_by(courseId=request.form['courseId']).first_or_404()
         curr_course = Course.query.filter_by(id=request.form['courseId']).first_or_404()
+        if current_user.is_anonymous or current_user not in curr_course.users:
+            return jsonify(status='fail', info=u'用户未登录或未加入该课程')
+        curr_comment = current_user.comments.filter_by(courseId=request.form['courseId']).first_or_404()
         curr_course.rank = (curr_course.rank * curr_course.comments.count() - curr_comment.rank + int(request.form['rank'])) / curr_course.comments.count()
         curr_comment.rank = request.form['rank']
         curr_comment.content = request.form['content']
         curr_comment.createdTime = datetime.now()
         db.session.commit()
-        return jsonify(status='success', rank=curr_course.rank)
+        return jsonify(status='success', rank=curr_course.rank,
+                       html=render_template('course/widget_course_comment.html', course=curr_course, user=current_user))
     elif request.form['op'] == 'data':
-        curr_course = Course.query.filter_by(id=request.form['cid']).first()
-        if current_user.is_anonymous:
-            state = 2
-        else:
-            state = 1 if current_user.comments.filter_by(courseId=request.form['cid']).count() > 0 else 0
-        return jsonify(status='success', state=state,
+        curr_course = Course.query.filter_by(id=request.form['cid']).first_or_404()
+        commented = False
+        content = ""
+        rank = 0
+        auth = current_user.is_authenticated and current_user in curr_course.users
+        if current_user.is_authenticated:
+            commented = current_user.comments.filter_by(courseId=request.form['cid']).count() > 0
+            content = current_user.comments.filter_by(courseId=request.form['cid']).first().content if commented else ""
+            rank = current_user.comments.filter_by(courseId=request.form['cid']).first().rank if commented else 0
+        return jsonify(status='success', auth=auth, commented=commented, content=content, rank=rank,
                        html=render_template('course/widget_course_comment.html', course=curr_course, user=current_user))
     else:
         return jsonify(status='fail')

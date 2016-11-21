@@ -50,30 +50,30 @@
                 </div>
 
                 <div id="course-comment" role="tabpanel" class="tab-pane">
-                    {% if user.id %}
-                        <div id="comment-edit-block">
-                            <div class="form-group controls">
-                                评分： <span id="raty"></span>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="comment-editor" class="form-control" rows="8" name="content" ></textarea>
-                            </div>
-                            <div class="form-group clearfix">
-                                <div class="pull-right">
-                                    <button id="comment-save-btn" class="btn btn-primary">保存</button>
-                                    <button id="comment-cancel-btn" class="btn btn-info">取消</button>
-                                </div>
-                            </div>
+                    <div id="comment-show-block" class="form-group clearfix">
+                        <div class="pull-left" style="margin-left: 10px">
+                            评分： <span id="show-raty"></span>
                         </div>
-                        <div id="re-edit" class="form-group clearfix">
-                            <div class="pull-left" style="margin-left: 20px">
-                                评分： <span id="show-raty"></span>
-                            </div>
+                        <div class="pull-right">
+                            <button class="btn btn-primary" id="comment-btn">评论</button>
+                        </div>
+                        <div class="pull-right" id="help-box" style="color: #919191;font-size: 15px;">
+                            登录并加入课程后方可进行评价
+                        </div>
+                    </div>
+                    <div id="comment-edit-block" style="display: none;margin-left: 20px;margin-right: 20px">
+                        <div class="form-group controls">
+                            你的评分： <span id="raty"></span>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="comment-editor" class="form-control" rows="8" name="content" ></textarea>
+                        </div>
+                        <div class="form-group clearfix">
                             <div class="pull-right">
-                                <button class="btn btn-primary">重新评价</button>
+                                <button id="comment-save-btn" class="btn btn-primary">保存</button>
                             </div>
                         </div>
-                    {% endif %}
+                    </div>
                     <div id="comment-list"></div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
     {{ super() }}
     <script>
         $(document).ready(function () {
-            var op = "";
+            var op = "", btn_text = "";
 
             $("#course-lists").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
             /* 加载课程列表内容 */
@@ -112,23 +112,31 @@
                     cid: "{{ course.id }}"
                 },
                 success: function (data) {
-                    $("#comment-list").empty().html(data["html"]);
-                    if (data["state"] == 0)
-                    {
-                        $("#comment-edit-block").show();
-                        $("#re-edit").hide();
-                        op = "create";
+                    if (data["html"] == "") {
+                        $("#comment-list").empty().html("<div style='text-align: center'> 目前尚未有评论 </div>");
                     }
-                    else if (data["state"] == 1)
-                    {
-                        $("#comment-edit-block").hide();
-                        $("#re-edit").show();
+                    else {
+                        $("#comment-list").empty().html(data["html"]);
+                    }
+                    if (data["auth"]) {
+                        $("#comment-btn").show();
+                        $("#help-box").hide();
+                    }
+                    else {
+                        $("#comment-btn").hide();
+                        $("#help-box").show();
+                    }
+                    if (data["commented"]) {
                         op = "edit";
+                        btn_text = "重新评论";
+                        $("#comment-btn").text(btn_text);
+                        $("#comment-editor").val(data["content"]);
+                        $("#raty").raty("score", data["rank"]);
                     }
-                    else
-                    {
-                        $("#comment-edit-block").hide();
-                        $("#re-edit").hide();
+                    else {
+                        op = "create";
+                        btn_text = "评论";
+                        $("#comment-btn").text(btn_text);
                     }
                 },
                 error: function () {
@@ -198,64 +206,71 @@
                     $('#course-test').removeClass('active');
                     $('#course-comment').addClass('active');
                 }
-                $("#raty").raty({
-                    starOff: "{{ url_for('static', filename='images/star-off.png') }}",
-                    starOn: "{{ url_for('static', filename='images/star-on.png') }}",
-                    starHalf: "{{ url_for('static', filename='images/star-half.png') }}"
-                });
+            });
 
-                $("#show-raty").raty({
-                    starOff: "{{ url_for('static', filename='images/star-off.png') }}",
-                    starOn: "{{ url_for('static', filename='images/star-on.png') }}",
-                    starHalf: "{{ url_for('static', filename='images/star-half.png') }}",
-                    readOnly: true,
-                    score: {{ course.rank }}
-                });
+            $("#raty").raty({
+                starOff: "{{ url_for('static', filename='images/star-off.png') }}",
+                starOn: "{{ url_for('static', filename='images/star-on.png') }}",
+                starHalf: "{{ url_for('static', filename='images/star-half.png') }}"
+            });
 
-                $("#comment-save-btn").click(function () {
-                    $.ajax({
-                        url: "{{ url_for('course.process_comment') }}",
-                        type: "post",
-                        data :{
-                            op: op,
-                            rank: $("#raty").raty("score") ? $("#raty").raty("score") : 0,
-                            content: $("#comment-editor").val(),
-                            courseId: "{{ course.id }}"
-                        },
-                        success: function (data) {
-                            alert("提交成功");
-                            $.ajax({
-                                url: "{{ url_for('course.process_comment') }}",
-                                type: "post",
-                                data: {
-                                    op: "data",
-                                    cid: "{{ course.id }}"
-                                },
-                                success: function (data) {
-                                    $("#comment-list").empty().html(data["html"]);
-                                    $("#comment-editor").val("");
-                                    $("#comment-edit-block").hide();
-                                    $("#re-edit").show();
-                                }
-                            });
-                            $("#raty").raty("score", 0);
-                            $("#show-raty").raty("set", { "score": data["rank"] });
-                            op = "edit";
+            $("#show-raty").raty({
+                starOff: "{{ url_for('static', filename='images/star-off.png') }}",
+                starOn: "{{ url_for('static', filename='images/star-on.png') }}",
+                starHalf: "{{ url_for('static', filename='images/star-half.png') }}",
+                readOnly: true,
+                score: {{ course.rank }}
+            });
+
+            $("#comment-save-btn").click(function () {
+                $.ajax({
+                    url: "{{ url_for('course.process_comment') }}",
+                    type: "post",
+                    data :{
+                        op: op,
+                        rank: $("#raty").raty("score") ? $("#raty").raty("score") : 0,
+                        content: $("#comment-editor").val(),
+                        courseId: "{{ course.id }}"
+                    },
+                    success: function (data) {
+                        if (data["status"] == "fail")
+                        {
+                            alert(data["info"]);
+                            location.reload();
+                            return;
                         }
-                    });
+                        $("#comment-list").empty().html(data["html"]);
+                        $("#comment-edit-block").hide();
+                        $("#show-raty").raty("set", { "score": data["rank"] });
+                        op = "edit";
+                        $("#comment-btn").removeClass("btn-info").addClass("btn-primary").text("重新评论");
+                    }
                 });
+            });
 
-                $("#comment-cancel-btn").click(function () {
-                    $("#comment-editor").val("");
-                    $("#comment-edit-block").hide();
-                    $("#re-edit").show();
-                });
-
-                $("#re-edit").find("button").click(function () {
-                    $("#re-edit").hide();
+            $("#comment-btn").click(function () {
+                if ($(this).hasClass("btn-primary"))
+                {
                     $("#comment-edit-block").show();
-                });
+                    $(this).removeClass("btn-primary").addClass("btn-info").text("取消评论");
+                }
+                else
+                {
+                    $("#comment-edit-block").hide();
+                    $(this).removeClass("btn-info").addClass("btn-primary").text(btn_text);
+                }
+            });
 
+            $("#course-in").click(function () {
+                if ($('#course-in').hasClass('btn-primary')) {
+                    $("#help-box").hide();
+                    $("#comment-btn").show();
+                }
+                else {
+                    $("#help-box").show();
+                    $("#comment-edit-block").hide();
+                    $("#comment-btn").hide();
+                }
             });
         });
     </script>

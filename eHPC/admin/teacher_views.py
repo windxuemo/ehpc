@@ -94,60 +94,30 @@ def problem():
 @admin.route('/problem/<q_type>')
 @teacher_login
 def question(q_type):
+
+    questions = None
     if q_type == 'choice':
-        choices = Question.query.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2))
-        return render_template('admin/problem/question.html',
-                               questions=choices,
-                               type='choice')
-
+        questions = Question.query.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2))
     elif q_type == 'judge':
-        judges = Question.query.filter_by(type=4)
-        return render_template('admin/problem/question.html',
-                               questions=judges,
-                               type='judge')
-
+        questions = Question.query.filter_by(type=4)
     elif q_type == 'fill':
-        fills = Question.query.filter_by(type=3)
-        return render_template('admin/problem/question.html',
-                               questions=fills,
-                               type='fill')
-
+        questions = Question.query.filter_by(type=3)
     elif q_type == 'essay':
-        essays = Question.query.filter_by(type=5)
-        return render_template('admin/problem/question.html',
-                               questions=essays,
-                               type='essay')
+        questions = Question.query.filter_by(type=5)
+
+    return render_template('admin/problem/question.html',
+                           questions=questions,
+                           type=q_type)
 
 
 @admin.route('/problem/<q_type>/create/')
 @teacher_login
 def question_create(q_type):
-    if q_type == 'choice':
-        return render_template('admin/problem/question_detail.html',
-                               classifies=Classify.query.all(),
-                               op='create',
-                               mode='practice',
-                               type='choice')
-    elif q_type == 'judge':
-        return render_template('admin/problem/question_detail.html',
-                               op='create',
-                               classifies=Classify.query.all(),
-                               mode='practice',
-                               type='judge')
-
-    elif q_type == 'fill':
-        return render_template('admin/problem/question_detail.html',
-                               op='create',
-                               classifies=Classify.query.all(),
-                               mode='practice',
-                               type='fill')
-
-    elif q_type == 'essay':
-        return render_template('admin/problem/question_detail.html',
-                               op='create',
-                               classifies=Classify.query.all(),
-                               mode='practice',
-                               type='essay')
+    return render_template('admin/problem/question_detail.html',
+                           op='create',
+                           classifies=Classify.query.all(),
+                           mode='practice',
+                           type=q_type)
 
 
 @admin.route('/problem/<q_type>/edit/<int:qid>')
@@ -162,41 +132,13 @@ def question_edit(q_type, qid):
         curr_classifies[index] = c.id
         index += 1
 
-    if q_type == 'choice':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               classifies=Classify.query.all(),
-                               question=curr_question,
-                               mode='practice',
-                               type='choice',
-                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
-
-    elif q_type == 'judge':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               question=curr_question,
-                               classifies=Classify.query.all(),
-                               mode='practice',
-                               type='judge',
-                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
-
-    elif q_type == 'fill':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               question=curr_question,
-                               classifies=Classify.query.all(),
-                               mode='practice',
-                               type='fill',
-                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
-
-    elif q_type == 'essay':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               question=curr_question,
-                               classifies=Classify.query.all(),
-                               mode='practice',
-                               type='essay',
-                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
+    return render_template('admin/problem/question_detail.html',
+                           op='edit',
+                           question=curr_question,
+                           classifies=Classify.query.all(),
+                           mode='practice',
+                           type=q_type,
+                           curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
 
 
 @admin.route('/problem/program/')
@@ -226,36 +168,12 @@ def program_edit():
 @teacher_login
 def paper_question_create(pid, q_type):
     curr_paper = Paper.query.filter_by(id=pid).first_or_404()
-    if q_type == 'choice':
-        return render_template('admin/problem/question_detail.html',
-                               op='create',
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               type='choice')
-    elif q_type == 'judge':
-        return render_template('admin/problem/question_detail.html',
-                               op='create',
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               type='judge')
-
-    elif q_type == 'fill':
-        return render_template('admin/problem/question_detail.html',
-                               op='create',
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               type='fill')
-
-    elif q_type == 'essay':
-        return render_template('admin/problem/question_detail.html',
-                               op='create',
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               type='essay')
+    return render_template('admin/problem/question_detail.html',
+                           op='create',
+                           classifies=Classify.query.all(),
+                           mode='paper',
+                           curr_paper=curr_paper,
+                           type=q_type)
 
 
 @admin.route('/paper/<int:pid>/<q_type>/edit/<qid>/')
@@ -269,49 +187,15 @@ def paper_question_edit(pid, q_type, qid):
         curr_classifies.append(c.id)
     print(curr_classifies)
 
-    if q_type == 'choice':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               question=curr_question.questions,
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               point=curr_question.point,
-                               type='choice',
-                               curr_classifies=curr_classifies)
-
-    if q_type == 'judge':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               curr_judge=curr_question.questions,
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               point=curr_question.point,
-                               type='judge',
-                               curr_classifies=curr_classifies)
-
-    if q_type == 'fill':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               curr_fill=curr_question.questions,
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               point=curr_question.point,
-                               type='fill',
-                               curr_classifies=curr_classifies)
-
-    if q_type == 'essay':
-        return render_template('admin/problem/question_detail.html',
-                               op='edit',
-                               curr_essay=curr_question.questions,
-                               classifies=Classify.query.all(),
-                               mode='paper',
-                               curr_paper=curr_paper,
-                               point=curr_question.point,
-                               type='essay',
-                               curr_classifies=curr_classifies)
+    return render_template('admin/problem/question_detail.html',
+                           op='edit',
+                           curr_essay=curr_question.questions,
+                           classifies=Classify.query.all(),
+                           mode='paper',
+                           curr_paper=curr_paper,
+                           point=curr_question.point,
+                           type=q_type,
+                           curr_classifies=curr_classifies)
 
 
 @admin.route('/process/course/', methods=['POST'])

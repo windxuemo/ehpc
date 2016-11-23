@@ -1,12 +1,17 @@
 <form action="{{ url_for('admin.process_question') if mode == 'paper' else url_for('admin.process_practice')}}" method="post">
-    {% with classifies=classifies %}
-        {% include 'admin/problem/widget_question_classifies.html' %}
-    {% endwith %}
+    <div class="form-group" id="classify">
+        <label>知识点&nbsp&nbsp</label>
+        {% for classify in classifies %}
+            <input type="checkbox" name="classify" id="classify{{ classify.id }}"
+                   value="{{ classify.id }}">{{ classify.name }}
+        {% endfor %}
+    </div>
 
     {% if mode == 'paper' %}
-        {% with op = op %}
-            {% include 'admin/problem/widget_question_point.html' %}
-        {% endwith %}
+        <div class="form-group">
+            <label>分值&nbsp&nbsp</label>
+            <input class="form-control" value="{{ point if op == 'edit' }}" id="point" name="point" style="width:50px;height:30px;display:inline;margin-top:10px;">
+        </div>
     {% endif %}
 
     <div class="form-group">
@@ -35,3 +40,6 @@
     {% endif %}
     <input id="save" type="submit" class="btn btn-primary btn-block" style="margin-top: 15px" value="保存提交">
 </form>
+
+
+<script src="{{ url_for('static', filename='js/admin/problem/essay_detail.js') }}"></script>

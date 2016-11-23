@@ -113,7 +113,7 @@ def paper_detail(pid):
 @course.route('/paper/<int:pid>/result/', methods=['POST'])
 def paper_result(pid):
     result = {}
-    correct_num = [0, 0, 0, 0, 0, 0]
+    correct_num = [0, 0, 0, 0, 0, 0]    # 分别代表6种题型的【答对数】
     solution = {}
     paper = Paper.query.filter_by(id=pid).first_or_404()
     your_solution = request.form
@@ -122,14 +122,14 @@ def paper_result(pid):
         q_type = -1
         for i in paper.questions:
             if i.question_id == int(key):
-                if i.questions.type == 5:
+                if i.questions.type == 5:   # 问答题暂时不做处理
                     solution[key] = i.questions.solution
                     q_type = 5
                 else:
-                    sol = i.questions.solution
+                    sol = i.questions.solution   # 题目答案
                     q_type = i.questions.type
 
-                    if i.questions.type == 3:
+                    if i.questions.type == 3:   # 填空题答案使用json格式储存，先解析再发送(0-单选 1-多选 2-不定项 3-填空 4-判断 5-问答)
                         ts = json.loads(sol)
                         temp = []
                         for j in range(ts['len']):

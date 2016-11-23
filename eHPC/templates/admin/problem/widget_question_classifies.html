@@ -1,7 +1,0 @@
-<div class="form-group" id="classify">
-    <label>知识点&nbsp&nbsp</label>
-    {% for classify in classifies %}
-        <input type="checkbox" name="classify" id="classify{{ classify.id }}"
-               value="{{ classify.id }}">{{ classify.name }}
-    {% endfor %}
-</div>

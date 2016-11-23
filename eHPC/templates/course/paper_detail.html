@@ -22,7 +22,61 @@
                 共 {{ paper.questions.count() }} 题，总分 {{ paper.questions | get_total_point }} 分。
             </div>
             <div id="result" class="media" style="display: none">
-                {% include 'course/widget_paper_result.html' %}
+                <div class="media-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>单选题
+                                    <small class="text-muted">({{ paper.questions | get_question_number(0) }})</small>
+                                </th>
+                                <th>多选题
+                                    <small class="text-muted">({{ paper.questions | get_question_number(1) }})</small>
+                                </th>
+                                <th>不定项选择
+                                    <small class="text-muted">({{ paper.questions | get_question_number(2) }})</small>
+                                </th>
+                                <th>填空题
+                                    <small class="text-muted">({{ paper.questions | get_question_number(3) }})</small>
+                                </th>
+                                <th>判断题
+                                    <small class="text-muted">({{ paper.questions | get_question_number(4) }})</small>
+                                </th>
+                                <th>问答题
+                                    <small class="text-muted">({{ paper.questions | get_question_number(5) }})</small>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>答对</th>
+                                <td><span class="text-success"><small></small></span></td>
+                                <td><span class="text-success"><small></small></span></td>
+                                <td><span class="text-success"><small></small></span></td>
+                                <td><span class="text-success"><small></small></span></td>
+                                <td><span class="text-success"><small></small></span></td>
+                                <td rowspan="3" style="vertical-align: middle;text-align: center"><span class="text-success" style="font-size:40px">?</span></td>
+                            </tr>
+                            <tr>
+                                <th>答错</th>
+                                <td><span class="text-danger"><small></small></span></td>
+                                <td><span class="text-danger"><small></small></span></td>
+                                <td><span class="text-danger"><small></small></span></td>
+                                <td><span class="text-danger"><small></small></span></td>
+                                <td><span class="text-danger"><small></small></span></td>
+                            <tr>
+                                <th>得分</th>
+                                <td><span class="text-score"><small></small></span></td>
+                                <td><span class="text-score"><small></small></span></td>
+                                <td><span class="text-score"><small></small></span></td>
+                                <td><span class="text-score"><small></small></span></td>
+                                <td><span class="text-score"><small></small></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <div id="paper-nav">
@@ -42,9 +96,10 @@
                     <div id="{{ head_id[i] }}"></div>
                     <div class="panel panel-default" id="{{ div_id[i] }}">
                         <div class="panel-heading">
-                            {% with type=i, name=name[i] %}
-                                {% include 'course/widget_paper_question_type.html' %}
-                            {% endwith %}
+                            <strong>{{ name[i] }}</strong>
+                            <small class="text-muted">共 {{ paper.questions | get_question_number(i) }}
+                                题，总计 {{ paper.questions | get_total_point(i) }} 分
+                            </small>
                         </div>
                         <div class="panel-body">
                             {% for pq in paper.questions %}
@@ -59,7 +114,7 @@
                                                 {% include 'course/widget_paper_question_detail.html' %}
                                             </div>
                                             <div class="panel-footer" style="display: none">
-                                                {% include 'course/widget_paper_question_solution.html' %}
+                                                <span>正确答案 <strong data-id="correct-sol"></strong></span>
                                             </div>
                                         {% endwith %}
                                     </div>

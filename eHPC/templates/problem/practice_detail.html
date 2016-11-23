@@ -1,21 +1,40 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-    {% with type=type  %}
-        {% include 'problem/widget_practice_header.html' %}
-    {% endwith %}
+    <link href="{{ url_for('static', filename='css/practice.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+    <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+    <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
     <div id="content-container" class="container">
 
-        {% with type=type, classify_id=classify_id, title=title %}
-            {% include 'problem/widget_practice_nav.html' %}
-        {% endwith %}
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">首页</a></li>
+            <li><a href="/problems/">试题中心</a></li>
+            <li><a href="/problems/question/">选择列表</a></li>
+            <li class="active"><a href="{{ url_for('problem.question_view', question_type=type, cid=classify_id) }}">{{ title }}</a></li>
+        </ol>
 
-        {% with questions=practices %}
-            {% include 'problem/widget_progress_bar.html' %}
-        {% endwith %}
+        <div class="hidden-xs container">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="progress">
+                        <div class="progress-bar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                    </div>
+                    <div>
+                        已完成 <span class="has-done">0</span><span class="color-gray">/{{ practices | count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="container">
             <div class="special-project">
@@ -66,7 +85,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="pauseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width: 300px;height: 200px">
             <div class="modal-content" style="width: 300px;height: 200px">
@@ -79,25 +97,6 @@
 
 {% endblock %}
 
-{% block footer_ext %}
-    <script>
-        var practice_count = {{ practices | count }};
-        var address = "{{ url_for('problem.show_question') }}";
-    </script>
-
-    <script src="{{ url_for('static', filename='js/problem/utility_func.js') }}" ></script>;
-    <script src="{{ url_for('static', filename='js/problem/practice_card.js') }}" ></script>;
-
-    {% if type == 'choice' %}
-        <script src="{{ url_for('static', filename='js/problem/choice_detail.js') }}"></script>
-    {% elif type == 'fill' %}
-        <script src="{{ url_for('static', filename='js/problem/fill_detail.js') }}"></script>
-    {% elif type == 'judge' %}
-        <script src="{{ url_for('static', filename='js/problem/judge_detail.js') }}"></script>
-    {% elif type == 'essay' %}
-        <script src="{{ url_for('static', filename='js/problem/essay_detail.js') }}"></script>
-    {% endif %}
-{% endblock %}
 
 
 

@@ -82,43 +82,20 @@ def program_view(pid):
 @login_required
 def question_view(cid, question_type):
     classify_name = Classify.query.filter_by(id=cid).first_or_404()
-
+    questions = None
     if question_type == 'choice':
-        choice_problem = classify_name.questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).all()
-        return render_template('problem/practice_detail.html',
-                               classify_id=classify_name.id,
-                               title=classify_name.name,
-                               practices=choice_problem,
-                               type=question_type)
-
+        questions = classify_name.questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).all()
     elif question_type == 'fill':
-        fill_problem = classify_name.questions.filter_by(type=3).all()
-        print( render_template('problem/practice_detail.html',
-                               classify_id=classify_name.id,
-                               title=classify_name.name,
-                               practices=fill_problem,
-                               type=question_type))
-        return render_template('problem/practice_detail.html',
-                               classify_id=classify_name.id,
-                               title=classify_name.name,
-                               practices=fill_problem,
-                               type=question_type)
-
+        questions = classify_name.questions.filter_by(type=3).all()
     elif question_type == 'judge':
-        judge_problem = classify_name.questions.filter_by(type=4).all()
-        return render_template('problem/practice_detail.html',
-                               classify_id=classify_name.id,
-                               title=classify_name.name,
-                               practices=judge_problem,
-                               type=question_type)
-
+        questions = classify_name.questions.filter_by(type=4).all()
     elif question_type == 'essay':
-        essay_problem = classify_name.questions.filter_by(type=5).all()
-        return render_template('problem/practice_detail.html',
-                               classify_id=classify_name.id,
-                               title=classify_name.name,
-                               practices=essay_problem,
-                               type=question_type)
+        questions = classify_name.questions.filter_by(type=5).all()
+    return render_template('problem/practice_detail.html',
+                           classify_id=classify_name.id,
+                           title=classify_name.name,
+                           practices=questions,
+                           type=question_type)
 
 
 @problem.route('/<int:pid>/submit/', methods=['POST'])

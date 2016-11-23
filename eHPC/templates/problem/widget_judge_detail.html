@@ -19,3 +19,11 @@
         <div data-id="solution" style="display: none;font-size: 20px" data-solution="{{ judge.solution }}"></div>
     </div>
 {% endfor %}
+
+<script>
+    var practice_count = {{ practices | count }};
+    var address = "{{ url_for('problem.show_question') }}";
+</script>
+<script src="{{ url_for('static', filename='js/problem/utility_func.js') }}" ></script>;
+<script src="{{ url_for('static', filename='js/problem/practice_card.js') }}" ></script>;
+<script src="{{ url_for('static', filename='js/problem/judge_detail.js') }}"></script>

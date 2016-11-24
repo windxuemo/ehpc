@@ -1,10 +1,13 @@
 {% extends 'admin/base.html' %}
 
-<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
-<script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}
 
 {% block content %}
 
@@ -17,10 +20,10 @@
                         <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
                     </div>
                     <div class="list-group">
-                        <a class="list-group-item" href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_paper', cid=c.id) }}">试卷管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_lesson', course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -40,7 +43,7 @@
                     <div class="panel-body">
                         <ul class="lesson-list sortable-list" id="course-item-list">
                             {% for l in lessons %}
-                                <li class="item-lesson clearfix" data-lid="{{ l.id }}" style="word-break: break-all;">
+                                <li class="item-lesson clearfix" data-lesson_id="{{ l.id }}" style="word-break: break-all;">
                                     <div class="item-content col-md-6">
                                         <i class="es-icon es-icon-undone"></i>
                                         课时<span class="number">{{ loop.index }}</span> ：{{ l.title }}
@@ -50,7 +53,7 @@
                                         <a class="btn btn-link pull-right" data-toggle="modal" data-target="#myModal"
                                            name="edit-btn"><i class="es-icon es-icon-edit"></i>编辑</a>
                                         <a class="btn btn-link pull-right"
-                                           href="{{ url_for('admin.lesson_material', cid=c.id, lid=l.id) }}">
+                                           href="{{ url_for('admin.lesson_material', course_id=course.id, lesson_id=l.id) }}">
                                             <i class="es-icon es-icon-fileupdate"></i>上传资料</a>
                                         <a class="btn btn-link pull-right" href="javascript:void(0)"
                                            name="del-btn">
@@ -94,9 +97,8 @@
                             </div>
                         </div>
 
-                        <input id="lesson-op-field" type="hidden" name="op" value="create_lesson">
-                        <input type="hidden" name="id" value="{{ c.id }}">
-                        <input id="lesson-id-field" type="hidden" name="lid">
+                        <input id="lesson-op-field" type="hidden" name="op">
+                        <input id="lesson-id-field" type="hidden" name="lesson_id">
                     </form>
                 </div>
 
@@ -110,7 +112,7 @@
 {% endblock %}
 
 {% block footer_ext %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $("#lesson-create-btn").click(function () {
@@ -122,14 +124,16 @@
             $('#lesson-save-btn').click(function () {
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process_lesson') }}",
+                    url: "{{ url_for('admin.course_lesson', course_id=course.id) }}",
                     data: new FormData($('#course-lesson-form')[0]),
                     cache: false,
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        alert("保存成功");
-                        location.reload();
+                        if (data["status"] == "success") {
+                            alert("保存成功");
+                            location.reload();
+                        }
                     }
                 });
             });
@@ -138,16 +142,17 @@
                 var obj = this;
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process_lesson') }}",
+                    url: "{{ url_for('admin.course_lesson', course_id=course.id) }}",
                     data: {
                         op: 'del',
-                        cid: {{ c.id }},
-                        lid: $(obj).parent().parent().data('lid')
+                        lesson_id: $(obj).parent().parent().data('lesson_id')
                     },
                     async: false,
                     success: function (data) {
-                        $(obj).parent().parent().remove();
-                        alert("删除成功");
+                        if (data["status"] == "success") {
+                            $(obj).parent().parent().remove();
+                            alert("删除成功");
+                        }
                     }
                 });
             });
@@ -156,16 +161,18 @@
                 var obj = this;
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process_lesson') }}",
+                    url: "{{ url_for('admin.course_lesson', course_id=course.id) }}",
                     data: {
                         op: "data",
-                        lid: $(obj).parent().parent().data('lid')
+                        lesson_id: $(obj).parent().parent().data('lesson_id')
                     },
                     success: function (data) {
-                        $("#lesson-op-field").val("edit");
-                        $("#lesson-title-field").val(data['title']);
-                        $("#lesson-content-field").val(data['content']);
-                        $("#lesson-id-field").val($(obj).parent().parent().data('lid'));
+                        if (data["status"] == "success") {
+                            $("#lesson-op-field").val("edit");
+                            $("#lesson-title-field").val(data['title']);
+                            $("#lesson-content-field").val(data['content']);
+                            $("#lesson-id-field").val($(obj).parent().parent().data('lesson_id'));
+                        }
                     }
                 });
             });

@@ -65,7 +65,7 @@
                     var obj = this;
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process_program') }}",
+                        url: "{{ url_for('admin.program') }}",
                         data: {op: 'del', id: $(obj).parent().parent().data('id')},
                         success: function (data) {
                             $(obj).parent().parent().remove();

@@ -20,7 +20,7 @@
                         题目编辑
                     </div>
                     <div class="panel-body">
-                        {% with op=op, classifies=classifies, mode=mode, curr_paper=curr_paper if mode == 'paper' else none %}
+                        {% with op=op, classifies=classifies, mode=mode, paper=curr_paper if mode == 'paper' else none %}
                             {% if type == 'choice' %}
                                 {% with choice=question %}
                                     {% include 'admin/problem/widget_choice_detail.html' %}
@@ -48,8 +48,8 @@
 
 {% block footer_ext %}
     <script>
+        var op = "{{ op }}";
         {% if op == 'edit' %}
-            var op = "{{ op }}";
             var data = {{ curr_classifies | safe }};
             {% if type == 'choice' %}
                 var oldAnswer = "{{ question.solution }}";

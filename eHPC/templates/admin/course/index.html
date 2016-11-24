@@ -32,7 +32,7 @@
                             <td>{{ c.studentNum }}</td>
                             <td>{{ c.createdTime }}</td>
                             <td>
-                                <a href="{{ url_for('admin.course_edit', cid=c.id) }}">编辑</a>
+                                <a href="{{ url_for('admin.course_edit', course_id=c.id) }}">编辑</a>
                                 <span class="divider"> | </span>
                                 <a href="javascript:void(0)" name="del-btn">删除</a>
                             </td>
@@ -53,8 +53,8 @@
                     var obj = this;
                     $.ajax({
                         type: "post",
-                        url: "{{ url_for('admin.process_course') }}",
-                        data: {op: 'del', id: $(obj).parent().parent().data('cid')},
+                        url: "{{ url_for('admin.course') }}",
+                        data: { course_id: $(obj).parent().parent().data('cid') },
                         async: false,
                         success: function (data) {
                             $(obj).parent().parent().remove();

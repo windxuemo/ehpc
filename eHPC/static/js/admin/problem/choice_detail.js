@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    if(op == 'edit'){
+    if(op == "edit") {
         for(var k in data){
             $("#classify"+data[k].toString()).eq(0).attr('checked', 'true');
         }
@@ -37,13 +37,20 @@ $(document).ready(function () {
     //删除选项
     $("#options").find(".btn.btn-default").each(function () {
         $(this).click(function () {
+            var len = $("#options").find(".btn.btn-default").length;
+            if(len==2){
+                alert("选项过少");
+                return;
+            }
+
             $(this).parent().parent().remove();//移除当前项
+
             //修改选项序号
             var number = 0;
             $("#options").find(".input-group-addon").each(function () {
-                var str = $(this).html();
+                var str = $(this).find('span[data-id=index-letter]').eq(0).text();
                 str = str.substr(0, str.length - 1) + String.fromCharCode("A".charCodeAt(0) + number);
-                $(this).html(str);
+                $(this).find('span[data-id=index-letter]').text(str);
                 number++;
             });
             number = 0;
@@ -63,11 +70,12 @@ $(document).ready(function () {
         t.find("input[name=options]").val("");
         var v = t.find('input[name=option_index]');
         v.val((Number(v.val())+1).toString());
+        v.prop('checked', false);
         //修改新选项序号为原来最后一个序号加1
         t.find(".input-group-addon").each(function () {
-            var str = $(this).html();
+            var str = $(this).find('span[data-id=index-letter]').eq(0).text();
             str = str.substr(0, str.length - 1) + String.fromCharCode(str.charCodeAt(str.length - 1) + 1);
-            $(this).html(str);
+            $(this).find('span[data-id=index-letter]').text(str);
         });
     });
 

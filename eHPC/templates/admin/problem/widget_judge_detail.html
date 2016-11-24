@@ -1,4 +1,8 @@
-<form action="{{ url_for('admin.process_question') if mode == 'paper' else url_for('admin.process_practice') }}" method="post">
+<form   {% if mode == 'practice' and op == 'create' %} action="{{ url_for('admin.question_create', question_type='judge') }}" {% endif %}
+        {% if mode == 'practice' and op == 'edit' %} action="{{ url_for('admin.question_edit', question_type='judge', question_id=judge.id) }}" {% endif %}
+        {% if mode == 'paper' and op == 'create' %} action="{{ url_for('admin.paper_question_create', question_type='judge', paper_id=paper.id) }}" {% endif %}
+        {% if mode == 'paper' and op == 'edit' %} action="{{ url_for('admin.paper_question_edit', question_type='judge', question_id=judge.id, paper_id=paper.id) }}" {% endif %}
+        method="post" id="form">
     <div class="form-group" id="classify">
         <label>知识点&nbsp&nbsp</label>
         {% for classify in classifies %}

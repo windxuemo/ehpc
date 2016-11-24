@@ -1,9 +1,5 @@
 {% extends 'admin/base.html' %}
 
-{% block header_ext %}
-    <script src="{{ url_for('static', filename='js/admin/problem/questions_show.js') }}"></script>
-{% endblock %}
-
 {% block content %}
     <div class="container" id="content-container">
         <div class="row">
@@ -14,7 +10,7 @@
             </div>
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
-                    {% with create=url_for('admin.question_create', q_type=type), questions=questions, q_type=type %}
+                    {% with create=url_for('admin.question_create', question_type=type), questions=questions, question_type=type %}
                         {% include 'admin/problem/widget_question_table.html' %}
                     {% endwith %}
                 </div>

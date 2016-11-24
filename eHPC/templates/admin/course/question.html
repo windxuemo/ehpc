@@ -10,10 +10,10 @@
                         <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
                     </div>
                     <div class="list-group">
-                        <a class="list-group-item" href="{{ url_for('admin.course_edit', cid=course.id) }}">课程信息</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=course.id) }}">课程图片</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', cid=course.id) }}">课时管理</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.course_paper', cid=course.id) }}">试卷管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson',course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -23,13 +23,13 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
                         <div class="pull-right">
-                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='choice') }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', paper_id=paper.id, question_type='choice') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>选择题</a>
-                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='judge') }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', paper_id=paper.id, question_type='judge') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>判断题</a>
-                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='fill') }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', paper_id=paper.id, question_type='fill') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>填空题</a>
-                            <a href="{{ url_for('admin.paper_question_create', pid=paper.id, q_type='essay') }}" class="btn btn-sm">
+                            <a href="{{ url_for('admin.paper_question_create', paper_id=paper.id, question_type='essay') }}" class="btn btn-sm">
                                 <span class="glyphicon glyphicon-plus"></span>问答题</a>
                         </div>
                         题目管理
@@ -49,13 +49,13 @@
                             </thead>
                             <tbody id="question-table-body">
                             {% for q in paper.questions %}
-                                <tr data-qid="{{ q.questions.id }}">
+                                <tr data-question_id="{{ q.questions.id }}">
                                     <td><input type="checkbox"></td>
                                     <td>{{ q.questions | get_question_content }}</td>
                                     <td>{{ q.questions | get_question_type }}</td>
                                     <td>{{ q.point }}</td>
                                     <td>
-                                        <a href="{{ url_for('admin.paper_question_edit', qid=q.questions.id, pid=paper.id, q_type = q.questions | get_question_id) }}">
+                                        <a href="{{ url_for('admin.paper_question_edit', question_id=q.questions.id, paper_id=paper.id, question_type = q.questions | get_question_id) }}">
                                             <span class="glyphicon glyphicon-edit"></span>编辑</a>
                                     </td>
                                 </tr>
@@ -98,27 +98,25 @@
             });
 
             $("#del-question-btn").click(function () {
-                var array = [];
+                var seq = [];
                 $("#question-table-body").find("input").each(function () {
                     if (this.checked) {
                         $(this).parent().parent().remove();
-                        array.push($(this).parent().parent().data("qid"));
+                        seq.push($(this).parent().parent().data("question_id"));
                     }
                 });
 
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process_question') }}",
+                    url: "{{ url_for('admin.paper_edit', course_id=course.id, paper_id=paper.id) }}",
                     data: {
                         op: "del",
-                        cid: "{{ course.id }}",
-                        pid: "{{ paper.id }}",
-                        seq: array
+                        question_id: seq
                     },
                     success: function (data) {
                         if(data.status=="success"){
                             alert("删除成功");
-                            $("#all-select")[0].checked = false;
+                            $("#all-select").prop("checked", false);
                         }
                         else{
                             alert("删除失败");
@@ -131,7 +129,3 @@
     </script>
 {% endblock %}
 
-{#
-l
-materials
-#}

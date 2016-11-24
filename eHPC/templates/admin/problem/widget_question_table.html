@@ -26,7 +26,7 @@
                 <td width="40%">{{ q | get_question_content }}</td>
                 <td width="20%">{{ q | get_question_solution }}</td>
                 <td>
-                    <a href="{{ url_for('admin.question_edit', q_type=q_type, qid=q.id) }}">编辑</a>
+                    <a href="{{ url_for('admin.question_edit', question_type=question_type, question_id=q.id) }}">编辑</a>
                     <span class="divider"> | </span>
                     <a href="javascript:void(0)" name="del-btn">删除</a>
                 </td>
@@ -35,3 +35,9 @@
         </tbody><!--表格主体-->
     </table>
 </div>
+
+<script>
+    var address = "{{ url_for('admin.question', question_type=question_type) }}";
+</script>
+
+<script src="{{ url_for('static', filename='js/admin/problem/questions_show.js') }}"></script>

@@ -9,17 +9,9 @@
     <div class="container" id="content-container">
         <div class="row">
             <div class="col-md-3">
-                <div class="list-group-panel">
-                    <div class="list-group">
-                        <a class="list-group-item" href="{{ url_for('admin.problem') }}">选择题</a>
-                        <a class="list-group-item" href="{{ url_for('admin.judge') }}">判断题</a>
-                        <a class="list-group-item" href="{{ url_for('admin.fill') }}">填空题</a>
-                        <a class="list-group-item" href="{{ url_for('admin.essay') }}">问答题</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.program') }}">编程题</a>
-                    </div>
-                    <div class="list-group">
-                    </div>
-                </div>
+                {% with type='program' %}
+                    {% include 'admin/problem/widget_nav_left.html' %}
+                {% endwith %}
             </div><!--左侧导航栏-->
 
             <div class="col-md-9">
@@ -29,7 +21,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <form action="{{ url_for('admin.process_program') }}" method="post">
+                        <form action="{{ url_for('admin.program_create') if op == 'create' else url_for('admin.program_edit')}}" method="post">
                             <div class="form-group">
                                 <div style="margin-bottom: 5px">
                                     <label>标题</label>
@@ -39,7 +31,7 @@
                                 </div>
 
                                 <label>题干</label>
-                                <textarea required name="content" id="target-editor">{% if op == 'edit' %}{{ program_problem.detail }}{% endif %}</textarea>
+                                <textarea name="content" id="target-editor">{% if op == 'edit' %}{{ program_problem.detail }}{% endif %}</textarea>
                             </div>
                             <input type="hidden" name="op" value="{{ op }}">
                             {% if op == 'edit' %}<input type="hidden" name="id" value="{{ program_problem.id }}">{% endif %}

@@ -19,9 +19,7 @@
             <div class="col-md-9">
                 <div class="panel panel-default panel-page">
                     <div class="panel-heading"><h2>创建课程</h2></div>
-
-                    <form id="course-create-form" class="form-horizontal" method="post" action="{{ url_for('admin.process_course') }}">
-
+                    <form id="course-create-form" class="form-horizontal" method="post" action="{{ url_for('admin.course_create') }}">
                         <div class="form-group">
                             <div class="col-md-2 control-label"><label for="course_title" class="required">标题</label></div>
                             <div class="col-md-8 controls">
@@ -29,21 +27,14 @@
                                 <input id="course_title" name="title" required="required" class="form-control" type="text">
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-8 controls">
                                 <input id="course-create-btn" class="btn btn-fat btn-primary" value="创建" type="submit">
                             </div>
                         </div>
-
                     </form>
-
                 </div>
-
             </div>
-
         </div>
-
-
     </div>
 {% endblock %}

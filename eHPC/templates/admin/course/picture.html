@@ -12,10 +12,10 @@
                     </div>
                     <div class="list-group">
                         <a class="list-group-item"
-                           href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_paper', cid=c.id) }}">试卷管理</a>
+                           href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
 
                             <div class="form-group clearfix">
                                 <div class="col-md-offset-2 col-md-8 controls">
-                                    <img id="course-picture" src="/static/{{ c.smallPicture }}">
+                                    <img id="course-picture" src="/static/{{ course.smallPicture }}">
                                 </div>
                             </div>
 
@@ -39,8 +39,7 @@
                                     <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
                                 </div>
                             </div>
-                            <input type="hidden" name="op" value="upload_pic">
-                            <input type="hidden" name="id" value="{{ c.id }}">
+                            <input type="hidden" name="op" value="upload">
                         </form>
 
                         <div class="form-group clearfix">
@@ -62,29 +61,35 @@
         $(document).ready(function () {
             $('#course-picture-field').change(function () {
                 $.ajax({
-                    url: "{{ url_for('admin.process_course') }}",
+                    url: "{{ url_for('admin.course_picture', course_id=course.id) }}",
                     type: "post",
                     data: new FormData($('#course-picture-form')[0]),
                     cache: false,
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        $("#course-picture").attr("src", data);
+                        if (data["status"] == "success") {
+                            $("#course-picture").attr("src", data["uri"]);
+                        }
+                        else {
+                            alert("上传失败");
+                        }
                     }
                 });
             });
 
             $('#upload-picture-btn').click(function () {
                 $.ajax({
-                    url: "{{ url_for('admin.process_course') }}",
+                    url: "{{ url_for('admin.course_picture', course_id=course.id) }}",
                     type: "post",
-                    data: {
-                        op: "pic",
-                        id: "{{ c.id }}",
-                        name: $("#course-picture").attr("src").split('/').pop()
-                    },
+                    data: { op: "save" },
                     success: function (data) {
-                        alert("保存成功");
+                        if (data["status"] == "success") {
+                            alert("保存成功");
+                        }
+                        else {
+                            alert("保存失败");
+                        }
                     }
                 });
             });

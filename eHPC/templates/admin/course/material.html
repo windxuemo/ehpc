@@ -14,10 +14,10 @@
                         <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
                     </div>
                     <div class="list-group">
-                        <a class="list-group-item" href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
-                        <a class="list-group-item active" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_paper', cid=c.id) }}">试卷管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_lesson', course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -25,11 +25,17 @@
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
-                        <button class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#choiceModal">
+                        {{ lesson.title }}
+                        <button class="btn btn-info btn-sm pull-right" data-toggle="modal"
+                                data-target="#localModal" data-dismiss="modal" style="margin-left: 10px">
                             <i class="es-icon es-icon-fileupdate"></i>
-                            上传文件
+                            本地资源
                         </button>
-                        {{ l.title }}
+                        <button class="btn btn-info btn-sm pull-right" data-toggle="modal"
+                                data-target="#linkModal" data-dismiss="modal">
+                            <i class="es-icon es-icon-fileupdate"></i>
+                            外链资源
+                        </button>
                     </div>
 
                     <div class="panel-body" id="file-manage-panel">
@@ -45,7 +51,7 @@
                             <tbody id="material-table-body">
 
                             {% for m in materials %}
-                                <tr data-mid="{{ m.id }}">
+                                <tr data-material_id="{{ m.id }}">
                                     <td><input type="checkbox"></td>
                                     <td><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></td>
                                     <td>{{ m.m_type }}</td>
@@ -63,21 +69,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal fade" id="choiceModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">请选择文件来源</h4>
-                </div>
-                <div class="modal-body">
-                    <button type="button" class="btn btn-primary" id="link-bnt" data-toggle="modal" data-target="#linkModal" data-dismiss="modal">外链接资源</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button type="button" class="btn btn-primary" id="local-bnt" data-toggle="modal" data-target="#localModal" data-dismiss="modal">本地上传</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
     </div>
 
     <!-- 本地上传文件-->
@@ -104,9 +95,6 @@
 
                         <input type="hidden" name="op" value="upload">
                         <input type="hidden" name="link-type" value="local">
-                        <input type="hidden" name="id" value="{{ c.id }}">
-                        <input type="hidden" name="lid" value="{{ l.id }}">
-
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -130,27 +118,29 @@
 
                         <div class="form-group clearfix">
                             <div class="controls">
-                                <label for="course-link-field">文件链接：</label><input id="course-link-field" name="file-link" type="text" placeholder="请输入文件外链接" style="width: 70%;" required>
+                                <label for="course-link-field">文件链接：</label>
+                                <input class="form-control" id="course-link-field" name="file-link" type="text" placeholder="请输入文件外链接" style="width: 70%;" required>
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="controls">
-                                <label for="course-name-field">自定义文件名：</label><input id="course-name-field" name="file-name" type="text" placeholder="请指定文件名" style="width: 70%;" required>
+                                <label for="course-name-field">自定义文件名：</label>
+                                <input class="form-control" id="course-name-field" name="file-name" type="text" placeholder="请指定文件名" style="width: 70%;" required>
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="controls">
                                 <label for="file-type">请选择文件类型：</label>
-                                <input id="course-type-field1" name="file-type" type="radio" value="pdf"><label for="course-type-field1">PDF</label>&nbsp;&nbsp;&nbsp;
-                                <input id="course-type-field2" name="file-type" type="radio" value="video"><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
-                                <input id="course-type-field3" name="file-type" type="radio" value="radio"><label for="course-type-field3">Radio</label>
+                                <div>
+                                    <input id="course-type-field1" name="file-type" type="radio" value="pdf"><label for="course-type-field1">PDF</label>&nbsp;&nbsp;&nbsp;
+                                    <input id="course-type-field2" name="file-type" type="radio" value="video"><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
+                                    <input id="course-type-field3" name="file-type" type="radio" value="radio"><label for="course-type-field3">Radio</label>
+                                </div>
                             </div>
                         </div>
 
                         <input type="hidden" name="op" value="upload">
                         <input type="hidden" name="link-type" value="origin">
-                        <input type="hidden" name="id" value="{{ c.id }}">
-                        <input type="hidden" name="lid" value="{{ l.id }}">
 
                     </form>
                 </div>
@@ -164,100 +154,10 @@
 
 {% endblock %}
 {% block footer_ext %}
-
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#all-select").click(function () {
-                if (this.checked) {
-                    $("#material-table-body").find("input").each(function () {
-                        this.checked = true;
-                    });
-                }
-                else {
-                    $("#material-table-body").find("input").each(function () {
-                        this.checked = false;
-                    });
-                }
-            });
-
-            $("#upload-material-btn1,#upload-material-btn2").click(function (e) {
-                if (e.target.id == "upload-material-btn1") {
-                    material_form = $('#course-material-form1')[0];
-                }
-                else material_form = $('#course-material-form2')[0];
-                $.ajax({
-                    url: "{{ url_for('admin.process_material') }}",
-                    type: "post",
-                    data: new FormData(material_form),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数  
-                        myXhr = $.ajaxSettings.xhr();  
-                        if(myXhr.upload){ //检查upload属性是否存在  
-                            //绑定progress事件的回调函数  
-                            myXhr.upload.addEventListener('progress',progressHandlingFunction, false);   
-                        }  
-                        return myXhr; //xhr对象返回给jQuery使用  
-                    },
-                    success: function (data) {
-                        if(data.status=="success"){
-                            alert("上传成功");
-                        }
-                        else{
-                            alert("上传失败 " + data['info']);
-                        }
-                        location.reload();
-                    },
-                    error: function (data) {
-                        alert("上传失败");
-                    }
-                });
-            });
-
-            $("#del-material-btn").click(function () {
-                var array = [];
-                $("#material-table-body").find("input").each(function () {
-                    if (this.checked) {
-                        $(this).parent().parent().remove();
-                        array.push($(this).parent().parent().data("mid"));
-                    }
-                });
-
-                $.ajax({
-                    type: "post",
-                    url: "{{ url_for('admin.process_material') }}",
-                    data: {
-                        op: "del",
-                        id: "{{ c.id }}",
-                        lid: "{{ l.id }}",
-                        seq: array
-                    },
-                    success: function (data) {
-                        if(data.status=="success"){
-                            alert("删除成功");
-                        }
-                        else{
-                            alert("删除失败");
-                        }
-                    }
-                });
-            });
-        });
-
-        //上传进度回调函数：  
-        function progressHandlingFunction(e) {  
-            if (e.lengthComputable) {  
-                $('progress').attr({value : e.loaded, max : e.total}); //更新数据到进度条  
-                var percent = e.loaded/e.total*100;  
-                $('#progress').html(percent.toFixed(2) + "%");  
-            }  
-        } 
-
+        var url = "{{ url_for('admin.lesson_material', course_id=course.id, lesson_id=lesson.id) }}";
     </script>
-{% endblock %}
 
-{#
-l
-materials
-#}
+    <script src="{{ url_for('static', filename='js/admin/course/material.js') }}"></script>
+
+{% endblock %}

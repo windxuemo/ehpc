@@ -1,6 +1,8 @@
 $(function () {
-    for(var k in data){
-        $("#classify"+data[k].toString()).eq(0).attr('checked', 'true');
+    if (op == "edit") {
+        for(var k in data){
+            $("#classify" + data[k].toString()).eq(0).attr('checked', 'true');
+        }
     }
 
     var edt1 = new SimpleMDE({

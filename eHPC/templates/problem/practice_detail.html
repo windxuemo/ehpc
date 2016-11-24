@@ -14,8 +14,33 @@
 {% endblock %}
 
 {% block content %}
-    <div id="content-container" class="container">
+{#模态框：提交框#}
+    <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">答题结果</h4>
+                </div>
+                <div class="modal-body" id="ansResult"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="confirm-submit">确认提交</button>
+                    <button type="button" class="btn btn-default" id="cancel-submit">继续答题</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{#模态框：暂停框#}
+    <div class="modal fade" id="pauseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 300px;height: 200px">
+            <div class="modal-content" style="width: 300px;height: 200px">
+                <div class="modal-body btn" style="width: 300px;height: 200px;font-size: 30px;line-height: 140px" id="continue">
+                    点击继续
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div id="content-container" class="container">
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">首页</a></li>
             <li><a href="/problems/">试题中心</a></li>
@@ -66,31 +91,6 @@
                         </div>
                     </div>
                 </div><!--题目区-->
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">答题结果</h4>
-                </div>
-                <div class="modal-body" id="ansResult"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="confirm-submit">确认提交</button>
-                    <button type="button" class="btn btn-default" id="cancel-submit">继续答题</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="pauseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width: 300px;height: 200px">
-            <div class="modal-content" style="width: 300px;height: 200px">
-                <div class="modal-body btn" style="width: 300px;height: 200px;font-size: 30px;line-height: 140px" id="continue">
-                    点击继续
-                </div>
             </div>
         </div>
     </div>

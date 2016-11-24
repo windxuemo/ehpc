@@ -16,10 +16,10 @@
                     </div>
                     <div class="list-group">
                         <a class="list-group-item active"
-                           href="{{ url_for('admin.course_edit', cid=c.id) }}">课程信息</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_picture', cid=c.id) }}">课程图片</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', cid=c.id) }}">课时管理</a>
-                        <a class="list-group-item" href="{{ url_for('admin.course_paper', cid=c.id) }}">试卷管理</a>
+                           href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                                 <label class="col-md-2 control-label">标题</label>
                                 <div class="col-md-8">
                                     <input id="course_title" name="title" required class="form-control"
-                                           type="text" value="{{ c.title }}">
+                                           type="text" value="{{ course.title }}">
                                 </div>
                             </div>
 
@@ -41,7 +41,7 @@
                                 <label class="col-md-2 control-label">副标题</label>
                                 <div class="col-md-8">
                                     <textarea id="course_subtitle" required name="subtitle"
-                                              class="form-control">{{ c.subtitle }}</textarea>
+                                              class="form-control">{{ course.subtitle }}</textarea>
                                 </div>
                             </div>
 
@@ -50,7 +50,7 @@
 
                                 <div class="col-md-8 controls">
                                     <textarea id="course_about" name="about" data-provide="markdown"
-                                              rows="10">{{ c.about }}</textarea>
+                                              rows="10">{{ course.about }}</textarea>
                                 </div>
                             </div>
                         </form>
@@ -87,16 +87,20 @@
                 }
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.process_course') }}",
+                    url: "{{ url_for('admin.course_edit', course_id=course.id) }}",
                     data: {
                         op: "edit",
-                        id: "{{ c.id }}",
                         title: $('#course_title').val(),
                         subtitle: $('#course_subtitle').val(),
                         about: edt.value()
                     },
                     success: function (data) {
-                        alert("保存成功");
+                        if (data["status"] == "success") {
+                            alert("保存成功");
+                        }
+                        else {
+                            alert("保存失败");
+                        }
                     }
                 });
             });

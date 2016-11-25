@@ -3714,6 +3714,15 @@ textarea {
 
 .content-wrap {
     min-height: 100%;
+    margin-bottom: -71px;
+    margin-top: -60px;
+    height: auto;
+    padding-bottom: 71px;
+    padding-top: 60px;
+}
+
+.lab-content-wrap {
+    min-height: 100%;
     height: auto;
 }
 
@@ -4449,11 +4458,11 @@ ul#program-run-tab li a {
     overflow-y: auto;
 }
 
-#challenge-right{
+#challenge-right {
     left: 48%;
 }
 
-hr{
+hr {
     border: 0;
     height: 1px;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
@@ -4467,7 +4476,7 @@ hr{
 }
 
 /* 播放按钮的大小 */
-.player-poster[data-poster] .play-wrapper[data-poster]{
+.player-poster[data-poster] .play-wrapper[data-poster] {
     height: 10% !important;
 }
 
@@ -4486,4 +4495,32 @@ hr{
     cursor: pointer;
     margin-right: 10px;
     vertical-align: middle;
+}
+
+/* 虚拟实验室中的提示信息*/
+.page-message-panel {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 50px 50px;
+}
+
+.page-message-heading {
+    margin-bottom: 25px;
+}
+
+.page-message-title {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-size: 24px;
+}
+
+.page-message-body {
+    font-size: 16px;
+}
+
+/* 虚拟实验室 */
+#lab-head-empty {
+    margin-top: 100px;
+    min-height: 200px;
 }

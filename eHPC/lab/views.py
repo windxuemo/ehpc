@@ -11,7 +11,19 @@ from ..lab.lab_util import get_question_and_type
 
 @lab.route('/')
 def index():
-    return render_template('lab/index.html', title=gettext('Labs'))
+    knowledges = Knowledge.query.all()
+
+    # 记录当前用户在每个knowledge上的进度白分比
+    if current_user.is_authenticated:
+        for k in knowledges:
+            pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=k.id).first()
+            k.cur_level = pro.cur_progress if pro else 0
+            k.all_levels = k.challenges.count()
+            k.percentage = "{0:.0f}%".format(100.0 * k.cur_level / k.all_levels) if k.all_levels >= 1 else "100%"
+
+    return render_template('lab/index.html',
+                           title=gettext('Labs'),
+                           knowledges=knowledges)
 
 
 @lab.route('/knowledge/<int:kid>/')
@@ -31,7 +43,10 @@ def knowledge(kid):
         cur_progress = int(request_progress)
     else:
         # 前面还有任务没有完成, 不能直接到请求的任务页面, 这里返回一个简单的提示页面
-        return render_template("", )
+        return render_template("lab/out_progress.html",
+                               title="Expired Progress",
+                               next_progress=cur_progress,
+                               kid=kid)
 
     # 获取当前技能中顺序为 cur_progress 的 challenge, 然后获取相应的详细内容
     cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=cur_progress).first_or_404()

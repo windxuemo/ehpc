@@ -353,7 +353,7 @@ class Challenge(db.Model):
     title = db.Column(db.String(1024), default=None)    # 技能标题
     content = db.Column(db.Text(), default=None)        # 知识点图文内容
 
-    # 所属技能ID以及对应技能下任务的次序, 可以唯一确定一个任务
+    # 所属技能ID以及对应技能下任务的次序, 可以用来唯一确定一个任务
     knowledgeId = db.Column(db.Integer, db.ForeignKey('knowledges.id'))
     knowledgeNum = db.Column(db.Integer, default=1)
 
@@ -371,7 +371,7 @@ class Progress(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)                # 用户 ID
     knowledge_id = db.Column(db.Integer, db.ForeignKey('knowledges.id'), primary_key=True)      # 技能 ID
-    cur_progress = db.Column(db.Integer, default=1)     # 用户 user_id 在知识点 knowledge_id 上已经完成的最后一个任务
+    cur_progress = db.Column(db.Integer, default=0)     # 用户 user_id 在知识点 knowledge_id 上已经完成的最后一个任务
 
     knowledge = db.relationship('Knowledge', backref=db.backref('users',
                                                                 lazy='dynamic', cascade="delete, delete-orphan"))

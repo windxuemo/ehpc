@@ -1,2 +1,43 @@
-{% extends "lab/lab_base.html" %}
+{% extends "base.html" %}
 
+{% block content %}
+    <div class="container" xmlns="http://www.w3.org/1999/html">
+        <div id="timeline">
+
+            {% for knowledge in knowledges %}
+                <div class="timeline-item">
+                    <div class="timeline-icon"><img src="{{ url_for('static', filename='images/star.svg') }}"></div>
+                    {% if loop.index % 2 != 0 %}
+                        <div class="timeline-content">
+                    {% else %}
+                        <div class="timeline-content right">
+                    {% endif %}
+                    <h2>{{ knowledge.title }}</h2>
+                    <p> {{ knowledge.content }} </p>
+
+                    {% if current_user.is_authenticated %}
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ knowledge.percentage }}; background: #92c26a;">
+                                <span class="progress-icon fa fa-check"
+                                      style="border-color:#92c26a; color:#92c26a;"></span>
+                                <div class="progress-value">{{ knowledge.cur_level }} / {{ knowledge.all_levels }}</div>
+                                <br>
+                            </div>
+                        </div>
+
+                        <a href="{{ url_for('lab.knowledge', kid=knowledge.id) }}" class="btn">继续学习</a></div>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('admin.auth') }}" class="btn">请先登录</a></div>
+                    {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <link href="{{ url_for('static', filename='css/timeline.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{# knowledges #}

@@ -85,3 +85,4 @@ def knowledge(kid):
                 return jsonify(status='success')
             else:
                 return jsonify(status='fail')
+

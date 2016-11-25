@@ -136,6 +136,38 @@ def course_lesson(course_id):
             curr_lesson = Lesson.query.filter_by(id=request.form['lesson_id']).first_or_404()
             return jsonify(status="success", title=curr_lesson.title, content=curr_lesson.content)
 
+@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/reload_lesson')
+@teacher_login
+def reload_material(course_id,lesson_id):
+    """ 重载课时表 """
+    materials=Material.query.filter_by(lessonId=lesson_id).all()
+    return render_template('admin/course/widget_material_list.html',materials=materials)
+
+#本地文件上传
+@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/upload', methods=['POST'])
+@teacher_login
+def upload(course_id,lesson_id):
+    cur_course = Course.query.filter_by(id=course_id).first_or_404()
+    cur_lesson = cur_course.lessons.filter_by(id=lesson_id).first_or_404()
+    filename=custom_secure_filename(request.form['name'])
+    file=request.files['file']
+    file_type = get_file_type(file.mimetype)  
+    filename= filename.encode("utf-8")
+    m = Material(name=filename, m_type=file_type, uri="")
+    cur_lesson.materials.append(m)
+    db.session.commit()  # get material id
+    m.uri = os.path.join("course_%d" % course_id,
+                             "lesson%d_material%d." % (lesson_id, m.id) + file.filename.rsplit('.', 1)[1])
+    print m.uri
+    status = upload_file(file, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+    if status[0]:
+        db.session.commit()
+    else:
+        cur_lesson.materials.remove(m)
+        db.session.delete(m)
+        db.session.commit()
+
+    return render_template('admin/course/upload.html')
 
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/', methods=['GET', 'POST'])
 @teacher_login
@@ -161,28 +193,7 @@ def lesson_material(course_id, lesson_id):
                 curr_lesson.materials.append(curr_material)
                 db.session.commit()  # get material id
                 return jsonify(status="success", id=curr_lesson.id)
-            else:
-                files = request.files['file']
-                if not files:
-                    return jsonify(status="fail", id=curr_lesson.id, info=u"文件为空")
-                filename = custom_secure_filename(files.filename)
-                file_type = get_file_type(files.mimetype)
-                status = upload_file(files, os.path.join(current_app.config['RESOURCE_FOLDER'],
-                                                         "course_%d" % curr_course.id, "temp"))
-                if status[0]:
-                    curr_material = Material(name=filename, m_type=file_type, uri="")
-                    db.session.add(curr_material)
-                    curr_lesson.materials.append(curr_material)
-                    db.session.commit()  # get material id
-                    curr_material.uri = os.path.join("course_%d" % curr_course.id,
-                                                     "lesson%d_material%d." % (curr_lesson.id, curr_material.id)
-                                                     + files.filename.rsplit('.', 1)[1])
-                    os.rename(os.path.join(current_app.config['RESOURCE_FOLDER'], "course_%d" % curr_course.id, "temp"),
-                              os.path.join(current_app.config['RESOURCE_FOLDER'], curr_material.uri))
-                    db.session.commit()
-                    return jsonify(status="success", lesson_id=curr_lesson.id)
-                else:
-                    return jsonify(status="fail", lesson_id=curr_lesson.id, info=status[1])
+            
         elif request.form['op'] == "del":
             curr_course = Course.query.filter_by(id=course_id).first_or_404()
             curr_lesson = curr_course.lessons.filter_by(id=lesson_id).first_or_404()

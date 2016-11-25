@@ -1,7 +1,11 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/plupload/plupload.full.min.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/plupload/jquery.plupload.queue/jquery.plupload.queue.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/plupload/i18n/zh_CN.js') }}" type="text/javascript"></script>
+<link href="{{ url_for('static', filename='js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -25,17 +29,15 @@
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
+                        <button class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#myModal">
+                            <i class="glyphicon glyphicon-link"></i>
+                            添加外链接文件
+                        </button>
+                        <button class="btn btn-info btn-sm pull-right local" style="margin-right: 10px;">
+                            <i class="es-icon es-icon-fileupdate"></i>
+                            本地上传
+                        </button>
                         {{ lesson.title }}
-                        <button class="btn btn-info btn-sm pull-right" data-toggle="modal"
-                                data-target="#localModal" data-dismiss="modal" style="margin-left: 10px">
-                            <i class="es-icon es-icon-fileupdate"></i>
-                            本地资源
-                        </button>
-                        <button class="btn btn-info btn-sm pull-right" data-toggle="modal"
-                                data-target="#linkModal" data-dismiss="modal">
-                            <i class="es-icon es-icon-fileupdate"></i>
-                            外链资源
-                        </button>
                     </div>
 
                     <div class="panel-body" id="file-manage-panel">
@@ -67,54 +69,23 @@
                         </button>
                     </div>
                 </div>
+                <div id="uploader" class="hide">
+                    <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 本地上传文件-->
-    <div class="modal fade" id="localModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">上传文件</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="course-material-form1" enctype="multipart/form-data">
-
-                        <div class="form-group clearfix">
-                            <div class="col-md-offset-2 col-md-8 controls">
-                                <input id="course-picture-field" name="file" type="file">
-                                <p class="help-block">你可以上传mp3, mkv, pdf, ppt格式的文件</p>
-                            </div>
-                        </div>
-                        <div class="form-group clearfix col-md-offset-2">
-                            上传进度：<progress></progress>&nbsp;
-                            <span id="progress"></span>
-                        </div>
-
-                        <input type="hidden" name="op" value="upload">
-                        <input type="hidden" name="link-type" value="local">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="upload-material-btn1">保存</button>
-                </div>
-            </div><!--/.modal-content-->
-        </div><!--/.modal-->
-    </div>
-
     <!-- 添加外链接文件-->
-    <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">添加外链接</h4>
+                    <h4 class="modal-title" id="myModalLabel"><i class="glyphicon glyphicon-link"></i> 添加外链接文件</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="course-material-form2" enctype="application/x-www-form-urlencoded">
+                    <form id="course-material-form" enctype="application/x-www-form-urlencoded">
 
                         <div class="form-group clearfix">
                             <div class="controls">
@@ -132,7 +103,6 @@
                             <div class="controls">
                                 <label for="file-type">请选择文件类型：</label>
                                 <div>
-                                    <input id="course-type-field1" name="file-type" type="radio" value="pdf"><label for="course-type-field1">PDF</label>&nbsp;&nbsp;&nbsp;
                                     <input id="course-type-field2" name="file-type" type="radio" value="video"><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
                                     <input id="course-type-field3" name="file-type" type="radio" value="radio"><label for="course-type-field3">Radio</label>
                                 </div>
@@ -146,7 +116,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="upload-material-btn2">保存</button>
+                    <button type="button" class="btn btn-primary" id="upload-material-btn" data-dismiss="modal">添加</button>
                 </div>
             </div><!--/.modal-content-->
         </div><!--/.modal-->
@@ -156,6 +126,8 @@
 {% block footer_ext %}
     <script type="text/javascript">
         var url = "{{ url_for('admin.lesson_material', course_id=course.id, lesson_id=lesson.id) }}";
+        var upload_url = "{{ url_for('admin.upload',course_id=course.id,lesson_id=lesson.id) }}";
+        var reload_url = "{{ url_for('admin.reload_material',course_id=course.id,lesson_id=lesson.id) }}";
     </script>
 
     <script src="{{ url_for('static', filename='js/admin/course/material.js') }}"></script>

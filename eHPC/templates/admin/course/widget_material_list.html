@@ -1,0 +1,7 @@
+{% for m in materials %}
+    <tr data-material_id='{{ m.id }}'>
+        <td><input type='checkbox'></td>
+        <td><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></td>
+        <td>{{ m.m_type }}</td>
+    </tr>
+{% endfor %}

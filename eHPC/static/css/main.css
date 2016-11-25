@@ -4470,3 +4470,20 @@ hr{
 .player-poster[data-poster] .play-wrapper[data-poster]{
     height: 10% !important;
 }
+
+/*文件上传进度框样式*/
+.plupload_wrapper .ops {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.plupload_wrapper .ops .op-icons {
+    font-size: 18px;
+    line-height: 1;
+    color: #b8b8b8;
+    cursor: pointer;
+    margin-right: 10px;
+    vertical-align: middle;
+}

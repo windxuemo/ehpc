@@ -1,3 +1,12 @@
+function fold_switch() {
+    $(".plupload .plupload_content").toggle();
+    $("#uploader .moxie-shim").addClass("hide");
+}
+
+function fold_close() {
+    location.reload();
+}
+
 $(document).ready(function () {
     $("#all-select").click(function () {
         if (this.checked) {
@@ -12,42 +21,82 @@ $(document).ready(function () {
         }
     });
 
-    $("#upload-material-btn1,#upload-material-btn2").click(function (e) {
-        var material_form;
-        if (e.target.id == "upload-material-btn1") {
-            material_form = $('#course-material-form1')[0];
+    $(".panel-heading .local").click(function() {
+        $("#uploader").removeClass("hide");
+    });
+
+    // Setup html5 version
+    $("#uploader").pluploadQueue({
+        // General settings
+        runtimes : 'html5,flash,silverlight,html4',
+        url : upload_url,
+        
+        rename : false,
+        dragdrop: true,
+        
+        filters : {
+            // Maximum file size
+            max_file_size : '512mb',
+            // Specify what files to browse for
+            mime_types: [
+                {title : "Image files", extensions : "jpg,gif,png"},
+                {title : "Zip files", extensions : "zip,rar"},
+                {title : "document files",extensions : "pdf"},
+                {title : "media files", extensions : "mkv,mp3,mp4"},
+            ]
+        },
+
+        // Resize images on clientside if we can
+        resize: {
+            width : 200, 
+            height : 200, 
+            quality : 90,
+            crop: true // crop to exact dimensions
+        },
+
+
+        // Flash settings
+        flash_swf_url : "url_for('static',filename='js/plupload/Moxie.swf')",
+    
+        // Silverlight settings
+        silverlight_xap_url : "url_for('static',filename='js/plupload/Moxie.xap')",
+        init : {
+            FileUploaded: function(up, file, info) {
+                // Called when file has finished uploading
+                table_obj=$.ajax({
+                    url: reload_url,
+                    async:false,
+                });
+                $("#material-table-body")[0].innerHTML=table_obj.responseText;
+            }
         }
-        else {
-            material_form = $('#course-material-form2')[0];
-        }
+    });
+
+    $("#upload-material-btn").click(function () {
+                               
         $.ajax({
             url: url,
             type: "post",
-            data: new FormData(material_form),
+            data: new FormData($('#course-material-form')[0]),
             cache: false,
             contentType: false,
             processData: false,
-            xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
-                myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload){ //检查upload属性是否存在
-                    //绑定progress事件的回调函数
-                    myXhr.upload.addEventListener('progress',progressHandlingFunction, false);
-                }
-                return myXhr; //xhr对象返回给jQuery使用
-            },
             success: function (data) {
                 if(data.status=="success"){
                     alert("上传成功");
                 }
                 else{
-                    alert("上传失败 " + data['info']);
+                    alert("上传失败 \n" + data['info']);
                 }
-                location.reload();
+                        
             },
             error: function (data) {
-                alert("上传失败");
+                alert("上传失败" + data['info']);
             }
         });
+
+        location.reload();
+                
     });
 
     $("#del-material-btn").click(function () {
@@ -78,12 +127,3 @@ $(document).ready(function () {
         });
     });
 });
-
-//上传进度回调函数：
-function progressHandlingFunction(e) {
-    if (e.lengthComputable) {
-        $('progress').attr({value : e.loaded, max : e.total}); //更新数据到进度条
-        var percent = e.loaded/e.total*100;
-        $('#progress').html(percent.toFixed(2) + "%");
-    }
-}

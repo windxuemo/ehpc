@@ -30,7 +30,7 @@
         <div class="navbar-user left">
             <ul class="nav navbar-nav clearfix hidden-xs">
                 <li>
-                    <a href="#progress" id="learn-progress">学习进度</a>
+                    <a href="{{ url_for('lab.my_progress', kid=kid) }}" rel="modal:open">学习进度</a>
                 </li>
                 <li>
                     <a href="{{ url_for('group.index') }}">社区讨论</a>
@@ -71,3 +71,4 @@
 {% block footer_ext %}{% endblock %}
 </body>
 </html>
+

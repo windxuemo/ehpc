@@ -51,12 +51,15 @@ def knowledge(kid):
             cur_progress = int(request_progress)
         else:
             # 前面还有任务没有完成, 不能直接到请求的任务页面, 这里返回一个简单的提示页面
-            return render_template("", )
+            return render_template("lab/out_progress.html",
+                                   title="Expired Progress",
+                                   next_progress=cur_progress,
+                                   kid=kid)
 
         # 获取当前技能中顺序为 cur_progress 的 challenge, 然后获取相应的详细内容
         cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=cur_progress).first()
         if cur_challenge is None:
-            return "已完成所有挑战"
+            return render_template('lab/finish_progress.html', kid=kid)
 
         m_id = cur_challenge.materialID
         material = Material.query.filter_by(id=m_id).first_or_404()
@@ -80,9 +83,30 @@ def knowledge(kid):
             cur_question = Question.query.filter_by(id=question_id).first_or_404()
             if check_if_correct(cur_question, user_sol):    # 如果对则通过，且用户已通过的challenge加1
                 pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
-                pro.cur_progress += 1
+                # 判断是否已经做完了所有的挑战
+                cur_knowledge = Knowledge.query.filter_by(id=kid).first_or_404()
+                if pro.cur_progress + 1 <= cur_knowledge.challenges.count():
+                    pro.cur_progress += 1
                 db.session.commit()
                 return jsonify(status='success')
             else:
                 return jsonify(status='fail')
 
+
+@lab.route('/my_progress/<int:kid>/')
+@login_required
+def my_progress(kid):
+    cur_knowledge = Knowledge.query.filter_by(id=kid).first_or_404()
+    pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
+    if pro is None:  # 如果用户在此knowledge上无progress记录，则添加一条新纪录
+        pro = Progress(user_id=current_user.id, knowledge_id=kid, cur_progress=0)
+        db.session.add(pro)
+        db.session.commit()
+
+    all_challenges = cur_knowledge.challenges.all()
+    all_challenges.sort(key=lambda k: k.knowledgeNum)
+    return render_template('lab/show_progress.html',
+                           kid=kid,
+                           title=cur_knowledge.title,
+                           challenges=all_challenges,
+                           cur_level=pro.cur_progress)

@@ -1,5 +1,7 @@
 {% extends "lab/lab_base.html" %}
 
+{% set kid=kid %}
+
 {% block header_ext %}
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet"
@@ -12,7 +14,8 @@
 
 {% block content %}
 
-    <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" style="width: 300px;height: 200px">
             <div class="modal-content" style="width: 300px;height: 200px">
                 <div class="modal-body" style="width: 300px;height: 200px;text-align: center;">
@@ -123,12 +126,16 @@
                 });
             }
         });
+
     </script>
 
     <script src="{{ url_for('static', filename='js/clappr.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery.modal.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/jquery.modal.min.css') }}" rel="stylesheet">
 {% endblock %}
 
 {# cur_material #}
-{# knowledge #}
+{# kid #}
 {# q_type #}
 {# practices #}

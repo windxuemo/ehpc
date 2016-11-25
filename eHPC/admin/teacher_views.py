@@ -158,7 +158,6 @@ def upload(course_id,lesson_id):
     db.session.commit()  # get material id
     m.uri = os.path.join("course_%d" % course_id,
                              "lesson%d_material%d." % (lesson_id, m.id) + file.filename.rsplit('.', 1)[1])
-    print m.uri
     status = upload_file(file, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
     if status[0]:
         db.session.commit()
@@ -224,7 +223,6 @@ def course_paper(course_id):
                                title=gettext('Course Paper'))
     elif request.method == 'POST':
         # 试卷的增加查改
-        print(request.form)
         if request.form['op'] == 'create':
             curr_paper = Paper(title=request.form['title'], about=request.form['content'])
             curr_course = Course.query.filter_by(id=course_id).first_or_404()

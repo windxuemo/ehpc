@@ -1,12 +1,4 @@
 
-$('#paper-card').find('a').click(function () {//为右侧答题卡创建点击跳转至题目事件
-    $("html,body").animate({scrollTop:$('#q'+$(this).data('id')).offset().top - 70}, 300);
-});
-
-$('#paper-nav').find('a').click(function () {//为顶部题型导航栏创建点击跳转至题目事件
-    $("html,body").animate({scrollTop:$('#'+$(this).data('goto')).offset().top - 70}, 300);
-});
-
 //为所有题目添加本试卷中的题号：q1、q2、q3...
 var question_index = 1;
 $('#question-single-choice').find("span[data-id=num-id]").each(function () {
@@ -75,6 +67,14 @@ $('#question-essay').find('textarea[data-id=target-editor]').each(function () {
 
 
 $(document).ready(function () {
+    $('#paper-card').find('a').click(function () {//为右侧答题卡创建点击跳转至题目事件
+        $("html,body").animate({scrollTop:$('#q'+$(this).data('id')).offset().top - 70}, 300);
+    });
+
+    $('#paper-nav').find('a').click(function () {//为顶部题型导航栏创建点击跳转至题目事件
+        $("html,body").animate({scrollTop:$('#'+$(this).data('goto')).offset().top - 70}, 300);
+    });
+
     $(window).scroll(function () {//滚动触发事件，用于实现【顶部题目类型选择栏】和【右侧答题卡】随页面一起滚动的效果
         if ($(window).scrollTop() > 200) {
             $('#paper-nav').addClass('paper-nav');

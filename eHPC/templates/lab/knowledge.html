@@ -1,6 +1,34 @@
 {% extends "lab/lab_base.html" %}
 
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+    <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html">
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/spin-js/spin.min.js') }}"></script>
+{% endblock %}
+
 {% block content %}
+
+    <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 300px;height: 200px">
+            <div class="modal-content" style="width: 300px;height: 200px">
+                <div class="modal-body" style="width: 300px;height: 200px;text-align: center;">
+                    <span id="pass" style="display: none;font-size: 30px;line-height: 100px">
+                        通过
+                    </span>
+                    <span id="fail" style="display: none;font-size: 30px;line-height: 100px">
+                        回答错误
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div id="challenge-left">
         <!--Challenge的内容展示-->
         <div class="markdown-body">
@@ -15,11 +43,54 @@
 
     <div id="challenge-right">
         <!--Challenge的题目展示-->
+        <div data-name="question" style="margin-bottom: 20px;font-size: 14px"
+             data-id="{{ practice.id }}" data-type="{{ practice.id }}">
+
+            <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+                <div class="pull-left" style="margin-bottom: 5px;margin-left: 20px">
+                    <span data-id="num-id" style="font-weight: bold">1</span>
+                    <span>、 </span>
+                    {% if question_type == 'choice' %}
+                        <span>{{ practice | get_question_content }}</span>
+                    {% elif question_type == 'fill' %}
+                        <span data-id="fill-id">
+                            {{ practice.content | split_fill | safe }}
+                            <span data-id="fill-solution-len-id"
+                                  style="display: none">{{ practice.solution | get_fill_solution_len }}</span>
+                        </span>
+                    {% elif question_type == 'judge' or question_type == 'essay' %}
+                        <span>{{ practice.content }}</span>
+                    {% endif %}
+                </div>
+            </div><!--题干-->
+
+            <div class="panel-body media-body">
+                {% if question_type != 'program' %}
+                    {% with question=practice %}
+                        {% include 'course/widget_paper_question_detail.html' %}
+                    {% endwith %}
+                {% endif %}
+            </div>
+
+            <button class="btn btn-primary pull-right" style="width: 100px" data-id="confirm">
+                确认
+            </button>
+        </div>
 
     </div>
 {% endblock %}
 
 {% block footer_ext %}
+    <script>
+        var address = "{{ url_for('lab.knowledge', kid=kid) }}";
+        {% if question_type != 'program' %}
+            var question_type = {{ practice.type }};
+        {% else %}
+            var question_type = 6;
+        {% endif %}
+    </script>
+    <script src="{{ url_for('static', filename='js/lab/practice.js') }}"></script>
+
     <script>
         var js_material_type = "{{ cur_material.m_type }}";
         var js_pdf_src = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";

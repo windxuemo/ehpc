@@ -133,10 +133,10 @@ class Material(db.Model):
     """ 一个课时包括多种材料, 每个材料只能属于一个课时。 课时和材料是一对多的关系。
     """
     __tablename__ = 'materials'
-    id = db.Column(db.Integer, primary_key=True)        # 资料 ID
-    name = db.Column(db.String(64), nullable=False)     # 资料名称
-    uri = db.Column(db.String(64), default="")          # 资料路径
-    m_type = db.Column(db.String(64), nullable=False)   # 资料类型
+    id = db.Column(db.Integer, primary_key=True)          # 资料 ID
+    name = db.Column(db.String(1024), nullable=False)     # 资料名称
+    uri = db.Column(db.String(2048), default="")          # 资料路径
+    m_type = db.Column(db.String(64), nullable=False)     # 资料类型
 
     lessonId = db.Column(db.Integer, db.ForeignKey('lessons.id'))  # 所属课时ID
 
@@ -358,7 +358,7 @@ class Challenge(db.Model):
     knowledgeNum = db.Column(db.Integer, default=1)
 
     # 每一个任务可能有一个教学材料, 如果 materialID == -1, 则表示没有材料, 纯图文内容。
-    materialID = db.Column(db.Integer, default=-1)      # 对应的教学材料的ID
+    materialID = db.Column(db.Integer, default=-1, nullable=False) # 对应的教学材料的ID
 
     # 每一个任务有一个测试题目
     # 对应题目的类型0:单选题 1:多选题 2:不定项选择题 3: 填空题 4: 判断题 5: 问答题 6: 编程题目

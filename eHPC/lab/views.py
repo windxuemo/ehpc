@@ -35,6 +35,9 @@ def knowledge(kid):
 
     cur_progress: 用户请求的任务进度, 如果请求中没有提供, 则返回下一个需要完成的任务的编号
     """
+    cur_knowledge = Knowledge.query.filter_by(id=kid).first_or_404()
+    challenges_count = cur_knowledge.challenges.count()
+
     if request.method == 'GET':
         pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
         if pro is None:     # 如果用户在此knowledge上无progress记录，则添加一条新纪录
@@ -59,7 +62,9 @@ def knowledge(kid):
         # 获取当前技能中顺序为 cur_progress 的 challenge, 然后获取相应的详细内容
         cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=cur_progress).first()
         if cur_challenge is None:
-            return render_template('lab/finish_progress.html', kid=kid)
+            return render_template('lab/finish_progress.html',
+                                   title="Finish All",
+                                   kid=kid)
 
         m_id = cur_challenge.materialID
         material = Material.query.filter_by(id=m_id).first_or_404()
@@ -73,7 +78,8 @@ def knowledge(kid):
                                cur_material=material,
                                practice=question,
                                question_type=question_type,
-                               kid=kid)
+                               kid=kid,
+                               next_progress=cur_progress+1)
 
     elif request.method == 'POST':  # 处理用户是否通过当前challenge
         question_type = request.form['question_type']
@@ -84,8 +90,7 @@ def knowledge(kid):
             if check_if_correct(cur_question, user_sol):    # 如果对则通过，且用户已通过的challenge加1
                 pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
                 # 判断是否已经做完了所有的挑战
-                cur_knowledge = Knowledge.query.filter_by(id=kid).first_or_404()
-                if pro.cur_progress + 1 <= cur_knowledge.challenges.count():
+                if pro.cur_progress + 1 <= challenges_count:
                     pro.cur_progress += 1
                 db.session.commit()
                 return jsonify(status='success')

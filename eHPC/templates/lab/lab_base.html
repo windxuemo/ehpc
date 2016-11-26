@@ -68,7 +68,11 @@
     {% endblock %}
 </div>
 
-{% block footer_ext %}{% endblock %}
+<link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/jquery.modal.min.js') }}"></script>
+<link href="{{ url_for('static', filename='css/jquery.modal.min.css') }}" rel="stylesheet">
+{% block footer_ext %}
+{% endblock %}
 </body>
 </html>
 

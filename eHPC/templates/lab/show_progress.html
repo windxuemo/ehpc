@@ -6,9 +6,9 @@
         <li class="period lesson-item">
             <a href="{{ url_for('lab.knowledge', kid=kid, progress=c.knowledgeNum) }}">
                 {% if loop.index <= cur_level %}
-                    <i class="es-icon es-icon-done1 status-icon color-primary"></i>
+                    <i class="es-icon es-icon-studydone status-icon color-primary"></i>
                 {% else %}
-                    <i class="es-icon es-icon-undone status-icon"></i>
+                    <i class="es-icon es-icon-study status-icon"></i>
                 {% endif %}
                 <span class="title"> {{ c.title }}</span>
             </a>

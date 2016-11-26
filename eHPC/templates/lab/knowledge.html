@@ -14,27 +14,19 @@
 
 {% block content %}
 
-    <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" style="width: 300px;height: 200px">
-            <div class="modal-content" style="width: 300px;height: 200px">
-                <div class="modal-body" style="width: 300px;height: 200px;text-align: center;">
-                    <span id='loading-gif' style="display: none;margin-top: 10px">
-                        <img src="{{ url_for('static', filename='images/loading.gif') }}" style="margin-top: 10px">
-                        <span style="font-size: 30px;display: block">正在判题</span>
-                    </span>
-
-                    <span id="pass" style="display: none;font-size: 30px;line-height: 100px">
-                        通过
-                    </span>
-                    <span id="fail" style="display: none;font-size: 30px;line-height: 100px">
-                        回答错误
-                    </span>
-                </div>
-            </div>
-        </div>
+    <div class="modal" id="loading-gif" style="display: none">
+        <p class="text-center">正在判题...</p>
+        <img style="margin: 0 auto; display: block;" src="{{ url_for('static', filename='images/loading.gif') }}">
     </div>
 
+    <div id="pass" class="modal" style="display: none">
+    <p class="es-icon es-icon-iccheckcircleblack24px text-primary text-center" style="font-size: 150px;"></p>
+        <p class="text-center text-xlarge"> 恭喜! 你又过关了! </p>
+    </div>
+    <div id="fail" class="modal" style="display: none">
+        <p class="es-icon es-icon-icon_close_circle text-danger text-center" style="font-size: 150px;"></p>
+        <p class="text-center text-xlarge"> 抱歉! 你没能通过! </p>
+    </div>
 
     <div id="challenge-left">
         <!--Challenge的内容展示-->
@@ -90,13 +82,13 @@
 {% block footer_ext %}
     <script>
         var address = "{{ url_for('lab.knowledge', kid=kid) }}";
+        var next_challenge_uri = "{{ url_for('lab.knowledge', kid=kid, progress=next_progress) }}";
         {% if question_type != 'program' %}
             var question_type = {{ practice.type }};
         {% else %}
             var question_type = 6;
         {% endif %}
     </script>
-    <script src="{{ url_for('static', filename='js/lab/practice.js') }}"></script>
 
     <script>
         var js_material_type = "{{ cur_material.m_type }}";
@@ -129,13 +121,14 @@
 
     </script>
 
+    <script src="{{ url_for('static', filename='js/lab/practice.js') }}"></script>
     <script src="{{ url_for('static', filename='js/clappr.min.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/jquery.modal.min.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/jquery.modal.min.css') }}" rel="stylesheet">
 {% endblock %}
 
-{# cur_material #}
-{# kid #}
-{# q_type #}
-{# practices #}
+{#title#}
+{#c_content#}
+{#cur_material#}
+{#practice#}
+{#question_type#}
+{#kid#}
+{#next_progress#}

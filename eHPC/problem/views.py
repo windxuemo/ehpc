@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from . import problem
 from ..models import Program, Classify, SubmitProblem, Question
 from flask_babel import gettext
-from ..problem.code_process import c_compile, c_run, ehpc_client
+from ..problem.code_process import c_compile, c_run
 from .. import db
 from sqlalchemy import or_
 
@@ -106,60 +106,26 @@ def question_view(cid, question_type):
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 @login_required
 def submit(pid):
-	uid = current_user.id
-	problem_id = request.form['problem_id']
-	source_code = request.form['source_code']
-	language = request.form['language']
-	submit_problem = SubmitProblem(uid, problem_id, source_code, language)
-	db.session.add(submit_problem)
-	db.session.commit()
+    uid = current_user.id
+    problem_id = request.form['problem_id']
+    source_code = request.form['source_code']
+    language = request.form['language']
+    submit_problem = SubmitProblem(uid, problem_id, source_code, language)
+    db.session.add(submit_problem)
+    db.session.commit()
 
-	path = "/HOME/sysu_dwu_1/coreos"
-	#之后需要改进
-	input_filename = "code/%s_%s.c" % (str(pid), str(uid))
-	output_filename = "code/%s_%S.o" % (str(pid), str(uid))
-
-	#with open(input_filename, 'w') as src_file:
-		#src_file.write(source_code)
-
-	client = ehpc_client()
-
-	is_success = client.login()
-	if not is_success:
-		print "login fail."
-
-	#之后我会进一步封装成compile函数
-	is_success = client.upload(path, input_filename, source_code)
-	if not is_success:
-		print "upload fail."
-
-	#之后需要改进
-	compile_command = "bash -c 'cd %s;g++ -o %s %s'" % (path, output_filename, input_filename)
-	run_command = "bash -c 'cd %s;./%s'" % (path, output_filename)
-
-	compile_output = client.run_command(compile_command)
-	compile_out = compile_output or "Compile success."
-	if compile_output is None:
-		compile_out = "Request fail."
-	
-	run_output = client.run_command(run_command)
-	run_out = run_output or "No output."
-	if run_output is None:
-		run_out = "Request fail."
-
-	'''
     # TODO here.  Get the result.
     is_compile_success = [False]
     compile_out = c_compile(source_code, pid, current_user.id, is_compile_success)
     run_out = "编译失败!\n程序无法运行..."
     if is_compile_success[0]:
         run_out = c_run(pid, current_user.id) or "程序无输出结果"
-'''
-	result = dict()
-	result['status'] = 'success'
-	result['problem_id'] = pid
-	result['compile_out'] = str(compile_out)
-	result['run_out'] = str(run_out)
 
-	return jsonify(**result)
+    result = dict()
+    result['status'] = 'success'
+    result['problem_id'] = pid
+    result['compile_out'] = compile_out
+    result['run_out'] = run_out
+
+    return jsonify(**result)
 

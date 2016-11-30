@@ -377,3 +377,27 @@ class Progress(db.Model):
                                                                 lazy='dynamic', cascade="delete, delete-orphan"))
     user = db.relationship('User', backref=db.backref('knowledges',
                                                       lazy='dynamic', cascade="delete, delete-orphan"))
+
+
+""" 案例展示 """
+
+
+class Case(db.Model):
+    __tablename__ = "cases"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
+    description = db.Column(db.String(1024), nullable=False)
+    tag = db.Column(db.String(256))
+
+    codes = db.relationship('CaseCode', backref='case')
+
+
+class CaseCode(db.Model):
+    __tablename__ = "case_codes"
+
+    case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), primary_key=True)
+    version_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
+    description = db.Column(db.String(256), nullable=False)
+    code_path = db.Column(db.String(64), nullable=False)

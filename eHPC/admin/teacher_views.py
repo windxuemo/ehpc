@@ -8,7 +8,6 @@ from ..models import Classify, Program, Paper, Question, PaperQuestion
 from .. import db
 import os, json
 from flask_babel import gettext
-from flask import current_app
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
 from sqlalchemy import or_
 
@@ -136,6 +135,7 @@ def course_lesson(course_id):
             curr_lesson = Lesson.query.filter_by(id=request.form['lesson_id']).first_or_404()
             return jsonify(status="success", title=curr_lesson.title, content=curr_lesson.content)
 
+
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/reload_lesson')
 @teacher_login
 def reload_material(course_id,lesson_id):
@@ -143,7 +143,8 @@ def reload_material(course_id,lesson_id):
     materials=Material.query.filter_by(lessonId=lesson_id).all()
     return render_template('admin/course/widget_material_list.html',materials=materials)
 
-#本地文件上传
+
+# 本地文件上传
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/upload', methods=['POST'])
 @teacher_login
 def upload(course_id,lesson_id):
@@ -167,6 +168,7 @@ def upload(course_id,lesson_id):
         db.session.commit()
 
     return render_template('admin/course/upload.html')
+
 
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/', methods=['GET', 'POST'])
 @teacher_login

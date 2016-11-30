@@ -77,7 +77,7 @@ $(function () {
                     $('.link').parent().removeClass('open');
                     $(obj).parent().parent().parent().addClass('open');
                     $('#accordion').find('a').removeClass('active');
-                    $(obj).parent().children('a').addClass('active');
+                    $(obj).addClass('active');
                     var id = $(obj).parent().attr('id').substr(8);
                     window.history.pushState(null, '', "/course/res/" + id + '/');
                 }

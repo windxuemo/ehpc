@@ -49,5 +49,7 @@ def create_app(config_name):
     app.register_blueprint(lab_blueprint, url_prefix='/lab')
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
+    from .case import case as case_blueprint
+    app.register_blueprint(case_blueprint, url_prefix='/case')
 
     return app

@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 from flask import render_template, request, jsonify, url_for, current_app
 from . import case
 from flask_babel import gettext
@@ -30,4 +32,9 @@ def index():
             return jsonify(status='success', codes=codes)
 
 
-
+@case.route('/<int:cid>/')
+def case_view(cid):
+    cur_case = Case.query.filter_by(id=cid).first_or_404()
+    return render_template('case/case.html',
+                           title=cur_case.name,
+                           case=cur_case)

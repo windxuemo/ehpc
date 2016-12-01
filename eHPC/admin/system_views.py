@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, url_for, abort, jsonify, c
 from datetime import datetime
 from ..user.authorize import system_login
 from . import admin
-from ..models import User, Classify, Article, Group
+from ..models import User, Classify, Article, Group, Case, CaseCode
 from .. import db
 from flask_babel import gettext
 import os
@@ -17,8 +17,9 @@ def index():
     return render_template('admin/system.html',
                            title=gettext("System Admin"),
                            user_cnt=User.query.count(),
-                           article_cnt=Group.query.count(),
-                           group_cnt=Group.query.count())
+                           article_cnt=Article.query.count(),
+                           group_cnt=Group.query.count(),
+                           case_cnt=Case.query.count())
 
 
 @admin.route('/users/')
@@ -125,7 +126,7 @@ def group_create():
             db.session.commit()
             return redirect(url_for('group.group_view', gid=new_group.id))
         else:
-            return redirect(url_for('group.group_edit', gid=new_group),
+            return redirect(url_for('group.group_edit', gid=new_group.id),
                             message=status[1])
 
 
@@ -157,3 +158,58 @@ def group_delete():
     db.session.delete(cur_group)
     db.session.commit()
     return jsonify(status="success", del_article_id=cur_group.id)
+
+
+@admin.route('/cases/')
+@system_login
+def case():
+    cases = Case.query.all()
+    return render_template('admin/case/index.html',
+                           title=gettext('Case Admin'),
+                           cases=cases)
+
+
+
+@admin.route('/case/create/', methods=['POST', 'GET'])
+@system_login
+def case_create():
+    if request.method == 'GET':
+        return render_template('admin/case/create.html', title=gettext('Create Case'))
+    if request.method == 'POST':
+        name = request.form['name']
+        tags = request.form['tags']
+        description = request.form['description']
+        new_case = Case(name=name, description=description, tag=tags)
+        db.session.add(new_case)
+        db.session.commit()
+        return redirect(url_for('admin.case'))
+
+@admin.route('/case/<int:cid>/edit/', methods=['POST', 'GET'])
+@system_login
+def case_edit(cid):
+    cur_case = Case.query.filter_by(id=cid).first_or_404()
+    if request.method == "GET":
+        if cur_case.tag!= "":
+            tags = cur_case.tag.split(";")
+            return render_template('admin/case/edit.html',
+                               title=cur_case.name,
+                               case=cur_case,
+                               tags=tags)
+        else:
+            return render_template('admin/case/edit.html',
+                               title=cur_case.name,
+                               case=cur_case)
+    elif request.method == "POST":
+        cur_case.name = request.form['name']
+        cur_case.description = request.form['description']
+        cur_case.tag = request.form['tags']
+        db.session.commit()
+        return redirect(url_for('admin.case'))
+
+@admin.route('/case/delete/', methods=['POST', 'GET'])
+@system_login
+def case_delete():
+    cur_case = Case.query.filter_by(id=request.form['cid']).first_or_404()
+    db.session.delete(cur_case)
+    db.session.commit()
+    return jsonify(status="success", del_case_id=cur_case.id)

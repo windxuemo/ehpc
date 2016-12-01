@@ -52,4 +52,7 @@ def create_app(config_name):
     from .case import case as case_blueprint
     app.register_blueprint(case_blueprint, url_prefix='/case')
 
+    from .case import case as case_blueprint
+    app.register_blueprint(case_blueprint,url_prefix='/case')
+
     return app

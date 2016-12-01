@@ -6,7 +6,7 @@ from datetime import datetime
 from ..user.authorize import admin_login, system_login, teacher_login
 from ..util.user_manage import is_admin_user, is_teacher_user
 from . import admin
-from ..models import User, Article, Group
+from ..models import User, Article, Group, Case, CaseCode
 from .. import db
 from flask_babel import gettext
 
@@ -53,9 +53,11 @@ def system():
     user_cnt = User.query.count()
     article_cnt = Article.query.count()
     group_cnt = Group.query.count()
+    case_cnt=Case.query.count()
     return render_template("admin/system.html",
                            user_cnt=user_cnt,
                            article_cnt=article_cnt,
                            group_cnt=group_cnt,
+                           case_cnt=case_cnt,
                            title=gettext("System Setting"))
 

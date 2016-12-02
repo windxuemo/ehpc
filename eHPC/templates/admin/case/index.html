@@ -17,16 +17,18 @@
                 <table class="table" id="course-table" style="word-break:break-all;">
                     <thead>
                     <tr>
-                        <th width="50%">案例名称</th>
-                        <th width="30%">关键词</th>
+                        <th width="45%">案例名称</th>
+                        <th width="25%">关键词</th>
+                        <th width="10%">版本数</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody id="tb">
                     {% for c in cases %}
                         <tr data-cid="{{ c.id }}">
-                            <td>{{ c.name }}</td>
+                            <td><a href="{{url_for('admin.case_version',case_id=c.id)}}">{{ c.name }}</a></td>
                             <td>{{ c.tag }}</td>
+                            <td><a href="{{url_for('admin.case_version',case_id=c.id)}}">{{ c.codes.count()}}</a></td>
                             <td>
                                 <a href="{{ url_for('admin.case_edit', cid=c.id) }}">编辑</a>
                                 <span class="divider"> | </span>

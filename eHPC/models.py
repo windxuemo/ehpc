@@ -401,15 +401,26 @@ class Case(db.Model):
     description = db.Column(db.String(1024), nullable=False)
     tag = db.Column(db.String(256))    #案例标签，两个标签之间用分号隔开
 
-    codes = db.relationship('CaseCode', backref='case')
+    codes = db.relationship('CaseCode', backref='case', lazy='dynamic')
 
 
 class CaseCode(db.Model):
     __tablename__ = "case_codes"
 
-    case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), primary_key=True)
+    case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), nullable=False, primary_key=True)
     version_id = db.Column(db.Integer, nullable=False, primary_key=True)
     name = db.Column(db.String(256), nullable=False)
     description = db.Column(db.String(256), nullable=False)
     code_path = db.Column(db.String(64), nullable=False)
+
+
+class CaseCodeMaterial(db.Model):
+    """ 一个课时包括多种材料, 每个材料只能属于一个课时。 课时和材料是一对多的关系。
+    """
+    __tablename__ = 'case_code_materials'
+    id = db.Column(db.Integer, primary_key=True)          # 资料 ID
+    name = db.Column(db.String(1024), nullable=False)     # 资料名称
+    uri = db.Column(db.String(256), default="")          # 资料路径
+    case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), nullable=False)
+    version_id = db.Column(db.Integer, db.ForeignKey('case_codes.version_id'), nullable=False)
 

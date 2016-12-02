@@ -32,7 +32,7 @@ class Config:
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
-    ALLOWED_RESOURCE_EXTENSIONS = set(['pdf', 'video', 'audio'])
+    ALLOWED_RESOURCE_EXTENSIONS = set(['pdf', 'video', 'audio', 'code'])
 
     @staticmethod
     def init_app(app):

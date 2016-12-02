@@ -1,0 +1,171 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container" id="content-container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading" style="position: sticky; top: 0px;border-bottom: 1px solid #d6d6d6;">
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-sm" id="version-create-btn"
+                                    data-toggle="modal" data-target="#myModal">
+                                <i class="glyphicon glyphicon-plus"></i><span style="font-size: 14px">案例版本</span>
+                            </button>
+                        </div>
+                        <h2 style="margin-top: 0px;">案例版本管理</h2>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="version-list sortable-list" id="case-item-list">
+                            {% for v in versions %}
+                                <li class="item-version clearfix" data-version_id="{{ v.version_id }}" style="word-break: break-all;">
+                                    <div class="item-content col-md-6">
+                                        <i class="es-icon es-icon-undone"></i>
+                                        版本<span class="number">{{ loop.index }}</span> ：{{ v.name }}
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-link pull-right" data-toggle="modal" data-target="#myModal"
+                                           name="edit-btn"><i class="es-icon es-icon-edit"></i>编辑</a>
+                                        <a class="btn btn-link pull-right"
+                                           href="{{url_for('admin.case_version_material',case_id=case.id,version_id=v.version_id)}}">
+                                            <i class="es-icon es-icon-fileupdate"></i>上传代码</a>
+                                        <a class="btn btn-link pull-right" href="javascript:void(0)"
+                                           name="del-btn">
+                                            <i class="es-icon es-icon-delete"></i>删除</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">添加案例版本</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="case-version-form" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="col-md-2 control-label">
+                                <label for="version-name-field">版本标题</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input id="version-name-field" class="form-control" name="name" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 control-label">
+                                <label for="version-description-field">版本描述</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <textarea class="form-control" id="version-description-field" name="description" style="height: 200px"></textarea>
+                            </div>
+                        </div>
+
+                        <input id="version-op-field" type="hidden" name="op">
+                        <input id="version-id-field" type="hidden" name="version_id">
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="version-save-btn" type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var success_info = "";
+            $("#version-create-btn").click(function () {
+                $("#version-op-field").val("create");
+                $("#version-title-field").val("");
+                $("#version-description-field").val("");
+                success_info = "添加成功";
+                $("#myModalLabel")[0].innerHTML = "添加案例版本";
+            });
+
+            $('#version-save-btn').click(function () {
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.case_version', case_id=case.id) }}", 
+                    data: new FormData($('#case-version-form')[0]),
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            alert(success_info);
+                            location.reload();
+                        }
+                    }
+                });
+            });
+
+            $("#case-item-list").find("a[name=del-btn]").click(function () {
+                var obj = this;
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.case_version', case_id=case.id) }}",
+                    data: {
+                        op: 'del',
+                        version_id: $(obj).parent().parent().data('version_id')
+                    },
+                    async: false,
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            $(obj).parent().parent().remove();
+                            alert("删除成功");
+                        }
+                    }
+                });
+            });
+
+            $("#case-item-list").find("a[name=edit-btn]").click(function () {
+                var obj = this;
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.case_version', case_id=case.id) }}",
+                    data: {
+                        op: "data",
+                        version_id: $(obj).parent().parent().data('version_id')
+                    },
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            $("#version-op-field").val("edit");
+                            $("#version-name-field").val(data['name']);
+                            $("#version-description-field").val(data['description']);
+                            $("#version-id-field").val($(obj).parent().parent().data('version_id'));
+                            success_info = "修改成功";
+                            $("#myModalLabel")[0].innerHTML = "修改案例版本信息";
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
+{% endblock %}

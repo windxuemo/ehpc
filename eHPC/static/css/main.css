@@ -4566,3 +4566,12 @@ hr {
     border-radius: 10px;
     outline: none;
 }
+
+/*   案例版本管理   */
+ul.version-list {
+    padding-left: 20px;
+}
+
+ul.version-list li {
+    list-style-type: none;
+}

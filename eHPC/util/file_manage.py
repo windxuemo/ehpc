@@ -76,7 +76,13 @@ def get_file_type(form_file_type):
         "audio/mpeg": "audio",
         "image/png": "img",
         "image/jpeg": "img",
-        "image/bmp": "img"
+        "image/bmp": "img",
+        "text/plain": "code",
+        "text/css": "code",
+        "text/html": "code",
+        "text/javascript": "code",
+        "application/javascript": "code",
+        "text/x-script.phyton": 'code'
     }
 
     return file_type_dict.get(form_file_type, "Unknown")

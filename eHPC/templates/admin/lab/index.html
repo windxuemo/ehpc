@@ -1,0 +1,59 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+    <div class="container" id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div style="margin-bottom: 10px;font-size: 15px">知识点列表</div>
+                <div class="list-group">
+                    {% for k in knows %}
+                    <a class="list-group-item{% if k.id==knowledge.id %} active{% endif %}"
+                    href="{{ url_for('admin.lab_view', knowledge_id=k.id) }}">{{ k.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">
+                        任务列表
+                        <span class="pull-right">
+                            <a class="btn btn-primary btn-sm" id="challenge-create-btn"
+                                    href="{{ url_for('admin.lab_create', knowledge_id=knowledge.id) }}">
+                                <span class="glyphicon glyphicon-plus"></span>创建任务
+                            </a>
+                        </span>
+                    </div>
+                    <div id="content" class="panel-body">
+                        {% include 'admin/lab/widget_challenge_table.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        $(document).ready(function () {
+            $("#challenges").find("a[name=challenge-del-btn]").click(function () {
+                var challenge_id = $(this).parent().parent().data("id");
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.lab_view', knowledge_id=knowledge.id) }}",
+                    data: {
+                        challenge_id: challenge_id
+                    },
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            location.reload();
+                        }
+                        else {
+                            alert("删除失败");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

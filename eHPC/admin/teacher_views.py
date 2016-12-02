@@ -5,6 +5,7 @@ from ..user.authorize import admin_login, teacher_login
 from . import admin
 from ..models import Course, Lesson, Material, User, Article
 from ..models import Classify, Program, Paper, Question, PaperQuestion
+from ..models import Knowledge, Challenge
 from .. import db
 import os, json
 from flask_babel import gettext
@@ -501,3 +502,120 @@ def program_edit():
         curr_program.detail = request.form['content']
         db.session.commit()
         return redirect(url_for('admin.program'))
+
+
+@admin.route('/lab/', methods=['GET', 'POST'])
+@teacher_login
+def lab():
+    curr_knowledge = Knowledge.query.first_or_404()
+    return redirect(url_for('admin.lab_view', knowledge_id=curr_knowledge.id))
+
+
+@admin.route('/lab/<int:knowledge_id>/', methods=['GET', 'POST'])
+@teacher_login
+def lab_view(knowledge_id):
+    if request.method == 'GET':
+        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+        knows = Knowledge.query.all()
+        return render_template('admin/lab/index.html', knowledge=curr_knowledge, knows=knows)
+    elif request.method == 'POST':
+        # 删除任务
+        curr_challenge = Challenge.query.filter_by(id=request.form['challenge_id']).first_or_404()
+        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+        curr_knowledge.challenges.remove(curr_challenge)
+        for x in curr_knowledge.challenges:
+            if x.knowledgeNum >= curr_challenge.knowledgeNum:
+                x.knowledgeNum -= 1
+        db.session.delete(curr_challenge)
+        db.session.commit()
+        return jsonify(status="success")
+
+
+@admin.route('/lab/<int:knowledge_id>/create/', methods=['GET', 'POST'])
+@teacher_login
+def lab_create(knowledge_id):
+    if request.method == 'GET':
+        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+        materials = Material.query.all()
+        questions = Question.query.all()
+        programs = Program.query.all()
+        return render_template('admin/lab/detail.html', op='create', knowledge=curr_knowledge,
+                               materials=materials, questions=questions, programs=programs)
+    elif request.method == 'POST':
+        # 创建任务
+        curr_challenge = Challenge(title=request.form['title'], content=request.form['content'])
+        curr_challenge.question_type = int(request.form['question_type'])
+        db.session.add(curr_challenge)
+        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+        if int(request.form['seq']) > curr_knowledge.challenges.count() + 1:
+            curr_challenge.knowledgeNum = curr_knowledge.challenges.count() + 1
+        else:
+            curr_challenge.knowledgeNum = int(request.form['seq'])
+        # 维护任务的顺序
+        for x in curr_knowledge.challenges:
+            if x.knowledgeNum >= curr_challenge.knowledgeNum:
+                x.knowledgeNum += 1
+        curr_knowledge.challenges.append(curr_challenge)
+        if int(request.form['question_type']) != 6:
+            curr_question = Question.query.filter_by(id=request.form['question_id']).first_or_404()
+            curr_question.challenges.append(curr_challenge)
+        else:
+            curr_program = Program.query.filter_by(id=request.form['question_id']).first_or_404()
+            curr_program.challenges.append(curr_challenge)
+
+        if request.form['material_id'] != -1:
+            curr_material = Material.query.filter_by(id=request.form['material_id']).first_or_404()
+            curr_material.challenges.append(curr_challenge)
+        db.session.commit()
+        return jsonify(status='success', challenge_id=curr_challenge.id)
+
+
+@admin.route('/lab/<int:knowledge_id>/edit/<int:challenge_id>/', methods=['GET', 'POST'])
+@teacher_login
+def lab_edit(knowledge_id, challenge_id):
+    if request.method == 'GET':
+        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+        curr_challenge = Challenge.query.filter_by(id=challenge_id).first_or_404()
+        materials = Material.query.all()
+        questions = Question.query.all()
+        programs = Program.query.all()
+        return render_template('admin/lab/detail.html', op='edit', knowledge=curr_knowledge, challenge=curr_challenge,
+                               materials=materials, questions=questions, programs=programs)
+    elif request.method == 'POST':
+        # 编辑任务
+        curr_challenge = Challenge.query.filter_by(id=challenge_id).first_or_404()
+        curr_challenge.title = request.form['title']
+        curr_challenge.content = request.form['content']
+        curr_challenge.question_type = int(request.form['question_type'])
+        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+        curr_knowledge.challenges.remove(curr_challenge)
+        for x in curr_knowledge.challenges:
+            if x.knowledgeNum >= curr_challenge.knowledgeNum:
+                x.knowledgeNum -= 1
+        if int(request.form['seq']) > curr_knowledge.challenges.count() + 1:
+            curr_challenge.knowledgeNum = curr_knowledge.challenges.count() + 1
+        else:
+            curr_challenge.knowledgeNum = int(request.form['seq'])
+        for x in curr_knowledge.challenges:
+            if x.knowledgeNum >= curr_challenge.knowledgeNum:
+                x.knowledgeNum += 1
+        curr_knowledge.challenges.append(curr_challenge)
+
+        if curr_challenge.question_type != 6:
+            curr_challenge.question.challenges.remove(curr_challenge)
+        else:
+            curr_challenge.program.challenges.remove(curr_challenge)
+        if int(request.form['question_type']) != 6:
+            curr_question = Question.query.filter_by(id=request.form['question_id']).first_or_404()
+            curr_question.challenges.append(curr_challenge)
+        else:
+            curr_program = Program.query.filter_by(id=request.form['question_id']).first_or_404()
+            curr_program.challenges.append(curr_challenge)
+
+        if request.form['material_id'] != -1:
+            curr_challenge.material.challenges.remove(curr_challenge)
+            curr_material = Material.query.filter_by(id=request.form['material_id']).first_or_404()
+            curr_material.challenges.append(curr_challenge)
+
+        db.session.commit()
+        return jsonify(status="success")

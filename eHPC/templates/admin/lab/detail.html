@@ -1,0 +1,189 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container" id="content-container">
+{#    TODO: 分页 （基本信息 材料 习题） #}
+        <div class="row">
+            <div class="col-md-3">
+                <div style="margin-bottom: 10px;font-size: 15px">{{ knowledge.title }}</div>
+                <div class="list-group" id="list">
+                    <a class="list-group-item active" href="#info-filed">基本信息</a>
+                    <a class="list-group-item" href="#material-filed">学习材料</a>
+                    <a class="list-group-item" href="#question-filed">实验任务</a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">任务详情</div>
+                    <div id="content" class="panel-body">
+
+                        <div id="info-filed">
+                            <div class="form-group row">
+                                <label class="col-md-2" style="text-align: right;">序号</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" style="width:50px;height:30px;"
+                                           value="{{ '' if op == 'create' else challenge.knowledgeNum }}" id="seq" name="seq" >
+                                </div>
+                            </div>
+
+                            <div class="form-group row" id="selected-material">
+                                <label class="col-md-2" style="text-align: right;">材料</label>
+                                <div class="col-md-8">
+                                    {{ '未选择' if op == 'create' else challenge.material.name | max_len(15) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row" id="selected-question">
+                                <label class="col-md-2" style="text-align: right;">任务</label>
+                                <div class="col-md-10">
+                                {% if op == 'edit' and challenge.question_type != 6 %}
+                                    {{ challenge.question | get_question_content }}
+                                {% elif op == 'edit' and challenge.question_type == 6 %}
+                                    {{ challenge.program.title }}
+                                {% else %}
+                                    未选择
+                                {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="text-align: right;">标题</label>
+                                <div class="col-md-8">
+                                    <input id="challenge-title" name="title" required class="form-control"
+                                           type="text" value="{{ '' if op == 'create' else challenge.title }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-2" style="text-align: right;">内容</label>
+                                <div class="col-md-8 controls">
+                                    <textarea id="challenge-content" name="content" data-provide="markdown"
+                                              rows="10">{{ '' if op == 'create' else challenge.content }}</textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="material-filed" style="display: none;">
+                            <div style="margin-bottom: 20px;">
+                                <label>材料列表</label>
+                                <br/> 请点击需要选择的材料
+                            </div>
+                            {% include 'admin/lab/widget_matrtial_table.html' %}
+                        </div>
+
+                        <div id="question-filed" style="display: none;">
+                            <div style="margin-bottom: 20px;">
+                                <label>习题列表</label>
+                                <br/>请点击需要选择的习题
+                            </div>
+                            {% include 'admin/lab/widget_question_table.html' %}
+                        </div>
+                    </div>
+
+                    <div class="panel-footer">
+                        <button id="challenge-save-btn" class="btn btn-primary" style="margin-left: 92%">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block footer_ext %}
+    <script>
+        $(document).ready(function () {
+            $("#materials").dataTable();
+            $("#questions").dataTable();
+            var edt = new SimpleMDE({
+                element: $("#challenge-content")[0],
+                autosave: true,
+                showIcons: ["code", "table"],
+                tabSize: 4,
+                spellChecker: false
+            });
+
+            $("#list").find("a").click(function () {
+                $("#list").find("a").removeClass("active");
+                $(this).addClass("active");
+                if ($(this).attr("href") == "#info-filed") {
+                    $("#info-filed").show();
+                    $("#material-filed").hide();
+                    $("#question-filed").hide();
+                }
+                else if ($(this).attr("href") == "#material-filed") {
+                    $("#info-filed").hide();
+                    $("#material-filed").show();
+                    $("#question-filed").hide();
+                }
+                else if ($(this).attr("href") == "#question-filed") {
+                    $("#info-filed").hide();
+                    $("#material-filed").hide();
+                    $("#question-filed").show();
+                }
+            });
+
+            var material_id = {{ -1 if op == 'create' else challenge.material.id }};
+            var question_id = {% if op == 'edit' and challenge.question_type != 6 %}{{ challenge.question.id }}
+                              {% elif op == 'edit' and challenge.question_type == 6 %}{{ challenge.program.id }}
+                              {% else %}-1
+                              {% endif %};
+            var question_type = {{ -1 if op == 'create' else challenge.question_type }};
+            $("#materials").find("tbody").on("click", "tr", function () {
+                $("#materials").find("tbody").find("tr").removeClass("selected");
+                $(this).addClass("selected");
+                material_id = $(this).data("id");
+                $("#selected-material").children("div").text($(this).children().eq(1).text());
+            });
+            $("#questions").find("tbody").on("click", "tr", function () {
+                $("#questions").find("tbody").find("tr").removeClass("selected");
+                $(this).addClass("selected");
+                question_id = $(this).data("id");
+                question_type = $(this).data("type");
+                $("#selected-question").children("div").text($(this).children().eq(1).text());
+            });
+
+            $("#challenge-save-btn").click(function () {
+                if (question_id == -1) {
+                    alert("请选择一个习题");
+                    return;
+                }
+                if ($("#seq").val() < 0) {
+                    alert("请输入正确的序号");
+                    return;
+                }
+                $.ajax({
+                    type: "post",
+                    url: location.href,
+                    data: {
+                        seq: $("#seq").val(),
+                        title: $("#challenge-title").val(),
+                        content: edt.value(),
+                        material_id: material_id,
+                        question_type: question_type,
+                        question_id: question_id
+                    },
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            location.href = "{{ url_for('admin.lab_view', knowledge_id=knowledge.id) }}";
+                        }
+                        else {
+                            alert("保存失败");
+                        }
+                    }
+                })
+            });
+
+        });
+    </script>
+{% endblock %}

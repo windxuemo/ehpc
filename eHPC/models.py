@@ -140,6 +140,9 @@ class Material(db.Model):
 
     lessonId = db.Column(db.Integer, db.ForeignKey('lessons.id'))  # 所属课时ID
 
+    # 材料相关联的实验任务
+    challenges = db.relationship('Challenge', backref='material', lazy='dynamic')
+
 
 class Comment(db.Model):
     """ 一个课程包括多个评论, 每个评论只能属于一个课程。 课程和评论是一对多的关系。
@@ -247,6 +250,9 @@ class Program(db.Model):
 
     createdTime = db.Column(db.DateTime(), default=datetime.now)
 
+    # 题目相关的实验任务
+    challenges = db.relationship('Challenge', backref='program', lazy='dynamic')
+
 
 class SubmitProblem(db.Model):
     # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
@@ -295,6 +301,9 @@ class Question(db.Model):
 
     classifies = db.relationship('Classify', secondary=question_classifies,
                                  backref=db.backref('questions', lazy='dynamic'))
+
+    # 题目相关联的实验任务
+    challenges = db.relationship('Challenge', backref='question', lazy='dynamic')
 
 
 class Paper(db.Model):
@@ -357,13 +366,14 @@ class Challenge(db.Model):
     knowledgeId = db.Column(db.Integer, db.ForeignKey('knowledges.id'))
     knowledgeNum = db.Column(db.Integer, default=1)
 
-    # 每一个任务可能有一个教学材料, 如果 materialID == -1, 则表示没有材料, 纯图文内容。
-    materialID = db.Column(db.Integer, default=-1, nullable=False) # 对应的教学材料的ID
+    # 每一个任务可能有一个教学材料, 如果为空, 则表示没有材料, 纯图文内容。
+    materialId = db.Column(db.Integer, db.ForeignKey('materials.id'))
 
     # 每一个任务有一个测试题目
     # 对应题目的类型0:单选题 1:多选题 2:不定项选择题 3: 填空题 4: 判断题 5: 问答题 6: 编程题目
     question_type = db.Column(db.Integer, nullable=False)
-    questionID = db.Column(db.Integer, nullable=False)  # 对应题目的ID
+    questionId = db.Column(db.Integer, db.ForeignKey('questions.id'))
+    programId = db.Column(db.Integer, db.ForeignKey('programs.id'))
 
 
 class Progress(db.Model):

@@ -1,0 +1,18 @@
+<table id="materials" class="table table-striped" style="word-break:break-all;">
+    <thead><!--表格头-->
+    <tr>
+        <th width="20%">序号</th>
+        <th width="50%">文件名</th>
+        <th width="30">类型</th>
+    </tr>
+    </thead>
+    <tbody><!--表格主体-->
+    {% for m in materials %}
+        <tr data-id="{{ m.id }}">
+            <td width="20%">{{ loop.index }}</td>
+            <td width="50%">{{ m.name | max_len(15) }}</td>
+            <td width="30%">{{ m.m_type }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

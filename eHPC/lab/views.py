@@ -15,14 +15,13 @@ from .. import db
 def index():
     knowledges = Knowledge.query.all()
 
-    # 记录当前用户在每个knowledge上的进度白分比
+    # 记录当前用户在每个knowledge上的进度百分比
     if current_user.is_authenticated:
         for k in knowledges:
             pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=k.id).first()
             k.cur_level = pro.cur_progress if pro else 0
             k.all_levels = k.challenges.count()
             k.percentage = "{0:.0f}%".format(100.0 * k.cur_level / k.all_levels) if k.all_levels >= 1 else "100%"
-
     return render_template('lab/index.html',
                            title=gettext('Labs'),
                            knowledges=knowledges)
@@ -66,16 +65,13 @@ def knowledge(kid):
                                    title="Finish All",
                                    kid=kid)
 
-        m_id = cur_challenge.materialID
-        material = Material.query.filter_by(id=m_id).first_or_404()
-
         # 保证每个challenge都有一个题目, 可以是一般的选择题、填空题等或者在线编程题目
-        question, question_type = get_question_and_type(cur_challenge.questionID, cur_challenge.question_type)
+        question, question_type = get_question_and_type(cur_challenge)
 
         return render_template('lab/knowledge.html',
                                title=cur_challenge.title,
                                c_content=cur_challenge.content,
-                               cur_material=material,
+                               cur_material=cur_challenge.material,
                                practice=question,
                                question_type=question_type,
                                kid=kid,

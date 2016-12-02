@@ -10,7 +10,7 @@
     {% for m in materials %}
         <tr data-id="{{ m.id }}">
             <td width="20%">{{ loop.index }}</td>
-            <td width="50%">{{ m.name | max_len(15) }}</td>
+            <td width="50%">{{ m.name }}</td>
             <td width="30%">{{ m.m_type }}</td>
         </tr>
     {% endfor %}

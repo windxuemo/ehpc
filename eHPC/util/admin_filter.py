@@ -40,8 +40,3 @@ def get_question_type(question):
 def get_question_id(question):
     dic = {0: u'choice', 1: u'choice', 2: u'choice', 3: u'fill', 4: u'judge', 5: u'essay'}
     return dic[question.type]
-
-
-@filter_blueprint.app_template_filter('max_len')
-def get_question_id(text, length):
-    return text[:length] + "..." if len(text) >= length else text

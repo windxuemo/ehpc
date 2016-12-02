@@ -519,16 +519,25 @@ def lab_view(knowledge_id):
         knows = Knowledge.query.all()
         return render_template('admin/lab/index.html', knowledge=curr_knowledge, knows=knows)
     elif request.method == 'POST':
-        # 删除任务
-        curr_challenge = Challenge.query.filter_by(id=request.form['challenge_id']).first_or_404()
-        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
-        curr_knowledge.challenges.remove(curr_challenge)
-        for x in curr_knowledge.challenges:
-            if x.knowledgeNum >= curr_challenge.knowledgeNum:
-                x.knowledgeNum -= 1
-        db.session.delete(curr_challenge)
-        db.session.commit()
-        return jsonify(status="success")
+        # 删除任务以及调整顺序
+        if request.form['op'] == 'del':
+            curr_challenge = Challenge.query.filter_by(id=request.form['challenge_id']).first_or_404()
+            curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+            curr_knowledge.challenges.remove(curr_challenge)
+            for x in curr_knowledge.challenges:
+                if x.knowledgeNum >= curr_challenge.knowledgeNum:
+                    x.knowledgeNum -= 1
+            db.session.delete(curr_challenge)
+            db.session.commit()
+            return jsonify(status='success')
+        elif request.form['op'] == 'seq':
+            print(request.form)
+            curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
+            seq = json.loads(request.form['seq'])
+            for x in curr_knowledge.challenges:
+                x.knowledgeNum = seq[str(x.id)]
+            db.session.commit()
+            return jsonify(status='success')
 
 
 @admin.route('/lab/<int:knowledge_id>/create/', methods=['GET', 'POST'])
@@ -543,19 +552,13 @@ def lab_create(knowledge_id):
                                materials=materials, questions=questions, programs=programs)
     elif request.method == 'POST':
         # 创建任务
+        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
         curr_challenge = Challenge(title=request.form['title'], content=request.form['content'])
         curr_challenge.question_type = int(request.form['question_type'])
+        curr_challenge.knowledgeNum = curr_knowledge.challenges.count() + 1
         db.session.add(curr_challenge)
-        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
-        if int(request.form['seq']) > curr_knowledge.challenges.count() + 1:
-            curr_challenge.knowledgeNum = curr_knowledge.challenges.count() + 1
-        else:
-            curr_challenge.knowledgeNum = int(request.form['seq'])
-        # 维护任务的顺序
-        for x in curr_knowledge.challenges:
-            if x.knowledgeNum >= curr_challenge.knowledgeNum:
-                x.knowledgeNum += 1
         curr_knowledge.challenges.append(curr_challenge)
+
         if int(request.form['question_type']) != 6:
             curr_question = Question.query.filter_by(id=request.form['question_id']).first_or_404()
             curr_question.challenges.append(curr_challenge)
@@ -587,19 +590,6 @@ def lab_edit(knowledge_id, challenge_id):
         curr_challenge.title = request.form['title']
         curr_challenge.content = request.form['content']
         curr_challenge.question_type = int(request.form['question_type'])
-        curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
-        curr_knowledge.challenges.remove(curr_challenge)
-        for x in curr_knowledge.challenges:
-            if x.knowledgeNum >= curr_challenge.knowledgeNum:
-                x.knowledgeNum -= 1
-        if int(request.form['seq']) > curr_knowledge.challenges.count() + 1:
-            curr_challenge.knowledgeNum = curr_knowledge.challenges.count() + 1
-        else:
-            curr_challenge.knowledgeNum = int(request.form['seq'])
-        for x in curr_knowledge.challenges:
-            if x.knowledgeNum >= curr_challenge.knowledgeNum:
-                x.knowledgeNum += 1
-        curr_knowledge.challenges.append(curr_challenge)
 
         if curr_challenge.question_type != 6:
             curr_challenge.question.challenges.remove(curr_challenge)

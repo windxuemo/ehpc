@@ -5,54 +5,18 @@
     <link href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
     <div class="container" id="content-container">
-{#    TODO: 分页 （基本信息 材料 习题） #}
         <div class="row">
-            <div class="col-md-3">
-                <div style="margin-bottom: 10px;font-size: 15px">{{ knowledge.title }}</div>
-                <div class="list-group" id="list">
-                    <a class="list-group-item active" href="#info-filed">基本信息</a>
-                    <a class="list-group-item" href="#material-filed">学习材料</a>
-                    <a class="list-group-item" href="#question-filed">实验任务</a>
-                </div>
-            </div>
-
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">任务详情</div>
                     <div id="content" class="panel-body">
 
                         <div id="info-filed">
-                            <div class="form-group row">
-                                <label class="col-md-2" style="text-align: right;">序号</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" style="width:50px;height:30px;"
-                                           value="{{ '' if op == 'create' else challenge.knowledgeNum }}" id="seq" name="seq" >
-                                </div>
-                            </div>
-
-                            <div class="form-group row" id="selected-material">
-                                <label class="col-md-2" style="text-align: right;">材料</label>
-                                <div class="col-md-8">
-                                    {{ '未选择' if op == 'create' else challenge.material.name | max_len(15) }}
-                                </div>
-                            </div>
-
-                            <div class="form-group row" id="selected-question">
-                                <label class="col-md-2" style="text-align: right;">任务</label>
-                                <div class="col-md-10">
-                                {% if op == 'edit' and challenge.question_type != 6 %}
-                                    {{ challenge.question | get_question_content }}
-                                {% elif op == 'edit' and challenge.question_type == 6 %}
-                                    {{ challenge.program.title }}
-                                {% else %}
-                                    未选择
-                                {% endif %}
-                                </div>
-                            </div>
 
                             <div class="form-group row">
                                 <label class="col-md-2" style="text-align: right;">标题</label>
@@ -70,28 +34,77 @@
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div id="material-filed" style="display: none;">
-                            <div style="margin-bottom: 20px;">
-                                <label>材料列表</label>
-                                <br/> 请点击需要选择的材料
+                            <div class="form-group row" id="selected-material">
+                                <label class="col-md-2" style="text-align: right;">材料</label>
+                                <div class="col-md-8">
+                                    <span>{{ '未选择' if op == 'create' else challenge.material.name }}</span>
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#materialModal">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </div>
                             </div>
-                            {% include 'admin/lab/widget_matrtial_table.html' %}
-                        </div>
 
-                        <div id="question-filed" style="display: none;">
-                            <div style="margin-bottom: 20px;">
-                                <label>习题列表</label>
-                                <br/>请点击需要选择的习题
+                            <div class="form-group row" id="selected-question">
+                                <label class="col-md-2" style="text-align: right;">任务</label>
+                                <div class="col-md-10">
+                                    <span>
+                                    {% if op == 'edit' and challenge.question_type != 6 %}
+                                        {{ challenge.question | get_question_content }}
+                                    {% elif op == 'edit' and challenge.question_type == 6 %}
+                                        {{ challenge.program.title }}
+                                    {% else %}
+                                        未选择
+                                    {% endif %}
+                                    </span>
+                                    <button class="btn btn-info" data-toggle="modal" data-target="#questionModal">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </div>
                             </div>
-                            {% include 'admin/lab/widget_question_table.html' %}
                         </div>
                     </div>
 
                     <div class="panel-footer">
                         <button id="challenge-save-btn" class="btn btn-primary" style="margin-left: 92%">保存</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="materialModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 50%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">材料列表</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 20px;">
+                        请点击需要选择的材料
+                    </div>
+                    {% include 'admin/lab/widget_matrtial_table.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 50%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">材料列表</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 20px;">
+                        请点击需要选择的习题
+                    </div>
+                    {% include 'admin/lab/widget_question_table.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
                 </div>
             </div>
         </div>
@@ -143,14 +156,14 @@
                 $("#materials").find("tbody").find("tr").removeClass("selected");
                 $(this).addClass("selected");
                 material_id = $(this).data("id");
-                $("#selected-material").children("div").text($(this).children().eq(1).text());
+                $("#selected-material").children("div").children("span").text($(this).children().eq(1).text());
             });
             $("#questions").find("tbody").on("click", "tr", function () {
                 $("#questions").find("tbody").find("tr").removeClass("selected");
                 $(this).addClass("selected");
                 question_id = $(this).data("id");
                 question_type = $(this).data("type");
-                $("#selected-question").children("div").text($(this).children().eq(1).text());
+                $("#selected-question").children("div").children("span").text($(this).children().eq(1).text());
             });
 
             $("#challenge-save-btn").click(function () {
@@ -158,15 +171,14 @@
                     alert("请选择一个习题");
                     return;
                 }
-                if ($("#seq").val() < 0) {
-                    alert("请输入正确的序号");
+                if ($("#challenge-title").val() == "") {
+                    alert("请填写标题");
                     return;
                 }
                 $.ajax({
                     type: "post",
                     url: location.href,
                     data: {
-                        seq: $("#seq").val(),
                         title: $("#challenge-title").val(),
                         content: edt.value(),
                         material_id: material_id,

@@ -735,4 +735,45 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-12-02 17:12:30
+-- Dump completed on 2016-11-24 20:34:56
+
+
+-- ----------------------------
+-- Table structure for cases
+-- ----------------------------
+DROP TABLE IF EXISTS `cases`;
+CREATE TABLE `cases` (
+  `id` int(64) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
+  `tag` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of cases
+-- ----------------------------
+INSERT INTO `cases` VALUES (1, '火灾模拟软件FDS的计算负载均衡优化', 'Fire dynamics simulator(FDS) 是一款用于处理火灾驱动的流体流动的开源计算流体力学CFD软件，广泛应用于建筑设计和消防安全等工程领域。FDS软件采用三维大涡模拟（Large Eddy Simulation），通过求解NS方程来分析燃烧过程中建筑内的温度场和流场的变化，但在此案例中，我们并不需要去关心具体求解过程。FDS软件支持MPI / OMP 的并行计算 , 但截止我们测试时，其公开版本（6.3.0）对MPI 并行计算有诸多限制:MPI 进程数必须少于其输入文件中的网格区域（MESH）数，并按照“前面的每个进程处理一个网格区域，最后一个进程处理剩余所有的网格区域”的方式来进行计算。这种模式使得FDS在HPC环境下直接使用难以发挥高性能计算集群的性能优势。', 'FDS;CFD;负载均衡');
+
+
+
+-- ----------------------------
+-- Table structure for case_code
+-- ----------------------------
+DROP TABLE IF EXISTS `case_codes`;
+CREATE TABLE `case_codes` (
+  `case_id` int(64) NOT NULL,
+  `version_id` int(64) NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `description` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `code_path` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`case_id`, `version_id`),
+  KEY `case_id` (`case_id`),
+  CONSTRAINT `case_codes_ibfk_1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of case_code
+-- ----------------------------
+INSERT INTO `case_codes` VALUES (1, 1, '优化1', '数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万', 'case/1/version_1/');
+INSERT INTO `case_codes` VALUES (1, 2, '优化2', '使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n', 'case/1/version_2/');

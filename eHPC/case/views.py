@@ -23,13 +23,8 @@ def index():
                                                  version_id=request.form['version_id']).first_or_404()
 
             path = os.path.join(current_app.config['RESOURCE_FOLDER'], case_code.code_path)
-            files = list(os.walk(path))[0][2]
-            codes = {}
-
-            for f in files:
-                with open(os.path.join(path, f), 'r') as code:
-                    codes[f] = code.read()
-            return jsonify(status='success', codes=codes)
+            with open(os.path.join(path, request.form['file_name']), 'r') as code:
+                return jsonify(status='success', code=code.read())
 
 
 @case.route('/<int:cid>/')

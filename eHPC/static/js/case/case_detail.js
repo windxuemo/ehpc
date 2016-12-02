@@ -46,14 +46,38 @@ $(function () {
                         $('#show-description').text(data['description']);
                         $('#case-text').show();
                         $('#editor').hide();
-                        $('#files-name').hide();
+                    }
+                }
+            });
+        }
+        else if (type == 'version-description'){
+            $(this).parent().parent().parent().addClass('open');
+            var parent5 = $(this).parent().parent().parent().parent().parent();
+            parent5.find('span[data-id=case-name]').css('color',"#46c37b");
+            parent5.find('i[data-id=case-icon]').css('color',"#46c37b").css('-webkit-transform',"rotate(180deg)")
+                .css('-ms-transform',"rotate(180deg)").css('-o-transform',"rotate(180deg)").css('transform',"rotate(180deg)");
+            parent5.find('i[data-id=case-icon2]').css('color',"#46c37b");
+            $('span[data-id=title]').text($(this).text());
+            $.ajax({
+                type: "post",
+                url: post_to,
+                data: {
+                    type: type,
+                    case_id: $(obj).parent().parent().parent().parent().parent().data('case_id'),
+                    version_id: $(obj).parent().parent().parent().data('version_id')
+                },
+                success: function (data) {
+                    if(data['status'] == 'success'){
+                        $('#show-description').text(data['description']);
+                        $('#case-text').show();
+                        $('#editor').hide();
                     }
                 }
             });
         }
         else if (type == 'code'){
             $(this).parent().parent().parent().addClass('open');
-            var parent5 = $(this).parent().parent().parent().parent().parent();
+            parent5 = $(this).parent().parent().parent().parent().parent();
             parent5.find('span[data-id=case-name]').css('color',"#46c37b");
             parent5.find('i[data-id=case-icon]').css('color',"#46c37b").css('-webkit-transform',"rotate(180deg)")
                 .css('-ms-transform',"rotate(180deg)").css('-o-transform',"rotate(180deg)").css('transform',"rotate(180deg)");
@@ -69,6 +93,7 @@ $(function () {
                 },
                 success: function (data) {
                     if(data['status'] == 'success'){
+                        $('#case-text').hide();
                         var file_type = $(obj).text().substring($(obj).text().lastIndexOf('.')+1, $(obj).text().length);
                         if(file_type.toLowerCase() == 'py'){
                             editor.getSession().setMode("ace/mode/python");
@@ -78,7 +103,6 @@ $(function () {
                         }
                         editor.setValue(data['code']);
                         editor.gotoLine(1);
-                        $('#case-text').hide();
                         $('#editor').show();
                     }
                 }

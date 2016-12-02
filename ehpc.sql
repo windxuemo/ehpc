@@ -65,6 +65,61 @@ INSERT INTO `articles` VALUES (6,'C++ 编译过程','简单地说，一个编译
 UNLOCK TABLES;
 
 --
+-- Table structure for table `case_codes`
+--
+
+DROP TABLE IF EXISTS `case_codes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `case_codes` (
+  `case_id` int(64) NOT NULL,
+  `version_id` int(64) NOT NULL,
+  `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `code_path` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`case_id`,`version_id`),
+  KEY `case_id` (`case_id`),
+  CONSTRAINT `case_codes_ibfk_1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `case_codes`
+--
+
+LOCK TABLES `case_codes` WRITE;
+/*!40000 ALTER TABLE `case_codes` DISABLE KEYS */;
+INSERT INTO `case_codes` VALUES (1,1,'优化1','数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万','case/1/version_1/'),(1,2,'优化2','使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n','case/1/version_2/');
+/*!40000 ALTER TABLE `case_codes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cases`
+--
+
+DROP TABLE IF EXISTS `cases`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cases` (
+  `id` int(64) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
+  `tag` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cases`
+--
+
+LOCK TABLES `cases` WRITE;
+/*!40000 ALTER TABLE `cases` DISABLE KEYS */;
+INSERT INTO `cases` VALUES (1,'火灾模拟软件FDS的计算负载均衡优化','Fire dynamics simulator(FDS) 是一款用于处理火灾驱动的流体流动的开源计算流体力学CFD软件，广泛应用于建筑设计和消防安全等工程领域。FDS软件采用三维大涡模拟（Large Eddy Simulation），通过求解NS方程来分析燃烧过程中建筑内的温度场和流场的变化，但在此案例中，我们并不需要去关心具体求解过程。FDS软件支持MPI / OMP 的并行计算 , 但截止我们测试时，其公开版本（6.3.0）对MPI 并行计算有诸多限制:MPI 进程数必须少于其输入文件中的网格区域（MESH）数，并按照“前面的每个进程处理一个网格区域，最后一个进程处理剩余所有的网格区域”的方式来进行计算。这种模式使得FDS在HPC环境下直接使用难以发挥高性能计算集群的性能优势。','FDS;CFD;负载均衡');
+/*!40000 ALTER TABLE `cases` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `challenges`
 --
 
@@ -90,7 +145,7 @@ CREATE TABLE `challenges` (
   CONSTRAINT `challenges_ibfk_2` FOREIGN KEY (`materialId`) REFERENCES `materials` (`id`),
   CONSTRAINT `challenges_ibfk_3` FOREIGN KEY (`questionId`) REFERENCES `questions` (`id`),
   CONSTRAINT `challenges_ibfk_4` FOREIGN KEY (`programId`) REFERENCES `programs` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +154,7 @@ CREATE TABLE `challenges` (
 
 LOCK TABLES `challenges` WRITE;
 /*!40000 ALTER TABLE `challenges` DISABLE KEYS */;
-INSERT INTO `challenges` VALUES (1,'任务一','Markdown 的目标是实现「易读易写」。\n\n可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。Markdown 语法受到一些既有 text-to-HTML 格式的影响，包括 [Setext] [1]、[atx] [2]、[Textile] [3]、[reStructuredText] [4]、[Grutatext] [5] 和 [EtText] [6]，而最大灵感来源其实是纯文本电子邮件的格式。\n\n  [1]: http://docutils.sourceforge.net/mirror/setext.html\n  [2]: http://www.aaronsw.com/2002/atx/\n  [3]: http://textism.com/tools/textile/\n  [4]: http://docutils.sourceforge.net/rst.html\n  [5]: http://www.triptico.com/software/grutatxt.html\n  [6]: http://ettext.taint.org/doc/\n\n总之， Markdown 的语法全由一些符号所组成，这些符号经过精挑细选，其作用一目了然。比如：在文字两旁加上星号，看起来就像\\*强调\\*。Markdown 的列表看起来，嗯，就是列表。Markdown 的区块引用看起来就真的像是引用一段文字，就像你曾在电子邮件中见过的那样。\n\n<h3 id=\"html\">兼容 HTML</h3>\n\nMarkdown 语法的目标是：成为一种适用于网络的*书写*语言。\n\nMarkdown 不是想要取代 HTML，甚至也没有要和它相近，它的语法种类很少，只对应 HTML 标记的一小部分。Markdown 的构想*不是*要使得 HTML 文档更容易书写。在我看来， HTML 已经很容易写了。Markdown 的理念是，能让文档更容易读、写和随意改。HTML 是一种*发布*的格式，Markdown 是一种*书写*的格式。就这样，Markdown 的格式语法只涵盖纯文本可以涵盖的范围。\n\n不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。不需要额外标注这是 HTML 或是 Markdown；只要直接加标签就可以了。\n\n要制约的只有一些 HTML 区块元素――比如 `<div>`、`<table>`、`<pre>`、`<p>` 等标签，必须在前后加上空行与其它内容区隔开，还要求它们的开始标签与结尾标签不能用制表符或空格来缩进。Markdown 的生成器有足够智能，不会在 HTML 区块标签外加上不必要的 `<p>` 标签。\n\n例子如下，在 Markdown 文件里加上一段 HTML 表格：\n\n    这是一个普通段落。\n\n    <table>\n        <tr>\n            <td>Foo</td>\n        </tr>\n    </table>\n\n    这是另一个普通段落。\n\n请注意，在 HTML 区块标签间的 Markdown 格式语法将不会被处理。比如，你在 HTML 区块内使用 Markdown 样式的`*强调*`会没有效果。\n',1,1,2,0,1,NULL),(2,'任务二','Markdown 的目标是实现「易读易写」。\n\n可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。Markdown 语法受到一些既有 text-to-HTML 格式的影响，包括 [Setext] [1]、[atx] [2]、[Textile] [3]、[reStructuredText] [4]、[Grutatext] [5] 和 [EtText] [6]，而最大灵感来源其实是纯文本电子邮件的格式。\n\n  [1]: http://docutils.sourceforge.net/mirror/setext.html\n  [2]: http://www.aaronsw.com/2002/atx/\n  [3]: http://textism.com/tools/textile/\n  [4]: http://docutils.sourceforge.net/rst.html\n  [5]: http://www.triptico.com/software/grutatxt.html\n  [6]: http://ettext.taint.org/doc/\n\n总之， Markdown 的语法全由一些符号所组成，这些符号经过精挑细选，其作用一目了然。比如：在文字两旁加上星号，看起来就像\\*强调\\*。Markdown 的列表看起来，嗯，就是列表。Markdown 的区块引用看起来就真的像是引用一段文字，就像你曾在电子邮件中见过的那样。\n\n<h3 id=\"html\">兼容 HTML</h3>\n\nMarkdown 语法的目标是：成为一种适用于网络的*书写*语言。\n\nMarkdown 不是想要取代 HTML，甚至也没有要和它相近，它的语法种类很少，只对应 HTML 标记的一小部分。Markdown 的构想*不是*要使得 HTML 文档更容易书写。在我看来， HTML 已经很容易写了。Markdown 的理念是，能让文档更容易读、写和随意改。HTML 是一种*发布*的格式，Markdown 是一种*书写*的格式。就这样，Markdown 的格式语法只涵盖纯文本可以涵盖的范围。\n\n不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。不需要额外标注这是 HTML 或是 Markdown；只要直接加标签就可以了。\n\n要制约的只有一些 HTML 区块元素――比如 `<div>`、`<table>`、`<pre>`、`<p>` 等标签，必须在前后加上空行与其它内容区隔开，还要求它们的开始标签与结尾标签不能用制表符或空格来缩进。Markdown 的生成器有足够智能，不会在 HTML 区块标签外加上不必要的 `<p>` 标签。\n\n例子如下，在 Markdown 文件里加上一段 HTML 表格：\n\n    这是一个普通段落。\n\n    <table>\n        <tr>\n            <td>Foo</td>\n        </tr>\n    </table>\n\n    这是另一个普通段落。\n\n请注意，在 HTML 区块标签间的 Markdown 格式语法将不会被处理。比如，你在 HTML 区块内使用 Markdown 样式的`*强调*`会没有效果。\n',1,2,60,5,6,NULL),(3,'任务三','Markdown 的目标是实现「易读易写」。\n\n可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。Markdown 语法受到一些既有 text-to-HTML 格式的影响，包括 [Setext] [1]、[atx] [2]、[Textile] [3]、[reStructuredText] [4]、[Grutatext] [5] 和 [EtText] [6]，而最大灵感来源其实是纯文本电子邮件的格式。\n\n  [1]: http://docutils.sourceforge.net/mirror/setext.html\n  [2]: http://www.aaronsw.com/2002/atx/\n  [3]: http://textism.com/tools/textile/\n  [4]: http://docutils.sourceforge.net/rst.html\n  [5]: http://www.triptico.com/software/grutatxt.html\n  [6]: http://ettext.taint.org/doc/\n\n总之， Markdown 的语法全由一些符号所组成，这些符号经过精挑细选，其作用一目了然。比如：在文字两旁加上星号，看起来就像\\*强调\\*。Markdown 的列表看起来，嗯，就是列表。Markdown 的区块引用看起来就真的像是引用一段文字，就像你曾在电子邮件中见过的那样。\n\n<h3 id=\"html\">兼容 HTML</h3>\n\nMarkdown 语法的目标是：成为一种适用于网络的*书写*语言。\n\nMarkdown 不是想要取代 HTML，甚至也没有要和它相近，它的语法种类很少，只对应 HTML 标记的一小部分。Markdown 的构想*不是*要使得 HTML 文档更容易书写。在我看来， HTML 已经很容易写了。Markdown 的理念是，能让文档更容易读、写和随意改。HTML 是一种*发布*的格式，Markdown 是一种*书写*的格式。就这样，Markdown 的格式语法只涵盖纯文本可以涵盖的范围。\n\n不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。不需要额外标注这是 HTML 或是 Markdown；只要直接加标签就可以了。\n\n要制约的只有一些 HTML 区块元素――比如 `<div>`、`<table>`、`<pre>`、`<p>` 等标签，必须在前后加上空行与其它内容区隔开，还要求它们的开始标签与结尾标签不能用制表符或空格来缩进。Markdown 的生成器有足够智能，不会在 HTML 区块标签外加上不必要的 `<p>` 标签。\n\n例子如下，在 Markdown 文件里加上一段 HTML 表格：\n\n    这是一个普通段落。\n\n    <table>\n        <tr>\n            <td>Foo</td>\n        </tr>\n    </table>\n\n    这是另一个普通段落。\n\n请注意，在 HTML 区块标签间的 Markdown 格式语法将不会被处理。比如，你在 HTML 区块内使用 Markdown 样式的`*强调*`会没有效果。\n',1,3,1,5,6,NULL),(4,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL);
+INSERT INTO `challenges` VALUES (1,'任务一','Markdown 的目标是实现「易读易写」。\n\n可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。Markdown 语法受到一些既有 text-to-HTML 格式的影响，包括 [Setext] [1]、[atx] [2]、[Textile] [3]、[reStructuredText] [4]、[Grutatext] [5] 和 [EtText] [6]，而最大灵感来源其实是纯文本电子邮件的格式。\n\n  [1]: http://docutils.sourceforge.net/mirror/setext.html\n  [2]: http://www.aaronsw.com/2002/atx/\n  [3]: http://textism.com/tools/textile/\n  [4]: http://docutils.sourceforge.net/rst.html\n  [5]: http://www.triptico.com/software/grutatxt.html\n  [6]: http://ettext.taint.org/doc/\n\n总之， Markdown 的语法全由一些符号所组成，这些符号经过精挑细选，其作用一目了然。比如：在文字两旁加上星号，看起来就像\\*强调\\*。Markdown 的列表看起来，嗯，就是列表。Markdown 的区块引用看起来就真的像是引用一段文字，就像你曾在电子邮件中见过的那样。\n\n<h3 id=\"html\">兼容 HTML</h3>\n\nMarkdown 语法的目标是：成为一种适用于网络的*书写*语言。\n\nMarkdown 不是想要取代 HTML，甚至也没有要和它相近，它的语法种类很少，只对应 HTML 标记的一小部分。Markdown 的构想*不是*要使得 HTML 文档更容易书写。在我看来， HTML 已经很容易写了。Markdown 的理念是，能让文档更容易读、写和随意改。HTML 是一种*发布*的格式，Markdown 是一种*书写*的格式。就这样，Markdown 的格式语法只涵盖纯文本可以涵盖的范围。\n\n不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。不需要额外标注这是 HTML 或是 Markdown；只要直接加标签就可以了。\n\n要制约的只有一些 HTML 区块元素――比如 `<div>`、`<table>`、`<pre>`、`<p>` 等标签，必须在前后加上空行与其它内容区隔开，还要求它们的开始标签与结尾标签不能用制表符或空格来缩进。Markdown 的生成器有足够智能，不会在 HTML 区块标签外加上不必要的 `<p>` 标签。\n\n例子如下，在 Markdown 文件里加上一段 HTML 表格：\n\n    这是一个普通段落。\n\n    <table>\n        <tr>\n            <td>Foo</td>\n        </tr>\n    </table>\n\n    这是另一个普通段落。\n\n请注意，在 HTML 区块标签间的 Markdown 格式语法将不会被处理。比如，你在 HTML 区块内使用 Markdown 样式的`*强调*`会没有效果。\n',1,1,63,0,1,NULL),(2,'任务二','Markdown 的目标是实现「易读易写」。\n\n可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。Markdown 语法受到一些既有 text-to-HTML 格式的影响，包括 [Setext] [1]、[atx] [2]、[Textile] [3]、[reStructuredText] [4]、[Grutatext] [5] 和 [EtText] [6]，而最大灵感来源其实是纯文本电子邮件的格式。\n\n  [1]: http://docutils.sourceforge.net/mirror/setext.html\n  [2]: http://www.aaronsw.com/2002/atx/\n  [3]: http://textism.com/tools/textile/\n  [4]: http://docutils.sourceforge.net/rst.html\n  [5]: http://www.triptico.com/software/grutatxt.html\n  [6]: http://ettext.taint.org/doc/\n\n总之， Markdown 的语法全由一些符号所组成，这些符号经过精挑细选，其作用一目了然。比如：在文字两旁加上星号，看起来就像\\*强调\\*。Markdown 的列表看起来，嗯，就是列表。Markdown 的区块引用看起来就真的像是引用一段文字，就像你曾在电子邮件中见过的那样。\n\n<h3 id=\"html\">兼容 HTML</h3>\n\nMarkdown 语法的目标是：成为一种适用于网络的*书写*语言。\n\nMarkdown 不是想要取代 HTML，甚至也没有要和它相近，它的语法种类很少，只对应 HTML 标记的一小部分。Markdown 的构想*不是*要使得 HTML 文档更容易书写。在我看来， HTML 已经很容易写了。Markdown 的理念是，能让文档更容易读、写和随意改。HTML 是一种*发布*的格式，Markdown 是一种*书写*的格式。就这样，Markdown 的格式语法只涵盖纯文本可以涵盖的范围。\n\n不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。不需要额外标注这是 HTML 或是 Markdown；只要直接加标签就可以了。\n\n要制约的只有一些 HTML 区块元素――比如 `<div>`、`<table>`、`<pre>`、`<p>` 等标签，必须在前后加上空行与其它内容区隔开，还要求它们的开始标签与结尾标签不能用制表符或空格来缩进。Markdown 的生成器有足够智能，不会在 HTML 区块标签外加上不必要的 `<p>` 标签。\n\n例子如下，在 Markdown 文件里加上一段 HTML 表格：\n\n    这是一个普通段落。\n\n    <table>\n        <tr>\n            <td>Foo</td>\n        </tr>\n    </table>\n\n    这是另一个普通段落。\n\n请注意，在 HTML 区块标签间的 Markdown 格式语法将不会被处理。比如，你在 HTML 区块内使用 Markdown 样式的`*强调*`会没有效果。\n',1,2,60,5,6,NULL),(3,'任务三','Markdown 的目标是实现「易读易写」。\n\n可读性，无论如何，都是最重要的。一份使用 Markdown 格式撰写的文件应该可以直接以纯文本发布，并且看起来不会像是由许多标签或是格式指令所构成。Markdown 语法受到一些既有 text-to-HTML 格式的影响，包括 [Setext] [1]、[atx] [2]、[Textile] [3]、[reStructuredText] [4]、[Grutatext] [5] 和 [EtText] [6]，而最大灵感来源其实是纯文本电子邮件的格式。\n\n  [1]: http://docutils.sourceforge.net/mirror/setext.html\n  [2]: http://www.aaronsw.com/2002/atx/\n  [3]: http://textism.com/tools/textile/\n  [4]: http://docutils.sourceforge.net/rst.html\n  [5]: http://www.triptico.com/software/grutatxt.html\n  [6]: http://ettext.taint.org/doc/\n\n总之， Markdown 的语法全由一些符号所组成，这些符号经过精挑细选，其作用一目了然。比如：在文字两旁加上星号，看起来就像\\*强调\\*。Markdown 的列表看起来，嗯，就是列表。Markdown 的区块引用看起来就真的像是引用一段文字，就像你曾在电子邮件中见过的那样。\n\n<h3 id=\"html\">兼容 HTML</h3>\n\nMarkdown 语法的目标是：成为一种适用于网络的*书写*语言。\n\nMarkdown 不是想要取代 HTML，甚至也没有要和它相近，它的语法种类很少，只对应 HTML 标记的一小部分。Markdown 的构想*不是*要使得 HTML 文档更容易书写。在我看来， HTML 已经很容易写了。Markdown 的理念是，能让文档更容易读、写和随意改。HTML 是一种*发布*的格式，Markdown 是一种*书写*的格式。就这样，Markdown 的格式语法只涵盖纯文本可以涵盖的范围。\n\n不在 Markdown 涵盖范围之内的标签，都可以直接在文档里面用 HTML 撰写。不需要额外标注这是 HTML 或是 Markdown；只要直接加标签就可以了。\n\n要制约的只有一些 HTML 区块元素――比如 `<div>`、`<table>`、`<pre>`、`<p>` 等标签，必须在前后加上空行与其它内容区隔开，还要求它们的开始标签与结尾标签不能用制表符或空格来缩进。Markdown 的生成器有足够智能，不会在 HTML 区块标签外加上不必要的 `<p>` 标签。\n\n例子如下，在 Markdown 文件里加上一段 HTML 表格：\n\n    这是一个普通段落。\n\n    <table>\n        <tr>\n            <td>Foo</td>\n        </tr>\n    </table>\n\n    这是另一个普通段落。\n\n请注意，在 HTML 区块标签间的 Markdown 格式语法将不会被处理。比如，你在 HTML 区块内使用 Markdown 样式的`*强调*`会没有效果。\n',1,3,1,5,6,NULL),(5,'新任务','新的任务1',2,1,64,4,5,NULL);
 /*!40000 ALTER TABLE `challenges` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -500,7 +555,7 @@ CREATE TABLE `progress` (
 
 LOCK TABLES `progress` WRITE;
 /*!40000 ALTER TABLE `progress` DISABLE KEYS */;
-INSERT INTO `progress` VALUES (1,1,1),(3,1,2);
+INSERT INTO `progress` VALUES (1,1,1),(3,1,3),(3,2,1);
 /*!40000 ALTER TABLE `progress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -659,7 +714,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-11-22 16:18:57','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',1,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,4,1,3),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-11-21 23:12:18','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0,1),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-11-24 19:31:59','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477293245.0',2,NULL,'混吃等死不舒服',NULL,0,1,5),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,2,0),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-11-21 23:11:42','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,1,0),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-11-08 10:43:39','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,2,0,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,1,NULL,NULL,NULL,0,3,0);
+INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-11-22 16:18:57','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',1,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,4,1,3),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-11-21 23:12:18','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0,1),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-12-02 15:32:41','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477293245.0',2,NULL,'混吃等死不舒服',NULL,0,1,5),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,2,0),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-11-21 23:11:42','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,1,0),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-11-08 10:43:39','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,2,0,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,1,NULL,NULL,NULL,0,3,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -672,46 +727,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-24 20:34:56
-
-
--- ----------------------------
--- Table structure for cases
--- ----------------------------
-DROP TABLE IF EXISTS `cases`;
-CREATE TABLE `cases` (
-  `id` int(64) NOT NULL AUTO_INCREMENT,
-  `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
-  `tag` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of cases
--- ----------------------------
-INSERT INTO `cases` VALUES (1, '火灾模拟软件FDS的计算负载均衡优化', 'Fire dynamics simulator(FDS) 是一款用于处理火灾驱动的流体流动的开源计算流体力学CFD软件，广泛应用于建筑设计和消防安全等工程领域。FDS软件采用三维大涡模拟（Large Eddy Simulation），通过求解NS方程来分析燃烧过程中建筑内的温度场和流场的变化，但在此案例中，我们并不需要去关心具体求解过程。FDS软件支持MPI / OMP 的并行计算 , 但截止我们测试时，其公开版本（6.3.0）对MPI 并行计算有诸多限制:MPI 进程数必须少于其输入文件中的网格区域（MESH）数，并按照“前面的每个进程处理一个网格区域，最后一个进程处理剩余所有的网格区域”的方式来进行计算。这种模式使得FDS在HPC环境下直接使用难以发挥高性能计算集群的性能优势。', 'FDS;CFD;负载均衡');
-
-
-
--- ----------------------------
--- Table structure for case_code
--- ----------------------------
-DROP TABLE IF EXISTS `case_codes`;
-CREATE TABLE `case_codes` (
-  `case_id` int(64) NOT NULL,
-  `version_id` int(64) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  `description` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `code_path` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`case_id`, `version_id`),
-  KEY `case_id` (`case_id`),
-  CONSTRAINT `case_codes_ibfk_1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- ----------------------------
--- Records of case_code
--- ----------------------------
-INSERT INTO `case_codes` VALUES (1, 1, '优化1', '数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万', 'case_1/version_1/');
-INSERT INTO `case_codes` VALUES (1, 2, '优化2', '使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n', 'case_1/version_2/');
-
+-- Dump completed on 2016-12-02 17:12:30

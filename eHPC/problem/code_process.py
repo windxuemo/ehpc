@@ -85,6 +85,7 @@ class ehpc_client(object):
             req.get_method = lambda: method
 
         # 发送接收请求
+        resp = None
         try:
             resp = urllib2.urlopen(req)
             self.resp = resp
@@ -102,10 +103,8 @@ class ehpc_client(object):
         except ValueError:
             self.data = rdata
             self.status = "unknown"
-            self.status_code = resp.getcode()
+            self.status_code = resp.getcode() if resp else 0
             self.output = rdata
-            if self.status_codce == 200:
-                self.status = "OK"
 
         # 设置异步获取,当卡了的时候等待,死掉的话会保存在那边,再获取
         if self.status_code == 201 and async_get:
@@ -201,7 +200,7 @@ if __name__ == '__main__':
     input_filename = "main.cpp"
     output_filename = "a.out"
     path = "/HOME/sysu_dwu_1/coreos"
-    test_text = open("main.cpp").read()
+    test_text = open(input_filename).read()
 
     if not mc.login():
         print "login fail."

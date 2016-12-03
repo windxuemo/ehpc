@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from . import problem
 from ..models import Program, Classify, SubmitProblem, Question
 from flask_babel import gettext
-from ..problem.code_process import c_compile, c_run, ehpc_client
+from ..problem.code_process import ehpc_client
 from .. import db
 from sqlalchemy import or_
 

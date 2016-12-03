@@ -6,7 +6,6 @@ import os
 import urllib2, urllib
 import json
 import time
-import random, string
 
 # 参数设置
 base_url = "http://10.127.48.5:8000/api"
@@ -18,40 +17,38 @@ DEBUG_ASYNC = True
 machine_name = "ln3"
 
 
-def c_compile(source_code, pid, uid, is_success):
-    save_src_filename = "code/%s_%s.c" % (str(pid), str(uid))
-    save_exe_filename = "code/%s_%s.o" % (str(pid), str(uid))
+# def c_compile(source_code, pid, uid, is_success):
+#     save_src_filename = "code/%s_%s.c" % (str(pid), str(uid))
+#     save_exe_filename = "code/%s_%s.o" % (str(pid), str(uid))
+#
+#     with open(save_src_filename, 'w') as src_file:
+#         src_file.write(source_code)
+#
+#     commands = "gcc %s -o %s" % (save_src_filename, save_exe_filename)
+#     p = subprocess.Popen(commands, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#     stdout, stderr = p.communicate()
+#
+#     is_success[0] = not p.returncode
+#
+#     if is_success[0]:
+#         return "编译成功!\n %s" % stderr
+#     else:
+#         return "编译失败!\n %s" % stderr
+#
+#
+# def c_run(pid, uid):
+#     save_exe_filename = "code/%s_%s.o" % (str(pid), str(uid))
+#     # 编译通过
+#     if os.path.isfile(save_exe_filename):
+#         commands = "./%s" % save_exe_filename
+#         p = subprocess.Popen(commands, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#         stdout, stderr = p.communicate()
+#         return stdout
+#     else:
+#         return None
 
-    with open(save_src_filename, 'w') as src_file:
-        src_file.write(source_code)
 
-    commands = "gcc %s -o %s" % (save_src_filename, save_exe_filename)
-    p = subprocess.Popen(commands, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate()
-
-    is_success[0] = not p.returncode
-
-    if is_success[0]:
-        return "编译成功!\n %s" % stderr
-    else:
-        return "编译失败!\n %s" % stderr
-
-
-def c_run(pid, uid):
-    save_exe_filename = "code/%s_%s.o" % (str(pid), str(uid))
-    # 编译通过
-    if os.path.isfile(save_exe_filename):
-        commands = "./%s" % save_exe_filename
-        p = subprocess.Popen(commands, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = p.communicate()
-        return stdout
-    else:
-        return None
-
-
-# 又要重写TAT
-# 参考@JiangLiNSCC的代码
-class ehpc_client:
+class ehpc_client(object):
     def __init__(self, base_url=base_url, headers={}, login_cookie=None, login_data=login_data):
         self.headers = headers
         self.base_url = base_url
@@ -92,8 +89,7 @@ class ehpc_client:
             resp = urllib2.urlopen(req)
             self.resp = resp
             rdata = resp.read()
-        # rdata = json.loads((rdata).decode('ascii'))
-        except urllib2.HTTPError, e:
+        except urllib2.HTTPError as e:
             rdata = e.fp.read()
 
         # 保存
@@ -108,16 +104,18 @@ class ehpc_client:
             self.status = "unknown"
             self.status_code = resp.getcode()
             self.output = rdata
-            if self.status_codce == 200: self.status = "OK"
+            if self.status_codce == 200:
+                self.status = "OK"
 
-        # 这里的意思其实是设置了可以异步获取,当卡了的时候等待,死掉的话会保存在那边,再获取
+        # 设置异步获取,当卡了的时候等待,死掉的话会保存在那边,再获取
         if self.status_code == 201 and async_get:
             self.async_wait_time = async_wait_time
             time.sleep(1)
-            if DEBUG_ASYNC: print "jump to async"
+            if DEBUG_ASYNC:
+                print "jump to async"
             self.open(async_url + '/' + self.output)
 
-        # 其实就是100continue啦
+        # 其实就是 100 continue
         if self.status_code == 100 and async_wait and self.async_wait_time > 0:
             time.sleep(1)
             self.async_wait_time = async_wait_time
@@ -150,13 +148,13 @@ class ehpc_client:
 
     # DELETE /api/auth
     def logout(self):
-        tmpdata = self.open("/auth", login=True, method="DELETE")
+        self.open("/auth", login=True, method="DELETE")
         return self.ret200()
 
     # GET /api/file/<machine>/<path>列目录
     # 那边没有给输出,暂时不用
     def get_directory(self, path):
-        tmpdata = self.open("/file/" + machine_name + path + '/')
+        self.open("/file/" + machine_name + path + '/')
         return self.ret200()
 
     # GET /api/async/<id>获取
@@ -169,12 +167,12 @@ class ehpc_client:
 
     # GET /api/file/<machine>/<path>?download=True
     def download(self, path, filename):
-        tmpdata = self.open("/file/" + machine_name + path + '/' + filename + "?download=True")
+        self.open("/file/" + machine_name + path + '/' + filename + "?download=True")
         return self.ret200()
 
     # PUT /api/file/<machine>/<path>
     def upload(self, path, filename, data):
-        tmpdata = self.open("/file/" + machine_name + path + '/' + filename, method="PUT", data=data)
+        self.open("/file/" + machine_name + path + '/' + filename, method="PUT", data=data)
         return self.ret200()
 
     # POST  /api/command/<machine>

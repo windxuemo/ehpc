@@ -139,27 +139,26 @@ def course_lesson(course_id):
 
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/reload_lesson')
 @teacher_login
-def reload_material(course_id,lesson_id):
+def reload_material(course_id, lesson_id):
     """ 重载课时表 """
-    materials=Material.query.filter_by(lessonId=lesson_id).all()
-    return render_template('admin/course/widget_material_list.html',materials=materials)
+    materials = Material.query.filter_by(lessonId=lesson_id).all()
+    return render_template('admin/course/widget_material_list.html', materials=materials)
 
 
 # 本地文件上传
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/upload', methods=['POST'])
 @teacher_login
-def upload(course_id,lesson_id):
+def upload(course_id, lesson_id):
     cur_course = Course.query.filter_by(id=course_id).first_or_404()
     cur_lesson = cur_course.lessons.filter_by(id=lesson_id).first_or_404()
-    filename=custom_secure_filename(request.form['name'])
-    file=request.files['file']
-    file_type = get_file_type(file.mimetype)  
-    filename= filename.encode("utf-8")
+    filename = custom_secure_filename(request.form['name'])
+    file = request.files['file']
+    file_type = get_file_type(file.mimetype)
     m = Material(name=filename, m_type=file_type, uri="")
     cur_lesson.materials.append(m)
     db.session.commit()  # get material id
     m.uri = os.path.join("course_%d" % course_id,
-                             "lesson%d_material%d." % (lesson_id, m.id) + file.filename.rsplit('.', 1)[1])
+                         "lesson%d_material%d." % (lesson_id, m.id) + file.filename.rsplit('.', 1)[1])
     status = upload_file(file, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
     if status[0]:
         db.session.commit()
@@ -195,7 +194,7 @@ def lesson_material(course_id, lesson_id):
                 curr_lesson.materials.append(curr_material)
                 db.session.commit()  # get material id
                 return jsonify(status="success", id=curr_lesson.id)
-            
+
         elif request.form['op'] == "del":
             curr_course = Course.query.filter_by(id=course_id).first_or_404()
             curr_lesson = curr_course.lessons.filter_by(id=lesson_id).first_or_404()

@@ -4,7 +4,7 @@
     <div class="container">
         <h4>{{ case.name }}</h4>
         <hr>
-        <div>{{ case.description }}</div>
+        <div>{{ case.description | markdown | safe }}</div>
     </div>
 {% endblock %}
 

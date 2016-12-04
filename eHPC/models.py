@@ -16,9 +16,9 @@ import json
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    username = db.Column(db.String(128), unique=True, index=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    email = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    email = db.Column(db.String(128), unique=True, index=True, nullable=False)
 
     is_password_reset_link_valid = db.Column(db.Boolean, default=True)
     last_login = db.Column(db.DateTime(), default=datetime.now)
@@ -26,13 +26,13 @@ class User(UserMixin, db.Model):
 
     # 权限: 0. 管理员, 1. 学生, 2. 老师,
     permissions = db.Column(db.Integer, default=1, nullable=False)
-    website = db.Column(db.String(64), nullable=True)
-    avatar_url = db.Column(db.String(64),
+    website = db.Column(db.String(128), nullable=True)
+    avatar_url = db.Column(db.String(128),
                            default="http://www.gravatar.com/avatar/")
 
     # 个人信息, 包括电话号码, 身份证号码, 个人座右铭等。
-    telephone = db.Column(db.String(32))
-    personal_id = db.Column(db.String(32))
+    telephone = db.Column(db.String(64))
+    personal_id = db.Column(db.String(64))
     personal_profile = db.Column(db.Text(), nullable=True)
 
     # 用户创建话题, 回复等, 一对多的关系
@@ -92,8 +92,8 @@ course_users = db.Table('course_users',
 class Course(db.Model):
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True, index=True)   # 课程标题
-    subtitle = db.Column(db.String(64), default="")             # 课程副标题
+    title = db.Column(db.String(128), unique=True, index=True)   # 课程标题
+    subtitle = db.Column(db.String(128), default="")             # 课程副标题
     about = db.Column(db.Text(), nullable=True)                 # 课程简介
     createdTime = db.Column(db.DateTime(), default=datetime.now)
 
@@ -101,9 +101,9 @@ class Course(db.Model):
     studentNum = db.Column(db.Integer, default=0)               # 学生数目
 
     # smallPicture, middlePicture, largePicture
-    smallPicture = db.Column(db.String(64))                     # 课程小图
-    middlePicture = db.Column(db.String(64))                    # 课程中图
-    largePicture = db.Column(db.String(64))                     # 课程大图
+    smallPicture = db.Column(db.String(128))                     # 课程小图
+    middlePicture = db.Column(db.String(128))                    # 课程中图
+    largePicture = db.Column(db.String(128))                     # 课程大图
 
     rank = db.Column(db.Float, default=0)                     # 课程评分
 
@@ -122,7 +122,7 @@ class Lesson(db.Model):
     __tablename__ = 'lessons'
     id = db.Column(db.Integer, primary_key=True)  # 课时 ID
     number = db.Column(db.Integer)                # 课时所在课程的编号
-    title = db.Column(db.String(64))              # 课时标题
+    title = db.Column(db.String(128))              # 课时标题
     content = db.Column(db.Text())                # 课时正文
     courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
 
@@ -136,7 +136,7 @@ class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)          # 资料 ID
     name = db.Column(db.String(1024), nullable=False)     # 资料名称
     uri = db.Column(db.String(2048), default="")          # 资料路径
-    m_type = db.Column(db.String(64), nullable=False)     # 资料类型
+    m_type = db.Column(db.String(128), nullable=False)     # 资料类型
 
     lessonId = db.Column(db.Integer, db.ForeignKey('lessons.id'))  # 所属课时ID
 
@@ -171,7 +171,7 @@ class Group(db.Model):
 
     __tablename__ = 'groups'
     id = db.Column(db.Integer, primary_key=True)        # 讨论组 ID
-    title = db.Column(db.String(64), nullable=False)    # 讨论组名字
+    title = db.Column(db.String(128), nullable=False)    # 讨论组名字
     about = db.Column(db.Text(), nullable=False)        # 讨论组介绍
     logo = db.Column(db.String(128))                    # 讨论组 Logo 的 URL
 
@@ -197,7 +197,7 @@ class Topic(db.Model):
 
     __tablename__ = 'topics'
     id = db.Column(db.Integer, primary_key=True)                # 话题 ID
-    title = db.Column(db.String(64), nullable=False)            # 话题标题
+    title = db.Column(db.String(128), nullable=False)            # 话题标题
     content = db.Column(db.Text(), nullable=False)              # 话题内容
     visitNum = db.Column(db.Integer, default=0)                 # 话题浏览次数
     postNum = db.Column(db.Integer, default=0)                  # 评论次数
@@ -240,7 +240,7 @@ class Post(db.Model):
 class Program(db.Model):
     __tablename__ = "programs"
     id = db.Column(db.Integer, primary_key=True)        # 题目 ID
-    title = db.Column(db.String(64), nullable=False)    # 题目标题
+    title = db.Column(db.String(128), nullable=False)    # 题目标题
     detail = db.Column(db.Text(), nullable=False)       # 题目详情
     difficulty = db.Column(db.Integer, default=0)       # 题目难度
     acceptedNum = db.Column(db.Integer, default=0)      # 通过次数
@@ -268,9 +268,9 @@ class SubmitProblem(db.Model):
     pid = db.Column(db.Integer, nullable=False)             # 本次提交的题目ID
     uid = db.Column(db.Integer, nullable=False)             # 本次提交的用户ID
     code = db.Column(db.Text(), nullable=False)             # 本次提交的提交代码
-    language = db.Column(db.String(64), nullable=False)     # 本次提交的代码语言
+    language = db.Column(db.String(128), nullable=False)     # 本次提交的代码语言
     submit_time = db.Column(db.DateTime(), default=datetime.now)   # 本次提交的提交时间
-    status = db.Column(db.String(64))                       # 本次提交的运行结果
+    status = db.Column(db.String(128))                       # 本次提交的运行结果
 
 
 question_classifies = db.Table('question_classifies',
@@ -321,7 +321,7 @@ class Paper(db.Model):
 class Classify(db.Model):
     __tablename__ = "classifies"
     id = db.Column(db.Integer, primary_key=True)        # 分类 ID
-    name = db.Column(db.String(64), nullable=False)     # 分类名字
+    name = db.Column(db.String(128), nullable=False)     # 分类名字
 
 
 """ 咨询信息
@@ -332,7 +332,7 @@ class Classify(db.Model):
 class Article(db.Model):
     __tablename__ = "articles"
     id = db.Column(db.Integer, primary_key=True)        # 资讯 ID
-    title = db.Column(db.String(64), nullable=False)    # 资讯标题
+    title = db.Column(db.String(128), nullable=False)    # 资讯标题
     content = db.Column(db.Text(), nullable=False)      # 资讯正文
     visitNum = db.Column(db.Integer, default=0)         # 浏览次数
 
@@ -411,7 +411,7 @@ class CaseCode(db.Model):
     version_id = db.Column(db.Integer, nullable=False, primary_key=True)
     name = db.Column(db.String(256), nullable=False)
     description = db.Column(db.String(256), nullable=False)
-    code_path = db.Column(db.String(64), nullable=False)
+    code_path = db.Column(db.String(128), nullable=False)
 
 
 class CaseCodeMaterial(db.Model):

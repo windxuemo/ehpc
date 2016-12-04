@@ -506,8 +506,26 @@ def program_edit():
 @admin.route('/lab/', methods=['GET', 'POST'])
 @teacher_login
 def lab():
-    curr_knowledge = Knowledge.query.first_or_404()
-    return redirect(url_for('admin.lab_view', knowledge_id=curr_knowledge.id))
+    if request.method == 'GET':
+        knows = Knowledge.query.all()
+        return render_template('admin/lab/index.html', knows=knows)
+    elif request.method == 'POST':
+        if request.form['op'] == 'create':
+            curr_knowledge = Knowledge(title=request.form['title'], content=request.form['content'])
+            db.session.add(curr_knowledge)
+            db.session.commit()
+            return jsonify(status='success')
+        elif request.form['op'] == 'edit':
+            curr_knowledge = Knowledge.query.filter_by(id=request.form['knowledge_id']).first_or_404()
+            curr_knowledge.title = request.form['title']
+            curr_knowledge.content = request.form['content']
+            db.session.commit()
+            return jsonify(status='success')
+        elif request.form['op'] == 'del':
+            curr_knowledge = Knowledge.query.filter_by(id=request.form['knowledge_id']).first_or_404()
+            db.session.delete(curr_knowledge)
+            db.session.commit()
+            return jsonify(status='success')
 
 
 @admin.route('/lab/<int:knowledge_id>/', methods=['GET', 'POST'])
@@ -516,7 +534,7 @@ def lab_view(knowledge_id):
     if request.method == 'GET':
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
         knows = Knowledge.query.all()
-        return render_template('admin/lab/index.html', knowledge=curr_knowledge, knows=knows)
+        return render_template('admin/lab/knowledge.html', knowledge=curr_knowledge, knows=knows)
     elif request.method == 'POST':
         # 删除任务以及调整顺序
         if request.form['op'] == 'del':
@@ -547,7 +565,7 @@ def lab_create(knowledge_id):
         materials = Material.query.all()
         questions = Question.query.all()
         programs = Program.query.all()
-        return render_template('admin/lab/detail.html', op='create', knowledge=curr_knowledge,
+        return render_template('admin/lab/knowledge_detail.html', op='create', knowledge=curr_knowledge,
                                materials=materials, questions=questions, programs=programs)
     elif request.method == 'POST':
         # 创建任务
@@ -581,7 +599,7 @@ def lab_edit(knowledge_id, challenge_id):
         materials = Material.query.all()
         questions = Question.query.all()
         programs = Program.query.all()
-        return render_template('admin/lab/detail.html', op='edit', knowledge=curr_knowledge, challenge=curr_challenge,
+        return render_template('admin/lab/knowledge_detail.html', op='edit', knowledge=curr_knowledge, challenge=curr_challenge,
                                materials=materials, questions=questions, programs=programs)
     elif request.method == 'POST':
         # 编辑任务

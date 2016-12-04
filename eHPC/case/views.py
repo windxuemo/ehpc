@@ -2,10 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, jsonify, url_for, current_app
 from . import case
-from flask_babel import gettext
-from flask_login import login_required, current_user
 from ..models import Case, CaseCode
-from .. import db
 import os
 
 
@@ -33,7 +30,7 @@ def show_case(case_id):
             case_code = CaseCode.query.filter_by(case_id=request.form['case_id'],
                                                  version_id=request.form['version_id']).first_or_404()
 
-            path = os.path.join(current_app.config['RESOURCE_FOLDER'], case_code.code_path)
+            path = os.path.join(current_app.config['CASE_FOLDER'], case_code.code_path)
             with open(os.path.join(path, request.form['file_name']), 'r') as code:
                 return jsonify(status='success', code=code.read())
 

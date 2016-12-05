@@ -34,10 +34,3 @@ def show_case(case_id):
             with open(os.path.join(path, request.form['file_name']), 'r') as code:
                 return jsonify(status='success', code=code.read())
 
-
-@case.route('/<int:cid>/')
-def case_view(cid):
-    cur_case = Case.query.filter_by(id=cid).first_or_404()
-    return render_template('case/case.html',
-                           title=cur_case.name,
-                           case=cur_case)

@@ -297,6 +297,7 @@ select:-webkit-autofill {
 
 .nav > li.nav-more.open li:hover .dropdown-menu {
     display: block;
+    z-index: 1;
 }
 
 .nav > li.nav-more .open > a,
@@ -4565,6 +4566,20 @@ hr {
     border: 1px solid #796161;
     border-radius: 10px;
     outline: none;
+}
+
+.version-manage {
+    padding-top: 10px;
+    padding-left: 0px;
+    border: 1px solid #d6d6d6;
+    border-radius: 3px;
+    position: relative;
+}
+
+.version-manage .pull-right-btn {
+    position: absolute;
+    top: -40px;
+    right: 0px;
 }
 
 /*   案例版本管理   */

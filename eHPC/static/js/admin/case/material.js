@@ -77,7 +77,7 @@ $(document).ready(function () {
         $("#material-table-body").find("input").each(function () {
             if (this.checked) {
                 $(this).parent().parent().remove();
-                array.push($(this).parent().parent().data("material_id"));
+                array.push($(this).parent().parent().data("material_name"));
             }
         });
 
@@ -86,12 +86,11 @@ $(document).ready(function () {
             url: url,
             data: {
                 op: "del",
-                material_id: array
+                material_name: array
             },
             success: function (data) {
                 if(data.status=="success"){
                     alert("删除成功");
-                    console.log("OKOKOK");
                     $("#file-manage-panel").find("input").prop("checked", false);
                 }
                 else{

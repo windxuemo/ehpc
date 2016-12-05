@@ -1,12 +1,6 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +8,18 @@
     <div class="container" id="content-container">
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.case') }}">返回案例首页</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item edit-info" href="{{url_for('admin.case_edit',case_id=case.id)}}">编辑基本信息</a>
+                        <a class="list-group-item edit-version active" href="#">管理案例版本</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading" style="position: sticky; top: 0px;border-bottom: 1px solid #d6d6d6;">
                         <div class="pull-right">
@@ -90,8 +95,8 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button id="version-save-btn" type="button" class="btn btn-primary">保存</button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
+            </div>
+        </div>
     </div>
 {% endblock %}
 

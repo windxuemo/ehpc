@@ -26,13 +26,13 @@
                     <tbody id="tb">
                     {% for c in cases %}
                         <tr data-cid="{{ c.id }}">
-                            <td><a href="{{url_for('admin.case_version',case_id=c.id)}}">{{ c.name }}</a></td>
+                            <td>{{ c.name }}</td>
                             <td>{{ c.tag }}</td>
-                            <td><a href="{{url_for('admin.case_version',case_id=c.id)}}">{{ c.codes.count()}}</a></td>
+                            <td>{{ c.codes.count()}}</td>
                             <td>
-                                <a href="{{ url_for('admin.case_edit', cid=c.id) }}">编辑</a>
+                                <a href="{{ url_for('admin.case_edit', case_id=c.id) }}">管理案例</a>
                                 <span class="divider"> | </span>
-                                <a href="{{ url_for('case.index') }}" target="_blank">预览</a>
+                                <a href="{{ url_for('case.show_case',case_id=c.id) }}" target="_blank">预览</a>
                                 <span class="divider"> | </span>
                                 <a href="javascript:void(0)" name="del-btn">删除</a>
                             </td>

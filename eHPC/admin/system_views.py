@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, url_for, abort, jsonify, c
 from datetime import datetime
 from ..user.authorize import system_login
 from . import admin
-from ..models import User, Classify, Article, Group, Case, CaseCode, CaseCodeMaterial
+from ..models import User, Classify, Article, Group, Case, CaseCode
 from .. import db
 from flask_babel import gettext
 import os
@@ -164,9 +164,6 @@ def group_delete():
 @system_login
 def case():
     cases = Case.query.all()
-    #print "HHHHHHH"
-    #for case in cases:
-    #    print case.codes.count()
     return render_template('admin/case/index.html',
                            title=gettext('Case Admin'),
                            cases=cases)
@@ -185,21 +182,23 @@ def case_create():
         new_case = Case(name=name, description=description, tag=tags)
         db.session.add(new_case)
         db.session.commit()
+        path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
+        os.mkdir(path)
         return redirect(url_for('admin.case'))
 
-@admin.route('/case/<int:cid>/edit/', methods=['POST', 'GET'])
+@admin.route('/case/<int:case_id>/edit/', methods=['POST', 'GET'])
 @system_login
-def case_edit(cid):
-    cur_case = Case.query.filter_by(id=cid).first_or_404()
+def case_edit(case_id):
+    cur_case = Case.query.filter_by(id=case_id).first_or_404()
     if request.method == "GET":
         if cur_case.tag!= "":
             tags = cur_case.tag.split(";")
-            return render_template('admin/case/edit.html',
+            return render_template('admin/case/edit_case_info.html',
                                title=cur_case.name,
                                case=cur_case,
                                tags=tags)
         else:
-            return render_template('admin/case/edit.html',
+            return render_template('admin/case/edit_case_info.html',
                                title=cur_case.name,
                                case=cur_case)
     elif request.method == "POST":
@@ -207,12 +206,26 @@ def case_edit(cid):
         cur_case.description = request.form['description']
         cur_case.tag = request.form['tags']
         db.session.commit()
-        return redirect(url_for('admin.case'))
+        return redirect(url_for('admin.case_edit',case_id=case_id))
 
 @admin.route('/case/delete/', methods=['POST', 'GET'])
 @system_login
 def case_delete():
     cur_case = Case.query.filter_by(id=request.form['cid']).first_or_404()
+    versions = cur_case.codes
+    path = os.path.join(current_app.config['CASE_FOLDER'],"%d" % cur_case.id)
+    for v in versions:
+        version_path = os.path.join(current_app.config['CASE_FOLDER'], v.code_path)
+        materials = list(os.walk(version_path))[0][2]
+        for m in materials:
+            curr_material_uri = os.path.join("%s" % version_path, "%s" % m)
+            #print curr_material_uri
+            try:
+                os.remove(os.path.join(current_app.config['CASE_FOLDER'], curr_material_uri))
+            except OSError:
+                pass
+        os.rmdir(version_path)
+    os.rmdir(path)
     db.session.delete(cur_case)
     db.session.commit()
     return jsonify(status="success", del_case_id=cur_case.id)
@@ -223,7 +236,7 @@ def case_version(case_id):
     if request.method == 'GET':
         curr_case = Case.query.filter_by(id=case_id).first_or_404()
         all_versions = CaseCode.query.filter_by(case_id=case_id).all()
-        return render_template('admin/case/case_code_versions.html',
+        return render_template('admin/case/edit_case_version.html',
                                title=gettext('Case Version'),
                                versions=all_versions,
                                case=curr_case)
@@ -238,10 +251,12 @@ def case_version(case_id):
                     index = v.version_id
             curr_version = CaseCode(case_id=case_id, version_id=index+1, name=request.form['name'], description=request.form['description'])
             curr_version.version_id = index+1;
-            curr_version.code_path = os.path.join("case","%d" % case_id, "version_%d/" % curr_version.version_id)
+            curr_version.code_path = os.path.join("%d" % case_id, "version_%d" % curr_version.version_id)
             db.session.add(curr_version)
             curr_case.codes.append(curr_version)
             db.session.commit()
+            path = os.path.join(current_app.config['CASE_FOLDER'], curr_version.code_path)
+            os.mkdir(path)
             return jsonify(status="success", id=curr_version.version_id)
         elif request.form['op'] == "edit":
             curr_case = Case.query.filter_by(id=case_id).first_or_404()
@@ -253,6 +268,16 @@ def case_version(case_id):
         elif request.form['op'] == "del":            
             curr_case = Case.query.filter_by(id=case_id).first_or_404()
             curr_version = curr_case.codes.filter_by(case_id=case_id,version_id=request.form['version_id']).first_or_404()
+            path = os.path.join(current_app.config['CASE_FOLDER'], curr_version.code_path)
+            materials = list(os.walk(path))[0][2]
+            for m in materials:
+                curr_material_uri = os.path.join("%s" % path, "%s" % m)
+                #print curr_material_uri
+                try:
+                    os.remove(os.path.join(current_app.config['CASE_FOLDER'], curr_material_uri))
+                except OSError:
+                    pass
+            os.rmdir(path)
             curr_case.codes.remove(curr_version)
             db.session.delete(curr_version)
             db.session.commit()
@@ -267,7 +292,10 @@ def case_version_material(case_id, version_id):
     if request.method == 'GET':
         curr_case = Case.query.filter_by(id=case_id).first_or_404()
         curr_version = curr_case.codes.filter_by(version_id=version_id).first_or_404()
-        materials = CaseCodeMaterial.query.filter_by(case_id=case_id,version_id=version_id).all()
+        path = os.path.join(current_app.config['CASE_FOLDER'], curr_version.code_path)
+        materials = list(os.walk(path))[0][2]
+        #for m in materials:
+        #    print m
         return render_template('admin/case/case_code_materials.html', case=curr_case,
                                version=curr_version,
                                materials=materials,
@@ -275,18 +303,13 @@ def case_version_material(case_id, version_id):
     elif request.method == 'POST':
         # 课时材料的上传和删除            
         if request.form['op'] == "del":
-            curr_case = Case.query.filter_by(id=case_id).first_or_404()
-            curr_version = curr_case.codes.filter_by(version_id=version_id).first_or_404()
-            material_id = request.form.getlist('material_id[]')
-            for idx in material_id:
-                curr_material = CaseCodeMaterial.query.filter_by(id=idx).first()
-                if not curr_material:
-                    return jsonify(status="fail", id=curr_version.id)
+            materials = request.form.getlist('material_name[]')
+            for m in materials:
                 # 需要在课时对象中删除该资源
-                db.session.delete(curr_material)
-                db.session.commit()
+                curr_material_uri = os.path.join("%d" % case_id, "version_%d" % version_id, "%s" % m)
+                #print curr_material_uri
                 try:
-                    os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], curr_material.uri))
+                    os.remove(os.path.join(current_app.config['CASE_FOLDER'], curr_material_uri))
                 except OSError:
                     pass
             return jsonify(status="success", version_id=version_id)
@@ -295,7 +318,10 @@ def case_version_material(case_id, version_id):
 @system_login
 def reload_case_material(case_id,version_id):
     """ 重载版本源文件表 """
-    materials=CaseCodeMaterial.query.filter_by(case_id=case_id,version_id=version_id).all()
+    curr_case = Case.query.filter_by(id=case_id).first_or_404()
+    curr_version = curr_case.codes.filter_by(version_id=version_id).first_or_404()
+    path = os.path.join(current_app.config['CASE_FOLDER'], curr_version.code_path)
+    materials = list(os.walk(path))[0][2]
     return render_template('admin/case/widget_material_list.html',materials=materials)
 
 
@@ -305,20 +331,10 @@ def reload_case_material(case_id,version_id):
 def case_upload(case_id,version_id):
     cur_case = Case.query.filter_by(id=case_id).first_or_404()
     cur_version = cur_case.codes.filter_by(version_id=version_id).first_or_404()
-    filename=custom_secure_filename(request.form['name'])
-    file=request.files['file']
-    filename= filename.encode("utf-8")
-    m = CaseCodeMaterial(name=filename, uri="", case_id=case_id, version_id=version_id)
-    db.session.add(m)
-    db.session.commit()  # get material id
-    m.uri = os.path.join("case","%d" % case_id, "version_%d" % version_id, "%s" % filename)
+    material_name=custom_secure_filename(request.form['name'])
+    material=request.files['file']
+    filename= material_name.encode("utf-8")
+    material_uri = os.path.join("%d" % case_id, "version_%d" % version_id, "%s" % filename)
     #print m.uri
-    status = upload_file(file, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
-    if status[0]:
-        db.session.commit()
-    else:
-        cur_version.materials.remove(m)
-        db.session.delete(m)
-        db.session.commit()
-
+    status = upload_file(material, os.path.join(current_app.config['CASE_FOLDER'], material_uri))
     return render_template('admin/case/upload.html')

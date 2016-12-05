@@ -15,7 +15,7 @@
             <div class="col-md-3">
                 <div class="list-group-panel">
                     <div class="list-group">
-                        <a class="list-group-item" href="{{ url_for('admin.case') }}">案例管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.case_version',case_id=case.id) }}">返回版本管理</a>
                     </div>
                     <div class="list-group">
                         {% for v in case.codes %}
@@ -51,9 +51,9 @@
                             <tbody id="material-table-body">
 
                             {% for m in materials %}
-                                <tr data-material_id="{{ m.id }}">
+                                <tr data-material_name="{{ m }}">
                                     <td><input type="checkbox"></td>
-                                    <td><a href="{{ url_for('case.index') }}">{{ m.name }}</a></td>
+                                    <td><a href="{{ url_for('case.index') }}">{{ m }}</a></td>
                                 </tr>
                             {% endfor %}
 

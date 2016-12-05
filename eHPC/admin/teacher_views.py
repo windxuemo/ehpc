@@ -137,7 +137,7 @@ def course_lesson(course_id):
             return jsonify(status="success", title=curr_lesson.title, content=curr_lesson.content)
 
 
-@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/reload_lesson')
+@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/reload_lesson/')
 @teacher_login
 def reload_material(course_id, lesson_id):
     """ 重载课时表 """
@@ -146,20 +146,21 @@ def reload_material(course_id, lesson_id):
 
 
 # 本地文件上传
-@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/upload', methods=['POST'])
+@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/upload/', methods=['POST'])
 @teacher_login
 def upload(course_id, lesson_id):
     cur_course = Course.query.filter_by(id=course_id).first_or_404()
     cur_lesson = cur_course.lessons.filter_by(id=lesson_id).first_or_404()
+
     filename = custom_secure_filename(request.form['name'])
-    file = request.files['file']
-    file_type = get_file_type(file.mimetype)
+    material = request.files['file']
+    file_type = get_file_type(material.mimetype)
     m = Material(name=filename, m_type=file_type, uri="")
     cur_lesson.materials.append(m)
     db.session.commit()  # get material id
     m.uri = os.path.join("course_%d" % course_id,
-                         "lesson%d_material%d." % (lesson_id, m.id) + file.filename.rsplit('.', 1)[1])
-    status = upload_file(file, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+                         "lesson%d_material%d." % (lesson_id, m.id) + material.filename.rsplit('.', 1)[1])
+    status = upload_file(material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
     if status[0]:
         db.session.commit()
     else:
@@ -599,7 +600,8 @@ def lab_edit(knowledge_id, challenge_id):
         materials = Material.query.all()
         questions = Question.query.all()
         programs = Program.query.all()
-        return render_template('admin/lab/knowledge_detail.html', op='edit', knowledge=curr_knowledge, challenge=curr_challenge,
+        return render_template('admin/lab/knowledge_detail.html', op='edit', knowledge=curr_knowledge,
+                               challenge=curr_challenge,
                                materials=materials, questions=questions, programs=programs)
     elif request.method == 'POST':
         # 编辑任务

@@ -65,32 +65,58 @@ INSERT INTO `articles` VALUES (6,'C++ 编译过程','简单地说，一个编译
 UNLOCK TABLES;
 
 --
--- Table structure for table `case_codes`
+-- Table structure for case_code_materials
+--
+DROP TABLE IF EXISTS `case_code_materials`;
+CREATE TABLE `case_code_materials` (
+  `id` int(64) NOT NULL AUTO_INCREMENT,
+  `version_id` int(64) NOT NULL,
+  `name` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
+  `uri` varchar(256) COLLATE utf8_unicode_ci DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `version_id` (`version_id`),
+  CONSTRAINT `case_code_materials_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `case_versions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `case_code_materials`
 --
 
-DROP TABLE IF EXISTS `case_codes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `case_codes` (
+LOCK TABLES `case_code_materials` WRITE;
+/*!40000 ALTER TABLE `case_code_materials` DISABLE KEYS */;
+INSERT INTO `case_code_materials` VALUES (1, 1, 'divBox.py', '');
+INSERT INTO `case_code_materials` VALUES (2, 1, 'FDSTool.py', '');
+INSERT INTO `case_code_materials` VALUES (3, 2, 'A.py', '');
+INSERT INTO `case_code_materials` VALUES (4, 2, 'B.py', '');
+INSERT INTO `case_code_materials` VALUES (5, 2, 'C.cpp', '');
+INSERT INTO `case_code_materials` VALUES (6, 2, 'D.c', '');
+/*!40000 ALTER TABLE `case_code_materials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for case_versions
+--
+DROP TABLE IF EXISTS `case_versions`;
+CREATE TABLE `case_versions` (
+  `id` int(64) NOT NULL AUTO_INCREMENT,
   `case_id` int(64) NOT NULL,
   `version_id` int(64) NOT NULL,
   `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `code_path` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`case_id`,`version_id`),
+  `dir_path` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `case_id` (`case_id`),
-  CONSTRAINT `case_codes_ibfk_1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  CONSTRAINT `case_versions_ibfk_1` FOREIGN KEY (`case_id`) REFERENCES `cases` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `case_codes`
+-- Dumping data for table `case_versions`
 --
 
-LOCK TABLES `case_codes` WRITE;
-/*!40000 ALTER TABLE `case_codes` DISABLE KEYS */;
-INSERT INTO `case_codes` VALUES (1,1,'优化1','数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万','1/version_1/'),(1,2,'优化2','使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n','1/version_2/');
-/*!40000 ALTER TABLE `case_codes` ENABLE KEYS */;
+LOCK TABLES `case_versions` WRITE;
+/*!40000 ALTER TABLE `case_versions` DISABLE KEYS */;
+INSERT INTO `case_versions` VALUES (1, 1, 1, '优化1', '数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万', '1/version_1/'),(2, 1, 2, '优化2', '使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n', '1/version_2/');
+/*!40000 ALTER TABLE `case_versions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -98,16 +124,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cases`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cases` (
   `id` int(64) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
+  `icon` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `tag` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `cases`
@@ -115,7 +139,7 @@ CREATE TABLE `cases` (
 
 LOCK TABLES `cases` WRITE;
 /*!40000 ALTER TABLE `cases` DISABLE KEYS */;
-INSERT INTO `cases` VALUES (1,'火灾模拟软件FDS的计算负载均衡优化','Fire dynamics simulator(FDS) 是一款用于处理火灾驱动的流体流动的开源计算流体力学CFD软件，广泛应用于建筑设计和消防安全等工程领域。FDS软件采用三维大涡模拟（Large Eddy Simulation），通过求解NS方程来分析燃烧过程中建筑内的温度场和流场的变化，但在此案例中，我们并不需要去关心具体求解过程。\r\n\r\nFDS软件支持MPI / OMP 的并行计算 , 但截止我们测试时，其公开版本（6.3.0）对MPI 并行计算有诸多限制:MPI 进程数必须少于其输入文件中的网格区域（MESH）数，并按照“前面的每个进程处理一个网格区域，最后一个进程处理剩余所有的网格区域”的方式来进行计算。这种模式使得FDS在HPC环境下直接使用难以发挥高性能计算集群的性能优势。\r\n\r\n为了能够在高性能计算环境下发挥FDS的并行计算能力，用户需要将模型切割成不同的MESH块。但一般情况下，用户建模是根据求解问题的几何特性来创建输入文件的MESH。这种建模方式导致了输入方式的各个MESH块中实际网格数量相差较大。\r\n\r\n为了能够使FDS的算例在超算上使用更大的节点规模，需要将大的MESH块拆分成小的MESH 块。通过拆分，可以提高MESH块的数量，从而提高算例的可用进程数，同时也降低了负载的不均衡性。此案例即要求用户尝试不同的切分方案来了解负载均衡对并行计算效率的影响。','FDS;CFD;负载均衡'),(2,'新的案例','新的案例','云');
+INSERT INTO `cases` VALUES (1,'火灾模拟软件FDS的计算负载均衡优化','Fire dynamics simulator(FDS) 是一款用于处理火灾驱动的流体流动的开源计算流体力学CFD软件，广泛应用于建筑设计和消防安全等工程领域。FDS软件采用三维大涡模拟（Large Eddy Simulation），通过求解NS方程来分析燃烧过程中建筑内的温度场和流场的变化，但在此案例中，我们并不需要去关心具体求解过程。\r\n\r\nFDS软件支持MPI / OMP 的并行计算 , 但截止我们测试时，其公开版本（6.3.0）对MPI 并行计算有诸多限制:MPI 进程数必须少于其输入文件中的网格区域（MESH）数，并按照“前面的每个进程处理一个网格区域，最后一个进程处理剩余所有的网格区域”的方式来进行计算。这种模式使得FDS在HPC环境下直接使用难以发挥高性能计算集群的性能优势。\r\n\r\n为了能够在高性能计算环境下发挥FDS的并行计算能力，用户需要将模型切割成不同的MESH块。但一般情况下，用户建模是根据求解问题的几何特性来创建输入文件的MESH。这种建模方式导致了输入方式的各个MESH块中实际网格数量相差较大。\r\n\r\n为了能够使FDS的算例在超算上使用更大的节点规模，需要将大的MESH块拆分成小的MESH 块。通过拆分，可以提高MESH块的数量，从而提高算例的可用进程数，同时也降低了负载的不均衡性。此案例即要求用户尝试不同的切分方案来了解负载均衡对并行计算效率的影响。','1.png','FDS;CFD;负载均衡'),(2,'新的案例','新的案例','2.png','云');
 /*!40000 ALTER TABLE `cases` ENABLE KEYS */;
 UNLOCK TABLES;
 

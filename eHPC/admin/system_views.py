@@ -4,7 +4,7 @@ from flask import render_template, request, redirect, url_for, abort, jsonify, c
 from datetime import datetime
 from ..user.authorize import system_login
 from . import admin
-from ..models import User, Classify, Article, Group, Case, CaseCode
+from ..models import User, Classify, Article, Group, Case
 from .. import db
 from flask_babel import gettext
 import os

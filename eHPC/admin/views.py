@@ -6,7 +6,7 @@ from datetime import datetime
 from ..user.authorize import admin_login, system_login, teacher_login
 from ..util.user_manage import is_admin_user, is_teacher_user
 from . import admin
-from ..models import User, Article, Group, Case, CaseCode
+from ..models import User, Article, Group, Case
 from .. import db
 from flask_babel import gettext
 

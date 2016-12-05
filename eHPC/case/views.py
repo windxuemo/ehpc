@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import render_template, request, jsonify, url_for, current_app
+from flask import render_template, request, jsonify, url_for, current_app, abort, render_template_string
 from . import case
-from ..models import Case, CaseCode
+from ..models import Case, CaseVersion
 import os
 
 
@@ -20,17 +20,24 @@ def show_case(case_id):
     elif request.method == 'POST':
         if request.form['type'] == 'case-description':
             case_to_show = Case.query.filter_by(id=request.form['case_id']).first_or_404()
-            return jsonify(status='success', description=case_to_show.description)
+            html = '{{ "' + case_to_show.description + '" | markdown | safe }}'
+            return jsonify(status='success', description=render_template_string(html))
+
         elif request.form['type'] == 'version-description':
-            case_code = CaseCode.query.filter_by(case_id=request.form['case_id'],
-                                                 version_id=request.form['version_id']).first_or_404()
+            case_version = CaseVersion.query.filter_by(id=request.form['auto_increment']).first_or_404()
+            html = '{{ "' + case_version.description + '" | markdown | safe }}'
+            return jsonify(status='success', description=render_template_string(html))
 
-            return jsonify(status='success', description=case_code.description)
         elif request.form['type'] == 'code':
-            case_code = CaseCode.query.filter_by(case_id=request.form['case_id'],
-                                                 version_id=request.form['version_id']).first_or_404()
-
-            path = os.path.join(current_app.config['CASE_FOLDER'], case_code.code_path)
-            with open(os.path.join(path, request.form['file_name']), 'r') as code:
-                return jsonify(status='success', code=code.read())
+            case_version = CaseVersion.query.filter_by(id=request.form['auto_increment']).first_or_404()
+            path = None
+            for m in case_version.materials:
+                if request.form['file_name'] == m.name:
+                    path = os.path.join(current_app.config['CASE_FOLDER'], case_version.dir_path, m.uri, m.name)
+                    break
+            if path is not None:
+                with open(path, 'r') as code:
+                    return jsonify(status='success', code=code.read())
+            else:
+                return jsonify(status='fail')
 

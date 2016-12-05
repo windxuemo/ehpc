@@ -399,18 +399,31 @@ class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False)
     description = db.Column(db.String(1024), nullable=False)
+    icon = db.Column(db.String(64))
     tag = db.Column(db.String(256))    #案例标签，两个标签之间用分号隔开
 
-    codes = db.relationship('CaseCode', backref='case', lazy='dynamic', cascade='all')
+    versions = db.relationship('CaseVersion', backref='case', lazy='dynamic', cascade='delete, delete-orphan')
 
 
-class CaseCode(db.Model):
-    __tablename__ = "case_codes"
+class CaseVersion(db.Model):
+    __tablename__ = "case_versions"
 
-    case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), nullable=False, primary_key=True)
-    version_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), nullable=False)
+    version_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(256), nullable=False)
     description = db.Column(db.String(256), nullable=False)
-    code_path = db.Column(db.String(128), nullable=False)
+    dir_path = db.Column(db.String(128), nullable=False)
 
+    materials = db.relationship('CaseCodeMaterial', backref='version', lazy='dynamic', cascade='delete, delete-orphan')
+
+
+class CaseCodeMaterial(db.Model):
+    """ 一个版本包括多份代码, 每份代码只能属于一个版本。 版本和代码是一对多的关系。
+    """
+    __tablename__ = 'case_code_materials'
+    id = db.Column(db.Integer, primary_key=True)          # 代码 ID
+    version_id = db.Column(db.Integer, db.ForeignKey('case_versions.id'), nullable=False)
+    name = db.Column(db.String(1024), nullable=False)     # 代码文件名称
+    uri = db.Column(db.String(256), default="")          # 代码路径
 

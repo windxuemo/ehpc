@@ -43,7 +43,7 @@ $(function () {
                 },
                 success: function (data) {
                     if(data['status'] == 'success'){
-                        $('#show-description').text(data['description']);
+                        $('#show-description').html(data['description']);
                         $('#case-text').show();
                         $('#editor').hide();
                     }
@@ -63,12 +63,11 @@ $(function () {
                 url: post_to,
                 data: {
                     type: type,
-                    case_id: $(obj).parent().parent().parent().parent().parent().data('case_id'),
-                    version_id: $(obj).parent().parent().parent().data('version_id')
+                    auto_increment: $(obj).parent().parent().parent().data('auto_increment')
                 },
                 success: function (data) {
                     if(data['status'] == 'success'){
-                        $('#show-description').text(data['description']);
+                        $('#show-description').html(data['description']);
                         $('#case-text').show();
                         $('#editor').hide();
                     }
@@ -87,8 +86,7 @@ $(function () {
                 url: post_to,
                 data: {
                     type: type,
-                    case_id: $(obj).parent().parent().parent().parent().parent().data('case_id'),
-                    version_id: $(obj).parent().parent().parent().data('version_id'),
+                    auto_increment: $(obj).parent().parent().parent().data('auto_increment'),
                     file_name: $(obj).text()
                 },
                 success: function (data) {
@@ -104,6 +102,9 @@ $(function () {
                         editor.setValue(data['code']);
                         editor.gotoLine(1);
                         $('#editor').show();
+                    }
+                    else if (data['status'] == 'fail'){
+                        alert('获取文件代码失败，请重试!');
                     }
                 }
             });

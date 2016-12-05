@@ -2,62 +2,57 @@
 
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/player.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/case.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="col-md-3" style="margin-top: 5px">
-            <div style="position: fixed;height: 83%;width: 17%">
-                <div style="overflow: auto;height: 100%">
-                    <ul id="accordion" class="accordion">
-                        <li data-case_id="{{ case.id }}">
-                            <div class="link">
-                                <i data-id='case-icon2' class="glyphicon glyphicon-tags"></i>
-                                <span data-id="case-name">{{ case.name }}</span>
-                                <i data-id='case-icon' class="glyphicon glyphicon-chevron-down temp-down"></i>
-                            </div>
-                            <ul class="submenu" style="display: block;">
-                                <li>
-                                    <a data-type="case-description" href="javascript:void(0)">案例描述</a>
-                                </li>
-                                {% for code in case.codes %}
-                                    <li data-version_id="{{ code.version_id }}">
-                                        <div class="link">
-                                            <span>{{ code.name }}</span>
-                                            <i class="glyphicon glyphicon-chevron-down"></i>
-                                        </div>
-                                        <ul class="submenu" style="display: block">
-                                            <li>
-                                                <a data-type="version-description" href="javascript:void(0)">优化描述</a>
-                                            </li>
-                                            {% for file in code.code_path | get_files_list %}
-                                                <li>
-                                                    <a data-type="code" href="javascript:void(0)">{{ file }}</a>
-                                                </li>
-                                            {% endfor %}
-
-                                        </ul>
-                                    </li>
-                                {% endfor %}
-                            </ul>
+    <div class="case-container">
+        <div class="col-md-3 case-left-nav">
+            <ul id="accordion" class="accordion">
+                <li data-case_id="{{ case.id }}">
+                    <div class="link">
+                        <i data-id='case-icon2' class="glyphicon glyphicon-tags"></i>
+                        <span data-id="case-name">{{ case.name }}</span>
+                        <i data-id='case-icon' class="glyphicon glyphicon-chevron-down temp-down"></i>
+                    </div>
+                    <ul class="submenu" style="display: block;">
+                        <li>
+                            <a data-type="case-description" href="javascript:void(0)">案例描述</a>
                         </li>
+                        {% for version in case.versions %}
+                            <li data-auto_increment="{{ version.id }}">
+                                <div class="link">
+                                    <span>{{ version.name }}</span>
+                                    <i class="glyphicon glyphicon-chevron-down"></i>
+                                </div>
+                                <ul class="submenu" style="display: block">
+                                    <li>
+                                        <a data-type="version-description" href="javascript:void(0)">优化描述</a>
+                                    </li>
+                                    {% for file in version.materials | get_files_list %}
+                                        <li>
+                                            <a data-type="code" href="javascript:void(0)">{{ file }}</a>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            </li>
+                        {% endfor %}
                     </ul>
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
 
-        <div class="col-md-9">
-            <div style="height: 83%;position: fixed;width: 53%">
-                <div id="case-text" class="panel" style="height: 100%;overflow: auto;width: 100%;margin: 5px 0;padding: 10px">
-                    <div class="panel-heading" style="border-bottom: solid 1px #F0F0F0">
-                        <span data-id="title" style="font-size: 25px"></span>
-                    </div>
-                    <div class="panel-body">
-                        <p id="show-description"></p>
-                    </div>
+        <div class="col-md-9 case-right-show">
+            <div id="case-text" class="panel case-text">
+                <div class="panel-heading case-text-panel-heading">
+                    <span data-id="title" class="case-text-title"></span>
                 </div>
-                <div id="editor" style="height: 100%;overflow: auto;width: 100%;margin: 5px 0"></div>
+                <div class="panel-body">
+                    <p id="show-description"></p>
+                </div>
             </div>
+            <div id="editor" class="case-code-editor"></div>
         </div>
     </div>
 

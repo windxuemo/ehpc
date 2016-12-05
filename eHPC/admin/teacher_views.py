@@ -152,15 +152,15 @@ def upload(course_id,lesson_id):
     cur_course = Course.query.filter_by(id=course_id).first_or_404()
     cur_lesson = cur_course.lessons.filter_by(id=lesson_id).first_or_404()
     filename=custom_secure_filename(request.form['name'])
-    file=request.files['file']
-    file_type = get_file_type(file.mimetype)  
+    material=request.files['file']
+    file_type = get_file_type(material.mimetype)
     filename= filename.encode("utf-8")
     m = Material(name=filename, m_type=file_type, uri="")
     cur_lesson.materials.append(m)
     db.session.commit()  # get material id
     m.uri = os.path.join("course_%d" % course_id,
-                             "lesson%d_material%d." % (lesson_id, m.id) + file.filename.rsplit('.', 1)[1])
-    status = upload_file(file, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+                             "lesson%d_material%d." % (lesson_id, m.id) + material.filename.rsplit('.', 1)[1])
+    status = upload_file(material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
     if status[0]:
         db.session.commit()
     else:

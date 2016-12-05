@@ -1,0 +1,75 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="content-container" class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.case') }}">返回案例首页</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item edit-info active" href="#">编辑基本信息</a>
+                        <a class="list-group-item edit-version" href="{{url_for('admin.case_version',case_id=case.id)}}">管理案例版本</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="case-info" class="panel panel-default">
+                    <div class="panel-body">
+                        <form action="{{ url_for('admin.case_edit', case_id=case.id) }}" method="POST" enctype="multipart/x-www-form-urlencoded" onsubmit="return validateForm()">
+                            <div class="form-group">
+                                <label>案例名称</label>
+                                <input type="text" class="form-control" name='name' value="{{ case.name }}" required>
+                                <br>
+                            </div>
+                            <div class="form-group">
+                                <label>案例关键词</label>
+                                <div class="form-group">
+                                    <input name="tag" type="text" class="case-tags" placeholder="请输入标签名(非必须)" value="">
+                                    <span id="add-tag-btn" class="btn btn-sm btn-primary">添加</span>
+                                </div>
+                                <br>
+                            </div>
+                            {% if tags %}
+                                <div class="case-tag-display">
+                                    {% for tag in tags %}
+                                    <h1 class='btn btn-info'>
+                                        <button type='button' class='close' onclick='delete_tag(this);'>&times;</button>
+                                        <span>{{tag}}</span>
+                                    </h1>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="case-tag-display hide">
+                                </div>
+                            {% endif %}
+                            <div class="form-group">
+                                <label>案例描述</label>
+                                <textarea name="description" data-provide="markdown" id="target-editor" rows="30"
+                                  >{{ case.description }}</textarea>
+                            </div>                       
+                            <div class="form-submit text-right">
+                                <input class='btn btn-success' id='submit' type='submit'>
+                            </div>
+                            <input name="tags" hidden value="{{case.tag}}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script src="{{ url_for('static',filename='js/admin/case/case.js') }}"></script>
+{% endblock %}
+
+{# group #}

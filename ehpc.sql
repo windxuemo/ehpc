@@ -107,8 +107,8 @@ CREATE TABLE `case_codes` (
 -- ----------------------------
 -- Records of case_codes
 -- ----------------------------
-INSERT INTO `case_codes` VALUES ('1', '1', '优化1', '数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万', 'case/1/version_1/');
-INSERT INTO `case_codes` VALUES ('1', '2', '优化2', '使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n', 'case/1/version_2/');
+INSERT INTO `case_codes` VALUES ('1', '1', '优化1', '数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万', '1/version_1/');
+INSERT INTO `case_codes` VALUES ('1', '2', '优化2', '使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n', '1/version_2/');
 
 -- ----------------------------
 -- Table structure for case_code_materials
@@ -742,4 +742,3 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-11-24 20:34:56
-

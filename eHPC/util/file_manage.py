@@ -36,7 +36,7 @@ def upload_img(file_src, des_height, des_width, des_path):
 def upload_file(file_src, des_path):
     """ 保存 form 表单获取的文件到目标地址 des_path
 
-    成功返回 True
+    成功返回 True, 同时 unique_uri 里面携带文件信息(用于更新资源链接, 防止缓存)
     失败返回 False, 同时 message 里面携带失败信息.
     """
     if file_src.filename == '':
@@ -82,7 +82,7 @@ def get_file_type(form_file_type):
         "text/html": "code",
         "text/javascript": "code",
         "application/javascript": "code",
-        "text/x-script.phyton": 'code'
+        "text/x-python-script": 'code',
     }
 
     return file_type_dict.get(form_file_type, "Unknown")

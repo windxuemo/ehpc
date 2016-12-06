@@ -115,9 +115,8 @@ def submit(pid):
     db.session.commit()
 
     path = "/HOME/sysu_dwu_1/coreos"
-    # 之后需要改进
-    input_filename = "code/%s_%s.c" % (str(pid), str(uid))
-    output_filename = "code/%s_%s.o" % (str(pid), str(uid))
+    input_filename = "%s_%s.c" % (str(pid), str(uid))
+    output_filename = "%s_%s.o" % (str(pid), str(uid))
 
     # with open(input_filename, 'w') as src_file:
     # src_file.write(source_code)
@@ -128,12 +127,10 @@ def submit(pid):
     if not is_success:
         print "login fail."
 
-        # 之后我会进一步封装成compile函数
     is_success = client.upload(path, input_filename, source_code)
     if not is_success:
         print "upload fail."
 
-        # 之后需要改进
     compile_command = "bash -c 'cd %s;g++ -o %s %s'" % (path, output_filename, input_filename)
     run_command = "bash -c 'cd %s;./%s'" % (path, output_filename)
 
@@ -160,5 +157,4 @@ def submit(pid):
     result['problem_id'] = pid
     result['compile_out'] = str(compile_out)
     result['run_out'] = str(run_out)
-
     return jsonify(**result)

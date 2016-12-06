@@ -169,7 +169,6 @@ def case():
                            cases=cases)
 
 
-
 @admin.route('/case/create/', methods=['POST', 'GET'])
 @system_login
 def case_create():
@@ -186,41 +185,43 @@ def case_create():
         os.mkdir(path)
         return redirect(url_for('admin.case'))
 
+
 @admin.route('/case/<int:case_id>/edit/', methods=['POST', 'GET'])
 @system_login
 def case_edit(case_id):
     cur_case = Case.query.filter_by(id=case_id).first_or_404()
     if request.method == "GET":
-        if cur_case.tag!= "":
+        if cur_case.tag != "":
             tags = cur_case.tag.split(";")
             return render_template('admin/case/edit_case_info.html',
-                               title=cur_case.name,
-                               case=cur_case,
-                               tags=tags)
+                                   title=cur_case.name,
+                                   case=cur_case,
+                                   tags=tags)
         else:
             return render_template('admin/case/edit_case_info.html',
-                               title=cur_case.name,
-                               case=cur_case)
+                                   title=cur_case.name,
+                                   case=cur_case)
     elif request.method == "POST":
         cur_case.name = request.form['name']
         cur_case.description = request.form['description']
         cur_case.tag = request.form['tags']
         db.session.commit()
-        return redirect(url_for('admin.case_edit',case_id=case_id))
+        return redirect(url_for('admin.case_edit', case_id=case_id))
+
 
 @admin.route('/case/delete/', methods=['POST', 'GET'])
 @system_login
 def case_delete():
     cur_case = Case.query.filter_by(id=request.form['cid']).first_or_404()
     versions = cur_case.versions
-    path = os.path.join(current_app.config['CASE_FOLDER'],"%d" % cur_case.id)
-    icon_path =os.path.join(current_app.config['CASE_COVER_FOLDER'], "%d.png" % cur_case.id)
+    path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % cur_case.id)
+    icon_path = os.path.join(current_app.config['CASE_COVER_FOLDER'], "%d.png" % cur_case.id)
     for v in versions:
         version_path = os.path.join(current_app.config['CASE_FOLDER'], v.dir_path)
         materials = v.materials
         for m in materials:
             cur_material_uri = os.path.join("%s" % version_path, "%s" % m.name)
-            #print cur_material_uri
+            # print cur_material_uri
             v.materials.remove(m)
             db.session.delete(m)
             db.session.commit()
@@ -233,11 +234,12 @@ def case_delete():
         db.session.commit()
         os.rmdir(version_path)
     if os.path.exists(icon_path):
-            os.remove(icon_path)
+        os.remove(icon_path)
     os.rmdir(path)
     db.session.delete(cur_case)
     db.session.commit()
     return jsonify(status="success", del_case_id=cur_case.id)
+
 
 @admin.route('/case/<int:case_id>/picture/', methods=['GET', 'POST'])
 @system_login
@@ -250,19 +252,20 @@ def case_icon(case_id):
         # 上传图片和保存图片
         if request.form['op'] == 'save':
             cur_case = Case.query.filter_by(id=case_id).first_or_404()
-            cur_case.icon = os.path.join("images/case","%d.png" % cur_case.id)
+            cur_case.icon = os.path.join("images/case", "%d.png" % cur_case.id)
             db.session.commit()
             return jsonify(status='success', id=cur_case.id)
         elif request.form['op'] == 'upload':
             cur_case = Case.query.filter_by(id=case_id).first_or_404()
             icon = request.files['pic']
-            icon_name =  "%d.png" % cur_case.id
+            icon_name = "%d.png" % cur_case.id
             icon_path = os.path.join(current_app.config['CASE_COVER_FOLDER'], icon_name)
             status = upload_img(icon, 171, 304, icon_path)
             if status[0]:
-                return jsonify(status='success', uri=os.path.join("/static/images/case",icon_name))
+                return jsonify(status='success', uri=os.path.join("/static/images/case", icon_name))
             else:
                 return jsonify(status="fail", id=cur_case.id)
+
 
 @admin.route('/case/<int:case_id>/version/', methods=['GET', 'POST'])
 @system_login
@@ -283,8 +286,9 @@ def case_version(case_id):
             for v in all_versions:
                 if v.version_id > index:
                     index = v.version_id
-            cur_version = CaseVersion(case_id=case_id, version_id=index+1, name=request.form['name'], description=request.form['description'])
-            cur_version.version_id = index+1;
+            cur_version = CaseVersion(case_id=case_id, version_id=index + 1, name=request.form['name'],
+                                      description=request.form['description'])
+            cur_version.version_id = index + 1;
             cur_version.dir_path = os.path.join("%d" % case_id, "version_%d" % cur_version.version_id)
             db.session.add(cur_version)
             cur_case.versions.append(cur_version)
@@ -299,9 +303,10 @@ def case_version(case_id):
             cur_version.description = request.form['description']
             db.session.commit()
             return jsonify(status="success", id=cur_version.version_id)
-        elif request.form['op'] == "del":            
+        elif request.form['op'] == "del":
             cur_case = Case.query.filter_by(id=case_id).first_or_404()
-            cur_version = cur_case.versions.filter_by(case_id=case_id,version_id=request.form['version_id']).first_or_404()
+            cur_version = cur_case.versions.filter_by(case_id=case_id,
+                                                      version_id=request.form['version_id']).first_or_404()
             materials = cur_version.materials
             path = os.path.join(current_app.config['CASE_FOLDER'], cur_version.dir_path)
             for m in materials:
@@ -318,8 +323,10 @@ def case_version(case_id):
             db.session.commit()
             return jsonify(status="success", id=cur_version.version_id)
         elif request.form['op'] == 'data':
-            cur_version = CaseVersion.query.filter_by(case_id=case_id,version_id=request.form['version_id']).first_or_404()
+            cur_version = CaseVersion.query.filter_by(case_id=case_id,
+                                                      version_id=request.form['version_id']).first_or_404()
             return jsonify(status="success", name=cur_version.name, description=cur_version.description)
+
 
 @admin.route('/case/<int:case_id>/version/<int:version_id>/material/', methods=['GET', 'POST'])
 @system_login
@@ -337,7 +344,7 @@ def case_version_material(case_id, version_id):
         if request.form['op'] == "del":
             material_ids = request.form.getlist('material_id[]')
             cur_case = Case.query.filter_by(id=case_id).first_or_404()
-            cur_version = cur_case.versions.filter_by(version_id=version_id).first_or_404() 
+            cur_version = cur_case.versions.filter_by(version_id=version_id).first_or_404()
             for i in material_ids:
                 # 需要在课时对象中删除该资源
                 m = cur_version.materials.filter_by(id=i).first_or_404()
@@ -350,30 +357,31 @@ def case_version_material(case_id, version_id):
                     pass
             return jsonify(status="success", version_id=version_id)
 
+
 @admin.route('/case/<int:case_id>/version/<int:version_id>/material/reload_version')
 @system_login
-def reload_case_material(case_id,version_id):
+def reload_case_material(case_id, version_id):
     """ 重载版本代码文件表 """
     cur_case = Case.query.filter_by(id=case_id).first_or_404()
     cur_version = cur_case.versions.filter_by(version_id=version_id).first_or_404()
     materials = cur_version.materials
-    return render_template('admin/case/widget_material_list.html',materials=materials)
+    return render_template('admin/case/widget_material_list.html', materials=materials)
 
 
 # 本地文件上传
 @admin.route('/case/<int:case_id>/version/<int:version_id>/material/upload', methods=['POST'])
 @system_login
-def case_upload(case_id,version_id):
+def case_upload(case_id, version_id):
     cur_case = Case.query.filter_by(id=case_id).first_or_404()
     cur_version = cur_case.versions.filter_by(version_id=version_id).first_or_404()
-    material_name=custom_secure_filename(request.form['name'])
-    material=request.files['file']
+    material_name = custom_secure_filename(request.form['name'])
+    material = request.files['file']
     material_uri = os.path.join("%d" % case_id, "version_%d" % version_id, "%s" % material_name)
     m = CaseCodeMaterial(name=material_name, uri=material_uri, version_id=cur_version.id)
-    #print m.uri
     db.session.add(m)
     cur_version.materials.append(m)
     db.session.commit()
-    #material_uri = os.path.join("%d" % case_id, "version_%d" % version_id, "%s" % material_name.decode("utf-8").encode("gbk"))
+
     status = upload_file(material, os.path.join(current_app.config['CASE_FOLDER'], material_uri))
+
     return render_template('admin/case/upload.html')

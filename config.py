@@ -28,7 +28,6 @@ class Config:
 
     PER_PAGE = 10
     UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/upload')
-    RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
     CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/case')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')

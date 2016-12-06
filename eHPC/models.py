@@ -389,7 +389,6 @@ class Progress(db.Model):
                                                       lazy='dynamic', cascade="delete, delete-orphan"))
 
 
-
 """ 案例展示 """
 
 
@@ -399,11 +398,10 @@ class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False)
     description = db.Column(db.String(1024), nullable=False)
-    icon = db.Column(db.String(64))
-    tag = db.Column(db.String(256))    #案例标签，两个标签之间用分号隔开
+    icon = db.Column(db.String(64), nullable=False)
+    tag = db.Column(db.String(256))         #案例标签，两个标签之间用分号隔开
 
     versions = db.relationship('CaseVersion', backref='case', lazy='dynamic', cascade='delete, delete-orphan')
-
 
 
 class CaseVersion(db.Model):
@@ -420,11 +418,10 @@ class CaseVersion(db.Model):
 
 
 class CaseCodeMaterial(db.Model):
-    """ 一个版本包括多份代码, 每份代码只能属于一个版本。 版本和代码是一对多的关系。
+    """ 一个版本包括多份代码, 每份代码只能属于一个版本。版本和代码是一对多的关系。
     """
     __tablename__ = 'case_code_materials'
     id = db.Column(db.Integer, primary_key=True)          # 代码 ID
     version_id = db.Column(db.Integer, db.ForeignKey('case_versions.id'), nullable=False)
     name = db.Column(db.String(1024), nullable=False)     # 代码文件名称
-    uri = db.Column(db.String(256), default="")          # 代码路径
-
+    uri = db.Column(db.String(256), default="")           # 代码路径

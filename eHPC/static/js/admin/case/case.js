@@ -6,6 +6,36 @@
             spellChecker: false
         });
 
+        simplemde.codemirror.on('drop', function (editor, e) {
+            var fileList = e.dataTransfer.files;
+            if (fileList.length > 1){
+                alert('一次只能上传一张图片');
+                return false;
+            }
+            if(fileList[0].type.indexOf('image') === -1){
+                alert("不是图片！");
+                return false;
+            }
+            var img = new FormData();
+            img.append('img', fileList[0]);
+            img.append('op', 'upload-img');
+            $.ajax({
+                type: "post",
+                url: post_to,
+                data: img,
+                processData : false,
+                contentType : false,
+                success: function (data) {
+                    if (data["status"] == "success") {
+                        simplemde.value(simplemde.value() + "\n" + "![](" + data['uri'] + ")");
+                    }
+                    else {
+                        alert("上传图片失败");
+                    }
+                }
+            });
+        });
+
         function validateForm() {
             var x = simplemde.value();
             if (x == null || x == "") {

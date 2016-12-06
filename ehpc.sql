@@ -141,7 +141,7 @@ CREATE TABLE `cases` (
 
 LOCK TABLES `cases` WRITE;
 /*!40000 ALTER TABLE `cases` DISABLE KEYS */;
-INSERT INTO `cases` VALUES (1,'火灾模拟软件FDS的计算负载均衡优化','Fire dynamics simulator(FDS) 是一款用于处理火灾驱动的流体流动的开源计算流体力学CFD软件，广泛应用于建筑设计和消防安全等工程领域。FDS软件采用三维大涡模拟（Large Eddy Simulation），通过求解NS方程来分析燃烧过程中建筑内的温度场和流场的变化，但在此案例中，我们并不需要去关心具体求解过程。\r\n\r\nFDS软件支持MPI / OMP 的并行计算 , 但截止我们测试时，其公开版本（6.3.0）对MPI 并行计算有诸多限制:MPI 进程数必须少于其输入文件中的网格区域（MESH）数，并按照“前面的每个进程处理一个网格区域，最后一个进程处理剩余所有的网格区域”的方式来进行计算。这种模式使得FDS在HPC环境下直接使用难以发挥高性能计算集群的性能优势。\r\n\r\n为了能够在高性能计算环境下发挥FDS的并行计算能力，用户需要将模型切割成不同的MESH块。但一般情况下，用户建模是根据求解问题的几何特性来创建输入文件的MESH。这种建模方式导致了输入方式的各个MESH块中实际网格数量相差较大。\r\n\r\n为了能够使FDS的算例在超算上使用更大的节点规模，需要将大的MESH块拆分成小的MESH 块。通过拆分，可以提高MESH块的数量，从而提高算例的可用进程数，同时也降低了负载的不均衡性。此案例即要求用户尝试不同的切分方案来了解负载均衡对并行计算效率的影响。','1.png','FDS;CFD;负载均衡'),(2,'新的案例','新的案例','2.png','云');
+INSERT INTO `cases` VALUES (1,'火灾模拟软件FDS的计算负载均衡优化','Fire dynamics simulator(FDS) 是一款用于处理火灾驱动的流体流动的开源计算流体力学CFD软件，广泛应用于建筑设计和消防安全等工程领域。FDS软件采用三维大涡模拟（Large Eddy Simulation），通过求解NS方程来分析燃烧过程中建筑内的温度场和流场的变化，但在此案例中，我们并不需要去关心具体求解过程。\r\n\r\nFDS软件支持MPI / OMP 的并行计算 , 但截止我们测试时，其公开版本（6.3.0）对MPI 并行计算有诸多限制:MPI 进程数必须少于其输入文件中的网格区域（MESH）数，并按照“前面的每个进程处理一个网格区域，最后一个进程处理剩余所有的网格区域”的方式来进行计算。这种模式使得FDS在HPC环境下直接使用难以发挥高性能计算集群的性能优势。\r\n\r\n为了能够在高性能计算环境下发挥FDS的并行计算能力，用户需要将模型切割成不同的MESH块。但一般情况下，用户建模是根据求解问题的几何特性来创建输入文件的MESH。这种建模方式导致了输入方式的各个MESH块中实际网格数量相差较大。\r\n\r\n为了能够使FDS的算例在超算上使用更大的节点规模，需要将大的MESH块拆分成小的MESH 块。通过拆分，可以提高MESH块的数量，从而提高算例的可用进程数，同时也降低了负载的不均衡性。此案例即要求用户尝试不同的切分方案来了解负载均衡对并行计算效率的影响。','images/case/1.png','FDS;CFD;负载均衡'),(2,'新的案例','新的案例','images/case/2.png','云');
 /*!40000 ALTER TABLE `cases` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -753,8 +753,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-<<<<<<< HEAD
 -- Dump completed on 2016-12-05 10:02:34
-=======
--- Dump completed on 2016-11-24 20:34:56
->>>>>>> 删除CaseCodeMaterial实体，合并案例管理操作，统一案例版本路径
+

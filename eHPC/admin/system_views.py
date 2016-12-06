@@ -9,6 +9,8 @@ from .. import db
 from flask_babel import gettext
 import os
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
+import time
+from PIL import Image
 
 
 @admin.route('/')
@@ -175,15 +177,26 @@ def case_create():
     if request.method == 'GET':
         return render_template('admin/case/create.html', title=gettext('Create Case'))
     if request.method == 'POST':
-        name = request.form['name']
-        tags = request.form['tags']
-        description = request.form['description']
-        new_case = Case(name=name, description=description, tag=tags, icon="images/case/test.png")
-        db.session.add(new_case)
-        db.session.commit()
-        path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
-        os.mkdir(path)
-        return redirect(url_for('admin.case'))
+        if 'op' in request.form and request.form['op'] == 'upload-img':
+            cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
+            cur_time += ".png"
+            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case', cur_time)
+            img = Image.open(request.files['img'])
+            status = upload_img(request.files['img'], img.height/3, img.width/3, path)
+            if status[0]:
+                return jsonify(status='success', uri=os.path.join('/static/upload/case', cur_time))
+            else:
+                return jsonify(status="fail")
+        else:
+            name = request.form['name']
+            tags = request.form['tags']
+            description = request.form['description']
+            new_case = Case(name=name, description=description, tag=tags, icon="images/case/1.png")
+            db.session.add(new_case)
+            db.session.commit()
+            path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
+            os.mkdir(path)
+            return redirect(url_for('admin.case'))
 
 
 @admin.route('/case/<int:case_id>/edit/', methods=['POST', 'GET'])
@@ -202,11 +215,22 @@ def case_edit(case_id):
                                    title=cur_case.name,
                                    case=cur_case)
     elif request.method == "POST":
-        cur_case.name = request.form['name']
-        cur_case.description = request.form['description']
-        cur_case.tag = request.form['tags']
-        db.session.commit()
-        return redirect(url_for('admin.case_edit', case_id=case_id))
+        if 'op' in request.form and request.form['op'] == 'upload-img':
+            cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
+            cur_time += ".png"
+            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case', cur_time)
+            img = Image.open(request.files['img'])
+            status = upload_img(request.files['img'], img.height/3, img.width/3, path)
+            if status[0]:
+                return jsonify(status='success', uri=os.path.join('/static/upload/case', cur_time))
+            else:
+                return jsonify(status="fail")
+        else:
+            cur_case.name = request.form['name']
+            cur_case.description = request.form['description']
+            cur_case.tag = request.form['tags']
+            db.session.commit()
+            return redirect(url_for('admin.case_edit', case_id=case_id))
 
 
 @admin.route('/case/delete/', methods=['POST', 'GET'])

@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import render_template, request, jsonify, url_for, current_app, abort, render_template_string
+from flask import render_template, request, jsonify, current_app, render_template_string
 from . import case
-from ..models import Case, CaseVersion, CaseCodeMaterial
+from ..models import Case, CaseVersion
 import os
 
 
@@ -36,8 +36,10 @@ def show_case(case_id):
                     path = os.path.join(current_app.config['CASE_FOLDER'], m.uri)
                     break
             if path is not None:
-                with open(path, 'r') as code:
-                    return jsonify(status='success', code=code.read())
+                try:
+                    with open(path, 'r') as code:
+                        return jsonify(status='success', code=code.read())
+                except IOError:
+                    return jsonify(status='fail')
             else:
                 return jsonify(status='fail')
-

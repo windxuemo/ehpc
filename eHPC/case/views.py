@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, jsonify, url_for, current_app, abort, render_template_string
 from . import case
-from ..models import Case, CaseVersion
+from ..models import Case, CaseVersion, CaseCodeMaterial
 import os
 
 
@@ -33,7 +33,7 @@ def show_case(case_id):
             path = None
             for m in case_version.materials:
                 if request.form['file_name'] == m.name:
-                    path = os.path.join(current_app.config['CASE_FOLDER'], case_version.dir_path, m.uri, m.name)
+                    path = os.path.join(current_app.config['CASE_FOLDER'], m.uri)
                     break
             if path is not None:
                 with open(path, 'r') as code:

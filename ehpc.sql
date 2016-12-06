@@ -93,9 +93,10 @@ INSERT INTO `case_code_materials` VALUES (6, 2, 'D.c', '');
 /*!40000 ALTER TABLE `case_code_materials` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
+
+-- ----------------------------
 -- Table structure for case_versions
---
+-- ----------------------------
 DROP TABLE IF EXISTS `case_versions`;
 CREATE TABLE `case_versions` (
   `id` int(64) NOT NULL AUTO_INCREMENT,
@@ -112,12 +113,12 @@ CREATE TABLE `case_versions` (
 --
 -- Dumping data for table `case_versions`
 --
-
 LOCK TABLES `case_versions` WRITE;
 /*!40000 ALTER TABLE `case_versions` DISABLE KEYS */;
 INSERT INTO `case_versions` VALUES (1, 1, 1, '优化1', '数据采用一个实际用户的算例，由于需要计算的建筑较大较复杂，用户划分了34个MESH ，大小差异较大，总网格量40余万', '1/version_1/'),(2, 1, 2, '优化2', '使用系统MPI（MPICH3）编译的FDS程序\r\n34个进程耗时182s 。因使用系统的MPI编译才能发挥HPC计算环境的高速网络的性能，通过跨节点的并行计算来提高计算能力\r\n', '1/version_2/');
 /*!40000 ALTER TABLE `case_versions` ENABLE KEYS */;
 UNLOCK TABLES;
+
 
 --
 -- Table structure for table `cases`
@@ -131,7 +132,8 @@ CREATE TABLE `cases` (
   `icon` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `tag` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cases`
@@ -751,4 +753,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD
 -- Dump completed on 2016-12-05 10:02:34
+=======
+-- Dump completed on 2016-11-24 20:34:56
+>>>>>>> 删除CaseCodeMaterial实体，合并案例管理操作，统一案例版本路径

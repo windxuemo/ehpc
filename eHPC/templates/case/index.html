@@ -13,7 +13,7 @@
                     <div class="course-item" style="padding-bottom: 10px">
                         <div class="course-img">
                             <a href="{{ url_for('case.show_case', case_id=case.id) }}" target="_blank" title="{{ case.description }}">
-                                <img src="/static/case/{{ case.id }}/{{ case.icon }}" alt="{{ case.name }}" class="img-responsive">
+                                <img src="{{ url_for('static',filename=case.icon) }}" alt="{{ case.name }}" class="img-responsive">
                             </a>
                         </div>
                         <div class="course-info">

@@ -15,6 +15,7 @@
                     </div>
                     <div class="list-group">
                         <a class="list-group-item edit-info active" href="#">编辑基本信息</a>
+                        <a class="list-group-item edit-info" href="{{url_for('admin.case_icon',case_id=case.id)}}">管理案例图标</a>
                         <a class="list-group-item edit-version" href="{{url_for('admin.case_version',case_id=case.id)}}">管理案例版本</a>
                     </div>
                 </div>

@@ -77,7 +77,7 @@ $(document).ready(function () {
         $("#material-table-body").find("input").each(function () {
             if (this.checked) {
                 $(this).parent().parent().remove();
-                array.push($(this).parent().parent().data("material_name"));
+                array.push($(this).parent().parent().data("material_id"));
             }
         });
 
@@ -86,7 +86,7 @@ $(document).ready(function () {
             url: url,
             data: {
                 op: "del",
-                material_name: array
+                material_id: array
             },
             success: function (data) {
                 if(data.status=="success"){

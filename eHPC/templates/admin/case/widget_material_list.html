@@ -1,6 +1,6 @@
 {% for m in materials %}
-    <tr data-material_name='{{ m }}'>
+    <tr data-material_id="{{ m.id }}">
         <td><input type='checkbox'></td>
-        <td><a href="{{ url_for('case.index') }}">{{ m }}</a></td>
+        <td><a href="{{ url_for('case.show_case',case_id=m.version.case.id) }}">{{ m.name }}</a></td>
     </tr>
 {% endfor %}

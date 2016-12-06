@@ -30,6 +30,7 @@ class Config:
     UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/upload')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
+    CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/case')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     CASE_FOLDER = os.path.join(basedir, 'eHPC/static/case')
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024

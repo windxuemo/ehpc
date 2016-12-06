@@ -1,0 +1,101 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+
+    <div class="container" id="content-container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.case') }}">返回案例首页</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item edit-info" href="{{url_for('admin.case_edit',case_id=case.id)}}">编辑基本信息</a>
+                        <a class="list-group-item edit-info active" href="#">管理案例图标</a>
+                        <a class="list-group-item edit-version" href="{{url_for('admin.case_version',case_id=case.id)}}">管理案例版本</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">案例图片</div>
+                    <div class="panel-body">
+                        <form id="case-icon-form" method="post" enctype="multipart/form-data">
+
+                            <div class="form-group clearfix">
+                                <div class="col-md-offset-2 col-md-8 controls">
+                                    <img id="case-icon" src="/static/{{ case.icon }}/?time=new Date()">
+                                </div>
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <div class="col-md-offset-2 col-md-8 controls">
+                                    <input id="case-icon-field" name="pic" accept="image/bmp,image/jpeg,image/png"
+                                           type="file">
+                                    <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
+                                </div>
+                            </div>
+                            <input type="hidden" name="op" value="upload">
+                            <input type="hidden" name="icon-type" value="">
+                        </form>
+
+                        <div class="form-group clearfix">
+                            <div class="col-md-offset-2 col-md-8 controls">
+                                <button class="btn btn-fat btn-primary" id="upload-icon-btn" type="submit">保存
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#case-icon-field').change(function () {
+                $.ajax({
+                    url: "{{ url_for('admin.case_icon', case_id=case.id) }}",
+                    type: "post",
+                    data: new FormData($('#case-icon-form')[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            $("#case-icon").attr("src", "");
+                            $("#case-icon").attr("src", data["uri"]);
+                        }
+                        else {
+                            alert("上传失败");
+                        }
+                    }
+                });
+            });
+
+            $('#upload-icon-btn').click(function () {
+                icon_type = $("input[name='icon-type']")[0].value;
+                $.ajax({
+                    url: "{{ url_for('admin.case_icon', case_id=case.id) }}",
+                    type: "post",
+                    data: { 
+                        op: "save"
+                    },
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            alert("保存成功");
+                        }
+                        else {
+                            alert("保存失败");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

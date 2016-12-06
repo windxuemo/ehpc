@@ -51,6 +51,7 @@
                     }
                     tag_value += tag;
                     $("input[name='tags']")[0].value = tag_value;
+                    //alert($("input[name='tags']")[0].value);
                     
                     tag_label = "<h1 class='btn btn-info'>"+
                                 "<button type='button' class='close' onclick='delete_tag(this);'>&times;</button><span>"+

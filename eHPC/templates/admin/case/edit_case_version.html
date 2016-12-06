@@ -15,6 +15,7 @@
                     </div>
                     <div class="list-group">
                         <a class="list-group-item edit-info" href="{{url_for('admin.case_edit',case_id=case.id)}}">编辑基本信息</a>
+                        <a class="list-group-item edit-info" href="{{url_for('admin.case_icon',case_id=case.id)}}">管理案例图标</a>
                         <a class="list-group-item edit-version active" href="#">管理案例版本</a>
                     </div>
                 </div>
@@ -44,7 +45,7 @@
                                            name="edit-btn"><i class="es-icon es-icon-edit"></i>编辑</a>
                                         <a class="btn btn-link pull-right"
                                            href="{{url_for('admin.case_version_material',case_id=case.id,version_id=v.version_id)}}">
-                                            <i class="es-icon es-icon-fileupdate"></i>上传代码</a>
+                                            <i class="es-icon es-icon-fileupdate"></i>代码管理</a>
                                         <a class="btn btn-link pull-right" href="javascript:void(0)"
                                            name="del-btn">
                                             <i class="es-icon es-icon-delete"></i>删除</a>

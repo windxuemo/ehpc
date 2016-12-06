@@ -405,10 +405,11 @@ class Case(db.Model):
     versions = db.relationship('CaseVersion', backref='case', lazy='dynamic', cascade='delete, delete-orphan')
 
 
+
 class CaseVersion(db.Model):
     __tablename__ = "case_versions"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True) 
     case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), nullable=False)
     version_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(256), nullable=False)

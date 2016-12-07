@@ -9,9 +9,8 @@ from .. import db
 from flask_babel import gettext
 import os
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
-import time
-from PIL import Image
 import shutil
+from ..util.receive_img import receive_img
 
 
 @admin.route('/')
@@ -179,13 +178,10 @@ def case_create():
         return render_template('admin/case/create.html', title=gettext('Create Case'))
     if request.method == 'POST':
         if 'op' in request.form and request.form['op'] == 'upload-img':
-            cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
-            cur_time += ".png"
-            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case', cur_time)
-            img = Image.open(request.files['img'])
-            status = upload_img(request.files['img'], img.height/3, img.width/3, path)
+            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case')
+            status, uri = receive_img(path, '/static/upload/case', request.files['img'], 0.33, 0.33)
             if status[0]:
-                return jsonify(status='success', uri=os.path.join('/static/upload/case', cur_time))
+                return jsonify(status='success', uri=uri)
             else:
                 return jsonify(status="fail")
         else:
@@ -217,13 +213,10 @@ def case_edit(case_id):
                                    case=cur_case)
     elif request.method == "POST":
         if 'op' in request.form and request.form['op'] == 'upload-img':
-            cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
-            cur_time += ".png"
-            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case', cur_time)
-            img = Image.open(request.files['img'])
-            status = upload_img(request.files['img'], img.height/3, img.width/3, path)
+            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case')
+            status, uri = receive_img(path, '/static/upload/case', request.files['img'], 0.33, 0.33)
             if status[0]:
-                return jsonify(status='success', uri=os.path.join('/static/upload/case', cur_time))
+                return jsonify(status='success', uri=uri)
             else:
                 return jsonify(status="fail")
         else:
@@ -382,7 +375,7 @@ def case_version_material(case_id, version_id):
                 db.session.delete(m)
                 db.session.commit()
                 try:
-                    os.remove(os.path.join(current_app.config['CASE_FOLDER'], m.uri))
+                    os.remove(os.path.join(current_app.config['CASE_FOLDER'], cur_version.dir_path, m.name))
                 except OSError:
                     pass
             return jsonify(status="success", version_id=version_id)
@@ -407,7 +400,7 @@ def case_upload(case_id, version_id):
     material_name = custom_secure_filename(request.form['name'])
     material = request.files['file']
     material_uri = os.path.join("%d" % case_id, "version_%d" % version_id, "%s" % material_name)
-    m = CaseCodeMaterial(name=material_name, uri=material_uri, version_id=cur_version.id)
+    m = CaseCodeMaterial(name=material_name, uri="", version_id=cur_version.id)
     db.session.add(m)
     cur_version.materials.append(m)
 

@@ -33,7 +33,7 @@ def show_case(case_id):
             path = None
             for m in case_version.materials:
                 if request.form['file_name'] == m.name:
-                    path = os.path.join(current_app.config['CASE_FOLDER'], m.uri)
+                    path = os.path.join(current_app.config['CASE_FOLDER'], case_version.dir_path, m.uri, m.name)
                     break
             if path is not None:
                 try:

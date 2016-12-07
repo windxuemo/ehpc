@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="case-container">
-        <div class="col-md-3 case-left-nav">
+    <div class="container ">
+        <div class="col-md-3">
             <ul id="accordion" class="accordion">
                 <li data-case_id="{{ case.id }}">
                     <div class="link">
@@ -43,16 +43,16 @@
             </ul>
         </div>
 
-        <div class="col-md-9 case-right-show">
-            <div id="case-text" class="panel case-text">
+        <div class="col-md-9">
+            <div id="case-text" class="panel">
                 <div class="panel-heading case-text-panel-heading">
                     <span data-id="title" class="case-text-title"></span>
                 </div>
                 <div class="panel-body">
-                    <p id="show-description"></p>
+                    <p class="markdown-body" id="show-description"></p>
                 </div>
             </div>
-            <div id="editor" class="case-code-editor"></div>
+            <div id="editor"></div>
         </div>
     </div>
 

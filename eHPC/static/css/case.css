@@ -1,3 +1,7 @@
+.container{
+    margin-top: 25px;
+}
+
 .case-container{
     margin-top: 30px;
     margin-right: auto;
@@ -102,10 +106,6 @@
     height: 100%;
     overflow: auto;
     padding: 10px;
-}
-
-.case-code-editor{
-    height: 100%;
 }
 
 .case-text-panel-heading{

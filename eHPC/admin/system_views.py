@@ -10,7 +10,7 @@ from flask_babel import gettext
 import os
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
 import shutil
-from ..util.receive_img import receive_img
+from ..util.file_manage import receive_img
 
 
 @admin.route('/')
@@ -212,6 +212,7 @@ def case_edit(case_id):
                                    title=cur_case.name,
                                    case=cur_case)
     elif request.method == "POST":
+        print request.form
         if 'op' in request.form and request.form['op'] == 'upload-img':
             path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case')
             status, uri = receive_img(path, '/static/upload/case', request.files['img'], 0.33, 0.33)

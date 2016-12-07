@@ -3,6 +3,7 @@
 from flask_babel import gettext
 from flask import current_app
 from PIL import Image
+import time
 import os
 import re
 
@@ -31,6 +32,23 @@ def upload_img(file_src, des_height, des_width, des_path):
     else:
         message = gettext("Invalid file")
         return False, message
+
+
+def receive_img(path, uri_to_return, img, height_coe=0.2, width_coe=0.2):
+    """ Markdown 编辑框上传图片后台处理核心函数。
+
+    后台将图片文件 img , 按照 height_code * width_core 进行处理,
+    然后保存到 path 路径指定的位置。
+    返回值为一个元组:
+        0. 是否上传成功,
+        1. 图片路径(返回给前端用),
+        2. 成功对应文件唯一的字符串或者失败对应反馈信息
+    """
+    cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime()) + ".png"
+    path = os.path.join(path, cur_time)
+    temp = Image.open(img)
+    status = upload_img(img, int(temp.height*height_coe), int(temp.width*width_coe), path)
+    return status[0], os.path.join(uri_to_return, cur_time), status[1]
 
 
 def upload_file(file_src, des_path):

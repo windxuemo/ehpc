@@ -397,7 +397,7 @@ class Case(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256), nullable=False)
-    description = db.Column(db.String(1024), nullable=False)
+    description = db.Column(db.Text(), nullable=False)
     icon = db.Column(db.String(64), nullable=False)
     tag = db.Column(db.String(256))         #案例标签，两个标签之间用分号隔开
 

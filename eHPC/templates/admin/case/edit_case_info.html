@@ -15,15 +15,16 @@
                     </div>
                     <div class="list-group">
                         <a class="list-group-item edit-info active" href="#">编辑基本信息</a>
-                        <a class="list-group-item edit-info" href="{{url_for('admin.case_icon',case_id=case.id)}}">管理案例图标</a>
-                        <a class="list-group-item edit-version" href="{{url_for('admin.case_version',case_id=case.id)}}">管理案例版本</a>
+                        <a class="list-group-item edit-info" href="{{ url_for('admin.case_icon',case_id=case.id) }}">管理案例图标</a>
+                        <a class="list-group-item edit-version"
+                           href="{{ url_for('admin.case_version',case_id=case.id) }}">管理案例版本</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-9">
                 <div id="case-info" class="panel panel-default">
                     <div class="panel-body">
-                        <form method="POST" id="case-info-form" enctype="multipart/x-www-form-urlencoded">
+                        <form method="POST" id="case-info-form" href="{{ url_for('admin.case_edit', case_id=case.id) }}">
                             <div class="form-group">
                                 <label>案例名称</label>
                                 <input type="text" class="form-control" name='name' value="{{ case.name }}" required>
@@ -40,10 +41,11 @@
                             {% if tags %}
                                 <div class="case-tag-display">
                                     {% for tag in tags %}
-                                    <h1 class='btn btn-info'>
-                                        <button type='button' class='close' onclick='delete_tag(this);'>&times;</button>
-                                        <span>{{tag}}</span>
-                                    </h1>
+                                        <h1 class='btn btn-info'>
+                                            <button type='button' class='close'
+                                                    onclick='delete_tag(this);'>&times;</button>
+                                            <span>{{ tag }}</span>
+                                        </h1>
                                     {% endfor %}
                                 </div>
                             {% else %}
@@ -52,9 +54,9 @@
                             {% endif %}
                             <div class="form-group">
                                 <label>案例描述</label>
-                                <textarea name="description" data-provide="markdown" id="target-editor" rows="30"
-                                  >{{ case.description }}</textarea>
-                            </div>                       
+                                <textarea name="description" data-provide="markdown" id="target-editor"
+                                          rows="30">{{ case.description }}</textarea>
+                            </div>
                             <div class="form-group">
                                 <div class="col-md-9">
                                     {% if success_message %}
@@ -66,26 +68,25 @@
                                     {% endif %}
                                 </div>
                                 <div class="col-md-3 form-submit text-right">
-                                    <input class='btn btn-success' id='submit-case-info' type='button' value="提交" onclick="return validateForm()">
+                                    <input class='btn btn-success' id='submit-case-info' type='submit' value='提交'>
                                 </div>
                             </div>
 
-                            <input name="tags" hidden value="{{case.tag}}">
+                            <input name="tags" hidden value="{{ case.tag }}">
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 {% endblock %}
 
 {% block footer_ext %}
     <script>
         var post_to = "{{ url_for("admin.case_edit", case_id=case.id) }}";
     </script>
+    <script language=javascript src='/static/js/markdown_upload_img.js'></script>
     <script src="{{ url_for('static',filename='js/admin/case/case.js') }}"></script>
 {% endblock %}
 
-{# group #}
+{# case #}

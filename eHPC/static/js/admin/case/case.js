@@ -60,7 +60,7 @@
             }
 
             $(e).parent().remove(); 
-            txt = $(".case-tag-display")[0].innerHTML;                  
+            txt = $(".case-tag-display")[0].innerHTML;
             var reg = /\S/;
             if(!reg.test(txt)) {
                 $(".case-tag-display").addClass("hide");
@@ -68,7 +68,24 @@
         }
 
         $(document).ready(function () {
-            $("#add-tag-btn").click(function() {                
+            $("#submit-case-info").click(function() {
+                $("textarea")[0].innerHTML = simplemde.value();
+                $.ajax({
+                    type: "post",
+                    url:  post_to,
+                    data: new FormData($('#case-info-form')[0]),
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            alert("修改成功！");
+                            location.reload();
+                        }
+                    }
+                });
+            });
+            $("#add-tag-btn").click(function() {
                 tag = $(".case-tags")[0].value;
                 var reg = /\S/;
                 if (!reg.test(tag)) {

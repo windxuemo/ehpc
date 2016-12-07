@@ -191,7 +191,7 @@ def case_create():
             name = request.form['name']
             tags = request.form['tags']
             description = request.form['description']
-            new_case = Case(name=name, description=description, tag=tags, icon="images/case/1.png")
+            new_case = Case(name=name, description=description, tag=tags, icon="/static/images/case/test.png")
             db.session.add(new_case)
             db.session.commit()
             path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
@@ -230,7 +230,7 @@ def case_edit(case_id):
             cur_case.description = request.form['description']
             cur_case.tag = request.form['tags']
             db.session.commit()
-            return redirect(url_for('admin.case_edit', case_id=case_id))
+            return jsonify(status="success")
 
 
 @admin.route('/case/delete/', methods=['POST', 'GET'])
@@ -274,21 +274,24 @@ def case_icon(case_id):
                                title=gettext('Case Icon'))
     elif request.method == 'POST':
         # 上传图片和保存图片
-        if request.form['op'] == 'save':
-            cur_case = Case.query.filter_by(id=case_id).first_or_404()
-            cur_case.icon = os.path.join("images/case", "%d.png" % cur_case.id)
-            db.session.commit()
-            return jsonify(status='success', id=cur_case.id)
-        elif request.form['op'] == 'upload':
-            cur_case = Case.query.filter_by(id=case_id).first_or_404()
-            icon = request.files['pic']
+        cur_case = Case.query.filter_by(id=case_id).first_or_404()
+        icon = request.files['pic']
+        if icon.filename == "":
+            return jsonify(status="no_file")
+
+        file_type = get_file_type(icon.mimetype)
+        if icon and '.' in icon.filename and file_type == "img":
             icon_name = "%d.png" % cur_case.id
             icon_path = os.path.join(current_app.config['CASE_COVER_FOLDER'], icon_name)
+            cur_case.icon = os.path.join("/static/images/case", "%d.png" % cur_case.id)
+            db.session.commit()
             status = upload_img(icon, 171, 304, icon_path)
             if status[0]:
-                return jsonify(status='success', uri=os.path.join("/static/images/case", icon_name))
+                return jsonify(status="success")
             else:
-                return jsonify(status="fail", id=cur_case.id)
+                return jsonify(status="fail")
+        else:
+            return jsonify(status="file_error")
 
 
 @admin.route('/case/<int:case_id>/version/', methods=['GET', 'POST'])
@@ -404,8 +407,13 @@ def case_upload(case_id, version_id):
     m = CaseCodeMaterial(name=material_name, uri=material_uri, version_id=cur_version.id)
     db.session.add(m)
     cur_version.materials.append(m)
-    db.session.commit()
-
+    #material_uri = os.path.join("%d" % case_id, "version_%d" % version_id, "%s" % material_name.decode("utf-8").encode("gbk"))
     status = upload_file(material, os.path.join(current_app.config['CASE_FOLDER'], material_uri))
-
-    return render_template('admin/case/upload.html')
+    if status[0]:
+        db.session.commit()
+        return jsonify(status="success")
+    else:
+        cur_version.materials.remove(m)
+        db.session.delete(m)
+        db.session.commit()
+        return jsonify(status="fail")

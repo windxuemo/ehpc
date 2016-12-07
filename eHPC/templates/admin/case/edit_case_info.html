@@ -23,7 +23,7 @@
             <div class="col-md-9">
                 <div id="case-info" class="panel panel-default">
                     <div class="panel-body">
-                        <form action="{{ url_for('admin.case_edit', case_id=case.id) }}" method="POST" enctype="multipart/x-www-form-urlencoded" onsubmit="return validateForm()">
+                        <form method="POST" id="case-info-form" enctype="multipart/x-www-form-urlencoded">
                             <div class="form-group">
                                 <label>案例名称</label>
                                 <input type="text" class="form-control" name='name' value="{{ case.name }}" required>
@@ -55,9 +55,21 @@
                                 <textarea name="description" data-provide="markdown" id="target-editor" rows="30"
                                   >{{ case.description }}</textarea>
                             </div>                       
-                            <div class="form-submit text-right">
-                                <input class='btn btn-success' id='submit' type='submit'>
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    {% if success_message %}
+                                        <div class="text-center alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ success_message }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3 form-submit text-right">
+                                    <input class='btn btn-success' id='submit-case-info' type='button' value="提交" onclick="return validateForm()">
+                                </div>
                             </div>
+
                             <input name="tags" hidden value="{{case.tag}}">
                         </form>
                     </div>

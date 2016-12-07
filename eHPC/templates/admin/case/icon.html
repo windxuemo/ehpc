@@ -26,7 +26,7 @@
 
                             <div class="form-group clearfix">
                                 <div class="col-md-offset-2 col-md-8 controls">
-                                    <img id="case-icon" src="/static/{{ case.icon }}/?time=new Date()">
+                                    <img id="case-icon" src="{{ case.icon }}">
                                 </div>
                             </div>
 
@@ -37,16 +37,13 @@
                                     <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
                                 </div>
                             </div>
-                            <input type="hidden" name="op" value="upload">
-                            <input type="hidden" name="icon-type" value="">
-                        </form>
-
-                        <div class="form-group clearfix">
-                            <div class="col-md-offset-2 col-md-8 controls">
-                                <button class="btn btn-fat btn-primary" id="upload-icon-btn" type="submit">保存
-                                </button>
+                            <div class="form-group clearfix">
+                                <div class="col-md-offset-2 col-md-8 controls">
+                                    <button class="btn btn-fat btn-primary" id="upload-icon-btn" type="button">保存
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -58,7 +55,7 @@
 {% block footer_ext %}
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#case-icon-field').change(function () {
+            $('#upload-icon-btn').click(function () {
                 $.ajax({
                     url: "{{ url_for('admin.case_icon', case_id=case.id) }}",
                     type: "post",
@@ -68,30 +65,17 @@
                     processData: false,
                     success: function (data) {
                         if (data["status"] == "success") {
-                            $("#case-icon").attr("src", "");
-                            $("#case-icon").attr("src", data["uri"]);
+                            alert("上传成功");
+                            location.reload();
                         }
-                        else {
+                        else if(data.status == "no_file"){
+                            alert("未选择上传文件");
+                        }
+                        else if(data.status == "fail"){
                             alert("上传失败");
                         }
-                    }
-                });
-            });
-
-            $('#upload-icon-btn').click(function () {
-                icon_type = $("input[name='icon-type']")[0].value;
-                $.ajax({
-                    url: "{{ url_for('admin.case_icon', case_id=case.id) }}",
-                    type: "post",
-                    data: { 
-                        op: "save"
-                    },
-                    success: function (data) {
-                        if (data["status"] == "success") {
-                            alert("保存成功");
-                        }
                         else {
-                            alert("保存失败");
+                            alert("文件错误")
                         }
                     }
                 });

@@ -67,6 +67,9 @@ $(document).ready(function () {
                     async:false,
                 });
                 $("#material-table-body")[0].innerHTML=table_obj.responseText;
+            },
+            Error: function(up, err) {
+                alert("文件 "+err.file.name+" 上传失败！\n"+"错误信息："+err.message);
             }
         }
     });

@@ -163,12 +163,13 @@ def upload(course_id, lesson_id):
     status = upload_file(material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
     if status[0]:
         db.session.commit()
+        return jsonify(status="success")
     else:
         cur_lesson.materials.remove(m)
         db.session.delete(m)
         db.session.commit()
+        return jsonify(status="fail")
 
-    return render_template('admin/course/upload.html')
 
 
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/', methods=['GET', 'POST'])

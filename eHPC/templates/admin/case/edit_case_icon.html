@@ -65,7 +65,6 @@
                     processData: false,
                     success: function (data) {
                         if (data["status"] == "success") {
-                            alert("上传成功");
                             location.reload();
                         }
                         else if(data.status == "no_file"){

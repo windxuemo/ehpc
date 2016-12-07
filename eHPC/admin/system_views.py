@@ -11,6 +11,7 @@ import os
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
 import time
 from PIL import Image
+import shutil
 
 
 @admin.route('/')
@@ -270,7 +271,7 @@ def case_delete():
 def case_icon(case_id):
     if request.method == 'GET':
         cur_case = Case.query.filter_by(id=case_id).first_or_404()
-        return render_template('admin/case/icon.html', case=cur_case,
+        return render_template('admin/case/edit_case_icon.html', case=cur_case,
                                title=gettext('Case Icon'))
     elif request.method == 'POST':
         # 上传图片和保存图片
@@ -339,15 +340,17 @@ def case_version(case_id):
             for m in materials:
                 cur_version.materials.remove(m)
                 db.session.delete(m)
-                db.session.commit()
-                try:
-                    os.remove(os.path.join(current_app.config['CASE_FOLDER'], m.uri))
-                except OSError:
-                    pass
-            os.rmdir(path)
+
             cur_case.versions.remove(cur_version)
             db.session.delete(cur_version)
             db.session.commit()
+
+            # 删除版本目录下所有文件, 如果删除失败(文件夹不存在)则继续执行;
+            try:
+                shutil.rmtree(path)
+            except:
+                pass
+
             return jsonify(status="success", id=cur_version.version_id)
         elif request.form['op'] == 'data':
             cur_version = CaseVersion.query.filter_by(case_id=case_id,
@@ -407,7 +410,7 @@ def case_upload(case_id, version_id):
     m = CaseCodeMaterial(name=material_name, uri=material_uri, version_id=cur_version.id)
     db.session.add(m)
     cur_version.materials.append(m)
-    #material_uri = os.path.join("%d" % case_id, "version_%d" % version_id, "%s" % material_name.decode("utf-8").encode("gbk"))
+
     status = upload_file(material, os.path.join(current_app.config['CASE_FOLDER'], material_uri))
     if status[0]:
         db.session.commit()

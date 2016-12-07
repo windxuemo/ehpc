@@ -93,7 +93,6 @@ $(document).ready(function () {
             },
             success: function (data) {
                 if(data.status=="success"){
-                    alert("删除成功");
                     $("#file-manage-panel").find("input").prop("checked", false);
                 }
                 else{

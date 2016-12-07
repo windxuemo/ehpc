@@ -41,14 +41,13 @@
 
                                     </div>
                                     <div class="col-md-6">
-                                        <a class="btn btn-link pull-right" data-toggle="modal" data-target="#myModal"
-                                           name="edit-btn"><i class="es-icon es-icon-edit"></i>编辑</a>
+                                        <a class="btn btn-link pull-right" href="javascript:void(0)" name="del-btn">
+                                            <i class="es-icon es-icon-delete"></i>删除版本</a>
                                         <a class="btn btn-link pull-right"
                                            href="{{url_for('admin.case_version_material',case_id=case.id,version_id=v.version_id)}}">
-                                            <i class="es-icon es-icon-fileupdate"></i>代码管理</a>
-                                        <a class="btn btn-link pull-right" href="javascript:void(0)"
-                                           name="del-btn">
-                                            <i class="es-icon es-icon-delete"></i>删除</a>
+                                            <i class="es-icon es-icon-fileupdate"></i>上传源码</a>
+                                        <a class="btn btn-link pull-right" data-toggle="modal" data-target="#myModal"
+                                           name="edit-btn"><i class="es-icon es-icon-edit"></i>编辑信息</a>
                                     </div>
                                 </li>
                             {% endfor %}
@@ -143,7 +142,6 @@
                     success: function (data) {
                         if (data["status"] == "success") {
                             $(obj).parent().parent().remove();
-                            alert("删除成功");
                         }
                     }
                 });

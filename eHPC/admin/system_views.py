@@ -236,27 +236,23 @@ def case_delete():
     path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % cur_case.id)
     icon_path = os.path.join(current_app.config['CASE_COVER_FOLDER'], "%d.png" % cur_case.id)
     for v in versions:
-        version_path = os.path.join(current_app.config['CASE_FOLDER'], v.dir_path)
         materials = v.materials
         for m in materials:
-            cur_material_uri = os.path.join("%s" % version_path, "%s" % m.name)
-            # print cur_material_uri
             v.materials.remove(m)
             db.session.delete(m)
             db.session.commit()
-            try:
-                os.remove(cur_material_uri)
-            except OSError:
-                pass
         cur_case.versions.remove(v)
         db.session.delete(v)
         db.session.commit()
-        os.rmdir(version_path)
     if os.path.exists(icon_path):
         os.remove(icon_path)
-    os.rmdir(path)
     db.session.delete(cur_case)
     db.session.commit()
+    # 删除案例目录下所有版本文件, 如果删除失败(文件夹不存在)则继续执行;
+    try:
+        shutil.rmtree(path)
+    except:
+        pass
     return jsonify(status="success", del_case_id=cur_case.id)
 
 
@@ -404,7 +400,6 @@ def case_upload(case_id, version_id):
     m = CaseCodeMaterial(name=material_name, uri="", version_id=cur_version.id)
     db.session.add(m)
     cur_version.materials.append(m)
-
     status = upload_file(material, os.path.join(current_app.config['CASE_FOLDER'], material_uri))
     if status[0]:
         db.session.commit()

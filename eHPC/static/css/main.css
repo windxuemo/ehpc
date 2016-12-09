@@ -4561,7 +4561,6 @@ hr {
     position: absolute;
     top:-11px;
     right: -7px;
-    color: ;
     width: 22px;
     border: 1px solid #796161;
     border-radius: 10px;
@@ -4589,4 +4588,10 @@ ul.version-list {
 
 ul.version-list li {
     list-style-type: none;
+}
+
+#case-edit-status {
+    margin-top: -20px;
+    margin-bottom: 0;
+    border-radius: 3px;
 }

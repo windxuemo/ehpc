@@ -212,10 +212,9 @@ def case_edit(case_id):
                                    title=cur_case.name,
                                    case=cur_case)
     elif request.method == "POST":
-        print request.form
         if 'op' in request.form and request.form['op'] == 'upload-img':
             path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case')
-            status, uri = receive_img(path, '/static/upload/case', request.files['img'], 0.33, 0.33)
+            status, uri = receive_img(path, '/static/upload/case', request.files['img'], 1, 1)
             if status[0]:
                 return jsonify(status='success', uri=uri)
             else:

@@ -34,21 +34,20 @@ def upload_img(file_src, des_height, des_width, des_path):
         return False, message
 
 
-def receive_img(path, uri_to_return, img, height_coe=0.2, width_coe=0.2):
+def receive_img(path, uri_to_return, img, height_coe=1, width_coe=1):
     """ Markdown 编辑框上传图片后台处理核心函数。
 
-    后台将图片文件 img , 按照 height_code * width_core 进行处理,
+    后台将图片文件 img , 按照 height_code * width_core (默认存放原尺寸)进行处理,
     然后保存到 path 路径指定的位置。
     返回值为一个元组:
-        0. 是否上传成功,
-        1. 图片路径(返回给前端用),
-        2. 成功对应文件唯一的字符串或者失败对应反馈信息
+        0. 也是一个元组: (是否上传成功的状态, 如果成功对应文件唯一的字符串或者失败对应反馈信息)
+        1. 图片路径(返回给前端用)
     """
     cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime()) + ".png"
     path = os.path.join(path, cur_time)
     temp = Image.open(img)
     status = upload_img(img, int(temp.height*height_coe), int(temp.width*width_coe), path)
-    return status[0], os.path.join(uri_to_return, cur_time), status[1]
+    return status, os.path.join(uri_to_return, cur_time)
 
 
 def upload_file(file_src, des_path):

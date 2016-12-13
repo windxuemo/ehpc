@@ -47,7 +47,7 @@
                     </div>
                     {% if lesson.materials.all() %}
                         <ul class="submenu" style="display: block;">
-                            {% for m in lesson.materials %}
+                            {% for m in lesson.materials | sort_lesson_materials() %}
                                 <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></li>
                             {% endfor %}
                         </ul>

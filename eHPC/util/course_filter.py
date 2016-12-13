@@ -77,3 +77,17 @@ def get_question_number(paper_question, q_type=-1):
             if pq.questions.type == q_type:
                 result += 1
     return result
+
+
+@filter_blueprint.app_template_filter('sort_lesson_materials')
+def sort_lesson_materials(materials):
+    new_materials = []
+    for m in materials:
+        new_materials.append(m)
+    for i in range(0, materials.count()):
+        for j in range(i+1, materials.count()):
+            if new_materials[i].name.lower() > new_materials[j].name.lower():
+                tmp = new_materials[i]
+                new_materials[i] = new_materials[j]
+                new_materials[j] = tmp
+    return new_materials

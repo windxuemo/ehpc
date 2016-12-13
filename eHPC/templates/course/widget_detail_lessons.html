@@ -6,18 +6,18 @@
                 {% for l in lessons %}
                     <li class="section"><span class="title"> 第 {{ loop.index }} 节: {{ l.title }}</span>
                     </li>
-                    {% for m in l.materials %}
-                        <li class="period lesson-item">
-                            <a href="{{ url_for('course.material', mid=m.id) }}" title="{{ m.name }}">
-                                <i class="es-icon es-icon-undone status-icon"></i>
-                                <span class="title"> {{ m.name }}</span>
+                        {% for m in l.materials | sort_lesson_materials() %}
+                            <li class="period lesson-item">
+                                <a href="{{ url_for('course.material', mid=m.id) }}" title="{{ m.name }}">
+                                    <i class="es-icon es-icon-undone status-icon"></i>
+                                    <span class="title"> {{ m.name }}</span>
 
-                                <span class="course-type">
-                                    <i class="{{ m.m_type | get_icon_class }}"></i>
-                                </span>
-                            </a>
-                        </li>
-                    {% endfor %}
+                                    <span class="course-type">
+                                        <i class="{{ m.m_type | get_icon_class }}"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        {% endfor %}
                 {% endfor %}
             </ul>
         </div>

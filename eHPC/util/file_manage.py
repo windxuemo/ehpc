@@ -100,6 +100,7 @@ def get_file_type(form_file_type):
         "text/javascript": "code",
         "application/javascript": "code",
         "text/x-python-script": 'code',
+        "text/x-fortran": 'code'
     }
 
     return file_type_dict.get(form_file_type, "Unknown")

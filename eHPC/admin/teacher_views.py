@@ -137,14 +137,6 @@ def course_lesson(course_id):
             return jsonify(status="success", title=curr_lesson.title, content=curr_lesson.content)
 
 
-@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/reload_lesson/')
-@teacher_login
-def reload_material(course_id, lesson_id):
-    """ 重载课时表 """
-    materials = Material.query.filter_by(lessonId=lesson_id).all()
-    return render_template('admin/course/widget_material_list.html', materials=materials)
-
-
 # 本地文件上传
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/upload/', methods=['POST'])
 @teacher_login
@@ -171,7 +163,6 @@ def upload(course_id, lesson_id):
         return jsonify(status="fail")
 
 
-
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/', methods=['GET', 'POST'])
 @teacher_login
 def lesson_material(course_id, lesson_id):
@@ -184,20 +175,7 @@ def lesson_material(course_id, lesson_id):
                                title=gettext('Lesson Material'))
     elif request.method == 'POST':
         # 课时材料的上传和删除
-        if request.form['op'] == "upload":
-            curr_course = Course.query.filter_by(id=course_id).first_or_404()
-            curr_lesson = curr_course.lessons.filter_by(id=lesson_id).first_or_404()
-            if request.form['link-type'] == "origin":
-                m_link = request.form['file-link']
-                m_name = request.form['file-name']
-                m_type = request.form['file-type']
-                curr_material = Material(name=m_name, m_type=m_type, uri=m_link)
-                db.session.add(curr_material)
-                curr_lesson.materials.append(curr_material)
-                db.session.commit()  # get material id
-                return jsonify(status="success", id=curr_lesson.id)
-
-        elif request.form['op'] == "del":
+        if request.form['op'] == "del":
             curr_course = Course.query.filter_by(id=course_id).first_or_404()
             curr_lesson = curr_course.lessons.filter_by(id=lesson_id).first_or_404()
             material_id = request.form.getlist('material_id[]')
@@ -214,6 +192,37 @@ def lesson_material(course_id, lesson_id):
                 except OSError:
                     pass
             return jsonify(status="success", lesson_id=curr_lesson.id)
+        elif request.form['op'] == 'local-upload':
+            cur_course = Course.query.filter_by(id=course_id).first_or_404()
+            cur_lesson = cur_course.lessons.filter_by(id=lesson_id).first_or_404()
+            material = request.files['file']
+            file_name = custom_secure_filename(material.filename)
+            file_type = get_file_type(material.mimetype)
+            m = Material(name=file_name, m_type=file_type, uri="")
+            cur_lesson.materials.append(m)
+            db.session.commit()  # get material id
+            m.uri = os.path.join("course_%d" % course_id, "lesson%d_material%d." % (lesson_id, m.id) + material.filename.rsplit('.', 1)[1])
+            status = upload_file(material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+            if status[0]:
+                db.session.commit()
+                return jsonify(status="success")
+            else:
+                cur_lesson.materials.remove(m)
+                db.session.delete(m)
+                db.session.commit()
+                return jsonify(status="fail")
+        elif request.form['op'] == "link-upload":
+            curr_course = Course.query.filter_by(id=course_id).first_or_404()
+            curr_lesson = curr_course.lessons.filter_by(id=lesson_id).first_or_404()
+            if request.form['link-type'] == "origin":
+                m_link = request.form['file-link']
+                m_name = request.form['file-name']
+                m_type = request.form['file-type']
+                curr_material = Material(name=m_name, m_type=m_type, uri=m_link)
+                db.session.add(curr_material)
+                curr_lesson.materials.append(curr_material)
+                db.session.commit()  # get material id
+                return jsonify(status="success", id=curr_lesson.id)
 
 
 @admin.route('/course/<int:course_id>/paper/', methods=['GET', 'POST'])
@@ -629,3 +638,4 @@ def lab_edit(knowledge_id, challenge_id):
 
         db.session.commit()
         return jsonify(status="success")
+

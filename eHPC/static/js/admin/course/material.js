@@ -61,10 +61,6 @@ $(document).ready(function () {
         $("#upload-status").hide();
     });
 
-    $("#local-upload-btn").click(function () {
-        $("#upload-status").show();
-    });
-
 });
 
 $(function () {
@@ -88,6 +84,7 @@ $(function () {
     myDropzone.on("addedfile", function(file) {
         // Hookup the start button
         file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+        $("#upload-status").show();
     });
 
     // Update the total progress bar

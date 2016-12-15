@@ -1,7 +1,7 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-<script src="/static/js/dropzone.js"></script>
+<script src="{{ url_for('static', filename='js/dropzone.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -64,9 +64,6 @@
                             删除
                         </button>
                     </div>
-                </div>
-                <div id="uploader" class="hide">
-                    <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
                 </div>
             </div>
         </div>

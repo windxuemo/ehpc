@@ -83,24 +83,27 @@ def get_file_type(form_file_type):
     """
 
     file_type_dict = {
-        # "application/msword": "doc",
-        "application/pdf": "pdf",
-        "video/mp4": "video",
-        "audio/mp3": "audio",
-        # "application/vnd.ms-powerpoint": "ppt",
-        # "application/vnd.openxmlformats-officedocument.presentationml.presentation": "ppt",
-        "video/x-matroska": "video",
-        "audio/mpeg": "audio",
-        "image/png": "img",
-        "image/jpeg": "img",
-        "image/bmp": "img",
-        "text/plain": "code",
-        "text/css": "code",
-        "text/html": "code",
-        "text/javascript": "code",
-        "application/javascript": "code",
-        "text/x-python-script": 'code',
-        "text/x-fortran": 'code'
+        # 'application/msword': 'doc',
+        'application/pdf': 'pdf',
+        'video/mp4': 'video',
+        'audio/mp3': 'audio',
+        # 'application/vnd.ms-powerpoint': 'ppt',
+        # 'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'ppt',
+        'video/x-matroska': 'video',
+        'audio/mpeg': 'audio',
+        'image/png': 'img',
+        'image/jpeg': 'img',
+        'image/bmp': 'img',
+        'text/plain': 'code',
+        'text/css': 'code',
+        'text/html': 'code',
+        'text/javascript': 'code',
+        'application/javascript': 'code',
+        'text/x-python-script': 'code',
+        'text/x-fortran': 'code',
+        'text/x-python': 'code',
+        'text/x-csrc': 'code',
+        'text/x-c++src': 'code'
     }
 
     return file_type_dict.get(form_file_type, "Unknown")

@@ -21,7 +21,7 @@ def upload_img(file_src, des_height, des_width, des_path):
 
     file_type = get_file_type(file_src.mimetype)
 
-    if file_src and '.' in file_src.filename and file_type=="img":
+    if file_src and '.' in file_src.filename and file_type == "img":
         im = Image.open(file_src)
         # 比例会有问题
         im = im.resize((des_width, des_height), Image.ANTIALIAS)
@@ -34,27 +34,31 @@ def upload_img(file_src, des_height, des_width, des_path):
         return False, message
 
 
-def receive_img(path, uri_to_return, img, max_height):
+def receive_img(des_path, img, max_height):
     """ Markdown 编辑框上传图片后台处理核心函数。
 
-    后台将图片文件 img , 按照 max_height (最大高度，宽度则以原图高宽比进行处理)进行处理,
+    后台处理图片文件 img, 使其宽度不超过 max_height, 超过的图片则按照比例进行缩放。
     然后保存到 path 路径指定的位置。
     返回值为一个元组:
         0. 也是一个元组: (是否上传成功的状态, 如果成功对应文件唯一的字符串或者失败对应反馈信息)
         1. 图片路径(返回给前端用)
     """
     cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime()) + ".png"
-    path = os.path.join(path, cur_time)
+    des_path = os.path.join(des_path, cur_time)
     temp = Image.open(img)
     h = max_height if temp.height > max_height else temp.height
     w = int(1.0 * h / temp.height * temp.width)
-    status = upload_img(img, h, w, path)
-    return status, os.path.join(uri_to_return, cur_time)
+    status = upload_img(img, h, w, des_path)
+
+    # 将图片路径转换为绝对路径, 这样站点图片 url 为 domain.com/static/....
+    img_link = "/%s" % os.path.join(current_app.config['MD_UPLOAD_IMG'], cur_time)
+    return status, img_link
 
 
-def upload_file(file_src, des_path):
+def upload_file(file_src, des_path, allowed_extensions=None):
     """ 保存 form 表单获取的文件到目标地址 des_path
 
+    allowed_extensions 是 sequence 类型, 指定支持的文件类型。
     成功返回 True, 同时 unique_uri 里面携带文件信息(用于更新资源链接, 防止缓存)
     失败返回 False, 同时 message 里面携带失败信息.
     """
@@ -62,10 +66,12 @@ def upload_file(file_src, des_path):
         message = gettext('No selected file')
         return False, message
 
-    allowed_extensions = current_app.config['ALLOWED_RESOURCE_EXTENSIONS']
     file_type = get_file_type(file_src.mimetype)
-
     folder = des_path[:des_path.rfind('/')]
+
+    # 如果没有指定可以上传的文件类型, 那么使用全局的默认限制
+    if not allowed_extensions:
+        allowed_extensions = current_app.config['ALLOWED_RESOURCE_EXTENSIONS']
 
     if file_src and '.' in file_src.filename and file_type in allowed_extensions:
         if not os.path.exists(folder):
@@ -79,9 +85,18 @@ def upload_file(file_src, des_path):
 
 
 def get_file_type(form_file_type):
-    """ 获取 form 表单上传文件的类型
+    """ 获取 form 表单上传文件的类型, 这里只是做一个简单的映射。
 
     @from_file_type: Flask 获取到的 mimetype 类型
+
+    Flask 通过 werkzeug 来获取文件类型, 代码如下:
+    if filename and content_type is None:
+        content_type = mimetypes.guess_type(filename)[0] or \
+            'application/octet-stream'
+
+    mimetypes 是 python 的文件类型检测模块, guess_type 用来猜测文件类型,
+    所有的 mime_type 在下面的链接中给出:
+        https://www.iana.org/assignments/media-types/media-types.xhtml
     """
 
     file_type_dict = {

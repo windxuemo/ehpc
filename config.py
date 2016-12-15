@@ -32,10 +32,13 @@ class Config:
     CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/case')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     CASE_FOLDER = os.path.join(basedir, 'eHPC/static/case')
-    IMAGES_FOLDER = os.path.join(basedir, 'eHPC/static/upload/markdown/images')
+
+    # 这个路径用来保存 Markdown 编辑框拖拽上传的文件
+    MD_UPLOAD_IMG = 'static/upload/md_images/'
+    IMAGES_FOLDER = os.path.join(basedir, 'eHPC/', MD_UPLOAD_IMG)
 
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
-    ALLOWED_RESOURCE_EXTENSIONS = set(['pdf', 'video', 'audio', 'code'])
+    ALLOWED_RESOURCE_EXTENSIONS = set(['pdf', 'video', 'audio'])
 
     @staticmethod
     def init_app(app):

@@ -10,7 +10,6 @@ from flask_babel import gettext
 import os
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
 import shutil
-from ..util.file_manage import receive_img
 
 
 @admin.route('/')
@@ -358,21 +357,20 @@ def case_version_material(case_id, version_id):
                     pass
             return jsonify(status='success', version_id=version_id)
         elif request.form['op'] == 'upload':
+            # 上传源码到案例管理中
             cur_case = Case.query.filter_by(id=case_id).first_or_404()
             cur_version = cur_case.versions.filter_by(version_id=version_id).first_or_404()
             material = request.files['file']
             material_name = custom_secure_filename(material.filename)
             material_uri = os.path.join('%d' % case_id, 'version_%d' % version_id, '%s' % material_name)
-            m = CaseCodeMaterial(name=material_name, uri='', version_id=cur_version.id)
-            db.session.add(m)
-            cur_version.materials.append(m)
-            status = upload_file(material, os.path.join(current_app.config['CASE_FOLDER'], material_uri))
+            status = upload_file(material, os.path.join(current_app.config['CASE_FOLDER'], material_uri), ['code'])
+
             if status[0]:
+                # 文件保存成功后, 更新相应的数据库记录。
+                m = CaseCodeMaterial(name=material_name, uri='', version_id=cur_version.id)
+                db.session.add(m)
+                cur_version.materials.append(m)
                 db.session.commit()
                 return jsonify(status='success')
             else:
-                print status[1]
-                cur_version.materials.remove(m)
-                db.session.delete(m)
-                db.session.commit()
                 return jsonify(status='fail')

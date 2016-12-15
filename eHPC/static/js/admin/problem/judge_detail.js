@@ -6,19 +6,19 @@ $(function () {
         }
     }
 
-    var edt1 = new SimpleMDE({
+    var edt1 = drop_img_simplemde(new SimpleMDE({
         element: $("#content-editor").get(0),
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    });
+    }));
 
-    var edt2 = new SimpleMDE({
+    var edt2 = drop_img_simplemde(new SimpleMDE({
         element: $("#analysis-editor").get(0),
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    });
+    }));
 });

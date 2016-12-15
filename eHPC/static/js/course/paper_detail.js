@@ -46,7 +46,7 @@ $("span[data-id=fill-id]").each(function () {
 var essay = {};
 $('#question-essay').find('textarea[data-id=target-editor]').each(function () {
     var obj = this;
-    essay[$(this).parent().parent().data('id')] = new SimpleMDE({
+    essay[$(this).parent().parent().data('id')] = drop_img_simplemde(new SimpleMDE({
         element: obj,
         autosave: true,
         showIcons: ["code", "table"],
@@ -62,7 +62,7 @@ $('#question-essay').find('textarea[data-id=target-editor]').each(function () {
                     $('#paper-card').find('a[data-id=' + temp + ']').removeClass('active');
                 }
             }}]
-    });
+    }));
 });
 
 

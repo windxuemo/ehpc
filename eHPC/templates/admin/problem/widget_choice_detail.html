@@ -31,7 +31,9 @@
     {% endif %}
     <div class="form-group">
         <label>题干</label>
-        <textarea name="content" id="target-editor">{% if op == 'edit' %}{{ choice | get_question_content }}{% endif %}</textarea>
+        <textarea name="content" id="target-editor"
+                  data-img-upload-url="{{ url_for("markdown_files.images") }}"
+        >{% if op == 'edit' %}{{ choice | get_question_content }}{% endif %}</textarea>
     </div>
 
     <div style="margin-bottom: 15px">
@@ -63,8 +65,10 @@
 </button>
 <div class="form-group" style="margin-top:20px">
     <label>答案解析</label>
-    <textarea name="analysis" id="analysis-editor">{% if op == 'edit' %}{{ choice.analysis }}{% endif %}</textarea>
+    <textarea name="analysis" id="analysis-editor"
+              data-img-upload-url="{{ url_for("markdown_files.images") }}">{% if op == 'edit' %}{{ choice.analysis }}{% endif %}</textarea>
 </div>
 <button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交</button>
 
+<script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
 <script src="{{ url_for('static', filename='js/admin/problem/choice_detail.js') }}"></script>

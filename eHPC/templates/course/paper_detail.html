@@ -143,6 +143,7 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
     <script>
         //错误题目数量为：总题目数量-答对题目数量
         var wrong_num = [0, 0, 0, 0, 0, 0];

@@ -50,7 +50,7 @@
 
                                 <div class="col-md-8 controls">
                                     <textarea id="course_about" name="about" data-provide="markdown"
-                                              rows="10">{{ course.about }}</textarea>
+                                              rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}">{{ course.about }}</textarea>
                                 </div>
                             </div>
                         </form>
@@ -70,15 +70,17 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var edt = new SimpleMDE({
+            var edt = drop_img_simplemde(new SimpleMDE({
                 element: $("#course_about")[0],
                 autosave: true,
                 showIcons: ["code", "table"],
                 tabSize: 4,
                 spellChecker: false
-            });
+            }));
+
 
             $('#course-create-btn').click(function () {
                 if (edt.value() == "") {

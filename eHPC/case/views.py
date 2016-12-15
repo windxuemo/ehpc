@@ -31,6 +31,7 @@ def show_case(case_id):
         elif request.form['type'] == 'code':
             case_version = CaseVersion.query.filter_by(id=request.form['auto_increment']).first_or_404()
             path = None
+            code_name = None
             for m in case_version.materials:
                 if request.form['file_name'] == m.name:
                     path = os.path.join(current_app.config['CASE_FOLDER'], case_version.dir_path, m.uri, m.name)

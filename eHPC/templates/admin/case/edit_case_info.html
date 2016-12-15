@@ -54,8 +54,8 @@
                             {% endif %}
                             <div class="form-group">
                                 <label>案例描述</label>
-                                <textarea name="description" data-provide="markdown" id="target-editor" rows="30">
-                                    {{ case.description }}</textarea>
+                                <textarea name="description" data-provide="markdown" id="target-editor" rows="30"
+                                          data-img-upload-url="{{ url_for("markdown_files.images") }}">{{ case.description }}</textarea>
                             </div>
                             <div class="form-group">
                                 <div id="case-edit-status" class="text-center alert alert-success hide">
@@ -85,7 +85,6 @@
     <script>
         var post_to = "{{ url_for("admin.case_edit", case_id=case.id) }}";
     </script>
-    <script language=javascript src='/static/js/markdown_upload_img.js'></script>
     <script src="{{ url_for('static',filename='js/admin/case/case.js') }}"></script>
 {% endblock %}
 

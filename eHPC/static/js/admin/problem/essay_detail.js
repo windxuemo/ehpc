@@ -6,27 +6,27 @@ $(function () {
     }
 
 
-    var edt1 = new SimpleMDE({
+    var edt1 = drop_img_simplemde(new SimpleMDE({
         element: $("#content-editor")[0],
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    });
+    }));
 
-    var edt2 = new SimpleMDE({
+    var edt2 = drop_img_simplemde(new SimpleMDE({
         element: $("#solution-editor")[0],
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    });
+    }));
 
-    var edt3 = new SimpleMDE({
+    var edt3 = drop_img_simplemde(new SimpleMDE({
         element: $("#analysis-editor")[0],
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    });
+    }));
 });

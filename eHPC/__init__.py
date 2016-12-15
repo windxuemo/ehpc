@@ -51,8 +51,7 @@ def create_app(config_name):
     app.register_blueprint(api_blueprint, url_prefix='/api')
     from .case import case as case_blueprint
     app.register_blueprint(case_blueprint, url_prefix='/case')
-
-    from .case import case as case_blueprint
-    app.register_blueprint(case_blueprint,url_prefix='/case')
+    from .markdown_files import markdown_files as markdown_files_blueprint
+    app.register_blueprint(markdown_files_blueprint, url_prefix='/markdown_files')
 
     return app

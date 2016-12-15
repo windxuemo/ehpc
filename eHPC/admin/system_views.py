@@ -177,23 +177,15 @@ def case_create():
     if request.method == 'GET':
         return render_template('admin/case/create.html', title=gettext('Create Case'))
     if request.method == 'POST':
-        if 'op' in request.form and request.form['op'] == 'upload-img':
-            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case')
-            status, uri = receive_img(path, '/static/upload/case', request.files['img'], 0.33, 0.33)
-            if status[0]:
-                return jsonify(status='success', uri=uri)
-            else:
-                return jsonify(status="fail")
-        else:
-            name = request.form['name']
-            tags = request.form['tags']
-            description = request.form['description']
-            new_case = Case(name=name, description=description, tag=tags, icon="/static/images/case/test.png")
-            db.session.add(new_case)
-            db.session.commit()
-            path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
-            os.mkdir(path)
-            return redirect(url_for('admin.case'))
+        name = request.form['name']
+        tags = request.form['tags']
+        description = request.form['description']
+        new_case = Case(name=name, description=description, tag=tags, icon="/static/images/case/test.png")
+        db.session.add(new_case)
+        db.session.commit()
+        path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
+        os.mkdir(path)
+        return redirect(url_for('admin.case'))
 
 
 @admin.route('/case/<int:case_id>/edit/', methods=['POST', 'GET'])
@@ -211,20 +203,12 @@ def case_edit(case_id):
             return render_template('admin/case/edit_case_info.html',
                                    title=cur_case.name,
                                    case=cur_case)
-    elif request.method == 'POST':
-        if 'op' in request.form and request.form['op'] == 'upload-img':
-            path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'case')
-            status, uri = receive_img(path, '/static/upload/case', request.files['img'], 1, 1)
-            if status[0]:
-                return jsonify(status='success', uri=uri)
-            else:
-                return jsonify(status='fail')
-        else:
-            cur_case.name = request.form['name']
-            cur_case.description = request.form['description']
-            cur_case.tag = request.form['tags']
-            db.session.commit()
-            return jsonify(status="success")
+    elif request.method == "POST":
+        cur_case.name = request.form['name']
+        cur_case.description = request.form['description']
+        cur_case.tag = request.form['tags']
+        db.session.commit()
+        return jsonify(status="success")
 
 
 @admin.route('/case/delete/', methods=['POST', 'GET'])

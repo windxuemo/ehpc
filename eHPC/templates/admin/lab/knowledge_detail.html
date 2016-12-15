@@ -29,7 +29,8 @@
                                 <label class="col-md-2" style="text-align: right;">内容</label>
                                 <div class="col-md-8 controls">
                                     <textarea id="challenge-content" name="content" data-provide="markdown"
-                                              rows="10">{{ '' if op == 'create' else challenge.content }}</textarea>
+                                              rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"
+                                    >{{ '' if op == 'create' else challenge.content }}</textarea>
                                 </div>
                             </div>
 
@@ -113,17 +114,18 @@
 
 
 {% block footer_ext %}
+    <script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
     <script>
         $(document).ready(function () {
             $("#materials").dataTable();
             $("#questions").dataTable();
-            var edt = new SimpleMDE({
+            var edt = drop_img_simplemde(new SimpleMDE({
                 element: $("#challenge-content")[0],
                 autosave: true,
                 showIcons: ["code", "table"],
                 tabSize: 4,
                 spellChecker: false
-            });
+            }));
 
             $("#list").find("a").click(function () {
                 $("#list").find("a").removeClass("active");

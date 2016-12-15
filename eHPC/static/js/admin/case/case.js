@@ -1,10 +1,6 @@
-    var simplemde = new SimpleMDE({
-        element: document.getElementById("target-editor"),
-        autosave: true,
-        showIcons: ["code", "table"],
-        tabSize: 4,
-        spellChecker: false
-    });
+document.write("<script language=javascript src='/static/js/markdown_upload_img.js'></script>");
+$(function () {
+    var simplemde = drop_img_simplemde();
 
     function validateForm() {
         var x = simplemde.value();
@@ -36,15 +32,6 @@
             $(".case-tag-display").addClass("hide");
         }
     }
-
-$(function () {
-    window.$my = {
-        simplemde: simplemde
-    }
-
-    simplemde.codemirror.on('drop', function (editor, e) {
-        upload_img(editor, e, post_to);
-    });
 
     /* 提交案例信息 */
     $("#submit-case-info").click(function() {

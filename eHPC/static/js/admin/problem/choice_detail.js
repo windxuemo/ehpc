@@ -16,21 +16,15 @@ $(document).ready(function () {
         }
     }
 
-    var simplemde = new SimpleMDE({
-        element: document.getElementById("target-editor"),
-        autosave: true,
-        showIcons: ["code", "table"],
-        tabSize: 4,
-        spellChecker: false
-    });
+    var simplemde = drop_img_simplemde();
 
-    var edt = new SimpleMDE({
+    var edt = drop_img_simplemde(new SimpleMDE({
         element: document.getElementById("analysis-editor"),
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    });
+    }));
 
     var c_type = 0;
 

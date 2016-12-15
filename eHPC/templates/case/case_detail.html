@@ -3,10 +3,15 @@
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/player.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/case.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.min.css') }}">
+    <script src="{{ url_for('static', filename='js/highlight.min.js') }}"></script>
+    <script> hljs.initHighlightingOnLoad();</script>
 {% endblock %}
 
 {% block content %}
-    <div class="container" id="content-container">
+    <div class="container">
         <div class="col-md-3">
             <ul id="accordion" class="accordion">
                 <li data-case_id="{{ case.id }}">
@@ -52,7 +57,19 @@
                     <p class="markdown-body" id="show-description"></p>
                 </div>
             </div>
-            <div id="editor"></div>
+            <div class="panel" id="code-area" style="display: none">
+                <div class="panel-heading case-text-panel-heading case-code-title-btn">
+                    <button class="btn btn-primary" id="mode">编辑代码</button>
+                </div>
+                <div class="panel-body" id="code-viewer">
+                    <pre id="view-code"><code id="viewer"></code></pre>
+                </div>
+                <div class="panel-body" id="code-editor" style="display: none">
+                    <div id="editor" style="z-index: 0">
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -61,11 +78,9 @@
 {% block footer_ext %}
     <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
     <script>
-        var post_to = "{{ url_for('case.show_case', case_id=case.id) }}";
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/tomorrow");
-        editor.getSession().setMode("ace/mode/c_cpp");
-        editor.setReadOnly(true);
+        var post_to = "{{ url_for('case.show_case', case_id=case.id) }}";
     </script>
     <script src="{{ url_for('static', filename='js/case/case_detail.js') }}"></script>
 

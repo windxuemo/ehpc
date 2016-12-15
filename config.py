@@ -32,6 +32,8 @@ class Config:
     CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/case')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     CASE_FOLDER = os.path.join(basedir, 'eHPC/static/case')
+    IMAGES_FOLDER = os.path.join(basedir, 'eHPC/static/upload/markdown/images')
+
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
     ALLOWED_RESOURCE_EXTENSIONS = set(['pdf', 'video', 'audio', 'code'])
 

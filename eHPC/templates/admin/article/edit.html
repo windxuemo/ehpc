@@ -18,6 +18,7 @@
                     <div class="form-group">
                         <label>文章内容</label>
                         <textarea name="content" data-provide="markdown"
+                                  data-img-upload-url="{{ url_for("markdown_files.images") }}"
                                   id="target-editor" rows="30">{{ article.content }}</textarea>
                     </div>
 
@@ -31,15 +32,9 @@
 {% endblock %}
 
 {% block footer_ext %}
-
+    <script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
     <script>
-        var simplemde = new SimpleMDE({
-            element: document.getElementById("target-editor"),
-            autosave: true,
-            showIcons: ["code", "table"],
-            tabSize: 4,
-            spellChecker: false
-        });
+        var simplemde = drop_img_simplemde();
 
         function validateForm() {
             var x = simplemde.value();

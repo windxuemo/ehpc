@@ -55,10 +55,10 @@ def receive_img(des_path, img, max_height):
     return status, img_link
 
 
-def upload_file(file_src, des_path, allowed_extensions=None):
+def upload_file(file_src, des_path, allowed_type=None):
     """ 保存 form 表单获取的文件到目标地址 des_path
 
-    allowed_extensions 是 sequence 类型, 指定支持的文件类型。
+    allowed_type 是 sequence 类型, 指定支持的文件类型。
     成功返回 True, 同时 unique_uri 里面携带文件信息(用于更新资源链接, 防止缓存)
     失败返回 False, 同时 message 里面携带失败信息.
     """
@@ -66,14 +66,15 @@ def upload_file(file_src, des_path, allowed_extensions=None):
         message = gettext('No selected file')
         return False, message
 
-    file_type = get_file_type(file_src.mimetype)
+    extension = file_src.filename[file_src.filename.rfind('.')+1:]
+    file_type = extension_to_file_type(extension)
     folder = des_path[:des_path.rfind('/')]
 
     # 如果没有指定可以上传的文件类型, 那么使用全局的默认限制
-    if not allowed_extensions:
-        allowed_extensions = current_app.config['ALLOWED_RESOURCE_EXTENSIONS']
+    if not allowed_type:
+        allowed_type = current_app.config['ALLOWED_RESOURCE_TYPE']
 
-    if file_src and '.' in file_src.filename and file_type in allowed_extensions:
+    if file_src and '.' in file_src.filename and file_type in allowed_type:
         if not os.path.exists(folder):
             os.mkdir(folder)
         file_src.save(des_path)
@@ -82,6 +83,31 @@ def upload_file(file_src, des_path, allowed_extensions=None):
     else:
         message = gettext("Invalid file")
         return False, message
+
+
+def extension_to_file_type(extension):
+    """
+    将扩展名映射到后台可以识别的文件类型标识
+    :param extension: 文件的扩展名
+    :return: 文件类型标识
+    """
+
+    file_type_dict = {
+        'jpg': 'img',
+        'jpeg': 'img',
+        'png': 'img',
+        'bmp': 'img',
+        'mp3': 'audio',
+        'mp4': 'video',
+        'mkv': 'video',
+        'pdf': 'pdf',
+        'c': 'code',
+        'cpp': 'code',
+        'py': 'code',
+        'f': 'code'
+    }
+
+    return file_type_dict.get(extension, "Unknown")
 
 
 def get_file_type(form_file_type):

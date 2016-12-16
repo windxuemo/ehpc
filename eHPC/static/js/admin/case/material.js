@@ -37,11 +37,16 @@ $(document).ready(function () {
 
     $("#dropz").dropzone({
         url: location.href,
-        // acceptedFiles: ".js,.obj,.dae",
+        maxFiles: 10,
+        maxFilesize: 512,
+        acceptedFiles: ".c,.cpp,.py,.f",
         autoProcessQueue: true,
         previewTemplate: template,
         previewsContainer: "#previews", // Define the container to display the previews
         clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+        dictInvalidFileType: "不支持的文件类型",
+        dictMaxFilesExceeded: "文件数量不能超过10个",
+        dictFileTooBig: "文件大小不能超过512",
         init: function() {
             this.on("addedfile", function(file) {
                 $("#upload-status").show();

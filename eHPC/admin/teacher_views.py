@@ -9,7 +9,7 @@ from ..models import Knowledge, Challenge
 from .. import db
 import os, json
 from flask_babel import gettext
-from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
+from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
 from sqlalchemy import or_
 
 
@@ -195,20 +195,23 @@ def lesson_material(course_id, lesson_id):
         elif request.form['op'] == 'local-upload':
             cur_course = Course.query.filter_by(id=course_id).first_or_404()
             cur_lesson = cur_course.lessons.filter_by(id=lesson_id).first_or_404()
-            material = request.files['file']
-            file_name = custom_secure_filename(material.filename)
-            file_type = get_file_type(material.mimetype)
-            m = Material(name=file_name, m_type=file_type, uri="")
-            cur_lesson.materials.append(m)
+            raw_file = request.files['file']
+            file_name = custom_secure_filename(raw_file.filename)
+            extension = file_name[file_name.rfind('.')+1:]
+            file_type = extension_to_file_type(extension)
+            cur_material = Material(name=file_name, m_type=file_type, uri="")
+            cur_lesson.materials.append(cur_material)
             db.session.commit()  # get material id
-            m.uri = os.path.join("course_%d" % course_id, "lesson%d_material%d." % (lesson_id, m.id) + material.filename.rsplit('.', 1)[1])
-            status = upload_file(material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
+            cur_material.uri = os.path.join("course_%d" % course_id,
+                                            "lesson%d_material%d.%s" % (lesson_id, cur_material.id, extension))
+            status = upload_file(raw_file, os.path.join(current_app.config['RESOURCE_FOLDER'], cur_material.uri),
+                                 ['audio', 'video', 'pdf'])
             if status[0]:
                 db.session.commit()
                 return jsonify(status="success")
             else:
-                cur_lesson.materials.remove(m)
-                db.session.delete(m)
+                cur_lesson.materials.remove(cur_material)
+                db.session.delete(cur_material)
                 db.session.commit()
                 return jsonify(status="fail")
         elif request.form['op'] == "link-upload":
@@ -221,7 +224,7 @@ def lesson_material(course_id, lesson_id):
                 curr_material = Material(name=m_name, m_type=m_type, uri=m_link)
                 db.session.add(curr_material)
                 curr_lesson.materials.append(curr_material)
-                db.session.commit()  # get material id
+                db.session.commit()
                 return jsonify(status="success", id=curr_lesson.id)
 
 

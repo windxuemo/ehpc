@@ -38,7 +38,7 @@ class Config:
     IMAGES_FOLDER = os.path.join(basedir, 'eHPC/', MD_UPLOAD_IMG)
 
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
-    ALLOWED_RESOURCE_EXTENSIONS = set(['pdf', 'video', 'audio'])
+    ALLOWED_RESOURCE_TYPE = {'pdf', 'video', 'audio'}
 
     @staticmethod
     def init_app(app):

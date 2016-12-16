@@ -4482,20 +4482,17 @@ hr {
 }
 
 /*文件上传进度框样式*/
-.plupload_wrapper .ops {
+.upload-status {
+    display: none;
+    width: 600px;
+    top: auto;
+    bottom: 0px;
+    left: auto;
+    right: 30px;
+    visibility: visible;
+    z-index: 42;
     position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
-}
-
-.plupload_wrapper .ops .op-icons {
-    font-size: 18px;
-    line-height: 1;
-    color: #b8b8b8;
-    cursor: pointer;
-    margin-right: 10px;
-    vertical-align: middle;
+    overflow: hidden;
 }
 
 /* 虚拟实验室中的提示信息*/

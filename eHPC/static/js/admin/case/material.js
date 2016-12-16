@@ -34,7 +34,7 @@ $(document).ready(function () {
 
     var template = $("#template").parent().html();
     $("#template").remove();
-
+    var error = false;
     $("#dropz").dropzone({
         url: location.href,
         maxFiles: 10,
@@ -51,8 +51,14 @@ $(document).ready(function () {
             this.on("addedfile", function(file) {
                 $("#upload-status").show();
             });
+            this.on("error", function (file) {
+                error = true;
+                alert("上传失败");
+            });
             this.on("queuecomplete", function(file) {
-                location.reload();
+                if (!error) {
+                    location.reload();
+                }
             });
         }
     });

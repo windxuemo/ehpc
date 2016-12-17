@@ -15,9 +15,7 @@
 
     </div>
     <div class="panel-body clearfix" id="post-action">
-        <div class="markdown-body">
-            {{ topic.content | markdown | safe }}
-        </div>
+        <div class="markdown-body" id="topic-content">{{ topic.content }}</div>
     </div>
 </div>
 
@@ -81,6 +79,14 @@
 <!-- End create new reply-->
 
 {% block foot_ext %}
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            var content = $("#topic-content");
+            content.html(SimpleMDE.prototype.markdown(content.text()));
+        });
+    </script>
+
     <script>
         $(document).ready(function () {
             $('#post-area').on(

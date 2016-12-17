@@ -2,6 +2,7 @@
 
 {% block header_ext %}
     <script src="{{ url_for('static', filename='js/jquery.raty.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
 {% endblock %}
 
 
@@ -19,9 +20,7 @@
 
             <!-- Tab panes -->
             <div class="tab-content markdown-body">
-                <div id="course-about" role="tabpanel" class="tab-pane">
-                    <p>{{ course.about | markdown | safe }}</p>
-                </div>
+                <div id="course-about" role="tabpanel" class="tab-pane">{{ course.about }}</div>
 
                 <div id="course-lists" role="tabpanel" class="tab-pane">
                 </div>
@@ -84,6 +83,12 @@
 
 {% block footer_ext %}
     {{ super() }}
+    <script>
+        $(document).ready(function () {
+            var about = $("#course-about");
+            about.html(SimpleMDE.prototype.markdown(about.text()));
+        });
+    </script>
     <script>
         $(document).ready(function () {
             var op = "", btn_text = "";

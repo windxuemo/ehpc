@@ -33,7 +33,7 @@
         <div class="markdown-body">
             <p class="text-center text-xlarge"> {{ title }}</p>
             <hr>
-            {{ c_content | markdown | safe }}
+            <div id="c_content">{{ c_content }}</div>
         </div>
         <br>
         <hr>
@@ -80,6 +80,14 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script>
+        $(document).ready(function () {
+            var c_content = $("#c_content");
+            c_content.html(SimpleMDE.prototype.markdown(c_content.text()));
+        });
+    </script>
+
+
     <script>
         var address = "{{ url_for('lab.knowledge', kid=kid) }}";
         var next_challenge_uri = "{{ url_for('lab.knowledge', kid=kid, progress=next_progress) }}";

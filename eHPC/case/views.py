@@ -20,12 +20,12 @@ def show_case(case_id):
     elif request.method == 'POST':
         if request.form['type'] == 'case-description':
             case_to_show = Case.query.filter_by(id=request.form['case_id']).first_or_404()
-            html = '{{ "' + case_to_show.description + '" | markdown | safe }}'
+            html = '{{ "' + case_to_show.description + '" }}'
             return jsonify(status='success', description=render_template_string(html))
 
         elif request.form['type'] == 'version-description':
             case_version = CaseVersion.query.filter_by(id=request.form['auto_increment']).first_or_404()
-            html = '{{ "' + case_version.description + '" | markdown | safe }}'
+            html = '{{ "' + case_version.description + '" }}'
             return jsonify(status='success', description=render_template_string(html))
 
         elif request.form['type'] == 'code':

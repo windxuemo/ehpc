@@ -1,10 +1,5 @@
 {% extends 'base.html' %}
 
-{% block header_ext %}
-    <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
-{% endblock %}
-
-
 {% block content %}
     <div class="container article-detail-main" id="content-container">
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
@@ -29,7 +24,17 @@
                     </div>
                 </div>
             </div>
-            <div id="content" class="markdown-body article-text">{{ article.content | markdown | safe }}</div>
+            <div id="article-content" class="markdown-body article-text">{{ article.content }}</div>
         </section>
     </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            var article_content = $("#article-content");
+            article_content.html(SimpleMDE.prototype.markdown(article_content.text()));
+        });
+    </script>
 {% endblock %}

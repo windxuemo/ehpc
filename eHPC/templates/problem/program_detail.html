@@ -30,9 +30,7 @@
 
 
                 </div>
-                <div class="panel-body markdown-body">
-                    <p>{{ problem.detail | markdown | safe }}</p>
-                </div>
+                <div class="panel-body markdown-body" id="program-content">{{ problem.detail }}</div>
             </div>
         </div>
 
@@ -89,6 +87,14 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            var content = $("#program-content");
+            content.html(SimpleMDE.prototype.markdown(content.text()));
+        });
+    </script>
+
     <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
 
     <script>

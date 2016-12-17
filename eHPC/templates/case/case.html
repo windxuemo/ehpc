@@ -1,15 +1,27 @@
 {% extends "base.html" %}
 
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <h4>{{ case.name }}</h4>
         <hr>
-        <div>{{ case.description | markdown | safe }}</div>
+        <div id="content" class="markdown-body">{{ case.description }}</div>
     </div>
 {% endblock %}
 
-{% block footer_ext %} 
+{% block footer_ext %}
+    <script>
+        $(document).ready(function () {
+            var content = $("#content");
+            content.html(SimpleMDE.prototype.markdown(content.text()));
+        });
+    </script>
 {% endblock %}
+
+
 
 
 {# knowledges #}

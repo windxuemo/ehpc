@@ -47,7 +47,7 @@ $(function () {
                 },
                 success: function (data) {
                     if(data['status'] == 'success'){
-                        $('#show-description').html(data['description']);
+                        $('#show-description').html(SimpleMDE.prototype.markdown(data['description']));
                         $('#case-text').show();
                         $('#code-area').hide();
                     }
@@ -71,7 +71,7 @@ $(function () {
                 },
                 success: function (data) {
                     if(data['status'] == 'success'){
-                        $('#show-description').html(data['description']);
+                        $('#show-description').html(SimpleMDE.prototype.markdown(data['description']));
                         $('#case-text').show();
                         $('#code-area').hide();
                     }

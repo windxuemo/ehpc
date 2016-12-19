@@ -4,11 +4,8 @@
 
 {% block header_ext %}
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet"
-          xmlns="http://www.w3.org/1999/html">
-    <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet"
-          xmlns="http://www.w3.org/1999/html">
-    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/paper.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/choice.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
 {% endblock %}
 
@@ -20,7 +17,7 @@
     </div>
 
     <div id="pass" class="modal" style="display: none">
-    <p class="es-icon es-icon-iccheckcircleblack24px text-primary text-center" style="font-size: 150px;"></p>
+        <p class="es-icon es-icon-iccheckcircleblack24px text-primary text-center" style="font-size: 150px;"></p>
         <p class="text-center text-xlarge"> 恭喜! 你又过关了! </p>
     </div>
     <div id="fail" class="modal" style="display: none">
@@ -36,34 +33,34 @@
             <div id="c_content">{{ c_content }}</div>
         </div>
         <br>
-        <hr>
-        <div id="player-content" class="col-md-12 material-container"></div>
+        <!-- 如果 challenge 没有 material, 则不显示 material 的区域。-->
+        {% if cur_material %}
+            <hr>
+            <div id="player-content" class="col-md-12 material-container"></div>
+        {% endif %}
     </div>
 
     <div id="challenge-right">
         <!--Challenge的题目展示-->
-        <div data-name="question" style="margin-bottom: 20px;font-size: 14px"
-             data-id="{{ practice.id }}" data-type="{{ practice.id }}">
-
-            <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
-                <div class="pull-left" style="margin-bottom: 5px;margin-left: 20px">
-                    <span data-id="num-id" style="font-weight: bold">1</span>
-                    <span>、 </span>
-                    {% if question_type == 'choice' %}
-                        <span>{{ practice | get_question_content }}</span>
-                    {% elif question_type == 'fill' %}
-                        <span data-id="fill-id">
+        <div data-name="question" data-id="{{ practice.id }}" data-type="{{ practice.id }}">
+            <!--题干-->
+            <div class="markdown-body">
+                <p class="text-center text-xlarge">小测试</p>
+                <hr>
+                {% if question_type == 'choice' %}
+                    <span id="question_content">{{ practice | get_question_content }}</span>
+                {% elif question_type == 'fill' %}
+                    <span data-id="fill-id">
                             {{ practice.content | split_fill | safe }}
                             <span data-id="fill-solution-len-id"
                                   style="display: none">{{ practice.solution | get_fill_solution_len }}</span>
                         </span>
-                    {% elif question_type == 'judge' or question_type == 'essay' %}
-                        <span>{{ practice.content }}</span>
-                    {% endif %}
-                </div>
-            </div><!--题干-->
+                {% elif question_type == 'judge' or question_type == 'essay' %}
+                    <span id="question_content">{{ practice.content }}</span>
+                {% endif %}
+            </div>
 
-            <div class="panel-body media-body">
+            <div class="markdown-body">
                 {% if question_type != 'program' %}
                     {% with question=practice %}
                         {% include 'course/widget_paper_question_detail.html' %}
@@ -71,12 +68,11 @@
                 {% endif %}
             </div>
 
-            <button class="btn btn-primary pull-right" style="width: 100px" data-id="confirm">
-                确认
+            <button class="btn btn-primary pull-right" data-id="confirm">确认
             </button>
         </div>
-
     </div>
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -84,6 +80,9 @@
         $(document).ready(function () {
             var c_content = $("#c_content");
             c_content.html(SimpleMDE.prototype.markdown(c_content.text()));
+
+            var q_content = $("#question_content");
+            q_content.html(SimpleMDE.prototype.markdown(q_content.text()));
         });
     </script>
 
@@ -99,7 +98,7 @@
     </script>
 
     <script>
-        var js_material_type = "{{ cur_material.m_type }}";
+        var js_material_type = "{{ cur_material.m_type if cur_material else "None" }}";
         var js_pdf_src = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
         var js_material_src = "{{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
 
@@ -107,7 +106,11 @@
             var video_player = '<div id="player" style="height:90%"></div>';
             var pdf_player = '<iframe id="player" class="course-player" frameborder="0" style="overflow:hidden;height:90%;width:100%" allowfullscreen></iframe>';
             var clappr = null;
-            if (js_material_type == "pdf") {
+
+            if (js_material_type == "None") {
+                return;
+            }
+            else if (js_material_type == "pdf") {
                 $("#player-content").empty().append(pdf_player);
                 $("#player").attr("src", js_pdf_src);
             }
@@ -135,7 +138,7 @@
 
 {#title#}
 {#c_content#}
-{#cur_material#}
+{#cur_material: 可能为空, 也就是说当前 challenge 并没有引用 material #}
 {#practice#}
 {#question_type#}
 {#kid#}

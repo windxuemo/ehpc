@@ -68,6 +68,7 @@ def knowledge(kid):
         # 保证每个challenge都有一个题目, 可以是一般的选择题、填空题等或者在线编程题目
         question, question_type = get_question_and_type(cur_challenge)
 
+        # challenge 可能没有相应的 material 存在, cur_material 对应为空。
         return render_template('lab/knowledge.html',
                                title=cur_challenge.title,
                                c_content=cur_challenge.content,

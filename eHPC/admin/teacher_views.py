@@ -617,9 +617,10 @@ def lab_create(knowledge_id):
             curr_program = Program.query.filter_by(id=request.form['question_id']).first_or_404()
             curr_program.challenges.append(curr_challenge)
 
-        if request.form['material_id'] != -1:
+        if int(request.form['material_id']) != -1:
             curr_material = Material.query.filter_by(id=request.form['material_id']).first_or_404()
             curr_material.challenges.append(curr_challenge)
+
         db.session.commit()
         return jsonify(status='success', challenge_id=curr_challenge.id)
 
@@ -658,11 +659,10 @@ def lab_edit(knowledge_id, challenge_id):
             curr_program = Program.query.filter_by(id=request.form['question_id']).first_or_404()
             curr_program.challenges.append(curr_challenge)
 
-        if request.form['material_id'] != -1:
+        if int(request.form['material_id']) != -1:
             curr_challenge.material.challenges.remove(curr_challenge)
             curr_material = Material.query.filter_by(id=request.form['material_id']).first_or_404()
             curr_material.challenges.append(curr_challenge)
 
         db.session.commit()
         return jsonify(status="success")
-

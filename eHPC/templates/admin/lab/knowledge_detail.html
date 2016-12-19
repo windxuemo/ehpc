@@ -147,7 +147,7 @@
                 }
             });
 
-            var material_id = {{ -1 if op == 'create' else challenge.material.id }};
+            var material_id = {{ -1 if op == 'create' else challenge.material.id or -1 }};
             var question_id = {% if op == 'edit' and challenge.question_type != 6 %}{{ challenge.question.id }}
                               {% elif op == 'edit' and challenge.question_type == 6 %}{{ challenge.program.id }}
                               {% else %}-1

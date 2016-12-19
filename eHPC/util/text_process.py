@@ -2,22 +2,22 @@
 # -*- coding: utf-8 -*-
 
 from . import filter_blueprint
-import misaka as m
 import re
 from ..models import User
 from flask import url_for
+# import misaka as m
 
-
-@filter_blueprint.app_template_filter('markdown')
-def markdown(string):
-    """ Render the string into html style.
-
-    支持表格, 自动检测链接, 删除线等
-    http://misaka.61924.nl/
-    """
-    renderer = m.HtmlRenderer()
-    md = m.Markdown(renderer, extensions=('fenced-code', 'tables', 'autolink', 'strikethrough', 'underline'))
-    return md(string)
+# 后台不再渲染 Markdown, 改为用 js 在前端渲染。
+# @filter_blueprint.app_template_filter('markdown')
+# def markdown(string):
+#     """ Render the string into html style.
+#
+#     支持表格, 自动检测链接, 删除线等
+#     http://misaka.61924.nl/
+#     """
+#     renderer = m.HtmlRenderer()
+#     md = m.Markdown(renderer, extensions=('fenced-code', 'tables', 'autolink', 'strikethrough', 'underline'))
+#     return md(string)
 
 
 @filter_blueprint.app_template_filter('split')

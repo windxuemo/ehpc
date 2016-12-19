@@ -3831,10 +3831,6 @@ ul#program-run-tab li a {
     font-weight: bold;
 }
 
-.markdown-body img {
-    border: 0;
-}
-
 .markdown-body pre {
     overflow: auto;
 }
@@ -4143,10 +4139,12 @@ ul#program-run-tab li a {
     max-width: 100%;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    border: 0;
+    display: block;
+    margin: 0 auto;
 }
 
 .markdown-body code {
-    padding: 0;
     padding-top: 0.2em;
     padding-bottom: 0.2em;
     margin: 0;
@@ -4531,7 +4529,7 @@ hr {
 .case-tags {
     outline: none;
     width: 50%;
-    border:1px solid #d6d6d6;
+    border: 1px solid #d6d6d6;
     border-radius: 3px;
     height: 35px;
     padding: 8px 12px;
@@ -4556,7 +4554,7 @@ hr {
 
 .case-tag-display .btn .close {
     position: absolute;
-    top:-11px;
+    top: -11px;
     right: -7px;
     width: 22px;
     border: 1px solid #796161;

@@ -40,7 +40,7 @@
             {% for lesson in cur_course.lessons %}
                 <li>
                     <div class="link"><i class="glyphicon glyphicon-tags">
-                    </i>课时{{ loop.index }}: {{ lesson.title }}
+                    </i><span>课时{{ loop.index }}: {{ lesson.title | truncate(18)}}</span>
                         {% if lesson.materials.all() %}
                             <i class="glyphicon glyphicon-chevron-down"></i>
                         {% endif %}
@@ -48,7 +48,7 @@
                     {% if lesson.materials.all() %}
                         <ul class="submenu" style="display: block;">
                             {% for m in lesson.materials | sort_lesson_materials() %}
-                                <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></li>
+                                <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name | truncate(25)}}</a></li>
                             {% endfor %}
                         </ul>
                     {% endif %}

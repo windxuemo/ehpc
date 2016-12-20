@@ -66,6 +66,7 @@ def show_question():
         rows.append([c.name, c.questions.count(), c.id])
 
     return render_template('problem/show_question.html',
+                           title=gettext('Choice Practice'),
                            rows=rows)
 
 

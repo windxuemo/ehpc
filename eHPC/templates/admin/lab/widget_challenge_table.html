@@ -13,11 +13,11 @@
         <tr data-id="{{ c.id }}">
             <td width="10%">{{ c.knowledgeNum }}</td>
             <td width="15%">{{ c.title }}</td>
-            <td width="30%">{{ c.material.name }}</td>
+            <td width="30%">{{ c.material.name | truncate(20)}}</td>
             {% if c.question_type == 6 %}
-            <td width="25%">{{ c.program.title }}</td>
+            <td width="25%">{{ c.program.title | truncate(15)}}</td>
             {% else %}
-            <td width="25%">{{ c.question | get_question_content }}</td>
+            <td width="25%">{{ c.question | get_question_content | truncate(15)}}</td>
             {% endif %}
             <td width="20%">
                 <a class="btn btn-link"

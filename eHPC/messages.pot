@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-11-30 10:14+0800\n"
+"POT-Creation-Date: 2016-12-19 16:04+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,40 +17,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: admin/system_views.py:18 templates/admin/navbar.html:6
+#: admin/system_views.py:19 templates/admin/navbar.html:6
 msgid "System Admin"
 msgstr ""
 
-#: admin/system_views.py:30
+#: admin/system_views.py:31
 msgid "User Admin"
 msgstr ""
 
-#: admin/system_views.py:42
+#: admin/system_views.py:43
 msgid "Successfully modify permission"
 msgstr ""
 
-#: admin/system_views.py:45
+#: admin/system_views.py:46
 msgid "User Edit"
 msgstr ""
 
-#: admin/system_views.py:53
+#: admin/system_views.py:54
 msgid "Articles Admin"
 msgstr ""
 
-#: admin/system_views.py:61
+#: admin/system_views.py:62
 msgid "Create Article"
 msgstr ""
 
-#: admin/system_views.py:103
+#: admin/system_views.py:104
 msgid "Groups Admin"
 msgstr ""
 
-#: admin/system_views.py:111
+#: admin/system_views.py:112
 msgid "Create Group"
 msgstr ""
 
-#: admin/system_views.py:168
+#: admin/system_views.py:169
 msgid "Case Admin"
+msgstr ""
+
+#: admin/system_views.py:177
+msgid "Create Case"
+msgstr ""
+
+#: admin/system_views.py:247
+msgid "Case Icon"
+msgstr ""
+
+#: admin/system_views.py:277
+msgid "Case Version"
+msgstr ""
+
+#: admin/system_views.py:341
+msgid "Case Code Material"
 msgstr ""
 
 #: admin/teacher_views.py:21
@@ -73,12 +89,45 @@ msgstr ""
 msgid "Course Lesson"
 msgstr ""
 
-#: admin/teacher_views.py:180
+#: admin/teacher_views.py:175
 msgid "Lesson Material"
 msgstr ""
 
-#: admin/teacher_views.py:223
+#: admin/teacher_views.py:239
 msgid "Course Paper"
+msgstr ""
+
+#: admin/teacher_views.py:345
+msgid "Question Manage"
+msgstr ""
+
+#: admin/teacher_views.py:361 admin/teacher_views.py:389
+#: admin/teacher_views.py:453 admin/teacher_views.py:518
+msgid "Edit question"
+msgstr ""
+
+#: admin/teacher_views.py:418 admin/teacher_views.py:501
+msgid "Create question"
+msgstr ""
+
+#: admin/teacher_views.py:486
+msgid "Program question"
+msgstr ""
+
+#: admin/teacher_views.py:536
+msgid "Lab Manage"
+msgstr ""
+
+#: admin/teacher_views.py:564
+msgid "Lab tasks"
+msgstr ""
+
+#: admin/teacher_views.py:598
+msgid "Lab Create"
+msgstr ""
+
+#: admin/teacher_views.py:637
+msgid "Lab Edit"
 msgstr ""
 
 #: admin/views.py:17 admin/views.py:32
@@ -93,7 +142,7 @@ msgstr ""
 msgid "Teacher Setting"
 msgstr ""
 
-#: admin/views.py:60
+#: admin/views.py:62
 msgid "System Setting"
 msgstr ""
 
@@ -101,12 +150,20 @@ msgstr ""
 msgid "Articles"
 msgstr ""
 
-#: case/views.py:17 templates/navbar.html:23
+#: case/views.py:14
+msgid "Case List"
+msgstr ""
+
+#: case/views.py:23 templates/navbar.html:23
 msgid "Case Display"
 msgstr ""
 
 #: course/views.py:18
 msgid "Courses"
+msgstr ""
+
+#: course/views.py:78
+msgid "Course Materials"
 msgstr ""
 
 #: group/views.py:20
@@ -122,7 +179,7 @@ msgstr ""
 msgid "Create Topic"
 msgstr ""
 
-#: lab/views.py:27
+#: lab/views.py:26
 msgid "Labs"
 msgstr ""
 
@@ -140,6 +197,10 @@ msgstr ""
 
 #: problem/views.py:43
 msgid "My Submit"
+msgstr ""
+
+#: problem/views.py:69
+msgid "Choice Practice"
 msgstr ""
 
 #: templates/admin/footer.html:4 templates/footer.html:4
@@ -293,21 +354,21 @@ msgid "Created Time"
 msgstr ""
 
 #: templates/group/widget_post_detail.html:20
-#: templates/group/widget_topic_detail.html:28
-#: templates/group/widget_topic_detail.html:55
-#: templates/group/widget_topic_detail.html:114
+#: templates/group/widget_topic_detail.html:26
+#: templates/group/widget_topic_detail.html:53
+#: templates/group/widget_topic_detail.html:120
 msgid "Reply"
 msgstr ""
 
-#: templates/group/widget_topic_detail.html:31
+#: templates/group/widget_topic_detail.html:29
 msgid "No replies yet!"
 msgstr ""
 
-#: templates/group/widget_topic_detail.html:62
+#: templates/group/widget_topic_detail.html:60
 msgid "Content"
 msgstr ""
 
-#: templates/group/widget_topic_detail.html:69
+#: templates/group/widget_topic_detail.html:67
 msgid "Submit"
 msgstr ""
 
@@ -340,7 +401,7 @@ msgstr ""
 msgid "Program Lists"
 msgstr ""
 
-#: templates/problem/program_detail.html:57
+#: templates/problem/program_detail.html:55
 msgid "Submit Solution"
 msgstr ""
 
@@ -573,7 +634,7 @@ msgstr ""
 msgid "Update info done!"
 msgstr ""
 
-#: user/views.py:252 util/file_manage.py:18 util/file_manage.py:43
+#: user/views.py:252 util/file_manage.py:19 util/file_manage.py:66
 msgid "No selected file"
 msgstr ""
 
@@ -581,7 +642,7 @@ msgstr ""
 msgid "Update avatar done!"
 msgstr ""
 
-#: user/views.py:272 util/file_manage.py:32 util/file_manage.py:58
+#: user/views.py:272 util/file_manage.py:33 util/file_manage.py:84
 msgid "Invalid file"
 msgstr ""
 

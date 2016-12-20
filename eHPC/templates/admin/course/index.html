@@ -27,7 +27,7 @@
                     <tbody id="tb">
                     {% for c in courses %}
                         <tr data-cid="{{ c.id }}">
-                            <td>{{ c.title }}</td>
+                            <td>{{ c.title | truncate(20)}}</td>
                             <td>{{ c.lessonNum }}</td>
                             <td>{{ c.studentNum }}</td>
                             <td>{{ c.createdTime }}</td>

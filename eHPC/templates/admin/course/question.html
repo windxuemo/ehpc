@@ -51,7 +51,7 @@
                             {% for q in paper.questions %}
                                 <tr data-question_id="{{ q.questions.id }}">
                                     <td><input type="checkbox"></td>
-                                    <td>{{ q.questions | get_question_content }}</td>
+                                    <td>{{ q.questions | get_question_content | truncate(28)}}</td>
                                     <td>{{ q.questions | get_question_type }}</td>
                                     <td>{{ q.point }}</td>
                                     <td>

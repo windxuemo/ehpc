@@ -75,7 +75,7 @@ def material(mid):
     cur_course = cur_lesson.course
     return render_template('course/player.html',
                            type=cur_material.m_type,
-                           title=cur_material.name,
+                           title=gettext('Course Materials'),
                            cur_course=cur_course,
                            cur_material=cur_material)
 

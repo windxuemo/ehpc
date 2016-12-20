@@ -37,7 +37,7 @@
                                 <li class="item-version clearfix" data-version_id="{{ v.version_id }}" style="word-break: break-all;">
                                     <div class="item-content col-md-6">
                                         <i class="es-icon es-icon-undone"></i>
-                                        版本<span class="number">{{ loop.index }}</span> ：{{ v.name }}
+                                        版本<span class="number">{{ loop.index }}</span> ：{{ v.name | truncate(23)}}
 
                                     </div>
                                     <div class="col-md-6">

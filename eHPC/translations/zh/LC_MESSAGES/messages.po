@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-11-30 10:14+0800\n"
+"POT-Creation-Date: 2016-12-19 16:04+0800\n"
 "PO-Revision-Date: 2016-10-08 15:35+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -18,41 +18,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
 
-#: admin/system_views.py:18 templates/admin/navbar.html:6
+#: admin/system_views.py:19 templates/admin/navbar.html:6
 msgid "System Admin"
 msgstr "站点管理"
 
-#: admin/system_views.py:30
+#: admin/system_views.py:31
 msgid "User Admin"
 msgstr "用户管理"
 
-#: admin/system_views.py:42
+#: admin/system_views.py:43
 msgid "Successfully modify permission"
 msgstr "修改权限成功"
 
-#: admin/system_views.py:45
+#: admin/system_views.py:46
 msgid "User Edit"
 msgstr "用户编辑"
 
-#: admin/system_views.py:53
+#: admin/system_views.py:54
 msgid "Articles Admin"
 msgstr "资讯管理"
 
-#: admin/system_views.py:61
+#: admin/system_views.py:62
 msgid "Create Article"
 msgstr "新建文章"
 
-#: admin/system_views.py:103
+#: admin/system_views.py:104
 msgid "Groups Admin"
 msgstr "群组管理"
 
-#: admin/system_views.py:111
+#: admin/system_views.py:112
 msgid "Create Group"
 msgstr "新建群组"
 
-#: admin/system_views.py:168
+#: admin/system_views.py:169
 msgid "Case Admin"
 msgstr "案例管理"
+
+#: admin/system_views.py:177
+msgid "Create Case"
+msgstr "新建案例"
+
+#: admin/system_views.py:247
+msgid "Case Icon"
+msgstr "案例图标"
+
+#: admin/system_views.py:277
+msgid "Case Version"
+msgstr "案例版本管理"
+
+#: admin/system_views.py:341
+msgid "Case Code Material"
+msgstr "案例代码管理"
 
 #: admin/teacher_views.py:21
 msgid "Course Admin"
@@ -74,13 +90,46 @@ msgstr "课程图片"
 msgid "Course Lesson"
 msgstr "课程课时"
 
-#: admin/teacher_views.py:180
+#: admin/teacher_views.py:175
 msgid "Lesson Material"
 msgstr "课时资料"
 
-#: admin/teacher_views.py:223
+#: admin/teacher_views.py:239
 msgid "Course Paper"
 msgstr "课程试卷"
+
+#: admin/teacher_views.py:345
+msgid "Question Manage"
+msgstr "试题管理"
+
+#: admin/teacher_views.py:361 admin/teacher_views.py:389
+#: admin/teacher_views.py:453 admin/teacher_views.py:518
+msgid "Edit question"
+msgstr "编辑试题"
+
+#: admin/teacher_views.py:418 admin/teacher_views.py:501
+msgid "Create question"
+msgstr "创建试题"
+
+#: admin/teacher_views.py:486
+msgid "Program question"
+msgstr "编程题"
+
+#: admin/teacher_views.py:536
+msgid "Lab Manage"
+msgstr "实验室管理"
+
+#: admin/teacher_views.py:564
+msgid "Lab tasks"
+msgstr "实验室任务管理"
+
+#: admin/teacher_views.py:598
+msgid "Lab Create"
+msgstr "新建实验"
+
+#: admin/teacher_views.py:637
+msgid "Lab Edit"
+msgstr "编辑实验"
 
 #: admin/views.py:17 admin/views.py:32
 msgid "Admin Auth"
@@ -94,7 +143,7 @@ msgstr "用户名或者密码错误"
 msgid "Teacher Setting"
 msgstr "教师管理"
 
-#: admin/views.py:60
+#: admin/views.py:62
 msgid "System Setting"
 msgstr "站点管理"
 
@@ -102,13 +151,21 @@ msgstr "站点管理"
 msgid "Articles"
 msgstr "所有资讯"
 
-#: case/views.py:17 templates/navbar.html:23
+#: case/views.py:14
+msgid "Case List"
+msgstr "案例列表"
+
+#: case/views.py:23 templates/navbar.html:23
 msgid "Case Display"
 msgstr "案例展示"
 
 #: course/views.py:18
 msgid "Courses"
 msgstr "在线课程"
+
+#: course/views.py:78
+msgid "Course Materials"
+msgstr "课时材料"
 
 #: group/views.py:20
 msgid "Groups"
@@ -123,7 +180,7 @@ msgstr "所有群组"
 msgid "Create Topic"
 msgstr "新建话题"
 
-#: lab/views.py:27
+#: lab/views.py:26
 msgid "Labs"
 msgstr "实验室"
 
@@ -142,6 +199,10 @@ msgstr "编程题目"
 #: problem/views.py:43
 msgid "My Submit"
 msgstr "我的提交"
+
+#: problem/views.py:69
+msgid "Choice Practice"
+msgstr "选择题练习"
 
 #: templates/admin/footer.html:4 templates/footer.html:4
 msgid "SYSU SDCS"
@@ -294,21 +355,21 @@ msgid "Created Time"
 msgstr "创建时间"
 
 #: templates/group/widget_post_detail.html:20
-#: templates/group/widget_topic_detail.html:28
-#: templates/group/widget_topic_detail.html:55
-#: templates/group/widget_topic_detail.html:114
+#: templates/group/widget_topic_detail.html:26
+#: templates/group/widget_topic_detail.html:53
+#: templates/group/widget_topic_detail.html:120
 msgid "Reply"
 msgstr "回复"
 
-#: templates/group/widget_topic_detail.html:31
+#: templates/group/widget_topic_detail.html:29
 msgid "No replies yet!"
 msgstr "目前没有回复"
 
-#: templates/group/widget_topic_detail.html:62
+#: templates/group/widget_topic_detail.html:60
 msgid "Content"
 msgstr "内容"
 
-#: templates/group/widget_topic_detail.html:69
+#: templates/group/widget_topic_detail.html:67
 msgid "Submit"
 msgstr "提交"
 
@@ -341,7 +402,7 @@ msgstr "试题中心"
 msgid "Program Lists"
 msgstr "编程题目"
 
-#: templates/problem/program_detail.html:57
+#: templates/problem/program_detail.html:55
 msgid "Submit Solution"
 msgstr "提交代码"
 
@@ -574,7 +635,7 @@ msgstr "的话题"
 msgid "Update info done!"
 msgstr "成功更新个人信息"
 
-#: user/views.py:252 util/file_manage.py:18 util/file_manage.py:43
+#: user/views.py:252 util/file_manage.py:19 util/file_manage.py:66
 msgid "No selected file"
 msgstr "没有选中文件"
 
@@ -582,7 +643,7 @@ msgstr "没有选中文件"
 msgid "Update avatar done!"
 msgstr "已更新头像"
 
-#: user/views.py:272 util/file_manage.py:32 util/file_manage.py:58
+#: user/views.py:272 util/file_manage.py:33 util/file_manage.py:84
 msgid "Invalid file"
 msgstr "文件不符合要求"
 

@@ -342,6 +342,7 @@ def question(question_type):
         elif question_type == 'essay':
             questions = Question.query.filter_by(type=5)
         return render_template('admin/problem/question.html',
+                               title=gettext('Question Manage'),
                                questions=questions,
                                type=question_type)
     elif request.method == 'POST':
@@ -357,6 +358,7 @@ def question(question_type):
 def question_create(question_type):
     if request.method == 'GET':
         return render_template('admin/problem/question_detail.html',
+                               title=gettext('Edit question'),
                                op='create',
                                classifies=Classify.query.all(),
                                mode='practice',
@@ -384,6 +386,7 @@ def question_edit(question_type, question_id):
             curr_classifies[index] = c.id
             index += 1
         return render_template('admin/problem/question_detail.html',
+                               title=gettext('Edit question'),
                                op='edit',
                                question=curr_question,
                                classifies=Classify.query.all(),
@@ -412,6 +415,7 @@ def paper_question_create(paper_id, question_type):
     if request.method == 'GET':
         curr_paper = Paper.query.filter_by(id=paper_id).first_or_404()
         return render_template('admin/problem/question_detail.html',
+                               title=gettext('Create question'),
                                op='create',
                                classifies=Classify.query.all(),
                                mode='paper',
@@ -446,6 +450,7 @@ def paper_question_edit(paper_id, question_type, question_id):
             curr_classifies[index] = c.id
             index += 1
         return render_template('admin/problem/question_detail.html',
+                               title=gettext('Edit question'),
                                op='edit',
                                question=curr_question.questions,
                                classifies=Classify.query.all(),
@@ -478,7 +483,7 @@ def paper_question_edit(paper_id, question_type, question_id):
 def program():
     """ 题库中编程题的入口页面 """
     if request.method == 'GET':
-        return render_template('admin/problem/program.html', programs=Program.query.all())
+        return render_template('admin/problem/program.html', title=gettext('Program question'), programs=Program.query.all())
     elif request.method == 'POST':
         # 删除编程题目
         curr_program = Program.query.filter_by(id=request.form['id']).first_or_404()
@@ -492,7 +497,9 @@ def program():
 def program_create():
     """ 在题库添加编程题 """
     if request.method == 'GET':
-        return render_template('admin/problem/program_detail.html', op='create')
+        return render_template('admin/problem/program_detail.html',
+                               title=gettext('Create question'),
+                               op='create')
     elif request.method == 'POST':
         # 添加编程题
         curr_program = Program(title=request.form['title'], detail=request.form['content'])
@@ -507,7 +514,10 @@ def program_edit():
     """ 题库中编程题目的编辑页面 """
     if request.method == 'GET':
         curr_program = Program.query.filter_by(id=request.args['id']).first_or_404()
-        return render_template('admin/problem/program_detail.html', op='edit', program_problem=curr_program)
+        return render_template('admin/problem/program_detail.html',
+                               title=gettext('Edit question'),
+                               op='edit',
+                               program_problem=curr_program)
     elif request.method == 'POST':
         # 编辑编程题
         curr_program = Program.query.filter_by(id=request.form['id']).first_or_404()
@@ -522,7 +532,9 @@ def program_edit():
 def lab():
     if request.method == 'GET':
         knows = Knowledge.query.all()
-        return render_template('admin/lab/index.html', knows=knows)
+        return render_template('admin/lab/index.html',
+                               title=gettext('Lab Manage'),
+                               knows=knows)
     elif request.method == 'POST':
         if request.form['op'] == 'create':
             curr_knowledge = Knowledge(title=request.form['title'], content=request.form['content'])
@@ -548,7 +560,10 @@ def lab_view(knowledge_id):
     if request.method == 'GET':
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
         knows = Knowledge.query.all()
-        return render_template('admin/lab/knowledge.html', knowledge=curr_knowledge, knows=knows)
+        return render_template('admin/lab/knowledge.html',
+                               title=gettext('Lab tasks'),
+                               knowledge=curr_knowledge,
+                               knows=knows)
     elif request.method == 'POST':
         # 删除任务以及调整顺序
         if request.form['op'] == 'del':
@@ -579,8 +594,13 @@ def lab_create(knowledge_id):
         materials = Material.query.all()
         questions = Question.query.all()
         programs = Program.query.all()
-        return render_template('admin/lab/knowledge_detail.html', op='create', knowledge=curr_knowledge,
-                               materials=materials, questions=questions, programs=programs)
+        return render_template('admin/lab/knowledge_detail.html',
+                               title=gettext('Lab Create'),
+                               op='create',
+                               knowledge=curr_knowledge,
+                               materials=materials,
+                               questions=questions,
+                               programs=programs)
     elif request.method == 'POST':
         # 创建任务
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
@@ -613,9 +633,13 @@ def lab_edit(knowledge_id, challenge_id):
         materials = Material.query.all()
         questions = Question.query.all()
         programs = Program.query.all()
-        return render_template('admin/lab/knowledge_detail.html', op='edit', knowledge=curr_knowledge,
+        return render_template('admin/lab/knowledge_detail.html',
+                               title=gettext('Lab Edit'),
+                               op='edit', knowledge=curr_knowledge,
                                challenge=curr_challenge,
-                               materials=materials, questions=questions, programs=programs)
+                               materials=materials,
+                               questions=questions,
+                               programs=programs)
     elif request.method == 'POST':
         # 编辑任务
         curr_challenge = Challenge.query.filter_by(id=challenge_id).first_or_404()

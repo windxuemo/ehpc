@@ -29,7 +29,7 @@
                                 <tr data-id="{{ k.id }}">
                                     <td width="10%">{{ loop.index }}</td>
                                     <td width="30%">{{ k.title }}</td>
-                                    <td width="30%">{{ k.content }}</td>
+                                    <td width="30%">{{ k.content | truncate(20)}}</td>
                                     <td width="30%">
                                         <a class="btn btn-link" href="javascript:void(0);" name="knowledge-edit-btn">
                                             <i class="es-icon es-icon-edit"></i>编辑信息</a>

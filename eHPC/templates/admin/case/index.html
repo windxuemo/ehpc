@@ -26,7 +26,7 @@
                     <tbody id="tb">
                     {% for c in cases %}
                         <tr data-cid="{{ c.id }}">
-                            <td>{{ c.name }}</td>
+                            <td>{{ c.name | truncate(35)}}</td>
                             <td>{{ c.tag }}</td>
                             <td>{{ c.versions.count()}}</td>
                             <td>

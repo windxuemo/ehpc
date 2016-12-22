@@ -37,35 +37,12 @@
         <form onsubmit="submit_code(); return false;">
             <div class="row form-group">
                 <div class="col-md-4">
-					<div class="row">
-						<label class="col-md-3" for="language">语言</label>
-						<select class="col-md-4" name="language" id="language">
-							<option value="mpicc">mpicc</option>
-						</select>
-					</div>
-
-					<div class="row">
-						<label class="col-md-3" for="task">任务数</label>
-						<select class="col-md-4" name="task_number" id="task">
-							<option value="4">4</option>
-							<option value="8">8</option>
-						</select>
-					</div>
-
-					<div class="row">
-						<label class="col-md-3" for="cpu_number_per_task">CPU/任务</label>
-						<select class="col-md-4" name="cpu_number_per_task" id="cpu_number_per_task">
-							<option value="1">1</option>
-						</select>
-					</div>
-
-					<div class="row">
-						<label class="col-md-3" for="node_number">结点数</label>
-						<select class="col-md-4" name="node_number" id="node_number">
-							<option value="1">1</option>
-						</select>
-					</div>
-
+                    <select class="form-control" id="language">
+                        <option value="ace/mode/c_cpp">C</option>
+                        <option value="ace/mode/c_cpp">C++</option>
+                        <option value="ace/mode/python">Python</option>
+                        <option value="ace/mode/fortran">Fortran</option>
+                    </select>
                 </div>
             </div>
 

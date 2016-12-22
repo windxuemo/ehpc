@@ -60,13 +60,12 @@ def view_code(sid):
 
 @problem.route('/question/')
 def show_question():
-    classifies = Classify.query.all()  # 知识点
+    classifies = Classify.query.all()   # 知识点
     rows = []
     for c in classifies:
         rows.append([c.name, c.questions.count(), c.id])
 
     return render_template('problem/show_question.html',
-                           title=gettext('Choice Practice'),
                            rows=rows)
 
 
@@ -107,55 +106,51 @@ def question_view(cid, question_type):
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 @login_required
 def submit(pid):
-    uid = current_user.id
-    problem_id = request.form['problem_id']
-    source_code = request.form['source_code']
-    language = request.form['language']
-    submit_problem = SubmitProblem(uid, problem_id, source_code, language)
-    db.session.add(submit_problem)
-    db.session.commit()
+	uid = current_user.id
+	problem_id = request.form['problem_id']
+	source_code = request.form['source_code']
+	language = request.form['language']
+	submit_problem = SubmitProblem(uid, problem_id, source_code, language)
+	db.session.add(submit_problem)
+	db.session.commit()
 
-    path = "/HOME/sysu_dwu_1/coreos"
-    input_filename = "%s_%s.c" % (str(pid), str(uid))
-    output_filename = "%s_%s.o" % (str(pid), str(uid))
+	path = "/HOME/sysu_dwu_1/coreos"
+	#之后需要改进
+	input_filename = "code/%s_%s.c" % (str(pid), str(uid))
+	output_filename = "code/%s_%s.o" % (str(pid), str(uid))
 
-    # with open(input_filename, 'w') as src_file:
-    # src_file.write(source_code)
+	task_number = request.form['task_number']
+	#task_number = "4"
+	cpu_number_per_task = request.form['cpu_number_per_task']
+	#cpu_number_per_task = "1"
+	node_number = request.form['node_number']
+	#node_number = "1"
+	#print task_number
+	partition = "free"
 
-    client = ehpc_client()
+	#print task_number
+	#print cpu_number_per_task
+	#print node_number
+	#with open(input_filename, 'w') as src_file:
+		#src_file.write(source_code)
 
-    is_success = client.login()
-    if not is_success:
-        print "login fail."
+	client = ehpc_client()
 
-    is_success = client.upload(path, input_filename, source_code)
-    if not is_success:
-        print "upload fail."
+	is_success = client.login()
+	if not is_success:
+		print "login fail."
 
-    compile_command = "bash -c 'cd %s;g++ -o %s %s'" % (path, output_filename, input_filename)
-    run_command = "bash -c 'cd %s;./%s'" % (path, output_filename)
+	is_success = client.upload(path, input_filename, source_code)
+	if not is_success:
+		print "upload fail."
 
-    compile_output = client.run_command(compile_command)
-    compile_out = compile_output or "Compile success."
-    if compile_output is None:
-        compile_out = "Request fail."
+	compile_out = client.ehpc_compile(path, input_filename, output_filename, language)
+	run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number)
 
-    run_output = client.run_command(run_command)
-    run_out = run_output or "No output."
-    if run_output is None:
-        run_out = "Request fail."
+	result['status'] = 'success'
+	result['problem_id'] = pid
+	result['compile_out'] = str(compile_out)
+	result['run_out'] = str(run_out)
 
-    '''
-    # TODO here.  Get the result.
-    is_compile_success = [False]
-    compile_out = c_compile(source_code, pid, current_user.id, is_compile_success)
-    run_out = "编译失败!\n程序无法运行..."
-    if is_compile_success[0]:
-        run_out = c_run(pid, current_user.id) or "程序无输出结果"
-    '''
-    result = dict()
-    result['status'] = 'success'
-    result['problem_id'] = pid
-    result['compile_out'] = str(compile_out)
-    result['run_out'] = str(run_out)
-    return jsonify(**result)
+	return jsonify(**result)
+

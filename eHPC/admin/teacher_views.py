@@ -1,16 +1,20 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import render_template, request, redirect, url_for, abort, jsonify, current_app
-from ..user.authorize import admin_login, teacher_login
-from . import admin
-from ..models import Course, Lesson, Material, User, Article
-from ..models import Classify, Program, Paper, Question, PaperQuestion
-from ..models import Knowledge, Challenge
-from .. import db
-import os, json
+import json
+import os
+
+from flask import render_template, request, redirect, url_for, abort, jsonify, current_app, make_response, send_file
 from flask_babel import gettext
-from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
 from sqlalchemy import or_
+
+from . import admin
+from .. import db
+from ..models import Classify, Program, Paper, Question, PaperQuestion
+from ..models import Course, Lesson, Material
+from ..models import Knowledge, Challenge
+from ..user.authorize import teacher_login
+from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
+from ..util.pdf import get_paper_pdf
 
 
 @admin.route('/course/', methods=['GET', 'POST'])
@@ -666,3 +670,12 @@ def lab_edit(knowledge_id, challenge_id):
 
         db.session.commit()
         return jsonify(status="success")
+
+
+@admin.route('/download/paper/<int:paper_id>/')
+@teacher_login
+def paper_pdf(paper_id):
+    path = get_paper_pdf(paper_id)
+    response = make_response(send_file(path))
+    response.headers["Content-Disposition"] = "attachment; filename=%s;" % path[path.rfind('/')+1:]
+    return response

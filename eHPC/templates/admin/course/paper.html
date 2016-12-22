@@ -49,6 +49,8 @@
                                             <i class="es-icon es-icon-delete"></i>删除</a>
                                         <a class="btn btn-link pull-right" href="{{ url_for('admin.paper_edit', course_id=course.id, paper_id=p.id) }}" name="edt-btn">
                                             <i class="es-icon es-icon-addbox"></i>题目</a>
+                                        <a class="btn btn-link pull-right" href="{{ url_for('admin.paper_pdf', paper_id=p.id) }}">
+                                            <i class="es-icon es-icon-download"></i>下载</a>
                                     </div>
                                 </li>
                             {% endfor %}

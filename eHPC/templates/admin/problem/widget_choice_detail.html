@@ -5,10 +5,11 @@
         method="post" id="form">
     <div class="form-group" id="classify">
         <label>知识点&nbsp&nbsp</label>
-        {% for classify in classifies %}
-            <input type="checkbox" name="classify" id="classify{{ classify.id }}"
-                   value="{{ classify.id }}">{{ classify.name }}
-        {% endfor %}
+        <select class="selectpicker" name="classify" multiple data-live-search="true">
+            {% for classify in classifies %}
+                <option value="{{ classify.id }}">{{ classify.name }}</option>
+            {% endfor %}
+        </select>
     </div>
 
     {% if mode == 'paper' %}

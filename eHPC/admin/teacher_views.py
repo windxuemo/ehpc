@@ -679,3 +679,29 @@ def paper_pdf(paper_id):
     response = make_response(send_file(path))
     response.headers["Content-Disposition"] = "attachment; filename=%s;" % path[path.rfind('/')+1:]
     return response
+
+
+@admin.route("/classifies/", methods=['GET', 'POST'])
+@teacher_login
+def classify():
+    if request.method == 'GET':
+        classifies = Classify.query.all()
+        return render_template('admin/classify/index.html',
+                               title=gettext("Classify Admin"),
+                               classifies=classifies)
+    elif request.method == 'POST':
+        if request.form['op'] == 'create':
+            new_classify = Classify(name=request.form['cname'])
+            db.session.add(new_classify)
+            db.session.commit()
+            return jsonify(status='success')
+        elif request.form['op'] == 'edit':
+            cur_classify = Classify.query.filter_by(id=request.form['cid']).first_or_404()
+            cur_classify.name = request.form['cname']
+            db.session.commit()
+            return jsonify(status='success')
+        elif request.form['op'] == 'del':
+            cur_classify = Classify.query.filter_by(id=request.form['cid']).first_or_404()
+            db.session.delete(cur_classify)
+            db.session.commit()
+            return jsonify(status='success')

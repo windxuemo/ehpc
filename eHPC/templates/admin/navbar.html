@@ -22,6 +22,9 @@
                     <li class="nav-hover">
                         <a href="{{ url_for('admin.lab') }}">实验管理</a>
                     </li>
+                    <li class="nav-hover">
+                        <a href="{{ url_for('admin.classify') }}">知识点管理</a>
+                    </li>
                 {% elif current_user | is_admin_user %}
                     <li class="nav-hover">
                         <a href="{{ url_for('admin.user') }}">用户管理</a>

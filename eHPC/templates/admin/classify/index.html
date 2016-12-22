@@ -1,0 +1,130 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/jquery.dataTables.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container" id="content-container">
+        <div class="panel panel-default panel-col">
+            <div class="panel-heading">
+                    <span class="pull-right">
+                        <a id="create-classify" class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            创建知识点
+                        </a>
+                    </span>
+                所有知识点
+            </div>
+
+            <div class="panel-body">
+                <table class="table" id="classify-table" style="word-break:break-all;">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>知识点名称</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tb">
+                    {% for c in classifies %}
+                        <tr data-cid="{{ c.id }}">
+                            <td>{{ loop.index }}</td>
+                            <td data-id="cname">{{ c.name }}</td>
+                            <td>
+                                <a href="javascript:void(0)" data-id="edit">编辑</a>
+                                <span class="divider"> | </span>
+                                <a href="javascript:void(0)" name="del-btn">删除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 50%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">创建知识点</h4>
+                </div>
+                <div class="modal-body">
+                    <label>知识点名称</label>
+                    <input class="form-control" name="name">
+                </div>
+                <div class="modal-footer">
+                    <button id="confirm-submit" type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        $(function () {
+            $("#create-classify").click(function () {
+                $("input[name=name]").val("");
+                $("#confirm-submit").data('op','create');
+                $("#createModal").modal("show");
+            });
+            $("a[data-id=edit]").click(function () {
+                $("input[name=name]").val($(this).parent().parent().find('td[data-id=cname]').eq(0).text());
+                $("#confirm-submit").data('op','edit');
+                $("#confirm-submit").data('cid', $(this).parent().parent().data('cid'));
+                $("#createModal").modal("show");
+            });
+
+            $("#confirm-submit").click(function () {
+                var cid = -1;
+                if($(this).data('op') == 'edit'){
+                    cid = $(this).data('cid');
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.classify') }}",
+                    data: {
+                        op: $(this).data('op'),
+                        cid: cid,
+                        cname: $(this).parent().parent().find("input[name=name]").eq(0).val()
+                    },
+                    success: function (data) {
+                        if(data['status'] == 'success'){
+                            location.reload();
+                        }
+                        else{
+                            alert('失败');
+                        }
+                    }
+                });
+            });
+
+            $("#tb").find("a[name=del-btn]").each(function () {
+                $(this).click(function () {
+                    var obj = this;
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.classify') }}",
+                        data: {
+                            op: 'del',
+                            cid: $(obj).parent().parent().data('cid')
+                        },
+                        success: function (data) {
+                            if(data['status'] == 'success'){
+                                location.reload();
+                            }
+                            else{
+                                alert('删除失败');
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{# classifies #}

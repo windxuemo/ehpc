@@ -20,7 +20,8 @@ def index():
                            user_cnt=User.query.count(),
                            article_cnt=Article.query.count(),
                            group_cnt=Group.query.count(),
-                           case_cnt=Case.query.count())
+                           case_cnt=Case.query.count(),
+                           classify_cnt=Classify.query.count())
 
 
 @admin.route('/users/')
@@ -374,3 +375,4 @@ def case_version_material(case_id, version_id):
                 return jsonify(status='success')
             else:
                 return jsonify(status='fail')
+

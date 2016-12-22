@@ -1,11 +1,12 @@
 $(document).ready(function () {
 
     if(op == "edit") {
+        var selected_classifies = [];
         for(var k in data){
-            $("#classify"+data[k].toString()).eq(0).attr('checked', 'true');
+            selected_classifies.push(data[k]);
         }
+        $(".selectpicker").selectpicker('val', selected_classifies);
         //需编辑题目的答案
-
         oldAnswer = oldAnswer.split(';');
         for (i = 0; i < oldAnswer.length; i++) {
             $("#options").find("input[value=" + (oldAnswer[i].charCodeAt(0)-'A'.charCodeAt(0)).toString() + "]").attr('checked', true);
@@ -75,13 +76,7 @@ $(document).ready(function () {
 
     //保存提交
     $("#save-problem").click(function () {
-        var count = 0;
-        $("input[name=classify]").each(function () {
-            if (this.checked == true) {
-                count++;
-            }
-        });
-        if (count == 0) {
+        if ($(".selectpicker").selectpicker('val').length == 0){
             alert("请至少选则一个知识点");
             return;
         }
@@ -94,7 +89,7 @@ $(document).ready(function () {
 
         var solution = [];
 
-        count = 0;
+        var count = 0;
         $("#options").find("input[name=option_index]").each(function () {
             if (this.checked == true) {
                 count++;

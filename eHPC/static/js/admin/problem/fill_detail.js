@@ -1,10 +1,8 @@
 $(function () {
     if (op == "edit") {
-        var selected_classifies = [];
         for(var k in data){
-            selected_classifies.push(data[k]);
+            $("#classify" + data[k].toString()).eq(0).attr('checked', 'true');
         }
-        $(".selectpicker").selectpicker('val', selected_classifies);
     }
 
     var edt1 = drop_img_simplemde(new SimpleMDE({

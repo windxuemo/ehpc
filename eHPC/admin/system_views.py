@@ -20,8 +20,7 @@ def index():
                            user_cnt=User.query.count(),
                            article_cnt=Article.query.count(),
                            group_cnt=Group.query.count(),
-                           case_cnt=Case.query.count(),
-                           classify_cnt=Classify.query.count())
+                           case_cnt=Case.query.count())
 
 
 @admin.route('/users/')
@@ -375,29 +374,3 @@ def case_version_material(case_id, version_id):
                 return jsonify(status='success')
             else:
                 return jsonify(status='fail')
-
-
-@admin.route("/classifies/", methods=['GET', 'POST'])
-@system_login
-def classify():
-    if request.method == 'GET':
-        classifies = Classify.query.all()
-        return render_template('admin/classify/index.html',
-                               title=gettext("Classify Admin"),
-                               classifies=classifies)
-    elif request.method == 'POST':
-        if request.form['op'] == 'create':
-            new_classify = Classify(name=request.form['cname'])
-            db.session.add(new_classify)
-            db.session.commit()
-            return jsonify(status='success')
-        elif request.form['op'] == 'edit':
-            cur_classify = Classify.query.filter_by(id=request.form['cid']).first_or_404()
-            cur_classify.name = request.form['cname']
-            db.session.commit()
-            return jsonify(status='success')
-        elif request.form['op'] == 'del':
-            cur_classify = Classify.query.filter_by(id=request.form['cid']).first_or_404()
-            db.session.delete(cur_classify)
-            db.session.commit()
-            return jsonify(status='success')

@@ -1,15 +1,16 @@
 <table id="questions" class="table fixed-table">
     <thead>
     <tr>
-        <th width="15%">序号</th>
-        <th width="50%">名称</th>
-        <th width="35%">答案</th>
+        <th>题型</th>
+        <th>题干</th>
+        <th>答案</th>
     </tr>
     </thead><!--表格头-->
     <tbody id="tb">
     {% for q in questions %}
         <tr data-id="{{ q.id }}" data-type="{{ q.type }}">
             <td>{{ loop.index }}</td>
+            <td>{{ q | get_question_type }}</td>
             <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q | get_question_content }}">{{ q | get_question_content }}</td>
             <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q | get_question_solution }}">{{ q | get_question_solution }}</td>
         </tr>
@@ -17,6 +18,7 @@
     {% for q in programs %}
         <tr data-id="{{ q.id }}" data-type="6">
             <td>{{ loop.index + questions | count }}</td>
+            <td >编程题</td>
             <td class="overflow-ellipsis">{{ q.title }}</td>
             <td class="overflow-ellipsis">无</td>
         </tr>

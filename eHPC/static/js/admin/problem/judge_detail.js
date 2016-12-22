@@ -1,9 +1,11 @@
 $(function () {
     if (op == "edit") {
         $('input[name=solution]').eq(!sol).attr('checked', 'true');
+        var selected_classifies = [];
         for(var k in data){
-            $("#classify" + data[k].toString()).eq(0).attr('checked', 'true');
+            selected_classifies.push(data[k]);
         }
+        $(".selectpicker").selectpicker('val', selected_classifies);
     }
 
     var edt1 = drop_img_simplemde(new SimpleMDE({

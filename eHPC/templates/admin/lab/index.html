@@ -15,22 +15,22 @@
                         </span>
                     </div>
                     <div id="content" class="panel-body">
-                        <table id="knowledge" class="table table-striped" style="word-break:break-all;">
+                        <table id="knowledge" class="table table-striped fixed-table">
                             <thead><!--表格头-->
                             <tr>
-                                <th>序号</th>
-                                <th>标题</th>
-                                <th>简介</th>
-                                <th>操作</th>
+                                <th width="10%">序号</th>
+                                <th width="25%">标题</th>
+                                <th width="35%">简介</th>
+                                <th width="30%">操作</th>
                             </tr>
                             </thead>
                             <tbody><!--表格主体-->
                             {% for k in knows %}
                                 <tr data-id="{{ k.id }}">
-                                    <td width="10%">{{ loop.index }}</td>
-                                    <td width="30%">{{ k.title }}</td>
-                                    <td width="30%">{{ k.content | truncate(20)}}</td>
-                                    <td width="30%">
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ k.title }}</td>
+                                    <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ k.content }}">{{ k.content }}</td>
+                                    <td>
                                         <a class="btn btn-link" href="javascript:void(0);" name="knowledge-edit-btn">
                                             <i class="es-icon es-icon-edit"></i>编辑信息</a>
                                         <a class="btn btn-link"

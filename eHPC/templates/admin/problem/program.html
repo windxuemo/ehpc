@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <table class="table" style="word-break:break-all;">
+                        <table class="table fixed-table">
                             <thead>
                             <tr>
                                 <th width="10%" style="text-align: center">序号</th>
@@ -36,10 +36,10 @@
                             <tbody id="tb">
                             {% for program in programs %}
                                 <tr data-id="{{ program.id }}">
-                                    <td width="10%" style="text-align: center">{{ loop.index }}</td>
-                                    <td width="40%">{{ program.title }}</td>
-                                    <td width="10%" style="text-align: center">{{ program.difficulty }}</td>
-                                    <td width="20%">{{ program.createdTime }}</td>
+                                    <td style="text-align: center">{{ loop.index }}</td>
+                                    <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ program.title }}">{{ program.title }}</td>
+                                    <td style="text-align: center">{{ program.difficulty }}</td>
+                                    <td>{{ program.createdTime }}</td>
                                     <td>
                                         <a href="{{ url_for('admin.program_edit', id=program.id) }}">编辑</a>
                                         <span class="divider"> | </span>

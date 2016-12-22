@@ -14,7 +14,7 @@
                 在教课程
             </div>
             <div class="panel-body">
-                <table class="table" id="course-table" style="word-break:break-all;">
+                <table class="table fixed-table" id="course-table">
                     <thead>
                     <tr>
                         <th width="30%">名称</th>
@@ -27,7 +27,7 @@
                     <tbody id="tb">
                     {% for c in courses %}
                         <tr data-cid="{{ c.id }}">
-                            <td>{{ c.title | truncate(20)}}</td>
+                            <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ c.title }}">{{ c.title }}</td>
                             <td>{{ c.lessonNum }}</td>
                             <td>{{ c.studentNum }}</td>
                             <td>{{ c.createdTime }}</td>

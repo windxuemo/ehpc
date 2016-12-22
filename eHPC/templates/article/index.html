@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-    <script src="{{ url_for('static', filename='js/markdown.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -25,7 +24,7 @@
                                     <div class="media-body pts">
                                         <div class="media-heading">
                                             <a class="title gray-darker" style="font-size: 20px"
-                                               href="{{ url_for('article.detail', article_id=article.id) }}">{{ article.title | truncate(50) }}</a>
+                                               href="{{ url_for('article.detail', article_id=article.id) }}">{{ article.title }}</a>
                                         </div>
 
                                         <div class="metas">
@@ -45,6 +44,22 @@
             <h2>暂无资讯信息</h2>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        /*$(function() {
+            var outer_width = $(".media-list .media").width();
+            $(".media-list .media .pts").width(outer_width-78);
+            $(window).resize(function() {
+                var outer_width = $(".media-list .media").width();
+                $(".media-list .media .pts").width(outer_width-78);
+                console.log(outer_width);
+                console.log($(".media-list .media .pts").width());
+                console.log($(".media-list .media .pts .overflow-ellipsis").width());
+            });
+        });*/
+    </script>
 {% endblock %}
 
 {# article #}

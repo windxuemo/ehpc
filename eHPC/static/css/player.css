@@ -203,12 +203,8 @@ h1 a {
     background: #46c37b;
     color: #FFF;
 }
-
-.accordion .link span {
-   display: inline-block;
-    margin-right: 15px;
-}
-
-.accordion li i.glyphicon-tags {
-   display: inline-block;
+.overflow-ellipsis {
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
 }

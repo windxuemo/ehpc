@@ -37,7 +37,7 @@
 
                     <div class="panel-body " id="quiz-table-container">
 
-                        <table class="table table-striped table-hover" id="quiz-table">
+                        <table class="table table-striped table-hover fixed-table" id="quiz-table">
                             <thead>
                             <tr>
                                 <th width="6%">选中</th>
@@ -51,7 +51,7 @@
                             {% for q in paper.questions %}
                                 <tr data-question_id="{{ q.questions.id }}">
                                     <td><input type="checkbox"></td>
-                                    <td>{{ q.questions | get_question_content | truncate(28)}}</td>
+                                    <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q.questions | get_question_content}}">{{ q.questions | get_question_content}}</td>
                                     <td>{{ q.questions | get_question_type }}</td>
                                     <td>{{ q.point }}</td>
                                     <td>

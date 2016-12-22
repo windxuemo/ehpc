@@ -10,7 +10,7 @@
 </div>
 
 <div class="panel-body">
-    <table class="table" style="word-break:break-all;">
+    <table class="table fixed-table">
         <thead>
         <tr>
             <th width="10%" style="text-align: center">序号</th>
@@ -22,9 +22,9 @@
         <tbody id="tb">
         {% for q in questions %}
             <tr data-id="{{ q.id }}">
-                <td width="10%" style="text-align: center">{{ loop.index }}</td>
-                <td width="40%">{{ q | get_question_content | truncate(22)}}</td>
-                <td width="20%">{{ q | get_question_solution | truncate(10)}}</td>
+                <td style="text-align: center">{{ loop.index }}</td>
+                <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q | get_question_content }}">{{ q | get_question_content }}</td>
+                <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q | get_question_solution }}">{{ q | get_question_solution }}</td>
                 <td>
                     <a href="{{ url_for('admin.question_edit', question_type=question_type, question_id=q.id) }}">编辑</a>
                     <span class="divider"> | </span>

@@ -39,8 +39,8 @@
         <ul id="accordion" class="accordion">
             {% for lesson in cur_course.lessons %}
                 <li>
-                    <div class="link"><i class="glyphicon glyphicon-tags">
-                    </i><span>课时{{ loop.index }}: {{ lesson.title | truncate(18)}}</span>
+                    <div class="link" class="overflow-ellipsis"><i class="glyphicon glyphicon-tags">
+                    </i><span>课时{{ loop.index }}: {{ lesson.title }}</span>
                         {% if lesson.materials.all() %}
                             <i class="glyphicon glyphicon-chevron-down"></i>
                         {% endif %}
@@ -48,7 +48,7 @@
                     {% if lesson.materials.all() %}
                         <ul class="submenu" style="display: block;">
                             {% for m in lesson.materials | sort_lesson_materials() %}
-                                <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name | truncate(25)}}</a></li>
+                                <li id="material{{ m.id }}"><a href="{{ url_for('course.material', mid=m.id) }}"  class="overflow-ellipsis" data-toggle="tooltip" title="{{ m.name }}">{{ m.name }}</a></li>
                             {% endfor %}
                         </ul>
                     {% endif %}

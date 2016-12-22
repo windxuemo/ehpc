@@ -38,9 +38,9 @@
                         <ul class="lesson-list sortable-list" id="course-item-list">
                             {% for l in lessons %}
                                 <li class="item-lesson clearfix" data-lesson_id="{{ l.id }}" style="word-break: break-all;">
-                                    <div class="item-content col-md-6">
+                                    <div class="item-content col-md-6 overflow-ellipsis" data-toggle="tooltip" title="{{ l.title }}">
                                         <i class="es-icon es-icon-undone"></i>
-                                        课时<span class="number">{{ loop.index }}</span> ：{{ l.title | truncate(20)}}
+                                        课时<span class="number">{{ loop.index }}</span> ：{{ l.title }}
 
                                     </div>
                                     <div class="col-md-6">

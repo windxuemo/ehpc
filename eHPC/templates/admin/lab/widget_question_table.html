@@ -1,24 +1,24 @@
-<table id="questions" class="table" style="word-break:break-all;">
+<table id="questions" class="table fixed-table">
     <thead>
     <tr>
-        <th width="20%">序号</th>
+        <th width="15%">序号</th>
         <th width="50%">名称</th>
-        <th width="30%">答案</th>
+        <th width="35%">答案</th>
     </tr>
     </thead><!--表格头-->
     <tbody id="tb">
     {% for q in questions %}
         <tr data-id="{{ q.id }}" data-type="{{ q.type }}">
-            <td width="20%">{{ loop.index }}</td>
-            <td width="50%">{{ q | get_question_content }}</td>
-            <td width="30%">{{ q | get_question_solution }}</td>
+            <td>{{ loop.index }}</td>
+            <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q | get_question_content }}">{{ q | get_question_content }}</td>
+            <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q | get_question_solution }}">{{ q | get_question_solution }}</td>
         </tr>
     {% endfor %}
     {% for q in programs %}
         <tr data-id="{{ q.id }}" data-type="6">
-            <td width="20%">{{ loop.index + questions | count }}</td>
-            <td width="50%">{{ q.title }}</td>
-            <td width="30%">无</td>
+            <td>{{ loop.index + questions | count }}</td>
+            <td class="overflow-ellipsis">{{ q.title }}</td>
+            <td class="overflow-ellipsis">无</td>
         </tr>
     {% endfor %}
     </tbody><!--表格主体-->

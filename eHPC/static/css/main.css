@@ -4591,6 +4591,13 @@ ul.version-list li {
     border-radius: 3px;
 }
 
-/*.overflow-ellipsis {
-    overflow: e;
-}*/
+.overflow-ellipsis {
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+table.fixed-table {
+    table-layout:fixed;
+    word-break:break-all;
+}

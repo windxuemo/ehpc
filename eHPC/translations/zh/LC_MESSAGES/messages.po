@@ -303,7 +303,7 @@ msgstr "保存"
 
 #: templates/article/index.html:22
 msgid "Views"
-msgstr ""
+msgstr "浏览"
 
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
 #: templates/group/group.html:5 templates/group/group_all.html:7

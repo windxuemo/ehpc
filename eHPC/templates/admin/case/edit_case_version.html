@@ -35,9 +35,9 @@
                         <ul class="version-list sortable-list" id="case-item-list">
                             {% for v in versions %}
                                 <li class="item-version clearfix" data-version_id="{{ v.version_id }}" style="word-break: break-all;">
-                                    <div class="item-content col-md-6">
+                                    <div class="item-content col-md-6 overflow-ellipsis" data-toggle="tooltip" title="{{ v.name }}">
                                         <i class="es-icon es-icon-undone"></i>
-                                        版本<span class="number">{{ loop.index }}</span> ：{{ v.name | truncate(23)}}
+                                        版本<span class="number">{{ loop.index }}</span> ：{{ v.name }}
 
                                     </div>
                                     <div class="col-md-6">

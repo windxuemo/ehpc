@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block header_ext %}
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -37,20 +39,28 @@
         <form onsubmit="submit_code(); return false;">
             <div class="row form-group">
                 <div class="col-md-4">
-                    <select class="form-control" id="language">
-                        <option value="ace/mode/c_cpp">C</option>
-                        <option value="ace/mode/c_cpp">C++</option>
-                        <option value="ace/mode/python">Python</option>
-                        <option value="ace/mode/fortran">Fortran</option>
-                    </select>
+					<div class="row">
+						<label class="col-md-3" for="language">语言</label>
+						<select class="col-md-4" name="language" id="language">
+							<option value="ace/mode/c_cpp">C</option>
+							<option value="ace/mode/c_cpp">C++</option>
+							<option value="ace/mode/python">Python</option>
+							<option value="ace/mode/fortran">Fortran</option>
+						</select>
+					</div>
+
+
                 </div>
             </div>
 
             <div class="row form-group">
                 <div id="editor"></div>
             </div>
+
+
             <div class="row form-group">
                 <div class="pull-right">
+					<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal">参数设置</button>
                     <button id="submit" class="btn btn-primary"
                             type="submit">{{ _('Submit Solution') }}
                     </button>
@@ -82,12 +92,62 @@
                 </div>
             </div>
         </div>
+
+		<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modallabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-content">
+						
+						<div class="modal-header">
+							<h4 class="modal-title" id="modallabel">参数设置</h4>
+						</div>
+
+						<div class="modal-body">
+							<div class="row">
+								<label class="col-md-3" for="compiler">编译器</label>
+								<select class="col-md-4" name="compiler" id="compiler">
+									<option value="mpicc">mpicc</option>
+								</select>
+							</div>
+
+							<div class="row">
+								<label class="col-md-3" for="task_number">任务数</label>
+								<select class="col-md-4" name="task_number" id="task_number">
+									<option value="4">4</option>
+									<option value="8">8</option>
+								</select>
+							</div>
+
+							<div class="row">
+								<label class="col-md-3" for="cpu_number_per_task">CPU/任务</label>
+								<select class="col-md-4" name="cpu_number_per_task" id="cpu_number_per_task">
+									<option value="1">1</option>
+								</select>
+							</div>
+
+							<div class="row">
+								<label class="col-md-3" for="node_number">结点数</label>
+								<select class="col-md-4" name="node_number" id="node_number">
+									<option value="1">1</option>
+								</select>
+							</div>
+
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		<div>
+
     </div>
 
 {% endblock %}
 
 {% block footer_ext %}
-    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             var content = $("#program-content");
@@ -106,7 +166,10 @@
     <script>
         function submit_code() {
             document.getElementById('source_code').value = editor.getValue();
-            $("input[name=language]").val($("#language").find("option:selected").text());
+            $("input[name=compiler]").val($("#compiler").find("option:selected").text());
+            $("input[name=task_number]").val($("#task_number").find("option:selected").text());
+            $("input[name=cpu_number_per_task]").val($("#cpu_number_per_task").find("option:selected").text());
+            $("input[name=node_number]").val($("#node_number").find("option:selected").text());
             var data = $("form").serialize();
             $('#result-show').css("display", 'block');
             var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>"

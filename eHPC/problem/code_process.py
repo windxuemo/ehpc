@@ -7,6 +7,7 @@ import urllib2, urllib
 import json
 import time
 import random, string
+import re
 
 #参数设置
 base_url = "http://10.127.48.5:8000/api"

@@ -109,7 +109,8 @@ def submit(pid):
 	uid = current_user.id
 	problem_id = request.form['problem_id']
 	source_code = request.form['source_code']
-	compiler = request.form['compiler']
+	compiler = request.form['compiler_setting']
+	language = request.form['language']
 	submit_problem = SubmitProblem(uid, problem_id, source_code, language)
 	db.session.add(submit_problem)
 	db.session.commit()
@@ -128,9 +129,11 @@ def submit(pid):
 	#print task_number
 	partition = "free"
 
-	#print task_number
-	#print cpu_number_per_task
-	#print node_number
+	print language
+	print compiler
+	print task_number
+	print cpu_number_per_task
+	print node_number
 	#with open(input_filename, 'w') as src_file:
 		#src_file.write(source_code)
 

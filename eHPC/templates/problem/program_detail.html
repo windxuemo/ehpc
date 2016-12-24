@@ -165,7 +165,8 @@
             $("input[name=node_number]").val($("#node_number").find("option:selected").text());
             var data = $("form").serialize();
             $('#result-show').css("display", 'block');
-            var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>"
+            var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>";
+
             $("#compiler").empty().append(loading);
             $('#program-run-tab a:first').tab('show');
             $.ajax({
@@ -174,12 +175,13 @@
                 url: "{{ url_for('problem.submit', pid=problem.id) }}",
 				data : data,
                 success: function (data) {
-                    if(data[status]=='success') {
+                    if(data.status==='success') {
                         $("#compiler").empty().append(data.compile_out);
                         $("#run").empty().html(data.run_out);
                     }
                     else{
                         $("#compiler").empty().append(data.msg);
+                        $("#run").empty().html("<p class='text-center'> 编译失败, 无法运行...</p>");
                     }
                 },
                 error: function (data) {

@@ -60,7 +60,7 @@ def view_code(sid):
 
 @problem.route('/question/')
 def show_question():
-    classifies = Classify.query.all()   # 知识点
+    classifies = Classify.query.all()  # 知识点
     rows = []
     for c in classifies:
         rows.append([c.name, c.questions.count(), c.id])
@@ -106,54 +106,52 @@ def question_view(cid, question_type):
 @problem.route('/<int:pid>/submit/', methods=['POST'])
 @login_required
 def submit(pid):
-	uid = current_user.id
-	problem_id = request.form['problem_id']
-	source_code = request.form['source_code']
-	compiler = request.form['compiler_setting']
-	language = request.form['language']
-	submit_problem = SubmitProblem(uid, problem_id, source_code, language)
-	db.session.add(submit_problem)
-	db.session.commit()
+    uid = current_user.id
+    problem_id = request.form['problem_id']
+    source_code = request.form['source_code']
+    compiler = request.form['compiler_setting']
+    language = request.form['language']
+    submit_problem = SubmitProblem(uid, problem_id, source_code, language)
+    db.session.add(submit_problem)
+    db.session.commit()
 
-	path = "/HOME/sysu_dwu_1/coreos"
-	#之后需要改进
-	input_filename = "code/%s_%s.c" % (str(pid), str(uid))
-	output_filename = "code/%s_%s.o" % (str(pid), str(uid))
+    path = "/HOME/sysu_dwu_1/coreos"
+    # 之后需要改进
 
-	task_number = request.form['task_number']
-	#task_number = "4"
-	cpu_number_per_task = request.form['cpu_number_per_task']
-	#cpu_number_per_task = "1"
-	node_number = request.form['node_number']
-	#node_number = "1"
-	#print task_number
-	partition = "free"
+    input_filename = "%s_%s.c" % (str(pid), str(uid))
+    output_filename = "%s_%s.o" % (str(pid), str(uid))
 
-	print language
-	print compiler
-	print task_number
-	print cpu_number_per_task
-	print node_number
-	#with open(input_filename, 'w') as src_file:
-		#src_file.write(source_code)
+    task_number = request.form['task_number']
+    cpu_number_per_task = request.form['cpu_number_per_task']
+    node_number = request.form['node_number']
+    partition = "free"
 
-	client = ehpc_client()
 
-	is_success = client.login()
-	if not is_success:
-		print "login fail."
+    # print language, type(language)
+    # print compiler, type(compiler)
+    # print task_number, type(task_number)
+    # print cpu_number_per_task, type(cpu_number_per_task)
+    # print node_number, type(node_number)
+    # with open(input_filename, 'w') as src_file:
+    # src_file.write(source_code)
 
-	is_success = client.upload(path, input_filename, source_code)
-	if not is_success:
-		print "upload fail."
+    client = ehpc_client()
 
-	compile_out = client.ehpc_compile(path, input_filename, output_filename, compiler)
-	run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number)
+    is_success = client.login()
+    if not is_success:
+        return jsonify(status="fail", msg="连接超算主机失败!")
 
-	result['status'] = 'success'
-	result['problem_id'] = pid
-	result['compile_out'] = str(compile_out)
-	result['run_out'] = str(run_out)
+    is_success = client.upload(path, input_filename, source_code)
+    if not is_success:
+        return jsonify(status="fail", msg="上传程序到超算主机失败!")
 
-	return jsonify(**result)
+    compile_out = client.ehpc_compile(path, input_filename, output_filename, compiler)
+    run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number, compiler)
 
+    result = dict()
+    result['status'] = 'success'
+    result['problem_id'] = pid
+    result['compile_out'] = str(compile_out)
+    result['run_out'] = str(run_out)
+
+    return jsonify(**result)

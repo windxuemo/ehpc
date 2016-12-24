@@ -174,8 +174,13 @@
                 url: "{{ url_for('problem.submit', pid=problem.id) }}",
 				data : data,
                 success: function (data) {
-                    $("#compiler").empty().append(data.compile_out);
-                    $("#run").empty().html(data.run_out);
+                    if(data[status]=='success') {
+                        $("#compiler").empty().append(data.compile_out);
+                        $("#run").empty().html(data.run_out);
+                    }
+                    else{
+                        $("#compiler").empty().append(data.msg);
+                    }
                 },
                 error: function (data) {
                     $("#compiler").empty().append("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");

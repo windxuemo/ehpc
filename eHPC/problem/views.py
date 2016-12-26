@@ -137,16 +137,22 @@ def submit(pid):
 
     client = ehpc_client()
 
-    is_success = client.login()
-    if not is_success:
+    is_success = [False]
+
+    is_success[0] = client.login()
+    if not is_success[0]:
         return jsonify(status="fail", msg="连接超算主机失败!")
 
-    is_success = client.upload(path, input_filename, source_code)
-    if not is_success:
+    is_success[0] = client.upload(path, input_filename, source_code)
+    if not is_success[0]:
         return jsonify(status="fail", msg="上传程序到超算主机失败!")
 
-    compile_out = client.ehpc_compile(path, input_filename, output_filename, compiler)
-    run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number, compiler)
+    compile_out = client.ehpc_compile(is_success, path, input_filename, output_filename, compiler)
+	
+    if is_success[0]:
+        run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number, compiler)
+    else :
+        run_out = "无结果"
 
     result = dict()
     result['status'] = 'success'
@@ -155,3 +161,4 @@ def submit(pid):
     result['run_out'] = str(run_out)
 
     return jsonify(**result)
+

@@ -158,15 +158,18 @@ class ehpc_client:
 
     # POST  /api/command/<machine>
     # 返回保存输出的文件的id
-    def run_command(self, command):
+    def run_command(self, command, is_success = [False]):
         tmpdata = self.open("/command/" + machine_name, data={"command": command})
         # print tmpdata
-        if self.ret200() and type(tmpdata) == type({}):
+        if self.ret200() and type(tmpdata) == type({}) and tmpdata["output"]["retcode"] == 0:
+            is_success[0] = True
             return tmpdata["output"]["output"]
-        elif type(tmpdata) == type({}):
+        elif self.ret200() and type(tmpdata) == type({}):
             return tmpdata["output"]["error"]
-        else:
+        elif self.ret200():
             return None
+        else:
+            return "Request fail."
 
     # POST /api/job/<machine>
     def upload_job(self, batchfile):
@@ -176,7 +179,7 @@ class ehpc_client:
     def get_job(self):
         pass
 
-    def ehpc_compile(self, path, input_filename, output_filename, language):
+    def ehpc_compile(self, is_success, path, input_filename, output_filename, language):
         compile_command = {
             "c++": "g++ -o %s %s" % (output_filename, input_filename),
             "mpicc": "mpicc -o %s %s" % (output_filename, input_filename)
@@ -184,7 +187,7 @@ class ehpc_client:
 
         commands = 'cd %s;%s' % (path, compile_command[language])
 
-        compile_output = self.run_command(commands)
+        compile_output = self.run_command(commands, is_success)
         compile_out = compile_output or "Compile success."
 
         if compile_output is None:
@@ -212,7 +215,7 @@ class ehpc_client:
 
 if __name__ == '__main__':
     mc = ehpc_client()
-    test_text = open("mpicc_demo.c").read()
+    test_text = open("log.a").read()
 
     if not mc.login():
         print "login fail."
@@ -221,8 +224,12 @@ if __name__ == '__main__':
         print "upload fail."
         exit(-1)
 
-    compile_out = mc.ehpc_compile(path, input_filename, output_filename, "mpicc")
+    is_success = [False]
+    compile_out = mc.ehpc_compile(is_success, path, input_filename, output_filename, "mpicc")
     # mc.run_command('cd %s;yhrun -n 4 -p free a.out'%(path))
-    run_out = mc.ehpc_run(output_filename, path, "4", "1", "1", "mpicc")
     print compile_out, type(compile_out)
+    if not is_success[0]:	
+        exit(-1)
+    run_out = mc.ehpc_run(output_filename, path, "4", "1", "1", "mpicc")
     print run_out, type(run_out)
+

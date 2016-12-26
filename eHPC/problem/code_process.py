@@ -158,13 +158,14 @@ class ehpc_client:
 
     # POST  /api/command/<machine>
     # 返回保存输出的文件的id
-    def run_command(self, command, is_success = [False]):
+    def run_command(self, command, is_success=[False]):
+        is_success[0] = False
         tmpdata = self.open("/command/" + machine_name, data={"command": command})
         # print tmpdata
-        if self.ret200() and type(tmpdata) == type({}) and tmpdata["output"]["retcode"] == 0:
+        if self.ret200() and isinstance(tmpdata, dict) and tmpdata["output"]["retcode"] == 0:
             is_success[0] = True
             return tmpdata["output"]["output"]
-        elif self.ret200() and type(tmpdata) == type({}):
+        elif self.ret200() and isinstance(tmpdata, dict):
             return tmpdata["output"]["error"]
         elif self.ret200():
             return None

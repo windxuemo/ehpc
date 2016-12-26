@@ -83,7 +83,7 @@ def program_view(pid):
 def question_view(cid, question_type):
     classify_name = Classify.query.filter_by(id=cid).first_or_404()
 
-    practices = None;
+    practices = None
     if question_type == 'choice':
         practices = classify_name.questions.filter(or_(Question.type == 0,
                                                        Question.type == 1, Question.type == 2)).all()
@@ -148,17 +148,17 @@ def submit(pid):
         return jsonify(status="fail", msg="上传程序到超算主机失败!")
 
     compile_out = client.ehpc_compile(is_success, path, input_filename, output_filename, compiler)
-	
+
     if is_success[0]:
         run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number, compiler)
-    else :
-        run_out = "无结果"
+    else:
+        run_out = "编译不通过, 无法运行..."
 
     result = dict()
     result['status'] = 'success'
     result['problem_id'] = pid
-    result['compile_out'] = str(compile_out)
-    result['run_out'] = str(run_out)
+    result['compile_out'] = compile_out
+    result['run_out'] = run_out
 
     return jsonify(**result)
 

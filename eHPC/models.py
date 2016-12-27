@@ -430,6 +430,12 @@ class CaseCodeMaterial(db.Model):
     uri = db.Column(db.String(256), default="")           # 代码路径
 
 
+""" 作业管理
+@Homework: 作业实体集
+@HomeworkUpload: 提交作业联系集
+"""
+
+
 class Homework(db.Model):
     __tablename__ = "homework"
 
@@ -444,7 +450,6 @@ class Homework(db.Model):
     uploads = db.relationship('HomeworkUpload', backref='homework', lazy='dynamic', cascade='delete, delete-orphan')
 
 
-#学生提交的作业
 class HomeworkUpload(db.Model):
     __tablename__ = "homework_upload"
 

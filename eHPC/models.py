@@ -45,6 +45,8 @@ class User(UserMixin, db.Model):
     comments = db.relationship('Comment', backref='user', lazy='dynamic')
     commentNum = db.Column(db.Integer, default=0, nullable=False)
 
+    homeworks = db.relationship('HomeworkUpload', backref='user', lazy='dynamic')
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -110,6 +112,7 @@ class Course(db.Model):
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
     papers = db.relationship('Paper', backref='course', lazy='dynamic')
+    homeworks = db.relationship('Homework', backref='course', lazy='dynamic')
     comments = db.relationship('Comment', backref='course', lazy='dynamic')
     # 加入该课程的用户, 多对多的关系
     users = db.relationship('User', secondary=course_users,
@@ -425,3 +428,29 @@ class CaseCodeMaterial(db.Model):
     version_id = db.Column(db.Integer, db.ForeignKey('case_versions.id'), nullable=False)
     name = db.Column(db.String(1024), nullable=False)     # 代码文件名称
     uri = db.Column(db.String(256), default="")           # 代码路径
+
+
+class Homework(db.Model):
+    __tablename__ = "homework"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(256), nullable=False)
+    description = db.Column(db.Text(), nullable=False)
+    publish_time = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    deadline = db.Column(db.DateTime, nullable=False)
+    submitable = db.Column(db.Integer, nullable=False)     #用于判断此作业是否允许在线提交测试:0为不允许，1为允许
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
+
+    uploads = db.relationship('HomeworkUpload', backref='homework', lazy='dynamic', cascade='delete, delete-orphan')
+
+
+#学生提交的作业
+class HomeworkUpload(db.Model):
+    __tablename__ = "homework_upload"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
+    homework_id = db.Column(db.Integer, db.ForeignKey('homework.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    uri = db.Column(db.String(256), nullable=False)
+    submit_time = db.Column(db.DateTime, default=datetime.now, nullable=False)

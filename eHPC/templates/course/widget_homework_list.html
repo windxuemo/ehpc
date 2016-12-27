@@ -1,0 +1,41 @@
+ <div class="course-detail-content" data-widget-cid="widget-1">
+    <div class="es-piece">
+        <div class="piece-body">
+            <ul class="period-list" id="course-item-list">
+                {% for h in homeworks %}
+                    <li class="period homework-item" data-homework_id="{{ h.id }}">
+                        <span>
+                            <i class="es-icon es-icon-undone"></i>
+                            <span class="title"> {{ h.title }}</span>
+
+                            <span class="course-type">
+                                <i class="es-icon es-icon-check"></i>
+                            </span>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% block footer_ext %}
+<script>
+    $(".homework-item").click(function() {
+        var homework_id = $(this).data('homework_id');
+        $.ajax({
+            url: "{{ url_for('course.homework_detail') }}",
+            type: 'post',
+            data: {
+                hid: homework_id,
+            },
+            success: function (html) {
+                $("#course-homework").empty().html(html.data);
+            },
+            error: function () {
+                $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container" id="content-container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_homework', course_id=course.id) }}">课程作业</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading" style="position: sticky; top: 0px;">
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-sm" id="homework-create-btn"
+                                    data-toggle="modal" data-target="#homeworkModal">
+                                <i class="glyphicon glyphicon-plus">作业</i>
+                            </button>
+                        </div>
+                        作业管理
+                    </div>
+
+                    <div class="panel-body">
+                        <ul class="lesson-list sortable-list" id="homework-item-list">
+                            {% for h in homeworks %}
+                                <li class="item-lesson clearfix" data-homework_id="{{ h.id }}" style="word-break: break-all;">
+                                    <div class="item-content col-md-6">
+                                        <i class="es-icon es-icon-undone"></i>
+                                         {{ h.title }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-link pull-right" data-toggle="modal" data-target="#homeworkModal" name="edit-btn">
+                                            <i class="es-icon es-icon-edit"></i>编辑</a>
+                                        <a class="btn btn-link pull-right" href="javascript:void(0)" name="del-btn">
+                                            <i class="es-icon es-icon-delete"></i>删除</a>
+                                        <a class="btn btn-link pull-right" href="{{ url_for('admin.course_homework_upload_list', course_id=course.id, homework_id=h.id) }}">
+                                            <i class="glyphicon glyphicon-eye-open"></i>上交情况</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="homeworkModal" tabindex="-1" role="dialog" aria-labelledby="homeworkModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="homeworkModalLabel">作业信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="course-homework-form" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="col-md-2 control-label">
+                                <label for="title">标题</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input id="homework-title" class="form-control" name="title" type="text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 control-label">
+                                <label for="deadline">截止日期</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <input id="homework-deadline" class="form-control" type="datetime-local" name="deadline">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 control-label">
+                                <label>是否在线运行</label>
+                            </div>
+                            <div class="col-md-9 controls" style="margin-top: 5px;">
+                                <input id="homework-submitable1" type="radio" name="submitable" value="0" checked="checked">否&nbsp;&nbsp;
+                                <input id="homework-submitable2" type="radio" name="submitable" value="1">是
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 control-label">
+                                <label for="description">作业内容</label>
+                            </div>
+                            <div class="col-md-9 controls">
+                                <textarea class="form-control" id="homework-description" name="description" data-provide="markdown"
+                                            rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"></textarea>
+                            </div>
+                        </div>
+
+                        <input id="homework-op" type="hidden" name="op">
+                        <input id="homework-id" type="hidden" name="homework_id">
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="homework-save-btn" type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        var homework_url = "{{ url_for('admin.course_homework', course_id=course.id) }}";
+        var edt = drop_img_simplemde(new SimpleMDE({
+            element: $("#homework-description")[0],
+            autosave: true,
+            showIcons: ["code", "table"],
+            tabSize: 4,
+            spellChecker: false
+        }));
+    </script>
+    <script src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
+    <script src='{{ url_for("static", filename="js/admin/course/homework.js") }}'></script>
+
+{% endblock %}

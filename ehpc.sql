@@ -357,6 +357,56 @@ INSERT INTO `groups` VALUES (1,'C++讨论','这里讨论 C++ 的基础知识，�
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+-- ----------------------------
+-- Table structure for homework
+-- ----------------------------
+DROP TABLE IF EXISTS `homework`;
+CREATE TABLE `homework` (
+  `id` int(64) NOT NULL AUTO_INCREMENT,
+  `title` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `publish_time` datetime NOT NULL,
+  `deadline` datetime NOT NULL,
+  `submitable` tinyint(4) NOT NULL,
+  `course_id` int(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `course_id` (`course_id`),
+  CONSTRAINT `homework_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of homework
+-- ----------------------------
+INSERT INTO `homework` VALUES ('3', '作业1', '将一种互连网络中的结点映射到另一种网络的过程叫做嵌入（Embedding）。研究嵌入是很重要的，因为设计在某一特定网络连接的并行机上的算法，如果实际运行在另一种与之不同的互连网络的并行机上时，我们要重新分析其通信（即选路）时间。试问：\r\n* 如何将一个环形网络嵌入到带环绕的二维网孔中去？\r\n* 被嵌入到带环绕的二维网孔上的原设计的算法其选路时间有何变化？\r\n', '2016-12-25 15:45:01', '2016-12-27 15:45:03', '0', '1');
+INSERT INTO `homework` VALUES ('4', '作业2', '查阅资料，找出一个并行计算的典型应用，详细描述该应用在并行化方面成功和失败之处以及遇到的困难：（从下列方面考虑：该应用是针对什么科学或者工程上的具体问题设计的；对于要解决的问题，该应用实际效果怎样，模拟结果和物理结果进行比较的结果如何；该应用的运行在什么并行计算平台上；（比如分布式或共享内存，向量机）这个应用使用那种开发工具开发的；该应用的实际工作性能怎样，和运行平台最佳性能相比较；该应用的可扩展性如何？如果不好，你认为它的扩展性的瓶颈在何处？）', '2016-12-25 15:45:29', '2016-12-28 15:45:32', '1', '1');
+
+
+-- ----------------------------
+-- Table structure for homework_upload
+-- ----------------------------
+DROP TABLE IF EXISTS `homework_upload`;
+CREATE TABLE `homework_upload` (
+  `id` int(64) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `homework_id` int(64) NOT NULL,
+  `user_id` int(64) NOT NULL,
+  `uri` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `submit_time` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `homework_id` (`homework_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `homework_upload_ibfk_1` FOREIGN KEY (`homework_id`) REFERENCES `homework` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `homework_upload_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of homework_upload
+-- ----------------------------
+INSERT INTO `homework_upload` VALUES ('1', 'ch1.pdf', '3', '3', 'course_1/homework_3/ch1.pdf', '2016-12-27 10:48:52');
+INSERT INTO `homework_upload` VALUES ('2', 'ch2.pdf', '3', '3', 'course_1/homework_3/ch2.pdf', '2016-12-27 10:49:02');
+
+
 --
 -- Table structure for table `knowledges`
 --

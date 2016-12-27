@@ -136,7 +136,6 @@ def submit(pid):
     # src_file.write(source_code)
 
     client = ehpc_client()
-
     is_success = [False]
 
     is_success[0] = client.login()
@@ -161,4 +160,3 @@ def submit(pid):
     result['run_out'] = run_out
 
     return jsonify(**result)
-

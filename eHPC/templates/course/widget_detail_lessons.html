@@ -6,7 +6,7 @@
                 {% for l in lessons %}
                     <li class="section"><span class="title"> 第 {{ loop.index }} 节: {{ l.title }}</span>
                     </li>
-                        {% for m in l.materials | sort_lesson_materials() %}
+                        {% for m in l.materials | sort_materials() %}
                             <li class="period lesson-item">
                                 <a href="{{ url_for('course.material', mid=m.id) }}" title="{{ m.name }}">
                                     <i class="es-icon es-icon-undone status-icon"></i>

@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+import zipfile
+import shutil
 
 from flask import render_template, request, redirect, url_for, abort, jsonify, current_app, make_response, send_file
 from flask_babel import gettext
@@ -9,7 +11,7 @@ from sqlalchemy import or_
 
 from . import admin
 from .. import db
-from ..models import Classify, Program, Paper, Question, PaperQuestion
+from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload
 from ..models import Course, Lesson, Material
 from ..models import Knowledge, Challenge
 from ..user.authorize import teacher_login
@@ -34,6 +36,8 @@ def course():
             db.session.delete(l)
         if os.path.exists(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id)):
             os.rmdir(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id))
+        if os.path.exists(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id)):
+            os.rmdir(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id))
         if os.path.exists(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id)):
             os.remove(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id))
         db.session.delete(curr_course)
@@ -54,6 +58,7 @@ def course_create():
         db.session.add(curr_course)
         db.session.commit()
         os.makedirs(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id))
+        os.makedirs(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id))
         return redirect(url_for('admin.course_edit', course_id=curr_course.id))
 
 
@@ -230,6 +235,100 @@ def lesson_material(course_id, lesson_id):
                 curr_lesson.materials.append(curr_material)
                 db.session.commit()
                 return jsonify(status="success", id=curr_lesson.id)
+
+
+@admin.route('/course/<int:course_id>/homework/', methods=['GET', 'POST'])
+@teacher_login
+def course_homework(course_id):
+    """ 课程的作业管理入口页面 """
+    if request.method == 'GET':
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        return render_template('admin/course/homework.html', course=curr_course,
+                               homeworks=curr_course.homeworks,
+                               title=gettext('Course Homework'))
+    elif request.method == "POST":
+        # 作业的增加查改
+        if request.form['op'] == 'create':
+            curr_homework = Homework(title=request.form['title'], description=request.form['description'],
+                                     deadline=request.form['deadline'], submitable=request.form['submitable'])
+            curr_course = Course.query.filter_by(id=course_id).first_or_404()
+            curr_course.homeworks.append(curr_homework)
+            db.session.add(curr_homework)
+            db.session.commit()
+            os.makedirs(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id, 'homework_%d' % curr_homework.id))
+            return jsonify(status="success", homework_id=curr_homework.id)
+        elif request.form['op'] == "del":
+            curr_course = Course.query.filter_by(id=course_id).first_or_404()
+            curr_homework = curr_course.homeworks.filter_by(id=request.form['homework_id']).first_or_404()
+            curr_course.homeworks.remove(curr_homework)
+            db.session.delete(curr_homework)
+            db.session.commit()
+
+            homework_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id, 'homework_%d' % curr_homework.id)
+            try:
+                shutil.rmtree(homework_path)
+            except OSError:
+                pass
+            return jsonify(status="success", homework_id=curr_homework.id)
+        elif request.form['op'] == "edit":
+            curr_course = Course.query.filter_by(id=course_id).first_or_404()
+            curr_homework = curr_course.homeworks.filter_by(id=request.form['homework_id']).first_or_404()
+            curr_homework.title = request.form['title']
+            curr_homework.description = request.form['description']
+            curr_homework.deadline = request.form['deadline']
+            curr_homework.submitable = request.form['submitable']
+            db.session.commit()
+            return jsonify(status="success", homework_id=curr_homework.id)
+        elif request.form['op'] == 'data':
+            curr_homework = Homework.query.filter_by(id=request.form['homework_id']).first_or_404()
+            deadline = curr_homework.deadline.strftime('%Y-%m-%dT%H:%M:%S')
+            return jsonify(status="success", title=curr_homework.title, description=curr_homework.description,
+                           deadline=deadline, submitable=curr_homework.submitable)
+        else:
+            return abort(404)
+
+
+@admin.route('/course/<int:course_id>/homework/<int:homework_id>', methods=['GET', 'POST'])
+@teacher_login
+def course_homework_upload_list(course_id, homework_id):
+    if request.method == "GET":
+        curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        return render_template('admin/course/homework_upload.html', course=curr_course, homework=curr_homework, uploads=curr_homework.uploads)
+    elif request.method == "POST":
+        curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        upload_id = request.form.getlist('upload_id[]')
+        if request.form['op'] == "del":
+            for idx in upload_id:
+                curr_upload = curr_homework.uploads.filter_by(id=idx).first()
+                if not curr_upload:
+                    return jsonify(status="fail", info="Not Found")
+                curr_homework.uploads.remove(curr_upload)
+                db.session.delete(curr_upload)
+                db.session.commit()
+                try:
+                    os.remove(os.path.join(current_app.config['HOMEWORK_FOLDER'], curr_upload.uri))
+                except OSError:
+                    pass
+            return jsonify(status="success")
+        elif request.form["op"] == "download":
+            zip_name = "homework_%d.zip" % curr_homework.id
+            f = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
+            for idx in upload_id:
+                curr_upload = curr_homework.uploads.filter_by(id=idx).first()
+                file_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], curr_upload.uri)
+                try:
+                    f.write(file_path, curr_upload.name)
+                except OSError:
+                    pass
+            f.close()
+            dest_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], "course_%d" % curr_course.id, "homework_%d" % curr_homework.id)
+            if os.path.exists(os.path.join(dest_path, "homework_%d.zip" % curr_homework.id)):
+                os.remove(os.path.join(dest_path, "homework_%d.zip" % curr_homework.id))
+            shutil.move(zip_name, dest_path)
+            file_name = os.path.join("course_%d" % curr_course.id, "homework_%d.zip" % curr_homework.id)
+            return jsonify(status="success", homework_id=curr_homework.id)
 
 
 @admin.route('/course/<int:course_id>/paper/', methods=['GET', 'POST'])

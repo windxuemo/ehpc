@@ -79,8 +79,8 @@ def get_question_number(paper_question, q_type=-1):
     return result
 
 
-@filter_blueprint.app_template_filter('sort_lesson_materials')
-def sort_lesson_materials(materials):
+@filter_blueprint.app_template_filter('sort_materials')
+def sort_materials(materials):
     new_materials = []
     for m in materials:
         new_materials.append(m)

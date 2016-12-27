@@ -1,0 +1,81 @@
+<div class="course-detail-content" data-widget-cid="widget-1">
+
+    <div class="es-piece">
+        <div class="piece-body">
+            <div class="homework-body">
+                <a class="btn btn-default btn-sm" href="{{ url_for('course.view', cid=homework.course.id, tab='homework') }}"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a>
+                <div class="homework-content">
+                    <span style="font-size: 20px"><b>{{ homework.title }}</b></span>
+                    <span class="pull-right" style="color: #919191;font-size: 14px">发布于： {{ homework.publish_time }}</span>
+                </div>
+                <div class="homework-content"><b><i class="glyphicon glyphicon-time"></i> 截止日期：</b> {{ homework.deadline }}</div>
+                <div class="homework-content">
+                    <b>作业内容：</b>
+                    <div id="homework-description">{{ homework.description }}</div>
+                </div>
+                <div class="homework-content">
+                    <b>作业提交：</b>
+                    <form id="homework-file-form">
+                        <div class="form-group">
+                            <div class="input-group col-md-8 col-sm-8 homework-file-item">
+                                <input id="homework-file" type="file" name="file" style="display: none;">
+                                <span class="input-group-addon" onclick="$('input[id=homework-file]').click();" style="cursor: pointer; background-color: #e7e7e7"><i class="fa fa-folder-open"></i></span>
+                                <input id="filenameCover" class="form-control" type="text" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
+                            <span id="homework-upload-status" class="col-md-2 col-sm-2 text-center homework-file-item hide" style="padding-top: 5px;"></span>
+                        </div>
+                        <!--input type="hidden" name="" value=""-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% block footer_ext %}
+<script>
+    $(document).ready(function() {
+        var description = $("#homework-description");
+        description.html(SimpleMDE.prototype.markdown(description.text()));
+
+        $('input[id=homework-file]').change(function() {
+            $('#filenameCover').val($(this).val());
+        });
+
+        $("#homework-upload-btn").click(function() {
+            $.ajax({
+                url: "{{ url_for('course.homework_upload', hid=homework.id) }}",
+                type: 'post',
+                data: new FormData($('#homework-file-form')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if(data.status == "success") {
+                        $("#homework-upload-status").removeClass("hide");
+                        $("#homework-upload-status")[0].innerHTML="上传成功！";
+                        $('#filenameCover').val("");
+                        setTimeout(function() { $("#homework-upload-status").addClass("hide")}, 3000);
+                    }
+                    else {
+                        $("#homework-upload-status").removeClass("hide");
+                        $("#homework-upload-status")[0].innerHTML="文件格式不支持！";
+                        $('#filenameCover').val("");
+                        setTimeout(function() { $("#homework-upload-status").addClass("hide")}, 3000);
+                    }
+                },
+                error: function() {
+                    $("#homework-upload-status").removeClass("hide");
+                    $("#homework-upload-status")[0].innerHTML="上传失败！";
+                        setTimeout(function() { $("#homework-upload-status").addClass("hide")}, 3000);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+{# lessons #}

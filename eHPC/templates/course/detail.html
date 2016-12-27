@@ -14,6 +14,7 @@
                     <li role="presentation"><a href="#about" role="tab" data-toggle="tab">课程概览</a></li>
                     <li role="presentation"><a href="#lists" role="tab" data-toggle="tab">课时列表</a></li>
                     <li role="presentation"><a href="#test" role="tab" data-toggle="tab">课堂试卷</a></li>
+                    <li role="presentation"><a href="#homework" role="tab" data-toggle="tab">课程作业</a></li>
                     <li role="presentation"><a href="#comment" role="tab" data-toggle="tab">课堂评价</a></li>
                 </ul>
             </div>
@@ -46,6 +47,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div id="course-homework" role="tabpanel" class="tab-pane">
                 </div>
 
                 <div id="course-comment" role="tabpanel" class="tab-pane">
@@ -107,6 +111,19 @@
                 }
             });
 
+            /* 加载作业列表内容 */
+            $.ajax({
+                url: "{{ url_for('course.homework_list', cid=course.id) }}",
+                dataType: "json",
+                contentType: 'application/json;charset=UTF-8',
+                success: function (html) {
+                    $("#course-homework").empty().html(html.data);
+                },
+                error: function () {
+                    $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
+                }
+            });
+
             $("#comment-list").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
             /* 加载课程评论内容 */
             $.ajax({
@@ -156,6 +173,7 @@
                 $("#course-content li:nth-child(2)").addClass('active');
                 $("#course-about").removeClass('active');
                 $('#course-test').removeClass('active');
+                $('#course-homework').removeClass('active');
                 $('#course-comment').removeClass('active');
                 $("#course-lists").addClass('active');
             }
@@ -164,6 +182,7 @@
                 $("#course-content li:nth-child(1)").addClass('active');
                 $("#course-lists").removeClass('active');
                 $('#course-test').removeClass('active');
+                $('#course-homework').removeClass('active');
                 $('#course-comment').removeClass('active');
                 $("#course-about").addClass('active');
             }
@@ -172,15 +191,26 @@
                 $("#course-content li:nth-child(3)").addClass('active');
                 $("#course-lists").removeClass('active');
                 $("#course-about").removeClass('active');
+                $('#course-homework').removeClass('active');
                 $('#course-comment').removeClass('active');
                 $('#course-test').addClass('active');
             }
-            else if (tab == "comment") {
+            else if (tab == "homework") {
                 $("#course-content").removeClass('active');
                 $("#course-content li:nth-child(4)").addClass('active');
                 $("#course-lists").removeClass('active');
                 $("#course-about").removeClass('active');
                 $("#course-test").removeClass('active');
+                $('#course-comment').removeClass('active');
+                $('#course-homework').addClass('active');
+            }
+            else if (tab == "comment") {
+                $("#course-content").removeClass('active');
+                $("#course-content li:nth-child(5)").addClass('active');
+                $("#course-lists").removeClass('active');
+                $("#course-about").removeClass('active');
+                $("#course-test").removeClass('active');
+                $('#course-homework').removeClass('active');
                 $('#course-comment').addClass('active');
             }
 
@@ -190,25 +220,48 @@
                 if ($(this).attr('href') == '#about') {
                     $("#course-lists").removeClass('active');
                     $('#course-test').removeClass('active');
+                    $('#course-homework').removeClass('active');
                     $('#course-comment').removeClass('active');
                     $("#course-about").addClass('active');
                 }
                 else if ($(this).attr('href') == '#lists') {
                     $("#course-about").removeClass('active');
                     $('#course-test').removeClass('active');
+                    $('#course-homework').removeClass('active');
                     $('#course-comment').removeClass('active');
                     $("#course-lists").addClass('active');
                 }
                 else if ($(this).attr('href') == '#test') {
                     $("#course-lists").removeClass('active');
                     $("#course-about").removeClass('active');
+                    $('#course-homework').removeClass('active');
                     $('#course-comment').removeClass('active');
                     $('#course-test').addClass('active');
+                }
+                else if ($(this).attr('href') == '#homework') {
+                    $("#course-lists").removeClass('active');
+                    $("#course-about").removeClass('active');
+                    $('#course-test').removeClass('active');
+                    $('#course-comment').removeClass('active');
+                    $('#course-homework').addClass('active');
+                    /* 加载作业列表内容 */
+                    $.ajax({
+                        url: "{{ url_for('course.homework_list', cid=course.id) }}",
+                        dataType: "json",
+                        contentType: 'application/json;charset=UTF-8',
+                        success: function (html) {
+                           $("#course-homework").empty().html(html.data);
+                        },
+                        error: function () {
+                            $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
+                        }
+                    });
                 }
                 else if ($(this).attr('href') == '#comment') {
                     $("#course-lists").removeClass('active');
                     $("#course-about").removeClass('active');
                     $('#course-test').removeClass('active');
+                    $('#course-homework').removeClass('active');
                     $('#course-comment').addClass('active');
                 }
             });

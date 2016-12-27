@@ -1,14 +1,16 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, current_app
 from . import course
-from ..models import Course, Material, Paper, Question, Comment, User
+from ..models import Course, Material, Paper, Question, Comment, User, Homework, HomeworkUpload
 from flask_babel import gettext
 from flask_login import current_user, login_required
+from ..util.file_manage import  upload_file, get_file_type, custom_secure_filename
 from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from .. import db
 import json
+import os
 from datetime import datetime
 
 
@@ -98,6 +100,42 @@ def detail_lessons(cid):
     all_lessons = c.lessons
     html_content = render_template('course/widget_detail_lessons.html', lessons=all_lessons)
     return jsonify(data=html_content)
+
+
+@course.route('/<int:cid>/homework')
+def homework_list(cid):
+    c = Course.query.filter_by(id=cid).first()
+    homeworks = c.homeworks.all()
+    html_content = render_template('course/widget_homework_list.html', homeworks=homeworks)
+    return jsonify(data=html_content)
+
+
+@course.route('/homework/detail', methods=['POST'])
+def homework_detail():
+    hid = request.form['hid']
+    homework = Homework.query.filter_by(id=hid).first_or_404()
+    html_content = render_template('course/widget_detail_homework.html', homework=homework)
+    return jsonify(data=html_content)
+
+
+@course.route('/homework/<int:hid>/upload', methods=['POST'])
+@login_required
+def homework_upload(hid):
+    cur_homework = Homework.query.filter_by(id=hid).first_or_404()
+    cur_course = cur_homework.course
+    homework_file = request.files['file']
+    homework_file_name = custom_secure_filename(homework_file.filename)
+    homework_uri = os.path.join("course_%d" % cur_course.id, "homework_%d" % hid, homework_file_name)
+    upload_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], homework_uri)
+    status = upload_file(homework_file, upload_path, ['wrap', 'pdf'])
+    if status[0]:
+        homework_upload = HomeworkUpload(name=homework_file_name, homework_id=hid, user_id=current_user.id, uri=homework_uri)
+        db.session.add(homework_upload)
+        cur_homework.uploads.append(homework_upload)
+        db.session.commit()
+        return jsonify(status="success")
+    else:
+        return jsonify(status="fail")
 
 
 @course.route('/paper/<int:pid>/show/')

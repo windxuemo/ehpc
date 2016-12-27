@@ -4601,3 +4601,49 @@ table.fixed-table {
     table-layout:fixed;
     word-break:break-all;
 }
+
+/*作业展示部分样式*/
+.homework-item:hover {
+    cursor: pointer;
+}
+
+.homework-body a {
+    color:#333333;
+}
+
+.homework-body a:hover {
+    text-decoration: none;
+}
+
+.es-piece .homework-body .homework-content {
+    border-bottom:1px solid #f5f5f5;
+    margin: 15px 0;
+    padding-bottom: 5px;
+}
+
+.homework-content .homework-file-item {
+    margin:8px 0;
+}
+
+#homeworkModal .modal-dialog .modal-content{
+    width: 750px;
+}
+
+#homework-manage-panel+.op-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}
+
+#back-to-homework-list {
+    color: #616161;
+    position: absolute;
+    top:15px;
+    left: 25px;
+    z-index: 1;
+}
+
+#back-to-homework-list:hover {
+    color: #333;
+    font-weight: 500;
+}

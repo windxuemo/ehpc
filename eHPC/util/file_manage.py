@@ -101,10 +101,15 @@ def extension_to_file_type(extension):
         'mp4': 'video',
         'mkv': 'video',
         'pdf': 'pdf',
+        'doc': 'pdf',
         'c': 'code',
         'cpp': 'code',
         'py': 'code',
-        'f': 'code'
+        'f': 'code',
+        'zip': 'wrap',
+        'rar': 'wrap',
+        'gz': 'wrap',
+        'tar': 'wrap'
     }
 
     return file_type_dict.get(extension, "Unknown")
@@ -128,6 +133,7 @@ def get_file_type(form_file_type):
     file_type_dict = {
         # 'application/msword': 'doc',
         'application/pdf': 'pdf',
+        'application/msword': 'pdf',
         'video/mp4': 'video',
         'audio/mp3': 'audio',
         # 'application/vnd.ms-powerpoint': 'ppt',
@@ -146,7 +152,11 @@ def get_file_type(form_file_type):
         'text/x-fortran': 'code',
         'text/x-python': 'code',
         'text/x-csrc': 'code',
-        'text/x-c++src': 'code'
+        'text/x-c++src': 'code',
+        'application/x-gzip': 'wrap',
+        'application/zip': 'wrap',
+        'application/x-tar': 'wrap',
+        'application/x-rar-compressed': 'wrap'
     }
 
     return file_type_dict.get(form_file_type, "Unknown")

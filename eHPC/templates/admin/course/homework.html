@@ -128,13 +128,6 @@
 {% block footer_ext %}
     <script>
         var homework_url = "{{ url_for('admin.course_homework', course_id=course.id) }}";
-        var edt = drop_img_simplemde(new SimpleMDE({
-            element: $("#homework-description")[0],
-            autosave: true,
-            showIcons: ["code", "table"],
-            tabSize: 4,
-            spellChecker: false
-        }));
     </script>
     <script src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
     <script src='{{ url_for("static", filename="js/admin/course/homework.js") }}'></script>

@@ -1,49 +1,175 @@
 <div class="course-detail-content" data-widget-cid="widget-1">
-
     <div class="es-piece">
         <div class="piece-body">
-            <div class="homework-body">
-                <a class="btn btn-default btn-sm" href="{{ url_for('course.view', cid=homework.course.id, tab='homework') }}"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a>
-                <div class="homework-content">
-                    <span style="font-size: 20px"><b>{{ homework.title }}</b></span>
-                    <span class="pull-right" style="color: #919191;font-size: 14px">发布于： {{ homework.publish_time }}</span>
-                </div>
-                <div class="homework-content"><b><i class="glyphicon glyphicon-time"></i> 截止日期：</b> {{ homework.deadline }}</div>
-                <div class="homework-content">
-                    <b>作业内容：</b>
-                    <div id="homework-description">{{ homework.description }}</div>
-                </div>
-                <div class="homework-content">
-                    <b>作业提交：</b>
-                    <form id="homework-file-form">
-                        <div class="form-group">
-                            <div class="input-group col-md-8 col-sm-8 homework-file-item">
-                                <input id="homework-file" type="file" name="file" style="display: none;">
-                                <span class="input-group-addon" onclick="$('input[id=homework-file]').click();" style="cursor: pointer; background-color: #e7e7e7"><i class="fa fa-folder-open"></i></span>
-                                <input id="filenameCover" class="form-control" type="text" readonly="readonly">
+            {% if current_user | is_student_user %}
+                {% if current_user.id | is_join_course(homework.course_id) %}
+                    <div class="homework-body">
+                        <a id="return-homework-list" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a>
+                        <!--a href="{{ url_for('course.view', cid=homework.course_id) }}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a-->
+                        <div class="homework-content">
+                           <span style="font-size: 20px"><b>{{ homework.title }}</b></span>
+                            <span class="pull-right" style="color: #919191;font-size: 14px">发布于： {{ homework.publish_time }}</span>
+                        </div>
+                        <div class="homework-content"><b><i class="glyphicon glyphicon-time"></i> 截止日期：</b> {{ homework.deadline }}</div>
+                        <div class="homework-content">
+                            <b>作业内容：</b>
+                            <div id="homework-description">{{ homework.description }}</div>
+                        </div>
+                        {% if homework.submitable == 1 %}
+                            <div class="homework-content">
+                                <b>代码在线测试：</b>
+                                <form onsubmit="submit_code(); return false;">
+                                    <div class="row form-group no-margin">
+                                        <div class="col-md-4" style="padding: 0;">
+                                            <select class="form-control" id="language">
+                                                <option value="ace/mode/c_cpp">C</option>
+                                                <option value="ace/mode/c_cpp">C++</option>
+                                                <option value="ace/mode/python">Python</option>
+                                                <option value="ace/mode/fortran">Fortran</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group no-margin">
+                                        <div id="editor"></div>
+                                    </div>
+                                    <div class="row form-group no-margin">
+                                        <div class="pull-right">
+                                            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#settingModal">参数设置</button>
+                                            <button id="submit" class="btn btn-primary"
+                                                    type="submit">{{ _('Submit Solution') }}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <input class="hide" name="language">
+                                    <input class="hide" name="homework_id" value="{{ homework.id }}">
+                                    <input id="source_code" name="source_code" value="" type="hidden">
+
+			                        <div class="modal fade" id="settingModal" tabindex="-1" role="dialog" aria-labelledby="settingModallabel" aria-hidden="true">
+			                            <div class="modal-dialog" role="document">
+			                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="settingModallabel">参数设置</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <label class="col-md-3" for="compiler_setting">编译器</label>
+                                                        <select class="col-md-4" name="compiler_setting" id="compiler_setiting">
+                                                            <option value="mpicc">mpicc</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="row">
+                                                        <label class="col-md-3" for="task_number">任务数</label>
+                                                        <select class="col-md-4" name="task_number" id="task_number">
+                                                            <option value="4">4</option>
+                                                            <option value="8">8</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="row">
+                                                        <label class="col-md-3" for="cpu_number_per_task">CPU/任务</label>
+                                                        <select class="col-md-4" name="cpu_number_per_task" id="cpu_number_per_task">
+                                                            <option value="1">1</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="row">
+                                                        <label class="col-md-3" for="node_number">结点数</label>
+                                                        <select class="col-md-4" name="node_number" id="node_number">
+                                                            <option value="1">1</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                                                </div>
+                                            </div>
+			                            </div>
+			                        </div>
+                                </form>
+                                {#  keep the result #}
+                                <div class="row no-margin">
+                                    <div class="es-section" id="result-show" style="display: none">
+                                        <!-- Nav tabs -->
+                                        <ul id="program-run-tab" class="nav nav-tabs" role="tablist">
+                                            <li role="presentation" class="active">
+                                                <a href="#compiler" role="tab" data-toggle="tab">编译结果</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a href="#run" role="tab" data-toggle="tab">运行结果</a>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Tab panes -->
+                                        <div class="tab-content">
+                                            <div id="compiler" role="tabpanel" class="tab-pane active" style="white-space: pre"></div>
+                                            <div id="run" role="tabpanel" class="tab-pane" style="white-space: pre"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        {% else %}
+                            <div id="editor" style="display: none"></div>
+                        {% endif %}
+                        <div class="homework-content">
+                            <b>作业提交：</b>
+                            <form id="homework-file-form">
+                                <div class="form-group">
+                                    <div class="input-group col-md-8 col-sm-8 homework-file-item">
+                                        <input id="homework-file" type="file" name="file" style="display: none;">
+                                        <span class="input-group-addon" onclick="$('input[id=homework-file]').click();" style="cursor: pointer; background-color: #e7e7e7"><i class="fa fa-folder-open"></i></span>
+                                        <input id="filenameCover" class="form-control" type="text" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
+                                    <span id="homework-upload-status" class="col-md-2 col-sm-2 text-center homework-file-item hide" style="padding-top: 5px;"></span>
+                                </div>
+                                <!--input type="hidden" name="" value=""-->
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
-                            <span id="homework-upload-status" class="col-md-2 col-sm-2 text-center homework-file-item hide" style="padding-top: 5px;"></span>
-                        </div>
-                        <!--input type="hidden" name="" value=""-->
-                    </form>
-                </div>
-            </div>
+                    </div>
+                {% else %}
+                    <div class="homework-body text-center">请先加入课程！</div>
+                {% endif %}
+            {% elif current_user | is_teacher_user %}
+                <div class="homework-body text-center">请以学生身份登录并加入课程！</div>
+            {% elif current_user | is_system_user %}
+                <div class="homework-body text-center">请以学生身份登录并加入课程！</div>
+            {% else %}
+                <div class="homework-body text-center">您还没有登录，请先登录并加入课程！</div>
+            {% endif %}
         </div>
     </div>
 
 </div>
 
 {% block footer_ext %}
-<script>
+    <script>
     $(document).ready(function() {
         var description = $("#homework-description");
         description.html(SimpleMDE.prototype.markdown(description.text()));
 
         $('input[id=homework-file]').change(function() {
             $('#filenameCover').val($(this).val());
+        });
+
+        $("#return-homework-list").click(function() {
+            $("#course-lists").removeClass('active');
+            $("#course-about").removeClass('active');
+            $('#course-test').removeClass('active');
+            $('#course-comment').removeClass('active');
+            $('#course-homework').addClass('active');
+            /* 加载作业列表内容 */
+            $.ajax({
+                url: "{{ url_for('course.homework_list', cid=homework.course_id) }}",
+                dataType: "json",
+                contentType: 'application/json;charset=UTF-8',
+                success: function (html) {
+                    $("#course-homework").empty().html(html.data);
+                },
+                error: function () {
+                    $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
+                }
+            });
         });
 
         $("#homework-upload-btn").click(function() {
@@ -76,6 +202,47 @@
             });
         });
     });
-</script>
+    </script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/tomorrow");
+        editor.getSession().setMode("ace/mode/c_cpp");
+    </script>
+    <script>
+        function submit_code() {
+            document.getElementById('source_code').value = editor.getValue();
+            $("input[name=language]").val($("#language").find("option:selected").text());
+            $("input[name=compiler_setting]").val($("#compiler_setting").find("option:selected").text());
+            $("input[name=task_number]").val($("#task_number").find("option:selected").text());
+            $("input[name=cpu_number_per_task]").val($("#cpu_number_per_task").find("option:selected").text());
+            $("input[name=node_number]").val($("#node_number").find("option:selected").text());
+            var data = $("form").serialize();
+            $('#result-show').css("display", 'block');
+            var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>";
+
+            $("#compiler").empty().append(loading);
+            $('#program-run-tab a:first').tab('show');
+            $.ajax({
+                method: "post",
+                cache: false,
+                url: "{{ url_for('course.submit', hid=homework.id) }}",
+				data : data,
+                success: function (data) {
+                    if(data.status==='success') {
+                        $("#compiler").empty().append(data.compile_out);
+                        $("#run").empty().html(data.run_out);
+                    }
+                    else{
+                        $("#compiler").empty().append(data.msg);
+                        $("#run").empty().html("<p class='text-center'>  暂时无法运行...</p>");
+                    }
+                },
+                error: function (data) {
+                    $("#compiler").empty().append("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
+                    $("#run").html("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
+                }
+            });
+        }
+    </script>
 {% endblock %}
 {# lessons #}

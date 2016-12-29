@@ -53,6 +53,8 @@
                                             <a href="{{ url_for('admin.course_approved', apply_id=a.id) }}">同意</a>
                                             <span class="divider"> | </span>
                                             <a href="{{ url_for('admin.course_disapproved', apply_id=a.id) }}">拒绝</a>
+                                        {% elif a.status == 1 %}
+                                            <a href="{{ url_for('admin.course_kick', apply_id=a.id) }}">踢出</a>
                                         {% else %}
                                             已处理
                                         {% endif %}

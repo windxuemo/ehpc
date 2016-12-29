@@ -261,6 +261,19 @@ def course_disapproved(apply_id):
     return redirect(url_for('admin.course_member', course_id=curr_course.id))
 
 
+@admin.route('/course/<int:apply_id>/kick/')
+@teacher_login
+def course_kick(apply_id):
+    curr_apply = Apply.query.filter_by(id=apply_id).first_or_404()
+    curr_apply.status = 2
+    curr_course = curr_apply.course
+    curr_student = curr_apply.user
+    curr_course.users.remove(curr_student)
+    curr_course.studentNum -= 1
+    db.session.commit()
+    return redirect(url_for('admin.course_member', course_id=curr_course.id))
+
+
 @admin.route('/course/<int:course_id>/homework/', methods=['GET', 'POST'])
 @teacher_login
 def course_homework(course_id):

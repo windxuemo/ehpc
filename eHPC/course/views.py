@@ -29,14 +29,22 @@ def view(cid):
     if not tab:
         tab = "about"
 
+    # 0：未加入课程，不显示其他标签  1：可以显示其他标签  2：等待审核，不显示其他标签
+    status = 1
     paper_of_course = c.papers.all()
+    if current_user.is_anonymous:
+        status = 0
+    elif not c.public and current_user not in c.users:
+        curr_apply = Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).first()
+        status = 2 if curr_apply else 0
 
     return render_template('course/detail.html',
                            title=c.title,
                            tab=tab,
                            course=c,
                            user=current_user,
-                           papers=paper_of_course)
+                           papers=paper_of_course,
+                           status=status)
 
 
 @course.route('/join/<int:cid>/')

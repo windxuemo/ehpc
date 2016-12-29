@@ -21,6 +21,9 @@
                             {{ course.title }}
                         </h2>
                         <div class="subtitle"> {{ course.subtitle }}</div>
+                        {% if course.public == False %}
+                        <div class="subtitle">开放时间:{{ course.beginTime }} 至 {{ course.endTime }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="course-operation clearfix">
@@ -70,12 +73,16 @@
 {% block footer_ext %}
     <script>
         $(document).ready(function () {
+            var status = {{ status }};
+            if (status == 2) {
+                $(".join").children("a").text("加入审批中").attr("href", "#");
+            }
+
             $("#join-course a").click(function () {
                 $.ajax({
                     url: this.href,
                     success: function (data) {
                         if (data.status == 'success') {
-                            // TODO : 根据status改变
                             /* 目前状态是已经加入了课程, 所以需要变为退出课堂 */
                             if ($('#course-in').hasClass('btn-primary')) {
                                 $("#course-in").text('退出课程');
@@ -95,6 +102,7 @@
                             }
                         }
                         else if (data["status"] == "pending") {
+                            $(".join").children("a").text("加入审批中").attr("href", "#");
                             alert("已经提交申请，请耐心等待老师同意");
                         }
                         else if (data["status"] == "duplicated") {

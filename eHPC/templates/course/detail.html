@@ -97,77 +97,6 @@
     </script>
     <script>
         $(document).ready(function () {
-            var op = "", btn_text = "";
-
-            $("#course-lists").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
-            /* 加载课程列表内容 */
-            $.ajax({
-                url: "{{ url_for('course.detail_lessons', cid=course.id) }}",
-                dataType: "json",
-                contentType: 'application/json;charset=UTF-8',
-                success: function (html) {
-                    $("#course-lists").empty().html(html.data);
-                },
-                error: function () {
-                    $("#course-lists").empty().html("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");
-                }
-            });
-
-            /* 加载作业列表内容 */
-            $.ajax({
-                url: "{{ url_for('course.homework_list', cid=course.id) }}",
-                dataType: "json",
-                contentType: 'application/json;charset=UTF-8',
-                success: function (html) {
-                    $("#course-homework").empty().html(html.data);
-                },
-                error: function () {
-                    $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
-                }
-            });
-
-            $("#comment-list").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
-            /* 加载课程评论内容 */
-            $.ajax({
-                url: "{{ url_for('course.process_comment') }}",
-                type: "post",
-                data: {
-                    op: "data",
-                    cid: "{{ course.id }}"
-                },
-                success: function (data) {
-                    if (data["html"] == "") {
-                        $("#comment-list").empty().html("<div style='text-align: center'> 目前尚未有评论 </div>");
-                    }
-                    else {
-                        $("#comment-list").empty().html(data["html"]);
-                    }
-                    if (data["auth"]) {
-                        $("#comment-btn").show();
-                        $("#help-box").hide();
-                    }
-                    else {
-                        $("#comment-btn").hide();
-                        $("#help-box").show();
-                    }
-                    if (data["commented"]) {
-                        op = "edit";
-                        btn_text = "重新评论";
-                        $("#comment-btn").text(btn_text);
-                        $("#comment-editor").val(data["content"]);
-                        $("#raty").raty("score", data["rank"]);
-                    }
-                    else {
-                        op = "create";
-                        btn_text = "评论";
-                        $("#comment-btn").text(btn_text);
-                    }
-                },
-                error: function () {
-                    $("#comment-list").empty().html("<h2 style='text-align: center'> 课程评论为空或者出现其他错误 </h2>");
-                }
-            });
-
             /* 根据tab 参数来指定默认显示的tab选项卡 */
             var tab = "{{ tab }}";
             if (tab == "lists") {
@@ -216,122 +145,202 @@
                 $('#course-comment').addClass('active');
             }
 
-            $("#course-content li a").click(function () {
-                $("#course-content li").removeClass('active');
-                $(this).parent().addClass('active');
-                if ($(this).attr('href') == '#about') {
-                    $("#course-lists").removeClass('active');
-                    $('#course-test').removeClass('active');
-                    $('#course-homework').removeClass('active');
-                    $('#course-comment').removeClass('active');
-                    $("#course-about").addClass('active');
-                }
-                else if ($(this).attr('href') == '#lists') {
-                    $("#course-about").removeClass('active');
-                    $('#course-test').removeClass('active');
-                    $('#course-homework').removeClass('active');
-                    $('#course-comment').removeClass('active');
-                    $("#course-lists").addClass('active');
-                }
-                else if ($(this).attr('href') == '#test') {
-                    $("#course-lists").removeClass('active');
-                    $("#course-about").removeClass('active');
-                    $('#course-homework').removeClass('active');
-                    $('#course-comment').removeClass('active');
-                    $('#course-test').addClass('active');
-                }
-                else if ($(this).attr('href') == '#homework') {
-                    $("#course-lists").removeClass('active');
-                    $("#course-about").removeClass('active');
-                    $('#course-test').removeClass('active');
-                    $('#course-comment').removeClass('active');
-                    $('#course-homework').addClass('active');
-                    /* 加载作业列表内容 */
-                    $.ajax({
-                        url: "{{ url_for('course.homework_list', cid=course.id) }}",
-                        dataType: "json",
-                        contentType: 'application/json;charset=UTF-8',
-                        success: function (html) {
-                           $("#course-homework").empty().html(html.data);
-                        },
-                        error: function () {
-                            $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
-                        }
-                    });
-                }
-                else if ($(this).attr('href') == '#comment') {
-                    $("#course-lists").removeClass('active');
-                    $("#course-about").removeClass('active');
-                    $('#course-test').removeClass('active');
-                    $('#course-homework').removeClass('active');
-                    $('#course-comment').addClass('active');
-                }
-            });
+            var op = "", btn_text = "";
+            var status = {{ status }};
+            if (status == 1) {
+                $("#course-lists").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
+                /* 加载课程列表内容 */
+                $.ajax({
+                    url: "{{ url_for('course.detail_lessons', cid=course.id) }}",
+                    dataType: "json",
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function (html) {
+                        $("#course-lists").empty().html(html.data);
+                    },
+                    error: function () {
+                        $("#course-lists").empty().html("<h2 style='text-align: center'> 课程内容为空或者出现其他错误 </h2>");
+                    }
+                });
 
-            $("#raty").raty({
-                starOff: "{{ url_for('static', filename='images/star-off.png') }}",
-                starOn: "{{ url_for('static', filename='images/star-on.png') }}",
-                starHalf: "{{ url_for('static', filename='images/star-half.png') }}"
-            });
+                /* 加载作业列表内容 */
+                $.ajax({
+                    url: "{{ url_for('course.homework_list', cid=course.id) }}",
+                    dataType: "json",
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function (html) {
+                        $("#course-homework").empty().html(html.data);
+                    },
+                    error: function () {
+                        $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
+                    }
+                });
 
-            $("#show-raty").raty({
-                starOff: "{{ url_for('static', filename='images/star-off.png') }}",
-                starOn: "{{ url_for('static', filename='images/star-on.png') }}",
-                starHalf: "{{ url_for('static', filename='images/star-half.png') }}",
-                readOnly: true,
-                score: {{ course.rank }}
-            });
-
-            $("#comment-save-btn").click(function () {
+                $("#comment-list").empty().html("<div id='loading'><img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading' /></div>");
+                /* 加载课程评论内容 */
                 $.ajax({
                     url: "{{ url_for('course.process_comment') }}",
                     type: "post",
-                    data :{
-                        op: op,
-                        rank: $("#raty").raty("score") ? $("#raty").raty("score") : 0,
-                        content: $("#comment-editor").val(),
-                        courseId: "{{ course.id }}"
+                    data: {
+                        op: "data",
+                        cid: "{{ course.id }}"
                     },
                     success: function (data) {
-                        if (data["status"] == "fail")
-                        {
-                            alert(data["info"]);
-                            location.reload();
-                            return;
+                        if (data["html"] == "") {
+                            $("#comment-list").empty().html("<div style='text-align: center'> 目前尚未有评论 </div>");
                         }
-                        $("#comment-list").empty().html(data["html"]);
-                        $("#comment-edit-block").hide();
-                        $("#show-raty").raty("set", { "score": data["rank"] });
-                        op = "edit";
-                        $("#comment-btn").removeClass("btn-info").addClass("btn-primary").text("重新评论");
+                        else {
+                            $("#comment-list").empty().html(data["html"]);
+                        }
+                        if (data["auth"]) {
+                            $("#comment-btn").show();
+                            $("#help-box").hide();
+                        }
+                        else {
+                            $("#comment-btn").hide();
+                            $("#help-box").show();
+                        }
+                        if (data["commented"]) {
+                            op = "edit";
+                            btn_text = "重新评论";
+                            $("#comment-btn").text(btn_text);
+                            $("#comment-editor").val(data["content"]);
+                            $("#raty").raty("score", data["rank"]);
+                        }
+                        else {
+                            op = "create";
+                            btn_text = "评论";
+                            $("#comment-btn").text(btn_text);
+                        }
+                    },
+                    error: function () {
+                        $("#comment-list").empty().html("<h2 style='text-align: center'> 课程评论为空或者出现其他错误 </h2>");
                     }
                 });
-            });
 
-            $("#comment-btn").click(function () {
-                if ($(this).hasClass("btn-primary"))
-                {
-                    $("#comment-edit-block").show();
-                    $(this).removeClass("btn-primary").addClass("btn-info").text("取消评论");
-                }
-                else
-                {
-                    $("#comment-edit-block").hide();
-                    $(this).removeClass("btn-info").addClass("btn-primary").text(btn_text);
-                }
-            });
+                $("#course-content li a").click(function () {
+                    $("#course-content li").removeClass('active');
+                    $(this).parent().addClass('active');
+                    if ($(this).attr('href') == '#about') {
+                        $("#course-lists").removeClass('active');
+                        $('#course-test').removeClass('active');
+                        $('#course-homework').removeClass('active');
+                        $('#course-comment').removeClass('active');
+                        $("#course-about").addClass('active');
+                    }
+                    else if ($(this).attr('href') == '#lists') {
+                        $("#course-about").removeClass('active');
+                        $('#course-test').removeClass('active');
+                        $('#course-homework').removeClass('active');
+                        $('#course-comment').removeClass('active');
+                        $("#course-lists").addClass('active');
+                    }
+                    else if ($(this).attr('href') == '#test') {
+                        $("#course-lists").removeClass('active');
+                        $("#course-about").removeClass('active');
+                        $('#course-homework').removeClass('active');
+                        $('#course-comment').removeClass('active');
+                        $('#course-test').addClass('active');
+                    }
+                    else if ($(this).attr('href') == '#homework') {
+                        $("#course-lists").removeClass('active');
+                        $("#course-about").removeClass('active');
+                        $('#course-test').removeClass('active');
+                        $('#course-comment').removeClass('active');
+                        $('#course-homework').addClass('active');
+                        /* 加载作业列表内容 */
+                        $.ajax({
+                            url: "{{ url_for('course.homework_list', cid=course.id) }}",
+                            dataType: "json",
+                            contentType: 'application/json;charset=UTF-8',
+                            success: function (html) {
+                                $("#course-homework").empty().html(html.data);
+                            },
+                            error: function () {
+                                $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
+                            }
+                        });
+                    }
+                    else if ($(this).attr('href') == '#comment') {
+                        $("#course-lists").removeClass('active');
+                        $("#course-about").removeClass('active');
+                        $('#course-test').removeClass('active');
+                        $('#course-homework').removeClass('active');
+                        $('#course-comment').addClass('active');
+                    }
+                });
 
-            $("#course-in").click(function () {
-                if ($('#course-in').hasClass('btn-primary')) {
-                    $("#help-box").hide();
-                    $("#comment-btn").show();
-                }
-                else {
-                    $("#help-box").show();
-                    $("#comment-edit-block").hide();
-                    $("#comment-btn").hide();
-                }
-            });
+                $("#raty").raty({
+                    starOff: "{{ url_for('static', filename='images/star-off.png') }}",
+                    starOn: "{{ url_for('static', filename='images/star-on.png') }}",
+                    starHalf: "{{ url_for('static', filename='images/star-half.png') }}"
+                });
+
+                $("#show-raty").raty({
+                    starOff: "{{ url_for('static', filename='images/star-off.png') }}",
+                    starOn: "{{ url_for('static', filename='images/star-on.png') }}",
+                    starHalf: "{{ url_for('static', filename='images/star-half.png') }}",
+                    readOnly: true,
+                    score: {{ course.rank }}
+                });
+
+                $("#comment-save-btn").click(function () {
+                    $.ajax({
+                        url: "{{ url_for('course.process_comment') }}",
+                        type: "post",
+                        data :{
+                            op: op,
+                            rank: $("#raty").raty("score") ? $("#raty").raty("score") : 0,
+                            content: $("#comment-editor").val(),
+                            courseId: "{{ course.id }}"
+                        },
+                        success: function (data) {
+                            if (data["status"] == "fail")
+                            {
+                                alert(data["info"]);
+                                location.reload();
+                                return;
+                            }
+                            $("#comment-list").empty().html(data["html"]);
+                            $("#comment-edit-block").hide();
+                            $("#show-raty").raty("set", { "score": data["rank"] });
+                            op = "edit";
+                            $("#comment-btn").removeClass("btn-info").addClass("btn-primary").text("重新评论");
+                        }
+                    });
+                });
+
+                $("#comment-btn").click(function () {
+                    if ($(this).hasClass("btn-primary"))
+                    {
+                        $("#comment-edit-block").show();
+                        $(this).removeClass("btn-primary").addClass("btn-info").text("取消评论");
+                    }
+                    else
+                    {
+                        $("#comment-edit-block").hide();
+                        $(this).removeClass("btn-info").addClass("btn-primary").text(btn_text);
+                    }
+                });
+
+                $("#course-in").click(function () {
+                    if ($('#course-in').hasClass('btn-primary')) {
+                        $("#help-box").hide();
+                        $("#comment-btn").show();
+                    }
+                    else {
+                        $("#help-box").show();
+                        $("#comment-edit-block").hide();
+                        $("#comment-btn").hide();
+                    }
+                });
+            }
+            else {
+                $(".nav.nav-tabs").find("a").each(function () {
+                    if ($(this).attr("href") != "#about") {
+                        $(this).css("color", "#A0A0A0");
+                    }
+                });
+            }
         });
     </script>
 {% endblock %}

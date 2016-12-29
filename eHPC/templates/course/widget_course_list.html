@@ -3,9 +3,11 @@
         <div class="course-item">
             <div class="course-img">
                 <a href="{{ url_for('course.view', cid=c.id) }}" target="_blank">
+                    {% if c.public == False %}
+                    <span class="tags"><span class="tag-private"></span></span>
+                    {% endif %}
                     <img src="{{ url_for('static', filename=c.smallPicture)}}" alt={{ c.title }} class="img-responsive">
                 </a>
-
             </div>
             <div class="course-info">
                 <div class="title">

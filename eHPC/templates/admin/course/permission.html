@@ -1,0 +1,109 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container" id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_permission', course_id=course.id) }}">权限管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_member', course_id=course.id) }}">成员管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_homework', course_id=course.id) }}">课程作业</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading" style="position: sticky; top: 0px;">
+                        权限管理
+                    </div>
+
+                    <div class="panel-body">
+                        <form class="form-horizontal" action="{{ url_for('admin.course_permission', course_id = course.id) }}" method="post">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">是否公开</label>
+                                <div class="col-md-8">
+                                    <div class="radio-inline">
+                                        <input type="radio" name="public" value="1" {% if course.public == True %}checked{% endif %}>是
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="public" value="0" {% if course.public == False %}checked{% endif %}>否
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dtp_input1" class="col-md-2 control-label">开始时间</label>
+                                <div class="col-md-8">
+                                    <div id="dtp1" class="input-group date form_datetime col-md-8" data-link-field="dtp_input1" >
+                                        <input class="form-control" size="16" value="{{ course.beginTime }}" readonly="" type="text">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                    </div>
+                                </div>
+                                <input name="begin" id="dtp_input1" value="{{ course.beginTime }}" type="hidden"><br>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dtp_input1" class="col-md-2 control-label">截止时间</label>
+                                <div class="col-md-8">
+                                    <div id="dtp2" class="input-group date form_datetime col-md-8" data-link-field="dtp_input2" >
+                                        <input class="form-control" size="16" value="{{ course.endTime }}" readonly="" type="text">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                    </div>
+                                </div>
+                                <input name="end" id="dtp_input2" value="{{ course.endTime }}" type="hidden"><br>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-8">
+                                    <button class="btn btn-fat btn-primary" type='submit'>保存</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script type="text/javascript">
+        $('#dtp1').datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0
+        });
+        $('#dtp2').datetimepicker({
+            format: "yyyy-mm-dd hh:ii:ss",
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0
+        });
+    </script>
+{% endblock %}

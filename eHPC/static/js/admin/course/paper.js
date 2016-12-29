@@ -17,7 +17,6 @@ $(document).ready(function () {
             contentType: false,
             success: function (data) {
                 if (data["status"] == "success") {
-                    alert("保存成功");
                     location.reload();
                 }
                 else {
@@ -40,7 +39,6 @@ $(document).ready(function () {
             success: function (data) {
                 if (data["status"] == "success") {
                     $(obj).parent().parent().remove();
-                    alert("删除成功");
                 }
                 else {
                     alert("删除失败");

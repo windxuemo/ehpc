@@ -98,6 +98,9 @@ class Course(db.Model):
     subtitle = db.Column(db.String(128), default="")             # 课程副标题
     about = db.Column(db.Text(), nullable=True)                 # 课程简介
     createdTime = db.Column(db.DateTime(), default=datetime.now)
+    public = db.Column(db.Boolean)
+    beginTime = db.Column(db.DateTime(), default='')
+    endTime = db.Column(db.DateTime(), default='')
 
     lessonNum = db.Column(db.Integer, nullable=False)           # 课时数
     studentNum = db.Column(db.Integer, default=0)               # 学生数目
@@ -287,10 +290,8 @@ class PaperQuestion(db.Model):
     paper_id = db.Column(db.Integer, db.ForeignKey('papers.id'), primary_key=True)
     point = db.Column(db.Integer, nullable=False)
 
-    papers = db.relationship('Paper', backref=db.backref('questions',
-                                                         lazy='dynamic', cascade="delete, delete-orphan"))
-    questions = db.relationship('Question', backref=db.backref('papers',
-                                                               lazy='dynamic', cascade="delete, delete-orphan"))
+    papers = db.relationship('Paper', backref=db.backref('questions', lazy='dynamic', cascade="delete, delete-orphan"))
+    questions = db.relationship('Question', backref=db.backref('papers', lazy='dynamic', cascade="delete, delete-orphan"))
 
 
 class Question(db.Model):
@@ -459,3 +460,14 @@ class HomeworkUpload(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     uri = db.Column(db.String(256), nullable=False)
     submit_time = db.Column(db.DateTime, default=datetime.now, nullable=False)
+
+
+class Apply(db.Model):
+    __tablename__ = "apply"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
+    status = db.Column(db.Integer, nullable=False)  # 0 待定 1 同意加入 2 拒绝加入
+
+    user = db.relationship('User', backref=db.backref('applies', lazy='dynamic', cascade="delete, delete-orphan"))
+    course = db.relationship('Course', backref=db.backref('applies', lazy='dynamic', cascade="delete, delete-orphan"))

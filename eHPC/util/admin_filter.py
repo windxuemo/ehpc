@@ -40,3 +40,9 @@ def get_question_type(question):
 def get_question_id(question):
     dic = {0: u'choice', 1: u'choice', 2: u'choice', 3: u'fill', 4: u'judge', 5: u'essay'}
     return dic[question.type]
+
+
+@filter_blueprint.app_template_filter('get_apply_status')
+def get_apply_status(status):
+    dic = {0: u'待定', 1: u'已同意', 2: u'已拒绝'}
+    return dic[status]

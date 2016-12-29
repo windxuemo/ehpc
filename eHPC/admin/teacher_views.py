@@ -4,6 +4,7 @@ import json
 import os
 import zipfile
 import shutil
+from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, abort, jsonify, current_app, make_response, send_file
 from flask_babel import gettext
@@ -12,7 +13,7 @@ from sqlalchemy import or_
 from . import admin
 from .. import db
 from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload
-from ..models import Course, Lesson, Material
+from ..models import Course, Lesson, Material, User, Apply
 from ..models import Knowledge, Challenge
 from ..user.authorize import teacher_login
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
@@ -146,32 +147,6 @@ def course_lesson(course_id):
             return jsonify(status="success", title=curr_lesson.title, content=curr_lesson.content)
 
 
-# 本地文件上传
-@admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/upload/', methods=['POST'])
-@teacher_login
-def upload(course_id, lesson_id):
-    cur_course = Course.query.filter_by(id=course_id).first_or_404()
-    cur_lesson = cur_course.lessons.filter_by(id=lesson_id).first_or_404()
-    filename = custom_secure_filename(request.form['name'])
-    material = request.files['file']
-    file_type = get_file_type(material.mimetype)
-    m = Material(name=filename, m_type=file_type, uri="")
-    cur_lesson.materials.append(m)
-    db.session.commit()  # get material id
-    m.uri = os.path.join("course_%d" % course_id,
-                             "lesson%d_material%d." % (lesson_id, m.id) + material.filename.rsplit('.', 1)[1])
-
-    status = upload_file(material, os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
-    if status[0]:
-        db.session.commit()
-        return jsonify(status="success")
-    else:
-        cur_lesson.materials.remove(m)
-        db.session.delete(m)
-        db.session.commit()
-        return jsonify(status="fail")
-
-
 @admin.route('/course/<int:course_id>/lesson/<int:lesson_id>/material/', methods=['GET', 'POST'])
 @teacher_login
 def lesson_material(course_id, lesson_id):
@@ -235,6 +210,55 @@ def lesson_material(course_id, lesson_id):
                 curr_lesson.materials.append(curr_material)
                 db.session.commit()
                 return jsonify(status="success", id=curr_lesson.id)
+
+
+@admin.route('/course/<int:course_id>/permission/', methods=['GET', 'POST'])
+@teacher_login
+def course_permission(course_id):
+    if request.method == 'GET':
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        return render_template('admin/course/permission.html', course=curr_course, title=u'权限管理')
+    elif request.method == 'POST':
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        curr_course.public = int(request.form['public'])
+        curr_course.beginTime = datetime.strptime(request.form['begin'], '%Y-%m-%d %X')
+        curr_course.endTime = datetime.strptime(request.form['end'], '%Y-%m-%d %X')
+        db.session.commit()
+        return redirect(url_for('admin.course_permission', course_id=course_id))
+
+
+@admin.route('/course/<int:course_id>/member/', methods=['GET', 'POST'])
+@teacher_login
+def course_member(course_id):
+    if request.method == 'GET':
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        return render_template('admin/course/member.html', course=curr_course, applies=curr_course.applies, title=u'成员管理')
+    elif request.method == 'POST':
+        print request.form
+        return redirect(url_for('admin.course_member', course_id=course_id))
+
+
+@admin.route('/course/<int:apply_id>/approved/')
+@teacher_login
+def course_approved(apply_id):
+    curr_apply = Apply.query.filter_by(id=apply_id).first_or_404()
+    curr_apply.status = 1
+    curr_course = curr_apply.course
+    curr_student = curr_apply.user
+    curr_course.users.append(curr_student)
+    curr_course.studentNum += 1
+    db.session.commit()
+    return redirect(url_for('admin.course_member', course_id=curr_course.id))
+
+
+@admin.route('/course/<int:apply_id>/disapproved/')
+@teacher_login
+def course_disapproved(apply_id):
+    curr_apply = Apply.query.filter_by(id=apply_id).first_or_404()
+    curr_apply.status = 2
+    db.session.commit()
+    curr_course = curr_apply.course
+    return redirect(url_for('admin.course_member', course_id=curr_course.id))
 
 
 @admin.route('/course/<int:course_id>/homework/', methods=['GET', 'POST'])
@@ -380,6 +404,8 @@ def paper_edit(course_id, paper_id):
         return render_template('admin/course/question.html', course=curr_cour, paper=curr_paper)
     elif request.method == 'POST':
         # 试题的增删查改
+        if os.path.exists(os.path.join(current_app.config['DOWNLOAD_FOLDER'], 'paper%d.pdf' % paper_id)):
+            os.remove(os.path.join(current_app.config['DOWNLOAD_FOLDER'], 'paper%d.pdf' % paper_id))
         if request.form['op'] == 'create':
             curr_paper = Paper.query.filter_by(id=paper_id).first_or_404()
             curr_question = Question(type=request.form['type'], content=request.form['content'],

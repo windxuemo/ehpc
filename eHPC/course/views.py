@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, jsonify, request, current_app
 from . import course
-from ..models import Course, Material, Paper, Question, Comment, User, Homework, HomeworkUpload
+from ..models import Course, Material, Paper, Question, Comment, User, Homework, HomeworkUpload, Apply
 from flask_babel import gettext
 from flask_login import current_user, login_required
-from ..util.file_manage import  upload_file, get_file_type, custom_secure_filename
+from ..util.file_manage import upload_file, get_file_type, custom_secure_filename
 from ..course.course_util import student_not_in_course, student_in_course
 from ..user.authorize import student_login
 from ..problem.code_process import ehpc_client
@@ -44,14 +44,28 @@ def view(cid):
 @student_not_in_course
 def join(cid, u=current_user):
     course_joined = Course.query.filter_by(id=cid).first_or_404()
-    course_joined.users.append(u)
-    course_joined.studentNum += 1
-    db.session.commit()
-
+    if course_joined.public:
+        course_joined.users.append(u)
+        course_joined.studentNum += 1
+        db.session.commit()
+        msg = 'success'
+    elif course_joined.beginTime < datetime.now() < course_joined.endTime:  # 判断是否在规定时间内
+        if Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).filter_by(status=0).count() == 0:  # 判断是否重复申请
+            curr_apply = Apply(user_id=current_user.id, course_id=cid, status=0)
+            curr_apply.user = current_user
+            curr_apply.course = course_joined
+            db.session.add(curr_apply)
+            course_joined.applies.append(curr_apply)
+            db.session.commit()
+            msg = 'pending'
+        else:
+            msg = 'duplicated'
+    else:
+        msg = 'time error'
     # 更新在本课堂的学员
     users_list = render_template('course/widget_course_students.html', course=course_joined)
     student_num = course_joined.studentNum
-    return jsonify(status='success', users_list=users_list,
+    return jsonify(status=msg, users_list=users_list,
                    student_num=student_num)
 
 

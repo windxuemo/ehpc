@@ -74,7 +74,8 @@
                 $.ajax({
                     url: this.href,
                     success: function (data) {
-                        if (data.status = 'success') {
+                        if (data.status == 'success') {
+                            // TODO : 根据status改变
                             /* 目前状态是已经加入了课程, 所以需要变为退出课堂 */
                             if ($('#course-in').hasClass('btn-primary')) {
                                 $("#course-in").text('退出课程');
@@ -92,6 +93,15 @@
                                 $("#all_students").html(data.users_list);
                                 $("#student-num").empty().html(data.student_num);
                             }
+                        }
+                        else if (data["status"] == "pending") {
+                            alert("已经提交申请，请耐心等待老师同意");
+                        }
+                        else if (data["status"] == "duplicated") {
+                            alert("请勿重复提交申请");
+                        }
+                        else if (data["status"] == "time error") {
+                            alert("当前时间段不能申请该课程");
                         }
                     },
                     error: function () {

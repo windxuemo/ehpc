@@ -1,4 +1,13 @@
 $(document).ready(function () {
+    $('#dtp').datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0
+    });
     var edt = drop_img_simplemde(new SimpleMDE({
         element: $("#homework-description")[0],
         autosave: true,
@@ -7,12 +16,20 @@ $(document).ready(function () {
         spellChecker: false
     }));
 
+    edt.codemirror.on('refresh', function() {
+        if (edt.isFullscreenActive()) {
+            $('body').addClass('simplemde-fullscreen');
+        }
+        else {
+            $('body').removeClass('simplemde-fullscreen');
+        }
+    });
+
     $("#homework-create-btn").click(function () {
         $("#homework-op").val("create");
         $("#homework-title").val("");
         $("#homework-deadline").val("");
-        $("#homework-submitable1").attr("checked","checked");
-        $("#homework-submitable2").removeAttr("checked");
+        $("#dtp .form-control").val("");
         $("#homework-description").val("");
         edt.value("");
     });
@@ -78,14 +95,7 @@ $(document).ready(function () {
                     $("#homework-op").val("edit");
                     $("#homework-title").val(data['title']);
                     $("#homework-deadline").val(data['deadline']);
-                    if (data['submitable'] == '0') {
-                        $("#homework-submitable1").attr("checked","checked");
-                        $("#homework-submitable2").removeAttr("checked");
-                    }
-                    else {
-                        $("#homework-submitable2").attr("checked","checked");
-                        $("#homework-submitable1").removeAttr("checked");
-                    }
+                    $("#dtp .form-control").val(data['deadline']);
                     edt.value(data['description']);
                     $("#homework-description")[0].innerHTML = data['description'];
                     $("#homework-id").val($(obj).parent().parent().data('homework_id'));

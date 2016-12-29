@@ -273,8 +273,9 @@ def course_homework(course_id):
     elif request.method == "POST":
         # 作业的增加查改
         if request.form['op'] == 'create':
+            deadline = datetime.strptime(request.form['deadline'], '%Y-%m-%d %H:%M')
             curr_homework = Homework(title=request.form['title'], description=request.form['description'],
-                                     deadline=request.form['deadline'], submitable=request.form['submitable'])
+                                     deadline=deadline)
             curr_course = Course.query.filter_by(id=course_id).first_or_404()
             curr_course.homeworks.append(curr_homework)
             db.session.add(curr_homework)
@@ -299,15 +300,14 @@ def course_homework(course_id):
             curr_homework = curr_course.homeworks.filter_by(id=request.form['homework_id']).first_or_404()
             curr_homework.title = request.form['title']
             curr_homework.description = request.form['description']
-            curr_homework.deadline = request.form['deadline']
-            curr_homework.submitable = request.form['submitable']
+            curr_homework.deadline = datetime.strptime(request.form['deadline'], '%Y-%m-%d %H:%M')
             db.session.commit()
             return jsonify(status="success", homework_id=curr_homework.id)
         elif request.form['op'] == 'data':
             curr_homework = Homework.query.filter_by(id=request.form['homework_id']).first_or_404()
-            deadline = curr_homework.deadline.strftime('%Y-%m-%dT%H:%M:%S')
+            deadline = curr_homework.deadline.strftime('%Y-%m-%d %H:%M')
             return jsonify(status="success", title=curr_homework.title, description=curr_homework.description,
-                           deadline=deadline, submitable=curr_homework.submitable)
+                           deadline=deadline)
         else:
             return abort(404)
 

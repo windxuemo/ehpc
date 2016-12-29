@@ -445,7 +445,6 @@ class Homework(db.Model):
     description = db.Column(db.Text(), nullable=False)
     publish_time = db.Column(db.DateTime, default=datetime.now, nullable=False)
     deadline = db.Column(db.DateTime, nullable=False)
-    submitable = db.Column(db.Integer, nullable=False)     #用于判断此作业是否允许在线提交测试:0为不允许，1为允许
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
 
     uploads = db.relationship('HomeworkUpload', backref='homework', lazy='dynamic', cascade='delete, delete-orphan')

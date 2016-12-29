@@ -84,22 +84,15 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-2 control-label">
-                                <label for="deadline">截止日期</label>
+                            <label for="deadline" class="col-md-2 control-label">截止时间</label>
+                            <div class="col-md-9">
+                                <div id="dtp" class="input-group date form_datetime col-md-8" data-link-field="homework-deadline" >
+                                    <input class="form-control" size="16" readonly="" type="text">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
                             </div>
-                            <div class="col-md-9 controls">
-                                <input id="homework-deadline" class="form-control" type="datetime-local" name="deadline">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-2 control-label">
-                                <label>在线测试</label>
-                            </div>
-                            <div class="col-md-9 controls" style="margin-top: 5px;">
-                                <input id="homework-submitable1" type="radio" name="submitable" value="0" checked="checked">否&nbsp;&nbsp;
-                                <input id="homework-submitable2" type="radio" name="submitable" value="1">是
-                            </div>
+                            <input name="deadline" id="homework-deadline" type="hidden"><br>
                         </div>
 
                         <div class="form-group">
@@ -133,5 +126,7 @@
     </script>
     <script src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
     <script src='{{ url_for("static", filename="js/admin/course/homework.js") }}'></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
 
 {% endblock %}

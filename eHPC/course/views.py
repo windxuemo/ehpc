@@ -48,7 +48,7 @@ def view(cid):
 
 
 @course.route('/join/<int:cid>/')
-@student_login
+@login_required
 @student_not_in_course
 def join(cid, u=current_user):
     course_joined = Course.query.filter_by(id=cid).first_or_404()
@@ -78,7 +78,7 @@ def join(cid, u=current_user):
 
 
 @course.route('/exit/<int:cid>/')
-@student_login
+@login_required
 @student_in_course
 def exit_out(cid, u=current_user):
     course_joined = Course.query.filter_by(id=cid).first_or_404()

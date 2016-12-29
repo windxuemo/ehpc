@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-12-19 16:04+0800\n"
+"POT-Creation-Date: 2016-12-29 10:35+0800\n"
 "PO-Revision-Date: 2016-10-08 15:35+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -22,114 +22,122 @@ msgstr ""
 msgid "System Admin"
 msgstr "站点管理"
 
-#: admin/system_views.py:31
+#: admin/system_views.py:32
 msgid "User Admin"
 msgstr "用户管理"
 
-#: admin/system_views.py:43
+#: admin/system_views.py:44
 msgid "Successfully modify permission"
 msgstr "修改权限成功"
 
-#: admin/system_views.py:46
+#: admin/system_views.py:47
 msgid "User Edit"
 msgstr "用户编辑"
 
-#: admin/system_views.py:54
+#: admin/system_views.py:55
 msgid "Articles Admin"
 msgstr "资讯管理"
 
-#: admin/system_views.py:62
+#: admin/system_views.py:63
 msgid "Create Article"
 msgstr "新建文章"
 
-#: admin/system_views.py:104
+#: admin/system_views.py:105
 msgid "Groups Admin"
 msgstr "群组管理"
 
-#: admin/system_views.py:112
+#: admin/system_views.py:113
 msgid "Create Group"
 msgstr "新建群组"
 
-#: admin/system_views.py:169
+#: admin/system_views.py:170
 msgid "Case Admin"
 msgstr "案例管理"
 
-#: admin/system_views.py:177
+#: admin/system_views.py:178
 msgid "Create Case"
 msgstr "新建案例"
 
-#: admin/system_views.py:247
+#: admin/system_views.py:248
 msgid "Case Icon"
 msgstr "案例图标"
 
-#: admin/system_views.py:277
+#: admin/system_views.py:278
 msgid "Case Version"
 msgstr "案例版本管理"
 
-#: admin/system_views.py:341
+#: admin/system_views.py:342
 msgid "Case Code Material"
 msgstr "案例代码管理"
 
-#: admin/teacher_views.py:21
+#: admin/teacher_views.py:28
 msgid "Course Admin"
 msgstr "课程管理"
 
-#: admin/teacher_views.py:45
+#: admin/teacher_views.py:54
 msgid "Create Course"
 msgstr "新建课程"
 
-#: admin/teacher_views.py:62
+#: admin/teacher_views.py:72
 msgid "Edit Course"
 msgstr "编辑课程"
 
-#: admin/teacher_views.py:79
+#: admin/teacher_views.py:89
 msgid "Course Picture"
 msgstr "课程图片"
 
-#: admin/teacher_views.py:104
+#: admin/teacher_views.py:114
 msgid "Course Lesson"
 msgstr "课程课时"
 
-#: admin/teacher_views.py:175
+#: admin/teacher_views.py:159
 msgid "Lesson Material"
 msgstr "课时资料"
 
-#: admin/teacher_views.py:239
+#: admin/teacher_views.py:272
+msgid "Course Homework"
+msgstr "课程作业"
+
+#: admin/teacher_views.py:366
 msgid "Course Paper"
 msgstr "课程试卷"
 
-#: admin/teacher_views.py:345
+#: admin/teacher_views.py:474
 msgid "Question Manage"
 msgstr "试题管理"
 
-#: admin/teacher_views.py:361 admin/teacher_views.py:389
-#: admin/teacher_views.py:453 admin/teacher_views.py:518
+#: admin/teacher_views.py:490 admin/teacher_views.py:518
+#: admin/teacher_views.py:582 admin/teacher_views.py:647
 msgid "Edit question"
 msgstr "编辑试题"
 
-#: admin/teacher_views.py:418 admin/teacher_views.py:501
+#: admin/teacher_views.py:547 admin/teacher_views.py:630
 msgid "Create question"
 msgstr "创建试题"
 
-#: admin/teacher_views.py:486
+#: admin/teacher_views.py:615
 msgid "Program question"
 msgstr "编程题"
 
-#: admin/teacher_views.py:536
+#: admin/teacher_views.py:665
 msgid "Lab Manage"
 msgstr "实验室管理"
 
-#: admin/teacher_views.py:564
+#: admin/teacher_views.py:693
 msgid "Lab tasks"
 msgstr "实验室任务管理"
 
-#: admin/teacher_views.py:598
+#: admin/teacher_views.py:727
 msgid "Lab Create"
 msgstr "新建实验"
 
-#: admin/teacher_views.py:637
+#: admin/teacher_views.py:767
 msgid "Lab Edit"
 msgstr "编辑实验"
+
+#: admin/teacher_views.py:815
+msgid "Classify Admin"
+msgstr "知识点管理"
 
 #: admin/views.py:17 admin/views.py:32
 msgid "Admin Auth"
@@ -159,11 +167,11 @@ msgstr "案例列表"
 msgid "Case Display"
 msgstr "案例展示"
 
-#: course/views.py:18
+#: course/views.py:21
 msgid "Courses"
 msgstr "在线课程"
 
-#: course/views.py:78
+#: course/views.py:95
 msgid "Course Materials"
 msgstr "课时材料"
 
@@ -199,10 +207,6 @@ msgstr "编程题目"
 #: problem/views.py:43
 msgid "My Submit"
 msgstr "我的提交"
-
-#: problem/views.py:69
-msgid "Choice Practice"
-msgstr "选择题练习"
 
 #: templates/admin/footer.html:4 templates/footer.html:4
 msgid "SYSU SDCS"
@@ -301,7 +305,7 @@ msgstr "权限"
 msgid "Save"
 msgstr "保存"
 
-#: templates/article/index.html:22
+#: templates/article/index.html:21
 msgid "Views"
 msgstr "浏览"
 
@@ -379,7 +383,7 @@ msgstr "回复"
 
 #: templates/lab/lab_base.html:8
 msgid "Challenges"
-msgstr ""
+msgstr "虚拟实验室"
 
 #: templates/main/index.html:49
 msgid "Learn HPC."
@@ -525,7 +529,7 @@ msgstr ""
 
 #: templates/user/passwd_reset_email.html:5
 msgid "If you have not requested a password reset simply ignore this message."
-msgstr ""
+msgstr "如果您没有申请重置密码，请忽略此信息"
 
 #: templates/user/passwd_reset_email.html:6
 msgid ""
@@ -545,7 +549,7 @@ msgstr "邮件已发送"
 msgid ""
 "We have sent you an email with a link to reset your password. Please "
 "check your email and click the link to continue."
-msgstr ""
+msgstr "我们已经发送邮件到您的邮箱，请点击邮件中的链接重置密码"
 
 #: templates/user/reg.html:15
 msgid "letters,digits,underscore"
@@ -731,7 +735,7 @@ msgstr "管理员"
 #~ msgstr "题目管理"
 
 #~ msgid "Choice Practice"
-#~ msgstr "选择题目"
+#~ msgstr "选择题练习"
 
 #~ msgid "The "
 #~ msgstr "第"

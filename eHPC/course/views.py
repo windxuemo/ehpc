@@ -130,68 +130,8 @@ def homework_list(cid):
 def homework_detail():
     hid = request.form['hid']
     homework = Homework.query.filter_by(id=hid).first_or_404()
-    html_content = render_template('course/widget_detail_homework.html', current_user=current_user, homework=homework)
+    html_content = render_template('course/widget_detail_homework.html', curr_time=datetime.now(), current_user=current_user, homework=homework)
     return jsonify(data=html_content)
-
-
-@course.route('/homework_<int:hid>/submit/', methods=['POST'])
-@login_required
-def submit(hid):
-    """
-    对于submitable == 1 (允许在线提交代码测试)的作业将提交到这里，具体操作同编程题的提交一样
-    :param hid:
-    :return:
-    """
-    uid = current_user.id
-    source_code = request.form['source_code']
-    compiler = request.form['compiler_setting']
-    language = request.form['language']
-
-    path = "/HOME/sysu_dwu_1/coreos"
-    # 之后需要改进
-
-    input_filename = "%s_%s.c" % (str(hid), str(uid))
-    output_filename = "%s_%s.o" % (str(hid), str(uid))
-
-    task_number = request.form['task_number']
-    cpu_number_per_task = request.form['cpu_number_per_task']
-    node_number = request.form['node_number']
-    partition = "free"
-
-
-    # print language, type(language)
-    # print compiler, type(compiler)
-    # print task_number, type(task_number)
-    # print cpu_number_per_task, type(cpu_number_per_task)
-    # print node_number, type(node_number)
-    # with open(input_filename, 'w') as src_file:
-    # src_file.write(source_code)
-
-    client = ehpc_client()
-    is_success = [False]
-
-    is_success[0] = client.login()
-    if not is_success[0]:
-        return jsonify(status="fail", msg="连接超算主机失败!")
-
-    is_success[0] = client.upload(path, input_filename, source_code)
-    if not is_success[0]:
-        return jsonify(status="fail", msg="上传程序到超算主机失败!")
-
-    compile_out = client.ehpc_compile(is_success, path, input_filename, output_filename, compiler)
-
-    if is_success[0]:
-        run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number, compiler)
-    else:
-        run_out = "编译不通过, 无法运行..."
-
-    result = dict()
-    result['status'] = 'success'
-    result['homework_id'] = hid
-    result['compile_out'] = compile_out
-    result['run_out'] = run_out
-
-    return jsonify(**result)
 
 
 @course.route('/homework/<int:hid>/upload', methods=['POST'])

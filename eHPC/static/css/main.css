@@ -4625,9 +4625,9 @@ table.fixed-table {
     margin:8px 0;
 }
 
-#homeworkModal .modal-dialog .modal-content{
+/*#homeworkModal .modal-dialog .modal-content{
     width: 750px;
-}
+}*/
 
 #homework-manage-panel+.op-btn {
     position: absolute;

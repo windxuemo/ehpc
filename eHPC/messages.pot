@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-12-19 16:04+0800\n"
+"POT-Creation-Date: 2016-12-29 10:35+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,113 +21,121 @@ msgstr ""
 msgid "System Admin"
 msgstr ""
 
-#: admin/system_views.py:31
+#: admin/system_views.py:32
 msgid "User Admin"
 msgstr ""
 
-#: admin/system_views.py:43
+#: admin/system_views.py:44
 msgid "Successfully modify permission"
 msgstr ""
 
-#: admin/system_views.py:46
+#: admin/system_views.py:47
 msgid "User Edit"
 msgstr ""
 
-#: admin/system_views.py:54
+#: admin/system_views.py:55
 msgid "Articles Admin"
 msgstr ""
 
-#: admin/system_views.py:62
+#: admin/system_views.py:63
 msgid "Create Article"
 msgstr ""
 
-#: admin/system_views.py:104
+#: admin/system_views.py:105
 msgid "Groups Admin"
 msgstr ""
 
-#: admin/system_views.py:112
+#: admin/system_views.py:113
 msgid "Create Group"
 msgstr ""
 
-#: admin/system_views.py:169
+#: admin/system_views.py:170
 msgid "Case Admin"
 msgstr ""
 
-#: admin/system_views.py:177
+#: admin/system_views.py:178
 msgid "Create Case"
 msgstr ""
 
-#: admin/system_views.py:247
+#: admin/system_views.py:248
 msgid "Case Icon"
 msgstr ""
 
-#: admin/system_views.py:277
+#: admin/system_views.py:278
 msgid "Case Version"
 msgstr ""
 
-#: admin/system_views.py:341
+#: admin/system_views.py:342
 msgid "Case Code Material"
 msgstr ""
 
-#: admin/teacher_views.py:21
+#: admin/teacher_views.py:28
 msgid "Course Admin"
 msgstr ""
 
-#: admin/teacher_views.py:45
+#: admin/teacher_views.py:54
 msgid "Create Course"
 msgstr ""
 
-#: admin/teacher_views.py:62
+#: admin/teacher_views.py:72
 msgid "Edit Course"
 msgstr ""
 
-#: admin/teacher_views.py:79
+#: admin/teacher_views.py:89
 msgid "Course Picture"
 msgstr ""
 
-#: admin/teacher_views.py:104
+#: admin/teacher_views.py:114
 msgid "Course Lesson"
 msgstr ""
 
-#: admin/teacher_views.py:175
+#: admin/teacher_views.py:159
 msgid "Lesson Material"
 msgstr ""
 
-#: admin/teacher_views.py:239
+#: admin/teacher_views.py:272
+msgid "Course Homework"
+msgstr ""
+
+#: admin/teacher_views.py:366
 msgid "Course Paper"
 msgstr ""
 
-#: admin/teacher_views.py:345
+#: admin/teacher_views.py:474
 msgid "Question Manage"
 msgstr ""
 
-#: admin/teacher_views.py:361 admin/teacher_views.py:389
-#: admin/teacher_views.py:453 admin/teacher_views.py:518
+#: admin/teacher_views.py:490 admin/teacher_views.py:518
+#: admin/teacher_views.py:582 admin/teacher_views.py:647
 msgid "Edit question"
 msgstr ""
 
-#: admin/teacher_views.py:418 admin/teacher_views.py:501
+#: admin/teacher_views.py:547 admin/teacher_views.py:630
 msgid "Create question"
 msgstr ""
 
-#: admin/teacher_views.py:486
+#: admin/teacher_views.py:615
 msgid "Program question"
 msgstr ""
 
-#: admin/teacher_views.py:536
+#: admin/teacher_views.py:665
 msgid "Lab Manage"
 msgstr ""
 
-#: admin/teacher_views.py:564
+#: admin/teacher_views.py:693
 msgid "Lab tasks"
 msgstr ""
 
-#: admin/teacher_views.py:598
+#: admin/teacher_views.py:727
 msgid "Lab Create"
 msgstr ""
 
-#: admin/teacher_views.py:637
+#: admin/teacher_views.py:767
 msgid "Lab Edit"
+msgstr ""
+
+#: admin/teacher_views.py:815
+msgid "Classify Admin"
 msgstr ""
 
 #: admin/views.py:17 admin/views.py:32
@@ -158,11 +166,11 @@ msgstr ""
 msgid "Case Display"
 msgstr ""
 
-#: course/views.py:18
+#: course/views.py:21
 msgid "Courses"
 msgstr ""
 
-#: course/views.py:78
+#: course/views.py:95
 msgid "Course Materials"
 msgstr ""
 
@@ -197,10 +205,6 @@ msgstr ""
 
 #: problem/views.py:43
 msgid "My Submit"
-msgstr ""
-
-#: problem/views.py:69
-msgid "Choice Practice"
 msgstr ""
 
 #: templates/admin/footer.html:4 templates/footer.html:4
@@ -300,7 +304,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: templates/article/index.html:22
+#: templates/article/index.html:21
 msgid "Views"
 msgstr ""
 

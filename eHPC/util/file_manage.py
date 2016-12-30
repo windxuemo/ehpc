@@ -6,6 +6,7 @@ from PIL import Image
 import time
 import os
 import re
+import shutil
 
 
 def upload_img(file_src, des_height, des_width, des_path):
@@ -191,3 +192,15 @@ def custom_secure_filename(filename):
         filename = '_' + filename
 
     return filename
+
+
+def remove_dirs(*dir_paths):
+    """ 删除参数里面列出的所有的目录
+
+    如果目录不存在, 不给出任何提示, 直接忽略。
+    删除目录 path_1, path_2, path_3, 可以用下面操作:
+
+        remove_dirs(path_1, path_2, path_3)
+    """
+    for one_dir in dir_paths:
+        shutil.rmtree(one_dir, True)

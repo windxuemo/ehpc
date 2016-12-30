@@ -18,6 +18,7 @@ from ..models import Knowledge, Challenge
 from ..user.authorize import teacher_login
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
 from ..util.pdf import get_paper_pdf
+from ..util.file_manage import remove_dirs
 
 
 @admin.route('/course/', methods=['GET', 'POST'])
@@ -35,12 +36,12 @@ def course():
                 os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
                 db.session.delete(m)
             db.session.delete(l)
-        if os.path.exists(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id)):
-            os.rmdir(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id))
-        if os.path.exists(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id)):
-            os.rmdir(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id))
-        if os.path.exists(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id)):
-            os.remove(os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id))
+
+        resource_path = os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id)
+        homework_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id)
+        cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id)
+        remove_dirs(resource_path, homework_path, cover_path)
+
         db.session.delete(curr_course)
         db.session.commit()
         return jsonify(status="success", course_id=curr_course.id)
@@ -302,10 +303,8 @@ def course_homework(course_id):
             db.session.commit()
 
             homework_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id, 'homework_%d' % curr_homework.id)
-            try:
-                shutil.rmtree(homework_path)
-            except OSError:
-                pass
+
+            remove_dirs(homework_path)
             return jsonify(status="success", homework_id=curr_homework.id)
         elif request.form['op'] == "edit":
             curr_course = Course.query.filter_by(id=course_id).first_or_404()

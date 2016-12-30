@@ -97,11 +97,11 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), unique=True, index=True)   # 课程标题
     subtitle = db.Column(db.String(128), default="")             # 课程副标题
-    about = db.Column(db.Text(), nullable=True)                 # 课程简介
+    about = db.Column(db.Text(), nullable=True)                  # 课程简介
     createdTime = db.Column(db.DateTime(), default=datetime.now)
-    public = db.Column(db.Boolean)
-    beginTime = db.Column(db.DateTime(), default='')
-    endTime = db.Column(db.DateTime(), default='')
+    public = db.Column(db.Boolean, default=True)
+    beginTime = db.Column(db.DateTime(), nullable=True)
+    endTime = db.Column(db.DateTime(), nullable=True)
 
     lessonNum = db.Column(db.Integer, nullable=False)           # 课时数
     studentNum = db.Column(db.Integer, default=0)               # 学生数目
@@ -111,7 +111,7 @@ class Course(db.Model):
     middlePicture = db.Column(db.String(128))                    # 课程中图
     largePicture = db.Column(db.String(128))                     # 课程大图
 
-    rank = db.Column(db.Float, default=0)                     # 课程评分
+    rank = db.Column(db.Float, default=0)                        # 课程评分
 
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')

@@ -44,6 +44,7 @@ class User(UserMixin, db.Model):
 
     comments = db.relationship('Comment', backref='user', lazy='dynamic')
     commentNum = db.Column(db.Integer, default=0, nullable=False)
+    open_id = db.Column(db.String(64), default=None)
 
     homeworks = db.relationship('HomeworkUpload', backref='user', lazy='dynamic')
 
@@ -121,6 +122,7 @@ class Course(db.Model):
     users = db.relationship('User', secondary=course_users,
                             backref=db.backref('courses', lazy='dynamic'))
 
+    qrcode = db.relationship('QRcode', uselist=False, backref='course')
 
 class Lesson(db.Model):
     """ 一个课程包括多个课时, 每个课时只能属于一个课程。 课程和课时是一对多的关系。
@@ -470,3 +472,10 @@ class Apply(db.Model):
 
     user = db.relationship('User', backref=db.backref('applies', lazy='dynamic', cascade="delete, delete-orphan"))
     course = db.relationship('Course', backref=db.backref('applies', lazy='dynamic', cascade="delete, delete-orphan"))
+
+
+class QRcode(db.Model):
+    __tablename__ = "qrcode"
+    id = db.Column(db.Integer, primary_key=True)
+    end_time = db.Column(db.DateTime, nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))

@@ -1,5 +1,10 @@
 {% extends 'admin/base.html' %}
 
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/qrcode.css') }}" rel="stylesheet">
+{% endblock %}
+
+
 {% block content %}
 
     <div class="container" id="content-container">
@@ -35,6 +40,8 @@
                                 <a href="{{ url_for('admin.course_edit', course_id=c.id) }}">管理</a>
                                 <span class="divider"> | </span>
                                 <a href="javascript:void(0)" name="del-btn">删除</a>
+                                <span class="divider"> | </span>
+                                <a href="javascript:void(0)" name="qr-code">课程二维码</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -43,6 +50,17 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="QRcode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog qrcode">
+            <div class="modal-content" style="text-align: center">
+                <div class="modal-body btn">
+                    <img id="qrcode-img" src="">
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -59,6 +77,23 @@
                         success: function (data) {
                             $(obj).parent().parent().remove();
                             alert("删除成功");
+                        }
+                    });
+                });
+            });
+            $("#tb").find("a[name=qr-code]").each(function () {
+                $(this).click(function () {
+                    var obj = this;
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('wechat.qr_code') }}",
+                        data: { course_id: $(obj).parent().parent().data('cid') },
+                        async: false,
+                        success: function (data) {
+                            if(data['status'] == 'success'){
+                                $("#qrcode-img").attr('src', data['img_path']);
+                                $("#QRcode").modal('show');
+                            }
                         }
                     });
                 });

@@ -780,6 +780,7 @@ CREATE TABLE `users` (
   `topicNum` int(11) NOT NULL,
   `postNum` int(11) NOT NULL,
   `commentNum` int(11) NOT NULL,
+  `open_id` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_users_email` (`email`),
   UNIQUE KEY `ix_users_username` (`username`)
@@ -792,7 +793,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-12-03 07:40:53','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',1,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,4,1,3),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-11-21 23:12:18','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0,1),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-12-05 08:51:41','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477293245.0',2,NULL,'混吃等死不舒服',NULL,0,1,5),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,2,0),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-12-04 11:27:42','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0,0),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,1,0),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-11-08 10:43:39','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,2,0,0),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,1,NULL,NULL,NULL,0,3,0);
+INSERT INTO `users` VALUES (1,'root','pbkdf2:sha1:1000$xBnOyGu0$2265b81c262f0438d80348748b24db1f66a65425','1291023320@qq.com',0,'2016-12-03 07:40:53','2016-09-29 03:14:30','http://selfboot.cn','/static/upload/1.png?t=1475844478.0',1,NULL,'知其然，知其所以然。知识广度是深度的副产品！',NULL,4,1,3,NULL),(2,'test','pbkdf2:sha1:1000$JZE0rscV$a7b07ad8602a608e76dc583142b1aaf2c378c55b','1@qq.com',0,'2016-11-21 23:12:18','2016-09-29 03:35:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,'好好学习，天天向上',NULL,0,0,1,NULL),(3,'teacher','pbkdf2:sha1:1000$ZRqJzJuR$ec4e50db6eb3eaae92e7cb8bd9468fd2743c3505','teacher@qq.com',0,'2016-12-05 08:51:41','2016-09-29 03:36:08','http://a','/static/upload/3.png?t=1477293245.0',2,NULL,'混吃等死不舒服',NULL,0,1,5,NULL),(4,'abc','pbkdf2:sha1:1000$Z0hb47ZO$8cc84309e6a696c6deb28d6ebb910fa828d16e3d','3@qq.com',0,'2016-10-23 10:40:03','2016-10-17 03:00:38',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,2,0,NULL),(5,'admin','pbkdf2:sha1:1000$h9IWWCJh$78e5c725ab15124732c7b19dbe43775df4e823e1','admin@qq.com',0,'2016-12-04 11:27:42','2016-10-22 11:41:15',NULL,'http://www.gravatar.com/avatar/',0,NULL,NULL,NULL,0,0,0,NULL),(6,'wudi','pbkdf2:sha1:1000$Qk7DY2fe$1a4a67c484525536c1abbe395bd8b5861d7ace37','wudi27@mail.sysu.edu.cn',0,'2016-10-18 11:13:55','2016-10-18 02:57:55',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,1,1,0,NULL),(7,'yongyi_yang','pbkdf2:sha1:1000$dxAtcVjb$ec40574e292899fed8f5e3c8a22b7d996ad6fac3','18826073128@163.com',0,'2016-11-08 10:43:39','2016-10-18 15:03:29',NULL,'http://www.gravatar.com/avatar/',1,NULL,NULL,NULL,2,0,0,NULL),(8,'alexhanbing','pbkdf2:sha1:1000$MsiV0RcE$b9d0794fd92ce0f1d6c3432f4a68614ec60294ca','565613352@qq.com',0,'2016-10-21 14:18:52','2016-10-21 14:18:52',NULL,NULL,1,NULL,NULL,NULL,0,3,0,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -828,3 +829,16 @@ CREATE TABLE `apply` (
 
 -- Dump completed on 2016-12-05 10:02:34
 
+
+DROP TABLE IF EXISTS `qrcode`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `qrcode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `end_time` datetime NOT NULL,
+  `course_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `course_id` (`course_id`),
+  CONSTRAINT `qrcode_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;

@@ -34,6 +34,7 @@ class Config:
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     CASE_FOLDER = os.path.join(basedir, 'eHPC/static/case')
     DOWNLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/download')
+    QRCODE_FOLDER = os.path.join(basedir, 'eHPC/static/images/QRcode')
 
     # 这个路径用来保存 Markdown 编辑框拖拽上传的文件
     MD_UPLOAD_IMG = 'static/upload/md_images/'

@@ -54,4 +54,7 @@ def create_app(config_name):
     from .markdown_files import markdown_files as markdown_files_blueprint
     app.register_blueprint(markdown_files_blueprint, url_prefix='/markdown_files')
 
+    from .wechat import wechat as wechat_blueprint
+    app.register_blueprint(wechat_blueprint, url_prefix='/wechat')
+
     return app

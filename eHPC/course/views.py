@@ -35,7 +35,7 @@ def view(cid):
     if current_user.is_anonymous:
         status = 0
     elif not c.public and current_user not in c.users:
-        curr_apply = Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).first()
+        curr_apply = Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).filter_by(status=0).first()
         status = 2 if curr_apply else 0
 
     return render_template('course/detail.html',
@@ -85,7 +85,10 @@ def exit_out(cid, u=current_user):
     course_joined.users.remove(u)
     course_joined.studentNum -= 1
     db.session.commit()
-
+    if not course_joined.public:
+        curr_apply = Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).first()
+        curr_apply.status = 3
+        db.session.commit()
     users_list = render_template('course/widget_course_students.html', course=course_joined)
     student_num = course_joined.studentNum
     return jsonify(status='success', users_list=users_list,

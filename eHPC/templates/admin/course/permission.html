@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <form class="form-horizontal" action="{{ url_for('admin.course_permission', course_id = course.id) }}" method="post">
+                        <form id="course-permission-form" class="form-horizontal">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">是否公开</label>
                                 <div class="col-md-8">
@@ -49,7 +49,7 @@
                                 <label for="dtp_input1" class="col-md-2 control-label">开始时间</label>
                                 <div class="col-md-8">
                                     <div id="dtp1" class="input-group date form_datetime col-md-8" data-link-field="dtp_input1" >
-                                        <input class="form-control" size="16" value="{{ course.beginTime }}" readonly="" type="text">
+                                        <input class="form-control" size="16" value="{{ course.beginTime | unite_time_format }}" readonly="" type="text">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                                     </div>
@@ -61,21 +61,21 @@
                                 <label for="dtp_input1" class="col-md-2 control-label">截止时间</label>
                                 <div class="col-md-8">
                                     <div id="dtp2" class="input-group date form_datetime col-md-8" data-link-field="dtp_input2" >
-                                        <input class="form-control" size="16" value="{{ course.endTime }}" readonly="" type="text">
+                                        <input class="form-control" size="16" value="{{ course.endTime | unite_time_format }}" readonly="" type="text">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                                     </div>
                                 </div>
                                 <input name="end" id="dtp_input2" value="{{ course.endTime }}" type="hidden"><br>
                             </div>
-
-                            <div class="form-group">
-                                <div class="col-md-offset-2 col-md-8">
-                                    <button class="btn btn-fat btn-primary" type='submit'>保存</button>
-                                </div>
-                            </div>
-
                         </form>
+                        <div class="col-md-offset-2 col-md-8">
+                            <button id="course-permission-save" class="btn btn-fat btn-primary">保存</button>
+                            <span id="course-permission-info" class="hide" style="margin-left: 20px;color: red;">
+                                <i class="es-icon es-icon-warning"></i>&nbsp;
+                                <span></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,23 +87,58 @@
 
 {% block footer_ext %}
     <script type="text/javascript">
-        $('#dtp1').datetimepicker({
-            format: "yyyy-mm-dd hh:ii",
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            forceParse: 0
+        $(document).ready(function () {
+            $('#dtp1').datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0
+            });
+            $('#dtp2').datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0
+            });
+            $("#course-permission-save").click(function() {
+                if ($("#dtp_input1").val() == "" || $("#dtp_input1").val() == "None" || $("#dtp_input1").val() == null) {
+                    $("#course-permission-info").removeClass("hide");
+                    $("#course-permission-info span")[0].innerHTML = "请设置开始时间";
+                    setTimeout(function() { $("#course-permission-info").addClass("hide")}, 3000);
+                    return;
+                }
+                if ($("#dtp_input2").val() == "" || $("#dtp_input2").val() == "None" || $("#dtp_input1").val() == null) {
+                    $("#course-permission-info").removeClass("hide");
+                    $("#course-permission-info span")[0].innerHTML = "请设置截止时间";
+                    setTimeout(function() { $("#course-permission-info").addClass("hide")}, 3000);
+                    return;
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.course_permission', course_id = course.id) }}",
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    data: new FormData($('#course-permission-form')[0]),
+                    success: function (data) {
+                        if (data["status"] == "success") {
+                            alert("保存成功");
+                            location.reload();
+                        }
+                        else {
+                            alert("保存失败");
+                        }
+                    }
+                });
+            });
         });
-        $('#dtp2').datetimepicker({
-            format: "yyyy-mm-dd hh:ii",
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            forceParse: 0
-        });
+
     </script>
 {% endblock %}

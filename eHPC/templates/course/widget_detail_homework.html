@@ -1,51 +1,43 @@
 <div class="course-detail-content" data-widget-cid="widget-1">
     <div class="es-piece">
         <div class="piece-body">
-            {% if current_user | is_student_user %}
-                {% if current_user.id | is_join_course(homework.course_id) %}
-                    <div class="homework-body">
-                        <a id="return-homework-list" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a>
-                        <!--a href="{{ url_for('course.view', cid=homework.course_id) }}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a-->
-                        <div class="homework-content">
-                           <span style="font-size: 20px"><b>{{ homework.title }}</b></span>
-                            <span class="pull-right" style="color: #919191;font-size: 14px">发布于： {{ homework.publish_time }}</span>
-                        </div>
-                        <div class="homework-content"><b><i class="glyphicon glyphicon-time"></i> 截止日期：</b> {{ homework.deadline }}</div>
-                        <div class="homework-content">
-                            <b>作业内容：</b>
-                            <div id="homework-description">{{ homework.description }}</div>
-                        </div>
-                        <div class="homework-content">
-                            <b>作业提交：</b>
-                            {% if curr_time < homework.deadline %}
-                                <form id="homework-file-form">
-                                    <div class="form-group">
-                                        <div class="input-group col-md-8 col-sm-8 homework-file-item">
-                                            <input id="homework-file" type="file" name="file" style="display: none;">
-                                            <span class="input-group-addon" onclick="$('input[id=homework-file]').click();" style="cursor: pointer; background-color: #e7e7e7"><i class="fa fa-folder-open"></i></span>
-                                            <input id="filenameCover" class="form-control" type="text" readonly="readonly">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
-                                        <span id="homework-upload-status" class="col-md-2 col-sm-2 text-center homework-file-item hide" style="padding-top: 5px;"></span>
-                                    </div>
-                                    <!--input type="hidden" name="" value=""-->
-                                </form>
-                            {% else %}
-                                <div>作业已过截止日期，无法提交！</div>
-                            {% endif %}
-                        </div>
+            {% if current_user.id | is_join_course(homework.course_id) %}
+                <div class="homework-body">
+                    <a id="return-homework-list" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a>
+                    <!--a href="{{ url_for('course.view', cid=homework.course_id) }}" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a-->
+                    <div class="homework-content">
+                        <span style="font-size: 20px"><b>{{ homework.title }}</b></span>
+                        <span class="pull-right" style="color: #919191;font-size: 14px">发布于： {{ homework.publish_time | unite_time_format }}</span>
                     </div>
-                {% else %}
-                    <div class="homework-body text-center">请先加入课程！</div>
-                {% endif %}
-            {% elif current_user | is_teacher_user %}
-                <div class="homework-body text-center">请以学生身份登录并加入课程！</div>
-            {% elif current_user | is_system_user %}
-                <div class="homework-body text-center">请以学生身份登录并加入课程！</div>
+                    <div class="homework-content"><b><i class="glyphicon glyphicon-time"></i> 截止日期：</b> {{ homework.deadline | unite_time_format }}</div>
+                    <div class="homework-content">
+                        <b>作业内容：</b>
+                        <div id="homework-description">{{ homework.description }}</div>
+                    </div>
+                    <div class="homework-content">
+                        <b>作业提交：</b>
+                        {% if curr_time < homework.deadline %}
+                            <form id="homework-file-form">
+                                <div class="form-group">
+                                    <div class="input-group col-md-8 col-sm-8 homework-file-item">
+                                        <input id="homework-file" type="file" name="file" style="display: none;">
+                                        <span class="input-group-addon" onclick="$('input[id=homework-file]').click();" style="cursor: pointer; background-color: #e7e7e7"><i class="fa fa-folder-open"></i></span>
+                                        <input id="filenameCover" class="form-control" type="text" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
+                                    <span id="homework-upload-status" class="col-md-2 col-sm-2 text-center homework-file-item hide" style="padding-top: 5px;"></span>
+                                </div>
+                                <!--input type="hidden" name="" value=""-->
+                            </form>
+                        {% else %}
+                            <div>作业已过截止日期，无法提交！</div>
+                        {% endif %}
+                    </div>
+                </div>
             {% else %}
-                <div class="homework-body text-center">您还没有登录，请先登录并加入课程！</div>
+                <div class="homework-body text-center">请先加入课程才能查看作业！</div>
             {% endif %}
         </div>
     </div>

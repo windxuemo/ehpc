@@ -22,7 +22,7 @@
                         </h2>
                         <div class="subtitle"> {{ course.subtitle }}</div>
                         {% if course.public == False %}
-                        <div class="subtitle">开放时间:{{ course.beginTime }} 至 {{ course.endTime }}</div>
+                        <div class="subtitle">开放时间: {{ course.beginTime | unite_time_format }} 至 {{ course.endTime | unite_time_format }}</div>
                         {% endif %}
                     </div>
 

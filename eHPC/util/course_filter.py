@@ -6,6 +6,7 @@ from ..models import Course, User, PaperQuestion
 from sqlalchemy import *
 from .. import db
 import json
+from datetime import datetime
 
 
 @filter_blueprint.app_template_filter('is_join_course')
@@ -91,3 +92,8 @@ def sort_materials(materials):
                 new_materials[i] = new_materials[j]
                 new_materials[j] = tmp
     return new_materials
+
+
+@filter_blueprint.app_template_filter('unite_time_format')
+def unite_time_format(course_time):
+    return course_time.strftime('%Y-%m-%d %H:%M')

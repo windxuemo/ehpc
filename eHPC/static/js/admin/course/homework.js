@@ -36,9 +36,24 @@ $(document).ready(function () {
 
     $('#homework-save-btn').click(function () {
         if (edt.value() == "" || edt.value() == null) {
-            alert("请编辑作业内容");
+            $("#homework-edit-info").removeClass("hide");
+            $("#homework-edit-info span")[0].innerHTML = "请编辑作业内容";
+            setTimeout(function() { $("#homework-edit-info").addClass("hide")}, 3000);
             return;
         }
+        if ($("#homework-title").val() == "" || $("#homework-title").val() == null) {
+            $("#homework-edit-info").removeClass("hide");
+            $("#homework-edit-info span")[0].innerHTML = "请编辑作业标题";
+            setTimeout(function() { $("#homework-edit-info").addClass("hide")}, 3000);
+            return;
+        }
+        if ($("#homework-deadline").val() == "" || $("#homework-deadline").val() == null) {
+            $("#homework-edit-info").removeClass("hide");
+            $("#homework-edit-info span")[0].innerHTML = "请选择作业截止日期";
+            setTimeout(function() { $("#homework-edit-info").addClass("hide")}, 3000);
+            return;
+        }
+
         $("#homework-description")[0].innerHTML = edt.value();
         $("#homework-description").val(edt.value());
         $.ajax({

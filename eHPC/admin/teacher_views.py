@@ -224,7 +224,7 @@ def course_permission(course_id):
         curr_course.beginTime = datetime.strptime(request.form['begin'], '%Y-%m-%d %X')
         curr_course.endTime = datetime.strptime(request.form['end'], '%Y-%m-%d %X')
         db.session.commit()
-        return redirect(url_for('admin.course_permission', course_id=course_id))
+        return jsonify(status="success", course_id=course_id)
 
 
 @admin.route('/course/<int:course_id>/member/', methods=['GET', 'POST'])
@@ -286,9 +286,8 @@ def course_homework(course_id):
     elif request.method == "POST":
         # 作业的增加查改
         if request.form['op'] == 'create':
-            deadline = datetime.strptime(request.form['deadline'], '%Y-%m-%d %H:%M')
             curr_homework = Homework(title=request.form['title'], description=request.form['description'],
-                                     deadline=deadline)
+                                     deadline=request.form['deadline'])
             curr_course = Course.query.filter_by(id=course_id).first_or_404()
             curr_course.homeworks.append(curr_homework)
             db.session.add(curr_homework)
@@ -313,7 +312,7 @@ def course_homework(course_id):
             curr_homework = curr_course.homeworks.filter_by(id=request.form['homework_id']).first_or_404()
             curr_homework.title = request.form['title']
             curr_homework.description = request.form['description']
-            curr_homework.deadline = datetime.strptime(request.form['deadline'], '%Y-%m-%d %H:%M')
+            curr_homework.deadline = request.form['deadline']
             db.session.commit()
             return jsonify(status="success", homework_id=curr_homework.id)
         elif request.form['op'] == 'data':

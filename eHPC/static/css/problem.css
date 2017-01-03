@@ -1,0 +1,94 @@
+/*计时块*/
+.clock-box{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/*计时时间*/
+.time-clock{
+    font-size: 20px;
+    color: #46c37b;
+}
+
+/*暂停计时*/
+.pause-clock{
+    position: absolute;
+    right: 0;
+    width: 86px;
+    height: 65px;
+    top: 0;
+    border-left: 1px solid #e6e6e6;
+    line-height: 64px;
+    text-align: center;
+}
+
+/*对错图标*/
+.choice-result-icon{
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.choice-options{
+    padding: 5px;
+    cursor: pointer;
+}
+
+.choice-options:hover{
+    background: #E0E0E0;
+    transition: 0.3s;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.pause-modal{
+     width: 300px;
+     height: 200px;
+ }
+
+.pause-text {
+    width: 300px;
+    height: 200px;
+    font-size: 30px;
+    line-height: 140px;
+}
+
+.practice-solution{
+    display: none;
+    font-size: 20px;
+}
+
+.time-clk-area{
+    width: 65%;
+    left: 0;
+    text-align: center;
+}
+
+.show-solution{
+    margin-top: 20px;
+    border-bottom: solid 1px #E0E0E0;
+    border-top: solid 1px #E0E0E0;
+    padding: 10px;
+    text-align: center;
+}
+
+.change-practice{
+    text-align:center;
+    padding: 10px;
+}
+
+.choose-practice{
+    text-align: center;
+    padding: 8px;
+}
+
+.submit-btn{
+    padding: 0 10px 10px 10px;
+}
+
+.practice-index{
+    width: 42px;
+    margin: 5px;
+    padding: 7px;
+}

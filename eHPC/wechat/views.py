@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, jsonify, request, abort, url_for, redirect, make_response
 from flask_login import current_user, login_required, current_app
-from flask_babel import gettext
-from ..problem.code_process import ehpc_client
 from .. models import User, Course, Apply, QRcode
 from .. import db
 from . import wechat
@@ -14,6 +12,8 @@ from datetime import datetime, timedelta
 
 @wechat.route('/', methods=['GET', 'POST'])
 def process():
+    """处理微信方发来的指令，目前只支持"绑定"指令
+    """
     if request.method == 'GET':
         my_wechat = Wechat()
         is_valid = my_wechat.check_signature(signature=request.args['signature'],
@@ -89,6 +89,9 @@ def unbind(open_id):
 @wechat.route('/qr-code/', methods=['GET', 'POST'])
 @login_required
 def qr_code():
+    """get方法用于处理用户使用二维码扫描加入课程的逻辑
+       post方法用于生成课程二维码并返回前端
+    """
     if request.method == 'GET':
         qrcode_img = QRcode.query.filter_by(id=request.args['id']).first_or_404()
         if qrcode_img.end_time > datetime.now():

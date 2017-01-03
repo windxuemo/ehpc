@@ -29,10 +29,10 @@ $(document).ready(function () {
         location.reload();
     });
 
-    $("#del-material-btn").click(function () {
+    $("#del-confirm").click(function () {
         var array = [];
         $("#material-table-body").find("input").each(function () {
-            if (this.checked) {
+            if ($(this).prop("checked")) {
                 $(this).parent().parent().remove();
                 array.push($(this).parent().parent().data("material_id"));
             }
@@ -48,12 +48,17 @@ $(document).ready(function () {
             success: function (data) {
                 if(data.status=="success"){
                     $("#file-manage-panel").find("input").prop("checked", false);
+                    $("#del-warning").modal("hide");
                 }
                 else{
                     alert("删除失败");
                 }
             }
         });
+    });
+
+    $("#del-material-btn").click(function () {
+        $("#del-warning").modal("show");
     });
 
     // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument

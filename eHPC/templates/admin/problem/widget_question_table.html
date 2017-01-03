@@ -36,6 +36,8 @@
     </table>
 </div>
 
+{% include "admin/widget-del-warning.html" %}
+
 <script>
     var address = "{{ url_for('admin.question', question_type=question_type) }}";
 </script>

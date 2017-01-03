@@ -105,12 +105,11 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
+
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
-    <script type="text/javascript">
-        var url = "{{ url_for('admin.course_paper', course_id=course.id) }}";
-    </script>
-
     <script src="{{ url_for('static', filename='js/admin/course/paper.js') }}"></script>
 {% endblock %}

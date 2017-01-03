@@ -10,7 +10,7 @@ $(document).ready(function () {
     $('#paper-save-btn').click(function () {
         $.ajax({
             type: "post",
-            url: url,
+            url: location.href,
             data: new FormData($('#course-paper-form')[0]),
             cache: false,
             processData: false,
@@ -26,11 +26,16 @@ $(document).ready(function () {
         });
     });
 
+    var obj = null;
     $("#paper-item-list").find("a[name=del-btn]").click(function () {
-        var obj = this;
+        obj = this;
+        $("#del-warning").modal("show");
+    });
+
+    $("#del-confirm").click(function () {
         $.ajax({
             type: "post",
-            url: url,
+            url: location.href,
             data: {
                 op: 'del',
                 paper_id: $(obj).parent().parent().data('paper_id')
@@ -39,6 +44,7 @@ $(document).ready(function () {
             success: function (data) {
                 if (data["status"] == "success") {
                     $(obj).parent().parent().remove();
+                    $("#del-warning").modal("hide");
                 }
                 else {
                     alert("删除失败");
@@ -51,7 +57,7 @@ $(document).ready(function () {
         var obj = this;
         $.ajax({
             type: "post",
-            url: url,
+            url: location.href,
             data: {
                 op: "data",
                 paper_id: $(obj).parent().parent().data('paper_id')

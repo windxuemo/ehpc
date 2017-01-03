@@ -6,6 +6,10 @@ $(document).ready(function () {
     });
 
     $("#del-material-btn").click(function () {
+        $("#del-warning").modal("show");
+    });
+
+    $("#del-confirm").click(function () {
         var array = [];
         $("#material-table-body").find("input").each(function () {
             if (this.checked) {
@@ -24,6 +28,7 @@ $(document).ready(function () {
             success: function (data) {
                 if(data.status=="success"){
                     $("#file-manage-panel").find("input").prop("checked", false);
+                    $("#del-warning").modal("hide");
                 }
                 else{
                     alert("删除失败");

@@ -81,6 +81,8 @@
         </div>
     </div>
 
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -112,8 +114,13 @@
                 });
             });
 
+            var obj = null;
             $("#knowledge").find("a[name=knowledge-del-btn]").click(function () {
-                var obj = $(this);
+                obj = $(this);
+                $("#del-warning").modal("show");
+            });
+
+            $("#del-confirm").click(function () {
                 $.ajax({
                     type: "post",
                     url: location.href,
@@ -124,9 +131,10 @@
                     success: function (data) {
                         if (data["status"] == "success") {
                             obj.parent().parent().remove();
+                            $("#del-warning").modal("hide");
                         }
                     }
-                })
+                });
             });
 
             $("#knowledge").find("a[name=knowledge-edit-btn]").click(function () {

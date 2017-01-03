@@ -5,6 +5,10 @@ $(document).ready(function () {
     });
 
     $("#del-homework-btn").click(function () {
+        $("#del-warning").modal("show");
+    });
+
+    $("#del-confirm").click(function () {
         var array = [];
         $("#homework-table-body").find("input").each(function () {
             if (this.checked) {
@@ -23,6 +27,7 @@ $(document).ready(function () {
             success: function (data) {
                 if(data.status=="success"){
                     $("#homework-manage-panel").find("input").prop("checked", false);
+                    $("#del-warning").modal("hide");
                 }
                 else{
                     alert("删除失败,文件不存在！");

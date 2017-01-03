@@ -23,15 +23,15 @@
                     <thead>
                     <tr>
                         <th width="30%">名称</th>
-                        <th>课程数</th>
-                        <th>学生数</th>
+                        <th width="10%">课程数</th>
+                        <th width="10%">学生数</th>
                         <th>创建时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody id="tb">
                     {% for c in courses %}
-                        <tr data-cid="{{ c.id }}">
+                        <tr data-id="{{ c.id }}">
                             <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ c.title }}">{{ c.title }}</td>
                             <td>{{ c.lessonNum }}</td>
                             <td>{{ c.studentNum }}</td>
@@ -41,7 +41,7 @@
                                 <span class="divider"> | </span>
                                 <a href="javascript:void(0)" name="del-btn">删除</a>
                                 <span class="divider"> | </span>
-                                <a href="javascript:void(0)" name="qr-code">课程二维码</a>
+                                <a href="javascript:void(0)" name="qr-code">二维码</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -61,24 +61,19 @@
         </div>
     </div>
 
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
     <script type="text/javascript">
         $(document).ready(function () {
+            var id = -1, obj = null;
             $("#tb").find("a[name=del-btn]").each(function () {
                 $(this).click(function () {
-                    var obj = this;
-                    $.ajax({
-                        type: "post",
-                        url: "{{ url_for('admin.course') }}",
-                        data: { course_id: $(obj).parent().parent().data('cid') },
-                        async: false,
-                        success: function (data) {
-                            $(obj).parent().parent().remove();
-                            alert("删除成功");
-                        }
-                    });
+                    id = $(obj).parent().parent().data('id');
+                    obj = this;
+                    $("#del-warning").modal("show");
                 });
             });
             $("#tb").find("a[name=qr-code]").each(function () {
@@ -96,6 +91,18 @@
                             }
                         }
                     });
+                });
+            });
+            $("#del-confirm").click(function () {
+                $.ajax({
+                    type: "post",
+                    url: location.href,
+                    data: { course_id: $(obj).parent().parent().data('id') },
+                    async: false,
+                    success: function (data) {
+                        $(obj).parent().parent().remove();
+                        $("#del-warning").modal("hide");
+                    }
                 });
             });
         });

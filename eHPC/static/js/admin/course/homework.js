@@ -75,11 +75,16 @@ $(document).ready(function () {
         });
     });
 
+    var obj = null;
     $("#homework-item-list").find("a[name=del-btn]").click(function () {
-        var obj = this;
+        obj = this;
+        $("#del-warning").modal("show");
+    });
+
+    $("#del-confirm").click(function () {
         $.ajax({
             type: "post",
-            url: homework_url,
+            url: location.href,
             data: {
                 op: 'del',
                 homework_id: $(obj).parent().parent().data('homework_id')
@@ -88,6 +93,7 @@ $(document).ready(function () {
             success: function (data) {
                 if (data["status"] == "success") {
                     $(obj).parent().parent().remove();
+                    $("#del-warning").modal("hide");
                 }
                 else {
                     alert("删除失败");

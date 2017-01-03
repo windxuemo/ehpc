@@ -43,25 +43,33 @@
             </div>
         </div>
     </div>
+
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#tb").find("a[name=del-btn]").each(function () {
-                $(this).click(function () {
-                    var obj = this;
-                    $.ajax({
-                        type: "post",
-                        url: "{{ url_for('admin.article_delete') }}",
-                        data: {id: $(obj).parent().parent().data('cid')},
-                        success: function (data) {
-                            $(obj).parent().parent().remove();
-                            alert("删除成功");
-                        }
-                    });
+            var obj = null;
+            $("#tb").find("a[name=del-btn]").click(function () {
+                obj = this;
+                $("#del-warning").modal("show");
+            });
+
+            $("#del-confirm").click(function () {
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('admin.article_delete') }}",
+                    data: {
+                        id: $(obj).parent().parent().data('cid')
+                    },
+                    success: function (data) {
+                        $(obj).parent().parent().remove();
+                        $("#del-warning").modal("hide");
+                    }
                 });
-            })
+            });
         });
     </script>
 {% endblock %}

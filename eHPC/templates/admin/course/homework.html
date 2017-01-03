@@ -3,6 +3,8 @@
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -122,15 +124,12 @@
         </div><!-- /.modal -->
     </div>
 
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
-    <script>
-        var homework_url = "{{ url_for('admin.course_homework', course_id=course.id) }}";
-    </script>
     <script src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
     <script src='{{ url_for("static", filename="js/admin/course/homework.js") }}'></script>
-    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
 
 {% endblock %}

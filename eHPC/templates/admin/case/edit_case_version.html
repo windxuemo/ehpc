@@ -98,6 +98,9 @@
             </div>
         </div>
     </div>
+
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -129,8 +132,13 @@
                 });
             });
 
+            var obj = null;
             $("#case-item-list").find("a[name=del-btn]").click(function () {
-                var obj = this;
+                obj = this;
+                $("#del-warning").modal("show");
+            });
+
+            $("#del-confirm").click(function () {
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.case_version', case_id=case.id) }}",
@@ -142,6 +150,7 @@
                     success: function (data) {
                         if (data["status"] == "success") {
                             $(obj).parent().parent().remove();
+                            $("#del-warning").modal("hide");
                         }
                     }
                 });

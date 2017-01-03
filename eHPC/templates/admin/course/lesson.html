@@ -106,6 +106,9 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
+
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -135,8 +138,13 @@
                 });
             });
 
+            var obj = null;
             $("#course-item-list").find("a[name=del-btn]").click(function () {
-                var obj = this;
+                obj = this;
+                $("#del-warning").modal("show");
+            });
+
+            $("#del-confirm").click(function () {
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.course_lesson', course_id=course.id) }}",
@@ -148,7 +156,7 @@
                     success: function (data) {
                         if (data["status"] == "success") {
                             $(obj).parent().parent().remove();
-                            alert("删除成功");
+                            $("#del-warning").modal("hide");
                         }
                     }
                 });

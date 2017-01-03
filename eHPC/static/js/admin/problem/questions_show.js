@@ -1,14 +1,22 @@
 $(document).ready(function () {
+    var obj = null;
     $("#tb").find("a[name=del-btn]").click(function () {
-        var obj = this;
+        obj = this;
+        $("#del-warning").modal("show");
+    });
+
+    $("#del-confirm").click(function () {
         $.ajax({
             type: "post",
             url: address,
-            data: {op: 'del', id: $(obj).parent().parent().data('id')},
+            data: {
+                op: 'del',
+                id: $(obj).parent().parent().data('id')
+            },
             success: function (data) {
                 if(data["status"] == "success") {
                     $(obj).parent().parent().remove();
-                    alert("删除成功");
+                    $("#del-warning").modal("hide");
                 }
                 else {
                     alert("删除失败");
@@ -16,4 +24,5 @@ $(document).ready(function () {
             }
         });
     });
+
 });

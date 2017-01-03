@@ -38,13 +38,21 @@
             </div>
         </div>
     </div>
+
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 
 {% block footer_ext %}
     <script>
         $(document).ready(function () {
+            var challenge_id = null;
             $("#challenges").find("a[name=challenge-del-btn]").click(function () {
-                var challenge_id = $(this).parent().parent().data("id");
+                challenge_id = $(this).parent().parent().data("id");
+                $("#del-warning").modal("show");
+            });
+
+            $("#del-confirm").click(function () {
                 $.ajax({
                     type: "post",
                     url: "{{ url_for('admin.lab_view', knowledge_id=knowledge.id) }}",
@@ -54,6 +62,7 @@
                     },
                     success: function (data) {
                         if (data["status"] == "success") {
+                            $("#del-warning").modal("hide");
                             location.reload();
                         }
                         else {

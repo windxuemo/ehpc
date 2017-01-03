@@ -76,6 +76,9 @@
 
         </div>
     </div>
+
+    {% include "admin/widget-del-warning.html" %}
+
 {% endblock %}
 {% block footer_ext %}
 
@@ -100,6 +103,10 @@
             });
 
             $("#del-question-btn").click(function () {
+                $("#del-warning").modal("show");
+            });
+
+            $("#del-confirm").click(function () {
                 var seq = [];
                 $("#question-table-body").find("input").each(function () {
                     if (this.checked) {
@@ -110,17 +117,17 @@
 
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.paper_edit', course_id=course.id, paper_id=paper.id) }}",
+                    url: location.href,
                     data: {
                         op: "del",
                         question_id: seq
                     },
                     success: function (data) {
-                        if(data.status=="success"){
-                            alert("删除成功");
+                        if (data["status"] == "success") {
                             $("#all-select").prop("checked", false);
+                            $("#del-warning").modal("hide");
                         }
-                        else{
+                        else {
                             alert("删除失败");
                         }
                     }

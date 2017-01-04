@@ -82,7 +82,7 @@
                     $.ajax({
                         type: "post",
                         url: "{{ url_for('wechat.qr_code') }}",
-                        data: { course_id: $(obj).parent().parent().data('cid') },
+                        data: { course_id: $(obj).parent().parent().data('id') },
                         async: false,
                         success: function (data) {
                             if(data['status'] == 'success'){

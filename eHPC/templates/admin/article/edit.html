@@ -20,6 +20,8 @@
                         <textarea name="content" data-provide="markdown"
                                   data-img-upload-url="{{ url_for("markdown_files.images") }}"
                                   id="target-editor" rows="30">{{ article.content }}</textarea>
+
+                        {% include 'widget/load_img_progress.html' %}
                     </div>
 
                     <div class="form-submit text-right">

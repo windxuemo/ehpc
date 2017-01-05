@@ -20,6 +20,8 @@
                         <textarea name="content" id="target-editor" data-img-upload-url="{{ url_for("markdown_files.images") }}"></textarea>
                     </div>
 
+                    {% include 'widget/load_img_progress.html' %}
+
                     <div class="form-submit text-right">
                         <input class='btn btn-success' id='submit' type='submit'>
                     </div>

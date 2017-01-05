@@ -35,6 +35,7 @@
         <textarea name="content" id="target-editor"
                   data-img-upload-url="{{ url_for("markdown_files.images") }}"
         >{% if op == 'edit' %}{{ choice | get_question_content }}{% endif %}</textarea>
+        {% include 'widget/load_img_progress.html' %}
     </div>
 
     <div style="margin-bottom: 15px">
@@ -68,6 +69,7 @@
     <label>答案解析</label>
     <textarea name="analysis" id="analysis-editor"
               data-img-upload-url="{{ url_for("markdown_files.images") }}">{% if op == 'edit' %}{{ choice.analysis }}{% endif %}</textarea>
+    {% include 'widget/load_img_progress.html' %}
 </div>
 <button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交</button>
 

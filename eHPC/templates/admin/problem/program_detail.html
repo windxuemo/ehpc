@@ -34,6 +34,7 @@
                                 <textarea name="content" id="target-editor"
                                           data-img-upload-url="{{ url_for("markdown_files.images") }}"
                                 >{% if op == 'edit' %}{{ program_problem.detail }}{% endif %}</textarea>
+                                {% include 'widget/load_img_progress.html' %}
                             </div>
                             <input type="hidden" name="op" value="{{ op }}">
                             {% if op == 'edit' %}<input type="hidden" name="id" value="{{ program_problem.id }}">{% endif %}

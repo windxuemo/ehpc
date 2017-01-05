@@ -15,7 +15,14 @@ function drop_img_simplemde() {
         spellChecker: false
     });
 
+    var is_loading = false;
+
     simplemde.codemirror.on('drop', function (editor, e) {
+        if(is_loading){
+            alert("请等待当前上传的完成！");
+            return;
+        }
+        is_loading = true;
         var fileList = e.dataTransfer.files;
         if (fileList.length > 1){
             alert('一次只能上传一张图片');
@@ -27,19 +34,44 @@ function drop_img_simplemde() {
         }
         var img = new FormData();
         img.append('img', fileList[0]);
+        var pos = {line: editor.getCursor().line, ch: editor.getCursor().ch};
+        $("#progress-percent").show();
+        $("#progress-text").show();
+        $(".progress").slideDown();
+
+        var count = 0;
         $.ajax({
             type: "post",
             url: $(simplemde.element).data('img-upload-url'),
             data: img,
             processData : false,
             contentType : false,
+            
+            xhr: function(){
+                myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){ 
+                    myXhr.upload.addEventListener('progress',function (e) {
+                        $(".progress-bar").css("width",(e.loaded/e.total *100).toString() + "%");
+                        $("#progress-percent").text(Math.round(e.loaded/e.total *100).toString() + " %");
+                    }, false);
+                }
+                return myXhr;
+            },
+            
             success: function (data) {
                 if (data["status"] == "success") {
-                    editor.replaceRange("![](" + data['uri'] + ")", {line: editor.getCursor().line, ch: editor.getCursor().ch});
+                    editor.replaceRange("![](" + data['uri'] + ")", pos);
                 }
                 else {
                     alert("上传图片失败");
                 }
+                $("#progress-percent").hide();
+                $("#progress-text").hide();
+                $(".progress").slideUp();
+                $(".progress-bar").css("width","0%");
+                $("#progress-percent").text("0 %");
+
+                is_loading = false;
             }
         });
     });

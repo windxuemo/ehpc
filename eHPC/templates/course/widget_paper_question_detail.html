@@ -7,4 +7,5 @@
 {% elif question.type == 5 %}
     <textarea name="content" data-id="target-editor"
               data-img-upload-url="{{ url_for("markdown_files.images") }}"></textarea>
+    {% include 'widget/load_img_progress.html' %}
 {% endif %}

@@ -7,7 +7,7 @@ from ..util.file_manage import receive_img
 def images():
     if request.method == "POST":
         status, uri = receive_img(current_app.config['IMAGES_FOLDER'], request.files['img'], 600)
-        if status[0]:
+        if status:
             return jsonify(status='success', uri=uri)
         else:
             return jsonify(status="fail")

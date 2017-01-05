@@ -31,6 +31,7 @@
                                     <textarea id="challenge-content" name="content" data-provide="markdown"
                                               rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"
                                     >{{ '' if op == 'create' else challenge.content }}</textarea>
+                                    {% include 'widget/load_img_progress.html' %}
                                 </div>
                             </div>
 

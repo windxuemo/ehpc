@@ -33,6 +33,8 @@
                         <textarea name="description" id="target-editor" rows="30" data-img-upload-url="{{ url_for("markdown_files.images") }}"></textarea>
                     </div>
 
+                    {% include 'widget/load_img_progress.html' %}
+
                     <div class="form-submit text-right">
                         <a class="btn btn-default" id="creat-case-cancel" href="{{url_for('admin.case')}}">取消</a>
                         <input class='btn btn-success' id='submit' type='submit'>
@@ -42,6 +44,8 @@
             </div>
         </div>
     </div>
+
+
 {% endblock %}
 
 {% block footer_ext %}

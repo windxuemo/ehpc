@@ -53,6 +53,8 @@
                                 <div class="col-md-8 controls">
                                     <textarea id="course_about" name="about" data-provide="markdown"
                                               rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}">{{ course.about }}</textarea>
+
+                                    {% include 'widget/load_img_progress.html' %}
                                 </div>
                             </div>
                         </form>

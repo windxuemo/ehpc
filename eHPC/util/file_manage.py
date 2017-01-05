@@ -46,14 +46,18 @@ def receive_img(des_path, img, max_height):
     """
     cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime()) + ".png"
     des_path = os.path.join(des_path, cur_time)
-    temp = Image.open(img)
-    h = max_height if temp.height > max_height else temp.height
-    w = int(1.0 * h / temp.height * temp.width)
+    try:
+        temp = Image.open(img)
+    except IOError:
+        return False, None
+    width, height = temp.size
+    h = max_height if height > max_height else height
+    w = int(1.0 * h / height * width)
     status = upload_img(img, h, w, des_path)
 
     # 将图片路径转换为绝对路径, 这样站点图片 url 为 domain.com/static/....
     img_link = "/%s" % os.path.join(current_app.config['MD_UPLOAD_IMG'], cur_time)
-    return status, img_link
+    return status[0], img_link
 
 
 def upload_file(file_src, des_path, allowed_type=None):

@@ -58,7 +58,7 @@ $(document).ready(function () {
         $("#homework-description").val(edt.value());
         $.ajax({
             type: "post",
-            url: homework_url,
+            url: location.href,
             cache: false,
             processData: false,
             contentType: false,
@@ -106,7 +106,7 @@ $(document).ready(function () {
         var obj = this;
         $.ajax({
             type: "post",
-            url: homework_url,
+            url: location.href,
             data: {
                 op: "data",
                 homework_id: $(obj).parent().parent().data('homework_id')

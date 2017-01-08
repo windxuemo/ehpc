@@ -17,8 +17,6 @@ migrate = Migrate(app, db)
 babel = Babel(app)
 csrf = CSRFProtect(app)
 
-# 虚拟实验室部分, 取消 CSRF 保护
-csrf.exempt(lab_blueprint)
 
 manager.add_command('db', MigrateCommand)
 #manager.add_command('runserver', Server(host="0.0.0.0", port=80))

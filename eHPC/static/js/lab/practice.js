@@ -71,6 +71,10 @@ $(function () {
         });
     }
 
+    $('#confirm').click(function () {
+        $('#loading-gif').modal();
+    });
+
     $('button[data-id=confirm]').click(function () {
         var user_sol = null;
         if (question_type == 0 || question_type == 1 || question_type == 2) {
@@ -124,9 +128,6 @@ $(function () {
                 user_sol: user_sol,
                 question_type: question_type,
                 question_id: $('div[data-name=question]').eq(0).data('id')
-            },
-            beforeSend: function () {
-                $('#loading-gif').modal();
             },
             success: function (data) {
                 if (data['status'] == 'success') {

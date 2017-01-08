@@ -78,7 +78,8 @@ def knowledge(kid):
                                kid=kid,
                                next_progress=cur_progress+1)
 
-    elif request.method == 'POST':  # 处理用户是否通过当前challenge
+    elif request.method == 'POST':
+        # 判断用户是否通过当前challenge
         question_type = request.form['question_type']
         question_id = request.form['question_id']
         user_sol = request.form['user_sol']

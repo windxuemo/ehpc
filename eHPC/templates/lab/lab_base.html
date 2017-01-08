@@ -7,10 +7,16 @@
     <title>
         {% block title %}{% if title %}{{ title }}{% endif %}-{{ _('Challenges') }}{% endblock %}
     </title>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery.modal.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/jquery.modal.min.css') }}" rel="stylesheet">
+
     {% block header_ext %}
     {% endblock %}
 
@@ -68,9 +74,6 @@
     {% endblock %}
 </div>
 
-<link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
-<script src="{{ url_for('static', filename='js/jquery.modal.min.js') }}"></script>
-<link href="{{ url_for('static', filename='css/jquery.modal.min.css') }}" rel="stylesheet">
 {% block footer_ext %}
 {% endblock %}
 </body>

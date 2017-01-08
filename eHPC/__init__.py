@@ -44,7 +44,6 @@ def create_app(config_name):
     from .article import article as article_blueprint
     app.register_blueprint(article_blueprint, url_prefix='/article')
 
-    # TODO
     from .lab import lab as lab_blueprint
     app.register_blueprint(lab_blueprint, url_prefix='/lab')
     from .api import api as api_blueprint

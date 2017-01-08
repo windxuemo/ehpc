@@ -17,9 +17,10 @@
 </div>
 
 {% include 'footer.html' %}
-{% block footer_ext %}{% endblock %}
 
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<!-- 防止 CSRF 攻击: https://github.com/xuelangZF/ehpc/issues/249 -->
 <script type="text/javascript">
     var csrf_token = "{{ csrf_token() }}";
     $.ajaxSetup({
@@ -33,5 +34,8 @@
         $('form[method=post]').append('<input type="hidden" name="csrf_token" value="' + csrf_token + '"/>');
     });
 </script>
+
+{% block footer_ext %}{% endblock %}
+
 </body>
 </html>

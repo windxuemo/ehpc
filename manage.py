@@ -7,11 +7,14 @@ from eHPC import create_app, db
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 from flask_babel import Babel
+from flask_wtf.csrf import CSRFProtect
+
 
 app = create_app(os.getenv('EHPC_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 babel = Babel(app)
+csrf = CSRFProtect(app)
 
 manager.add_command('db', MigrateCommand)
 #manager.add_command('runserver', Server(host="0.0.0.0", port=80))

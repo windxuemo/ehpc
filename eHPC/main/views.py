@@ -2,6 +2,7 @@ from flask import render_template
 from . import main
 from ..models import Course, Group, Article
 from flask_babel import gettext
+from flask_wtf.csrf import CSRFError
 
 
 @main.route('/')
@@ -29,3 +30,8 @@ def page_403(err):
 @main.app_errorhandler(500)
 def page_500(err):
     return render_template('500.html', title='500'), 500
+
+
+@main.app_errorhandler(CSRFError)
+def handle_csrf_error(err):
+    return render_template('403.html', title='403'), 403

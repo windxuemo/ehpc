@@ -27,7 +27,7 @@
             url: "{{ url_for('course.homework_detail') }}",
             type: 'post',
             data: {
-                hid: homework_id,
+                hid: homework_id
             },
             success: function (html) {
                 $("#course-homework").empty().html(html.data);

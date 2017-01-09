@@ -92,9 +92,8 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script>
         $(document).ready(function () {
-            var about = $("#course-about"), homework = $("#course-homework");
+            var about = $("#course-about");
             about.html(latex_support(about.html()));
-            homework.html(latex_support(homework.html()));
         });
     </script>
     <script>

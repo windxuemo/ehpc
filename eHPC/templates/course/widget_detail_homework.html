@@ -48,7 +48,7 @@
     <script>
     $(document).ready(function() {
         var description = $("#homework-description");
-        description.html(SimpleMDE.prototype.markdown(description.text()));
+        description.html(latex_support(description.html()));
 
         $('input[id=homework-file]').change(function() {
             $('#filenameCover').val($(this).val());

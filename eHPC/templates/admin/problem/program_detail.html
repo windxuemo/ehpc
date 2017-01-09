@@ -38,7 +38,11 @@
                             </div>
                             <input type="hidden" name="op" value="{{ op }}">
                             {% if op == 'edit' %}<input type="hidden" name="id" value="{{ program_problem.id }}">{% endif %}
-                            <input type="submit" class="btn btn-primary btn-block" style="margin-top: 15px" value="保存提交">
+
+
+                            <div class="form-submit text-right">
+                                <input type="submit" class="btn btn-primary" value="保存提交">
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -49,8 +53,8 @@
 {% endblock %}
 
 {% block footer_ext %}
-    <script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
+    <script language=javascript src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
     <script>
-        var simplemde = drop_img_simplemde();
+        var simplemde = custom_simplemde();
     </script>
 {% endblock %}

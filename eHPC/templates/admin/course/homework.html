@@ -104,7 +104,6 @@
                             <div class="col-md-9 controls">
                                 <textarea class="form-control" id="homework-description" name="description" data-provide="markdown"
                                             rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"></textarea>
-
                                 {% include 'widget/load_img_progress.html' %}
                             </div>
                         </div>
@@ -131,7 +130,7 @@
 {% endblock %}
 
 {% block footer_ext %}
-    <script src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
+    <script src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
     <script src='{{ url_for("static", filename="js/admin/course/homework.js") }}'></script>
 
 {% endblock %}

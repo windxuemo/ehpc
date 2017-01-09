@@ -35,7 +35,7 @@
         <textarea name="content" id="target-editor"
                   data-img-upload-url="{{ url_for("markdown_files.images") }}"
         >{% if op == 'edit' %}{{ choice | get_question_content }}{% endif %}</textarea>
-        {% include 'widget/load_img_progress.html' %}
+
     </div>
 
     <div style="margin-bottom: 15px">
@@ -71,7 +71,10 @@
               data-img-upload-url="{{ url_for("markdown_files.images") }}">{% if op == 'edit' %}{{ choice.analysis }}{% endif %}</textarea>
     {% include 'widget/load_img_progress.html' %}
 </div>
-<button id="save-problem" class="btn btn-primary btn-block" style="margin-top: 15px">保存提交</button>
 
-<script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
+<div class="form-submit text-right">
+    <button id="save-problem" class="btn btn-primary">保存提交</button>
+</div>
+
+<script language=javascript src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
 <script src="{{ url_for('static', filename='js/admin/problem/choice_detail.js') }}"></script>

@@ -17,15 +17,15 @@ $(document).ready(function () {
         }
     }
 
-    var simplemde = drop_img_simplemde();
+    var simplemde = custom_simplemde();
 
-    var edt = drop_img_simplemde(new SimpleMDE({
+    var edt = custom_simplemde({
         element: document.getElementById("analysis-editor"),
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    }));
+    });
 
     var c_type = 0;
 

@@ -1,3 +1,4 @@
+document.write('<script type="text/javascript" src="/static/js/markdown_latex_support.js"></script>');
 $(function () {
     var Accordion = function (el, multiple) {
         this.el = el || {};
@@ -47,7 +48,7 @@ $(function () {
                 },
                 success: function (data) {
                     if(data['status'] == 'success'){
-                        $('#show-description').html(SimpleMDE.prototype.markdown(data['description']));
+                        $('#show-description').html(latex_support(data['description']));
                         $('#case-text').show();
                         $('#code-area').hide();
                     }
@@ -71,7 +72,7 @@ $(function () {
                 },
                 success: function (data) {
                     if(data['status'] == 'success'){
-                        $('#show-description').html(SimpleMDE.prototype.markdown(data['description']));
+                        $('#show-description').html(latex_support(data['description']));
                         $('#case-text').show();
                         $('#code-area').hide();
                     }
@@ -154,3 +155,4 @@ $(function () {
         }
     });
 });
+

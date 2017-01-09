@@ -80,10 +80,11 @@
 
 {% block foot_ext %}
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script>
         $(document).ready(function () {
             var content = $("#topic-content");
-            content.html(SimpleMDE.prototype.markdown(content.text()));
+            content.html(latex_support(content.text()));
         });
     </script>
 

@@ -8,13 +8,13 @@ $(document).ready(function () {
         startView: 2,
         forceParse: 0
     });
-    var edt = drop_img_simplemde(new SimpleMDE({
+    var edt = custom_simplemde({
         element: $("#homework-description")[0],
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    }));
+    });
 
     edt.codemirror.on('refresh', function() {
         if (edt.isFullscreenActive()) {

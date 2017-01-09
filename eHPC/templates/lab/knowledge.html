@@ -73,13 +73,14 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script>
         $(document).ready(function () {
             var c_content = $("#c_content");
-            c_content.html(SimpleMDE.prototype.markdown(c_content.text()));
+            c_content.html(latex_support(c_content.text()));
 
             var q_content = $("#question_content");
-            q_content.html(SimpleMDE.prototype.markdown(q_content.text()));
+            q_content.html(latex_support(q_content.text()));
         });
     </script>
 

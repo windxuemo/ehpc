@@ -35,7 +35,8 @@
                                 <ul class="period-list" id="course-item-list">
                                     {% for p in papers %}
                                         <li class="period" data-paper_id="{{ p.id }}">
-                                            <a href="{{ url_for('course.paper_detail', pid=p.id) }}" title="{{ p.title }}">
+                                            <a href="{{ url_for('course.paper_detail', pid=p.id) }}"
+                                               title="{{ p.title }}">
                                                 <i class="es-icon es-icon-undone"></i>
                                                 <span class="title"> {{ p.title }}</span>
 
@@ -71,7 +72,7 @@
                             你的评分： <span id="raty"></span>
                         </div>
                         <div class="form-group">
-                            <textarea id="comment-editor" class="form-control" rows="8" name="content" ></textarea>
+                            <textarea id="comment-editor" class="form-control" rows="8" name="content"></textarea>
                         </div>
                         <div class="form-group clearfix">
                             <div class="pull-right">
@@ -84,15 +85,15 @@
             </div>
         </section>
     </div>
-
 {% endblock %}
 
 {% block footer_ext %}
     {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script>
         $(document).ready(function () {
             var about = $("#course-about");
-            about.html(SimpleMDE.prototype.markdown(about.text()));
+            about.html(latex_support(about.text()));
         });
     </script>
     <script>
@@ -287,22 +288,21 @@
                     $.ajax({
                         url: "{{ url_for('course.process_comment') }}",
                         type: "post",
-                        data :{
+                        data: {
                             op: op,
                             rank: $("#raty").raty("score") ? $("#raty").raty("score") : 0,
                             content: $("#comment-editor").val(),
                             courseId: "{{ course.id }}"
                         },
                         success: function (data) {
-                            if (data["status"] == "fail")
-                            {
+                            if (data["status"] == "fail") {
                                 alert(data["info"]);
                                 location.reload();
                                 return;
                             }
                             $("#comment-list").empty().html(data["html"]);
                             $("#comment-edit-block").hide();
-                            $("#show-raty").raty("set", { "score": data["rank"] });
+                            $("#show-raty").raty("set", {"score": data["rank"]});
                             op = "edit";
                             $("#comment-btn").removeClass("btn-info").addClass("btn-primary").text("重新评论");
                         }
@@ -310,13 +310,11 @@
                 });
 
                 $("#comment-btn").click(function () {
-                    if ($(this).hasClass("btn-primary"))
-                    {
+                    if ($(this).hasClass("btn-primary")) {
                         $("#comment-edit-block").show();
                         $(this).removeClass("btn-primary").addClass("btn-info").text("取消评论");
                     }
-                    else
-                    {
+                    else {
                         $("#comment-edit-block").hide();
                         $(this).removeClass("btn-info").addClass("btn-primary").text(btn_text);
                     }

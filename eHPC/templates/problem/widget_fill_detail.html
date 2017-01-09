@@ -1,7 +1,7 @@
 {% for fill in fills %}
     <div class="panel" data-name="fill" data-id="{{loop.index}}" data-type="{{ fill.type }}" style="display: {% if loop.index != 1 %}none{% endif %}">
         {% with question=fill %}
-            <div class="panel-heading media" style="border-bottom: solid 1px #ddd">
+            <div class="panel-heading media" data-id="fill-title" style="border-bottom: solid 1px #ddd">
                 {% with index=loop.index %}
                     {% include 'problem/widget_practice_title.html' %}
                 {% endwith %}

@@ -8,19 +8,19 @@ $(function () {
         $(".selectpicker").selectpicker('val', selected_classifies);
     }
 
-    var edt1 = drop_img_simplemde(new SimpleMDE({
+    var edt1 = custom_simplemde({
         element: $("#content-editor").get(0),
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    }));
+    });
 
-    var edt2 = drop_img_simplemde(new SimpleMDE({
+    var edt2 = custom_simplemde({
         element: $("#analysis-editor").get(0),
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
         spellChecker: false
-    }));
+    });
 });

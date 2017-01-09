@@ -31,10 +31,11 @@
 
 {% block footer_ext %}
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script>
         $(document).ready(function () {
             var article_content = $("#article-content");
-            article_content.html(SimpleMDE.prototype.markdown(article_content.text()));
+            article_content.html(latex_support(article_content.text()));
         });
     </script>
 {% endblock %}

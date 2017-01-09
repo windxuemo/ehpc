@@ -1,6 +1,6 @@
-document.write("<script language=javascript src='/static/js/markdown_upload_img.js'></script>");
+document.write("<script language=javascript src='/static/js/custom_simplemde.js'></script>");
 $(function () {
-    var simplemde = drop_img_simplemde();
+    var simplemde = custom_simplemde();
 
     function validateForm() {
         var x = simplemde.value();
@@ -13,7 +13,7 @@ $(function () {
     function delete_tag(e) {
         var existed_tags = $("input[name='tags']")[0].value;
         var cur_tag = $(e).next()[0].innerText;
-        var tmp = cur_tag + ";"
+        var tmp = cur_tag + ";";
         if (existed_tags.indexOf(tmp) >= 0) {
             $("input[name='tags']")[0].value = existed_tags.replace(tmp, "");
         }

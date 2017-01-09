@@ -45,9 +45,9 @@
 {% endblock %}
 
 {% block footer_ext %}
-    <script language=javascript src='{{ url_for("static", filename="js/markdown_upload_img.js") }}'></script>
+    <script language=javascript src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
     <script>
-        var simplemde = drop_img_simplemde();
+        var simplemde = custom_simplemde();
 
         function validateForm() {
             var x = simplemde.value();

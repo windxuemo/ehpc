@@ -56,8 +56,6 @@
                                 <label>案例描述</label>
                                 <textarea name="description" data-provide="markdown" id="target-editor" rows="30"
                                           data-img-upload-url="{{ url_for("markdown_files.images") }}">{{ case.description }}</textarea>
-
-                                {% include 'widget/load_img_progress.html' %}
                             </div>
                             <div class="form-group">
                                 <div id="case-edit-status" class="text-center alert alert-success hide">
@@ -81,6 +79,7 @@
             </div>
         </div>
     </div>
+
 {% endblock %}
 
 {% block footer_ext %}

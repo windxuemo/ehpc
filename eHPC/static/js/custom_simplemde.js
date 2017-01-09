@@ -4,15 +4,28 @@
 //提交时，img为图片文件的key，键op表示操作为上传图片
 //上传成功后，后台会返回图片地址（例如：static/case/1.png）
 //该地址将按照markdown图片格式自动插入到光标处
+document.write('<script type="text/javascript" src="/static/js/markdown_latex_support.js"></script>');
 
-
-function drop_img_simplemde() {
-    var simplemde = arguments[0]? arguments[0] : new SimpleMDE({
+function custom_simplemde() {
+    if (arguments[0]){
+        var flag = false;
+        for(var k in arguments[0]){
+            if (k == "previewRender"){
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            arguments[0].previewRender = latex_support;
+        }
+    }
+    var simplemde = arguments[0] ? new SimpleMDE(arguments[0]) : new SimpleMDE({
         element: document.getElementById("target-editor"),
         autosave: true,
         showIcons: ["code", "table"],
         tabSize: 4,
-        spellChecker: false
+        spellChecker: false,
+        previewRender: latex_support
     });
 
     var is_loading = false;
@@ -26,10 +39,12 @@ function drop_img_simplemde() {
         var fileList = e.dataTransfer.files;
         if (fileList.length > 1){
             alert('一次只能上传一张图片');
+            is_loading = false;
             return false;
         }
         if(fileList[0].type.indexOf('image') === -1){
             alert("不是图片！");
+            is_loading = false;
             return false;
         }
         var img = new FormData();

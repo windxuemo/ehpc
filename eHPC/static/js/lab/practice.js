@@ -62,7 +62,7 @@ $(function () {
         });
     }
     else if (question_type == 5) {
-        essay = new SimpleMDE({
+        essay = custom_simplemde({
             element: $('textarea[data-id=target-editor]')[0],
             autosave: true,
             showIcons: ["code", "table"],

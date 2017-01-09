@@ -2,7 +2,7 @@ var tcount=1;
 var essay = {};
 $('div[data-name=essay]').find('textarea[data-id=target-editor]').each(function () {
     var obj = this;
-    essay[tcount.toString()] = new SimpleMDE({
+    essay[tcount.toString()] = custom_simplemde({
         element: obj,
         autosave: true,
         showIcons: ["code", "table"],

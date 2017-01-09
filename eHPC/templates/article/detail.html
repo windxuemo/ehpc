@@ -35,7 +35,7 @@
     <script>
         $(document).ready(function () {
             var article_content = $("#article-content");
-            article_content.html(latex_support(article_content.text()));
+            article_content.html(latex_support(article_content.html()));
         });
     </script>
 {% endblock %}

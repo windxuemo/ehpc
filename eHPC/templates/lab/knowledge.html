@@ -77,10 +77,10 @@
     <script>
         $(document).ready(function () {
             var c_content = $("#c_content");
-            c_content.html(latex_support(c_content.text()));
+            c_content.html(latex_support(c_content.html()));
 
             var q_content = $("#question_content");
-            q_content.html(latex_support(q_content.text()));
+            q_content.html(latex_support(q_content.html()));
         });
     </script>
 

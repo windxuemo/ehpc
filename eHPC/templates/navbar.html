@@ -36,7 +36,7 @@
                             <li><a href="{{ url_for('user.view', uid=current_user.id) }}"><i
                                     class="es-icon es-icon-person"></i>{{ _('Personal Page') }}</a>
                             </li>
-                            <li><a href=""><i class="es-icon es-icon-homework"></i>{{ _("Job's List") }}</a>
+                            <li><a href=""><i class="es-icon es-icon-assignment"></i>{{ _("Job's List") }}</a>
                             </li>
                             <li><a href="{{ url_for('lab.index') }}"><i class="es-icon es-icon-homework"></i>学习进度</a>
                             </li>
@@ -46,6 +46,10 @@
                                     class="es-icon es-icon-power"></i>{{ _('Logout') }}</a></li>
                         </ul>
                     </li>
+                    {% if current_user.permissions == 2 %}
+                        <li><a href="{{ url_for('admin.teacher') }}">
+                            <i class="es-icon es-icon-administrator"></i>切换为老师</a></li>
+                    {% endif %}
                 {% else %}
                     <li class="hidden-xs"><a
                             href="{{ url_for('user.signin', next=request.path) }}">{{ _('Sign In') }}</a></li>

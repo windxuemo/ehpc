@@ -44,5 +44,5 @@ def teacher_login(func):
         if current_user.is_authenticated and current_user.permissions == 2:
             return func(*args, **kwargs)
         else:
-            return redirect(url_for('admin.auth', next=request.url))
+            return redirect(url_for('user.signin', next=request.url))
     return wrap

@@ -35,11 +35,7 @@ def signin():
             login_user(u)
             u.last_login = datetime.now()
             db.session.commit()
-            print current_user.permissions, request.args.get('next')
-            if current_user.permissions == 2 and request.args.get('next') == '/':
-                return redirect(url_for('admin.teacher'))
-            else:
-                return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(request.args.get('next') or url_for('main.index'))
         else:
             message = gettext('Invalid username or password.')
             return render_template('user/signin.html', title=gettext('User Sign In'),

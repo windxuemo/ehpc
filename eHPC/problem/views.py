@@ -63,7 +63,12 @@ def show_question():
     classifies = Classify.query.all()  # 知识点
     rows = []
     for c in classifies:
-        rows.append([c.name, c.questions.count(), c.id])
+        rows.append([c.name, c.questions.count(),
+                     c.questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2)).count(),
+                     c.questions.filter(Question.type == 3).count(),
+                     c.questions.filter(Question.type == 4).count(),
+                     c.questions.filter(Question.type == 5).count(),
+                     c.id])
 
     return render_template('problem/show_question.html',
                            rows=rows)

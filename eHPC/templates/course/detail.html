@@ -23,7 +23,7 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div id="course-about" role="tabpanel" class="tab-pane markdown-body">{{ course.about }}</div>
+                <div id="course-about" role="tabpanel" class="tab-pane markdown-body" data-to-render="{{ course.about }}"></div>
 
                 <div id="course-lists" role="tabpanel" class="tab-pane markdown-body">
                 </div>
@@ -93,7 +93,8 @@
     <script>
         $(document).ready(function () {
             var about = $("#course-about");
-            about.html(latex_support(about.html()));
+            about.html(latex_support(about.data('to-render')));
+            about.attr('data-to-render', null);
         });
     </script>
     <script>

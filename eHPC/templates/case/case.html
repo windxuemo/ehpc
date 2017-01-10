@@ -8,7 +8,7 @@
     <div class="container">
         <h4>{{ case.name }}</h4>
         <hr>
-        <div id="content" class="markdown-body">{{ case.description }}</div>
+        <div id="content" class="markdown-body" data-to-render="{{ case.description }}"></div>
     </div>
 {% endblock %}
 
@@ -17,7 +17,8 @@
     <script>
         $(document).ready(function () {
             var content = $("#content");
-            content.html(latex_support(content.html()));
+            content.html(latex_support(content.data('to-render')));
+            content.attr('data-to-render', null);
         });
     </script>
 {% endblock %}

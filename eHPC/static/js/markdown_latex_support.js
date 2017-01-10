@@ -1,5 +1,13 @@
-document.write('<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>');
+var import_mathjax = '<script type="text/x-mathjax-config">\
+                      MathJax.Hub.Config({\
+                          skipStartupTypeset: true\
+                      })\
+                      </script>\
+                      <script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+
+document.write(import_mathjax);
 function latex_support(plainText) {
+    $(".lab-content-wrap, .content-wrap").append("<div id='latex-render-area' style='display: none'></div>");
     var temp = plainText.match(/\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]/g);
     if(temp!=null){
         for(var i=0;i<temp.length;i++){
@@ -18,18 +26,14 @@ function latex_support(plainText) {
             count++;
             return $("#sp-rep-latex-" + count.toString()).html();
         });
-        $("#latex-render-area").empty();
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        $("#latex-render-area").remove();
     }
     else{
         plainText = SimpleMDE.prototype.markdown(plainText);
     }
     return plainText;
 }
-
-$(function () {
-    $(".lab-content-wrap, .content-wrap").append("<div id='latex-render-area' style='display: none'></div>");
-});
 
 
 

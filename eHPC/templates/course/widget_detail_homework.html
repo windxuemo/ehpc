@@ -12,7 +12,7 @@
                     <div class="homework-content"><b><i class="glyphicon glyphicon-time"></i> 截止日期：</b> {{ homework.deadline | unite_time_format }}</div>
                     <div class="homework-content">
                         <b>作业内容：</b>
-                        <div id="homework-description">{{ homework.description }}</div>
+                        <div id="homework-description" data-to-render="{{ homework.description }}"></div>
                     </div>
                     <div class="homework-content">
                         <b>作业提交：</b>
@@ -48,7 +48,8 @@
     <script>
     $(document).ready(function() {
         var description = $("#homework-description");
-        description.html(latex_support(description.html()));
+        description.html(latex_support(description.data('to-render')));
+        description.attr('data-to-render', null);
 
         $('input[id=homework-file]').change(function() {
             $('#filenameCover').val($(this).val());

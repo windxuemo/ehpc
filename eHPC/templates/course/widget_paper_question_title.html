@@ -6,17 +6,12 @@
     </div>
 </div>
 <div class="pull-right" style="margin-bottom: 5px;width: 94%">
-    <span data-id="num-id" style="font-weight: bold"></span>
-    <span>、 </span>
+    <span data-id="num-id" style="font-weight: bold"></span><span>、 </span>
     {% if question.type == 0 or question.type == 1 or question.type == 2%}
-        <span>{{ question | get_question_content }}</span>
+        <span class="markdown-body" data-to-render="{{ question | get_question_content }}"></span>
     {% elif question.type == 3%}
-        <span data-id="fill-id">
-            {{ question.content | split_fill | safe }}
-            <span data-id="fill-solution-len-id"
-                  style="display: none">{{ question.solution | get_fill_solution_len }}</span>
-        </span>
+        <span class="markdown-body" data-id="fill-id" data-len="{{ question.solution | get_fill_solution_len }}" data-to-render="{{ question.content | split_fill }}"></span>
     {% elif question.type == 4 or question.type == 5%}
-        <span>{{ question.content }}</span>
+        <span class="markdown-body" data-to-render="{{ question.content }}"></span>
     {% endif %}
 </div>

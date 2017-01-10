@@ -28,7 +28,7 @@
         <div class="markdown-body">
             <p class="text-center text-xlarge"> {{ title }}</p>
             <hr>
-            <div id="c_content">{{ c_content }}</div>
+            <div id="c_content" data-to-render="{{ c_content }}"></div>
         </div>
         <br>
         <!-- 如果 challenge 没有 material, 则不显示 material 的区域。-->
@@ -46,15 +46,11 @@
                 <p class="text-center text-xlarge">小测试</p>
                 <hr>
                 {% if question_type == 'choice' %}
-                    <span id="question_content">{{ practice | get_question_content }}</span>
+                    <span id="question_content" data-to-render="{{ practice | get_question_content }}"></span>
                 {% elif question_type == 'fill' %}
-                    <span data-id="fill-id">
-                            {{ practice.content | split_fill | safe }}
-                            <span data-id="fill-solution-len-id"
-                                  style="display: none">{{ practice.solution | get_fill_solution_len }}</span>
-                        </span>
+                    <span id="question_content" data-id="fill-id" data-len="{{ practice.solution | get_fill_solution_len }}" data-to-render="{{ practice.content | split_fill }}"></span>
                 {% elif question_type == 'judge' or question_type == 'essay' %}
-                    <span id="question_content">{{ practice.content }}</span>
+                    <span id="question_content" data-to-render="{{ practice.content }}"></span>
                 {% endif %}
             </div>
 
@@ -77,10 +73,12 @@
     <script>
         $(document).ready(function () {
             var c_content = $("#c_content");
-            c_content.html(latex_support(c_content.html()));
+            c_content.html(latex_support(c_content.data('to-render')));
+            c_content.attr('data-to-render', null);
 
             var q_content = $("#question_content");
-            q_content.html(latex_support(q_content.html()));
+            q_content.html(latex_support(q_content.data('to-render')));
+            q_content.attr('data-to-render', null);
         });
     </script>
 

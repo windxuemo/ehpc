@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body markdown-body" id="program-content">{{ problem.detail }}</div>
+                <div class="panel-body markdown-body" id="program-content" data-to-render="{{ problem.detail }}"></div>
             </div>
         </div>
 
@@ -144,7 +144,8 @@
     <script>
         $(document).ready(function () {
             var content = $("#program-content");
-            content.html(latex_support(content.html()));
+            content.html(latex_support(content.data('to-render')));
+            content.attr('data-to-render', null);
         });
     </script>
 

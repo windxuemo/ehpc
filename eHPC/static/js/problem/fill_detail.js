@@ -1,15 +1,25 @@
-$('div[data-id=solution]').each(function () {
-    var sol = $(this).data('solution');
-    var temp = [];
-    for(var i=0;i<sol['len'];i++){
-
-        temp.push(sol[i.toString()]);
-    }
-    temp = temp.join(';');
-    $(this).text("参考答案： " + temp);
-});
-
 $(document).ready(function () {
+    $('div[data-id=solution]').each(function () {
+        var sol = $(this).data('solution');
+        var temp = [];
+        for(var i=0;i<sol['len'];i++){
+
+            temp.push(sol[i.toString()]);
+        }
+        temp = temp.join(';');
+        $(this).text("参考答案： " + temp);
+    });
+
+//根据填空题答案长度生成对应长度的填空框
+    $("span[data-id=fill-id]").each(function () {
+        var solution_len = $(this).data('len').split(';');
+        var i = 0;
+        $(".fill-input").each(function () {
+            $(this).css('width', ((solution_len[i].length) * 100 + 40).toString() + 'px');
+            i++;
+        });
+    });
+
     //确认按钮
     $('a[data-id=confirm]').click(function () {
         var your_solution = [];//用户该题的回答

@@ -211,7 +211,6 @@ def paper_result(pid):
             correct_num[q_type] += 1
         elif q_type != 5:
             result[key] = 'F'
-    print result
     return jsonify(status='success', result=result, correct_num=correct_num, solution=solution)
 
 

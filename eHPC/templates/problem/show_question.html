@@ -36,10 +36,14 @@
                                         {{ r[1] }} 道
                                     </div>
                                     <div class="item col-xs-4">
-                                        <a data-id="start" class="btn" data-choice="{{ url_for('problem.question_view', question_type='choice', cid=r[2]) }}"
-                                        data-fill="{{ url_for('problem.question_view', question_type='fill', cid=r[2]) }}"
-                                        data-judge="{{ url_for('problem.question_view', question_type='judge', cid=r[2]) }}"
-                                        data-essay="{{ url_for('problem.question_view', question_type='essay', cid=r[2]) }}">开始做题</a>
+                                        <a data-id="start" class="btn"
+                                           data-choice="{{ url_for('problem.question_view', question_type='choice', cid=r[6]) }}"
+                                           data-fill="{{ url_for('problem.question_view', question_type='fill', cid=r[6]) }}"
+                                           data-judge="{{ url_for('problem.question_view', question_type='judge', cid=r[6]) }}"
+                                           data-essay="{{ url_for('problem.question_view', question_type='essay', cid=r[6]) }}"
+                                           data-choice-count="{{ r[2] }}" data-fill-count="{{ r[3] }}"
+                                           data-judge-count="{{ r[4] }}"
+                                           data-essay-count="{{ r[5] }}">开始做题</a>
                                     </div>
                                 </li>
                             </ul>
@@ -51,34 +55,44 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            $('a[data-id=start]').click(function () {
-                $('#choice').attr('href', $(this).data('choice'));
-                $('#fill').attr('href', $(this).data('fill'));
-                $('#judge').attr('href', $(this).data('judge'));
-                $('#essay').attr('href', $(this).data('essay'));
-                $('#q-type-choose').modal('show');
-            });
-        });
-    </script>
-
-    <div class="modal fade" id="q-type-choose" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="q-type-choose" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">题型选择</h4>
                 </div>
-                <div class="modal-body" style="text-align: center">
-                    <a id="choice" class="btn btn-primary">选择题</a>
-                    <a id="fill" class="btn btn-primary">填空题</a>
-                    <a id="judge" class="btn btn-primary">判断题</a>
-                    <a id="essay" class="btn btn-primary">问答题</a>
+                <div class="modal-body text-center">
+                    <a id="choice" class="btn btn-primary">选择题<strong></strong></a>
+                    <a id="fill" class="btn btn-primary">填空题<strong></strong></a>
+                    <a id="judge" class="btn btn-primary">判断题<strong></strong></a>
+                    <a id="essay" class="btn btn-primary">问答题<strong></strong></a>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        $(document).ready(function () {
+            $('a[data-id=start]').click(function () {
+                var name = ['choice', 'fill', 'judge', 'essay'];
+                for (var i = 0; i < name.length; i++) {
+                    var q_type_name = $('#' + name[i]);
+                    if (Number($(this).data(name[i] + '-count')) == 0) {
+                        q_type_name.hide();
+                        q_type_name.attr('href', null);
+                        q_type_name.find('strong').eq(0).text('');
+                    }
+                    else {
+                        q_type_name.attr('href', $(this).data(name[i]));
+                        q_type_name.find('strong').eq(0).text("(" + $(this).data(name[i] + '-count') + ")")
+                        q_type_name.show();
+                    }
+                }
+                $('#q-type-choose').modal('show');
+            });
+        });
+    </script>
 {% endblock %}
 
 {#rows#}

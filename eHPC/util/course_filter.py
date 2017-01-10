@@ -7,6 +7,7 @@ from sqlalchemy import *
 from .. import db
 import json
 from datetime import datetime
+from flask import Markup
 
 
 @filter_blueprint.app_template_filter('is_join_course')
@@ -40,8 +41,8 @@ def get_substring_number(string, c):
 @filter_blueprint.app_template_filter('split_fill')
 def split_fill(string):
     temp = string.split('*')[0::2]
-    for i in temp:
-        i = '<span>' + i + '</span>'
+    for i in range(len(temp)):
+        temp[i] = '<span>' + temp[i] + '</span>'
     return '<input type="text" class="fill-input" style="margin: 0 10px;text-align:center">'.join(temp)
 
 

@@ -1,13 +1,23 @@
 <img class="choice-result-icon" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
 <img class="choice-result-icon" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
-<div class="pull-right" style="margin-bottom: 5px;width: 94%">
-    <span data-id="num-id" style="font-weight: bold">{{ index }}<span>、 </span></span>
+<div style="margin-bottom: 5px;width: 94%">
+    <div class="pull-left" data-id="num-id" style="font-weight: bold;width: 6%">{{ index }}<span>、 </span></div>
     {% if question.type == 0 or question.type == 1 or question.type == 2%}
-        <span>{{ question | get_question_content }}</span>
+        <div class="pull-right markdown-body" style="width: 93%">
+            <span class="color-primary">
+                {% if question.type == 0 %}
+                    (单选题)
+                {% elif question.type == 1 %}
+                    (多选题)
+                {% elif question.type == 2 %}
+                    (不定向选择)
+                {% endif %}
+            </span>
+            <span data-id="question-title" data-to-render="{{ question | get_question_content }}"></span>
+        </div>
     {% elif question.type == 3%}
-        <span>{{ question.content | split_fill }}</span>
-        <span data-id="fill-solution-len-id" style="display: none">{{ question.solution | get_fill_solution_len }}</span>
+        <div data-id="question-title" class="pull-right markdown-body" style="width: 93%" data-id="fill-id" data-len="{{ question.solution | get_fill_solution_len }}" data-to-render="{{ question.content | split_fill }}"></div>
     {% elif question.type == 4 or question.type == 5%}
-        <span>{{ question.content }}</span>
+        <div data-id="question-title" class="pull-right markdown-body" style="width: 93%" data-to-render="{{ question.content }}"></div>
     {% endif %}
 </div>

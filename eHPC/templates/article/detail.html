@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <div id="article-content" class="markdown-body article-text">{{ article.content }}</div>
+            <div id="article-content" class="markdown-body article-text" data-to-render="{{ article.content }}"></div>
         </section>
     </div>
 {% endblock %}
@@ -35,7 +35,8 @@
     <script>
         $(document).ready(function () {
             var article_content = $("#article-content");
-            article_content.html(latex_support(article_content.html()));
+            article_content.html(latex_support(article_content.data('to-render')));
+            article_content.attr('data-to-render', null);
         });
     </script>
 {% endblock %}

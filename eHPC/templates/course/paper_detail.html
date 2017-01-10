@@ -142,8 +142,15 @@
     </div>
 {% endblock %}
 
-{% block footer_ext %}
-    <script language=javascript src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
+{% block footer_ext %}<script language=javascript src='{{ url_for("static" , filename="js/custom_simplemde.js") }}'></script>
+    <script>
+        $(function () {
+            $(".markdown-body").each(function () {
+                $(this).html(latex_support($(this).data('to-render')));
+                $(this).attr('data-to-render', null);
+            });
+        });
+    </script>
     <script>
         //错误题目数量为：总题目数量-答对题目数量
         var wrong_num = [0, 0, 0, 0, 0, 0];

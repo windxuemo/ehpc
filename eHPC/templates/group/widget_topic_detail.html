@@ -15,7 +15,7 @@
 
     </div>
     <div class="panel-body clearfix" id="post-action">
-        <div class="markdown-body" id="topic-content">{{ topic.content }}</div>
+        <div class="markdown-body" id="topic-content" data-to-render="{{ topic.content }}"></div>
     </div>
 </div>
 
@@ -84,7 +84,8 @@
     <script>
         $(document).ready(function () {
             var content = $("#topic-content");
-            content.html(latex_support(content.html()));
+            content.html(latex_support(content.data('to-render')));
+            content.attr('data-to-render', null);
         });
     </script>
 

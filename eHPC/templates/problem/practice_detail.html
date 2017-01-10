@@ -11,6 +11,7 @@
 
     <link href="{{ url_for('static', filename='css/bootstrap-select.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/bootstrap-select.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom_simplemde.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -97,6 +98,16 @@
 
 {% endblock %}
 
+{% block footer_ext %}
+<script>
+    $(function () {
+        $("[data-id=question-title]").each(function () {
+            $(this).html(latex_support($(this).data("to-render")));
+            $(this).attr('data-to-render', null);
+        });
+    });
+</script>
+{% endblock %}
 
 {# classify_id #}
 {# title #}

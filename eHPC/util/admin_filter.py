@@ -3,6 +3,7 @@
 
 from . import filter_blueprint
 import json
+from flask import Markup
 
 
 @filter_blueprint.app_template_filter('get_json_value')

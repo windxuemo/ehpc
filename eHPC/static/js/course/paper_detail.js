@@ -34,7 +34,7 @@ $('#question-essay').find("span[data-id=num-id]").each(function () {
 
 //根据填空题答案长度生成对应长度的填空框
 $("span[data-id=fill-id]").each(function () {
-    var solution_len = $(this).find("span[data-id=fill-solution-len-id]").text().split(';');
+    var solution_len = $(this).data('len').split(';');
     var i = 0;
     $(".fill-input").each(function () {
         $(this).css('width', ((solution_len[i].length) * 100 + 40).toString() + 'px');

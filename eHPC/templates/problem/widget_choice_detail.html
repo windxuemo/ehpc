@@ -1,25 +1,12 @@
 {% for choice in choices %}
     <div class="panel" data-name="choice" data-id="{{loop.index}}" data-type="{{ choice.type }}" style="display: {% if loop.index != 1 %}none{% endif %}">
-        <div class="panel-heading media" data-id="choice-title" style="border-bottom: solid 1px #e1e1e1">
-            <img class="choice-result-icon" data-id="choice_correct" src="/static/images/problem/choice/choice_correct.png" style="display: none">
-            <img class="choice-result-icon" data-id="choice_wrong" src="/static/images/problem/choice/choice_wrong.png" style="display: none">
-            <div class="pull-left">{{loop.index}}. </div>
-            <div>
-                <span class="color-primary">
-                    {% if choice.type == 0 %}
-                        (单选题)
-                    {% elif choice.type == 1 %}
-                        (多选题)
-                    {% elif choice.type == 2 %}
-                        (不定向选择)
-                    {% endif %}
-                </span>
-                <span>{{ choice | get_question_content }}</span>
+            {% with question=choice %}
+            <div class="panel-heading media" data-id="choice-title" style="border-bottom: solid 1px #e1e1e1">
+                {% with index=loop.index %}
+                    {% include 'problem/widget_practice_title.html' %}
+                {% endwith %}
             </div>
-        </div>
 
-
-        {% with question=choice %}
             <div class="panel-body media-body">
                 {% include 'course/widget_paper_question_detail.html' %}
             </div>

@@ -83,6 +83,7 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/custom_simplemde.js') }}"></script>
     <script>
         var post_to = "{{ url_for("admin.case_edit", case_id=case.id) }}";
     </script>

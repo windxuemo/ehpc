@@ -75,6 +75,7 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
     <script>
         var editor = ace.edit("editor");

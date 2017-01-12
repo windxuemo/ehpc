@@ -1,4 +1,3 @@
-document.write("<script language=javascript src='/static/js/custom_simplemde.js'></script>");
 $(function () {
     var simplemde = custom_simplemde();
 

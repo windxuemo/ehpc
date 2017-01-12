@@ -1,4 +1,3 @@
-document.write('<script type="text/javascript" src="/static/js/markdown_latex_support.js"></script>');
 $(function () {
     var Accordion = function (el, multiple) {
         this.el = el || {};

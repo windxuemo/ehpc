@@ -1,12 +1,10 @@
 {% extends "course/widget_material_base.html" %}
 {% block header_ext %}
-    <script src="{{ url_for('static', filename='js/clappr.min.js') }}"></script>
+    <script src="//cdn.bootcss.com/clappr/0.2.64/clappr.min.js"></script>
 {% endblock %}
 
 {% block content %}
-
     <div id="player-content" class="col-md-12 course-container"></div>
-
 {% endblock %}
 
 {% block footer_ext %}

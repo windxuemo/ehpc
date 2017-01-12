@@ -48,6 +48,11 @@ class User(UserMixin, db.Model):
 
     homeworks = db.relationship('HomeworkUpload', backref='user', lazy='dynamic')
 
+    teacher_courses = db.relationship('Course', backref='teacher', lazy='dynamic')
+    teacher_questions = db.relationship('Question', backref='teacher', lazy='dynamic')
+    teacher_knowledge = db.relationship('Knowledge', backref='teacher', lazy='dynamic')
+
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -113,6 +118,8 @@ class Course(db.Model):
 
     rank = db.Column(db.Float, default=0)                        # 课程评分
 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
     papers = db.relationship('Paper', backref='course', lazy='dynamic')
@@ -123,6 +130,7 @@ class Course(db.Model):
                             backref=db.backref('courses', lazy='dynamic'))
 
     qrcode = db.relationship('QRcode', uselist=False, backref='course')
+
 
 class Lesson(db.Model):
     """ 一个课程包括多个课时, 每个课时只能属于一个课程。 课程和课时是一对多的关系。
@@ -305,6 +313,8 @@ class Question(db.Model):
     solution = db.Column(db.String(512), nullable=False)       # 题目答案
     analysis = db.Column(db.String(1024), default="")          # 答案解析
 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
     classifies = db.relationship('Classify', secondary=question_classifies,
                                  backref=db.backref('questions', lazy='dynamic'))
 
@@ -357,6 +367,8 @@ class Knowledge(db.Model):
     id = db.Column(db.Integer, primary_key=True)        # 技能 ID
     title = db.Column(db.String(1024), nullable=False)  # 技能标题
     content = db.Column(db.Text(), default=None)        # 技能简介
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # 一个技能对应了很多任务, 一对多的关系。
     challenges = db.relationship('Challenge', backref='knowledge', lazy='dynamic')

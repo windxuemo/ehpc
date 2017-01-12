@@ -34,8 +34,10 @@
                             <td data-id="cname">{{ c.name }}</td>
                             <td>
                                 <a href="javascript:void(0)" data-id="edit">编辑</a>
+                                {% if c.questions.count() == 0 %}
                                 <span class="divider"> | </span>
                                 <a href="javascript:void(0)" name="del-btn">删除</a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

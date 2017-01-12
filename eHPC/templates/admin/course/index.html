@@ -30,7 +30,7 @@
                     </tr>
                     </thead>
                     <tbody id="tb">
-                    {% for c in courses %}
+                    {% for c in current_user.teacher_courses %}
                         <tr data-id="{{ c.id }}">
                             <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ c.title }}">{{ c.title }}</td>
                             <td>{{ c.lessonNum }}</td>

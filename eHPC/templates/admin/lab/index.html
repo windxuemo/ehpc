@@ -25,7 +25,7 @@
                             </tr>
                             </thead>
                             <tbody><!--表格主体-->
-                            {% for k in knows %}
+                            {% for k in current_user.teacher_knowledge %}
                                 <tr data-id="{{ k.id }}">
                                     <td>{{ loop.index }}</td>
                                     <td>{{ k.title }}</td>

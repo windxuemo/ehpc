@@ -34,7 +34,7 @@
                             </tr>
                             </thead><!--表格头-->
                             <tbody id="tb">
-                            {% for program in programs %}
+                            {% for program in current_user.teacher_program %}
                                 <tr data-id="{{ program.id }}">
                                     <td style="text-align: center">{{ loop.index }}</td>
                                     <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ program.title }}">{{ program.title }}</td>

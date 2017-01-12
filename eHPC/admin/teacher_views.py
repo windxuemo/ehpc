@@ -7,6 +7,7 @@ import shutil
 from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, abort, jsonify, current_app, make_response, send_file
+from flask_login import current_user
 from flask_babel import gettext
 from sqlalchemy import or_
 
@@ -26,8 +27,7 @@ from ..util.file_manage import remove_dirs
 def course():
     if request.method == 'GET':
         return render_template('admin/course/index.html',
-                               title=gettext('Course Admin'),
-                               courses=Course.query.all())
+                               title=gettext('Course Admin'))
     elif request.method == 'POST':
         # 删除课程
         curr_course = Course.query.filter_by(id=request.form['course_id']).first_or_404()
@@ -57,6 +57,7 @@ def course_create():
         # 创建课程
         curr_course = Course(title=request.form['title'], subtitle='', about='',
                              lessonNum=0, smallPicture='images/course/noImg.jpg')
+        curr_course.teacher = current_user
         db.session.add(curr_course)
         db.session.commit()
         os.makedirs(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id))
@@ -474,13 +475,13 @@ def question(question_type):
     if request.method == 'GET':
         questions = None
         if question_type == 'choice':
-            questions = Question.query.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2))
+            questions = current_user.teacher_questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2))
         elif question_type == 'judge':
-            questions = Question.query.filter_by(type=4)
+            questions = current_user.teacher_questions.filter_by(type=4)
         elif question_type == 'fill':
-            questions = Question.query.filter_by(type=3)
+            questions = current_user.teacher_questions.filter_by(type=3)
         elif question_type == 'essay':
-            questions = Question.query.filter_by(type=5)
+            questions = current_user.teacher_questions.filter_by(type=5)
         return render_template('admin/problem/question.html',
                                title=gettext('Question Manage'),
                                questions=questions,
@@ -507,6 +508,7 @@ def question_create(question_type):
         # 添加练习题目
         curr_question = Question(type=request.form['type'], content=request.form['content'],
                                  solution=request.form['solution'], analysis=request.form['analysis'])
+        curr_question.teacher = current_user
         classifies = request.form.getlist('classify')
         for x in classifies:
             curr_question.classifies.append(Classify.query.filter_by(id=x).first_or_404())
@@ -566,6 +568,7 @@ def paper_question_create(paper_id, question_type):
         curr_paper = Paper.query.filter_by(id=paper_id).first_or_404()
         curr_question = Question(type=request.form['type'], content=request.form['content'],
                                  solution=request.form['solution'], analysis=request.form['analysis'])
+        curr_question.teacher = current_user
         aux = PaperQuestion(point=request.form['point'])
         aux.questions = curr_question
         db.session.add(aux)
@@ -623,7 +626,7 @@ def paper_question_edit(paper_id, question_type, question_id):
 def program():
     """ 题库中编程题的入口页面 """
     if request.method == 'GET':
-        return render_template('admin/problem/program.html', title=gettext('Program question'), programs=Program.query.all())
+        return render_template('admin/problem/program.html', title=gettext('Program question'))
     elif request.method == 'POST':
         # 删除编程题目
         curr_program = Program.query.filter_by(id=request.form['id']).first_or_404()
@@ -643,6 +646,7 @@ def program_create():
     elif request.method == 'POST':
         # 添加编程题
         curr_program = Program(title=request.form['title'], detail=request.form['content'])
+        curr_program.teacher = current_user
         db.session.add(curr_program)
         db.session.commit()
         return redirect(url_for('admin.program'))
@@ -671,13 +675,12 @@ def program_edit():
 @teacher_login
 def lab():
     if request.method == 'GET':
-        knows = Knowledge.query.all()
         return render_template('admin/lab/index.html',
-                               title=gettext('Lab Manage'),
-                               knows=knows)
+                               title=gettext('Lab Manage'))
     elif request.method == 'POST':
         if request.form['op'] == 'create':
             curr_knowledge = Knowledge(title=request.form['title'], content=request.form['content'])
+            curr_knowledge.teacher = current_user
             db.session.add(curr_knowledge)
             db.session.commit()
             return jsonify(status='success')
@@ -699,11 +702,9 @@ def lab():
 def lab_view(knowledge_id):
     if request.method == 'GET':
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
-        knows = Knowledge.query.all()
         return render_template('admin/lab/knowledge.html',
                                title=gettext('Lab tasks'),
-                               knowledge=curr_knowledge,
-                               knows=knows)
+                               knowledge=curr_knowledge)
     elif request.method == 'POST':
         # 删除任务以及调整顺序
         if request.form['op'] == 'del':
@@ -731,9 +732,13 @@ def lab_view(knowledge_id):
 def lab_create(knowledge_id):
     if request.method == 'GET':
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
-        materials = Material.query.all()
-        questions = Question.query.all()
-        programs = Program.query.all()
+        materials = []
+        for c in current_user.teacher_courses:
+            for l in c.lessons:
+                for m in l.materials:
+                    materials.append(m)
+        questions = current_user.teacher_questions
+        programs = current_user.teacher_program
         return render_template('admin/lab/knowledge_detail.html',
                                title=gettext('Lab Create'),
                                op='create',
@@ -771,9 +776,13 @@ def lab_edit(knowledge_id, challenge_id):
     if request.method == 'GET':
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
         curr_challenge = Challenge.query.filter_by(id=challenge_id).first_or_404()
-        materials = Material.query.all()
-        questions = Question.query.all()
-        programs = Program.query.all()
+        materials = []
+        for c in current_user.teacher_courses:
+            for l in c.lessons:
+                for m in l.materials:
+                    materials.append(m)
+        questions = current_user.teacher_questions
+        programs = current_user.teacher_program
         return render_template('admin/lab/knowledge_detail.html',
                                title=gettext('Lab Edit'),
                                op='edit', knowledge=curr_knowledge,

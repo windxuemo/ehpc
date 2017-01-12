@@ -11,8 +11,8 @@
             <div class="col-md-3">
                 <div style="margin-bottom: 10px;font-size: 15px">知识点列表</div>
                 <div class="list-group">
-                    {% for k in knows %}
-                    <a class="list-group-item{% if k.id==knowledge.id %} active{% endif %}"
+                    {% for k in current_user.teacher_knowledge %}
+                    <a class="list-group-item{% if k.id == knowledge.id %} active{% endif %}"
                     href="{{ url_for('admin.lab_view', knowledge_id=k.id) }}">{{ k.title }}</a>
                     {% endfor %}
                 </div>

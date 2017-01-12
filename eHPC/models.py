@@ -51,6 +51,7 @@ class User(UserMixin, db.Model):
     teacher_courses = db.relationship('Course', backref='teacher', lazy='dynamic')
     teacher_questions = db.relationship('Question', backref='teacher', lazy='dynamic')
     teacher_knowledge = db.relationship('Knowledge', backref='teacher', lazy='dynamic')
+    teacher_program = db.relationship('Program', backref='teacher', lazy='dynamic')
 
 
     @property
@@ -265,6 +266,8 @@ class Program(db.Model):
     # default_code = db.Column(db.Text(), default="")   # 预先设定的代码
 
     createdTime = db.Column(db.DateTime(), default=datetime.now)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # 题目相关的实验任务
     challenges = db.relationship('Challenge', backref='program', lazy='dynamic')

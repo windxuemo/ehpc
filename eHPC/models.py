@@ -138,9 +138,9 @@ class Lesson(db.Model):
     """
     __tablename__ = 'lessons'
     id = db.Column(db.Integer, primary_key=True)  # 课时 ID
-    number = db.Column(db.Integer)                # 课时所在课程的编号
-    title = db.Column(db.String(128))              # 课时标题
-    content = db.Column(db.Text())                # 课时正文
+    number = db.Column(db.Integer, nullable=False)                # 课时所在课程的编号
+    title = db.Column(db.String(128), nullable=False)              # 课时标题
+    content = db.Column(db.Text(), default="")                # 课时正文
     courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
 
     materials = db.relationship('Material', backref='lesson', lazy='dynamic')
@@ -380,8 +380,8 @@ class Knowledge(db.Model):
 class Challenge(db.Model):
     __tablename__ = "challenges"
     id = db.Column(db.Integer, primary_key=True)        # 任务 ID
-    title = db.Column(db.String(1024), default=None)    # 技能标题
-    content = db.Column(db.Text(), default=None)        # 知识点图文内容
+    title = db.Column(db.String(1024), nullable=False)    # 技能标题
+    content = db.Column(db.Text(), nullable=False)        # 知识点图文内容
 
     # 所属技能ID以及对应技能下任务的次序, 可以用来唯一确定一个任务
     knowledgeId = db.Column(db.Integer, db.ForeignKey('knowledges.id'))

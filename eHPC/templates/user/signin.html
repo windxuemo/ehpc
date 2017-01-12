@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div id="content-container" class="container">
         <div class="es-section login-section">
@@ -8,17 +13,19 @@
             </div>
             <div class="login-main">
                 <form id="login-form" class="form-vertical" method="post"
-                      action="{{ url_for('user.signin', next=request.args.get('next')) }}">
+                      action="{{ url_for('user.signin', next=request.args.get('next')) }}" data-parsley-validate="">
                     <div class="form-group mbl">
-                        <label class="control-label" for="login_username">{{ _('Username') }}</label>
+                        <label class="control-label" for="login_username">{{ _('Email Address') }}</label>
                         <input class="form-control input-lg" id="login_email" type="text" name="email"
-                               value="{{ form.email }}" required="" placeholder="{{ _('Email Address') }}" >
+                               value="{{ form.email }}" placeholder="{{ _('Email Address') }}"
+                               data-parsley-type="email" data-parsley-maxlength="128" required="required">
                     </div>
                     <div class="form-group mbl">
                         <label class="control-label" for="login_password">{{ _('Password') }}</label>
                         <div class="controls">
                             <input class="form-control input-lg" id="login_password" type="password" name="password"
-                                   value="{{ form.password }}" placeholder="{{ _('Password') }}" >
+                                   value="{{ form.password }}" placeholder="{{ _('Password') }}"
+                                   data-parsley-maxlength="128" required="required">
                         </div>
                     </div>
                     {% if message %}

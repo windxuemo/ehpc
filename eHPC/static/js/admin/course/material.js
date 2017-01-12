@@ -6,27 +6,38 @@ $(document).ready(function () {
         $("#material-table-body").find("input").prop("checked", $(obj).prop("checked"));
     });
 
+    $("#add-link-file").click(function () {
+        $("#file-name-field").val("");
+        $("#course-link-field").val("");
+        $("#course-type-field1").prop("checked", false);
+        $("#course-type-field2").prop("checked", false);
+    });
+
     $("#upload-material-btn").click(function () {
-        $.ajax({
-            url: location.href,
-            type: "post",
-            data: new FormData($('#course-material-form')[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                if(data.status=="success"){
-                    alert("上传成功");
+        var p_instance = $('#course-material-form').parsley();
+        p_instance.validate();
+        if (p_instance.isValid()) {
+            $.ajax({
+                url: location.href,
+                type: "post",
+                data: new FormData($('#course-material-form')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.status == "success") {
+                        alert("上传成功");
+                        location.reload();
+                    }
+                    else {
+                        alert("上传失败 \n" + data['info']);
+                    }
+                },
+                error: function (data) {
+                    alert("上传失败" + data['info']);
                 }
-                else{
-                    alert("上传失败 \n" + data['info']);
-                }
-            },
-            error: function (data) {
-                alert("上传失败" + data['info']);
-            }
-        });
-        location.reload();
+            });
+        }
     });
 
     $("#del-confirm").click(function () {

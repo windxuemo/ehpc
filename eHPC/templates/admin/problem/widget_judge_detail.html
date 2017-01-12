@@ -1,11 +1,15 @@
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+{% endblock %}
+
 <form   {% if mode == 'practice' and op == 'create' %} action="{{ url_for('admin.question_create', question_type='judge') }}" {% endif %}
         {% if mode == 'practice' and op == 'edit' %} action="{{ url_for('admin.question_edit', question_type='judge', question_id=judge.id) }}" {% endif %}
         {% if mode == 'paper' and op == 'create' %} action="{{ url_for('admin.paper_question_create', question_type='judge', paper_id=paper.id) }}" {% endif %}
         {% if mode == 'paper' and op == 'edit' %} action="{{ url_for('admin.paper_question_edit', question_type='judge', question_id=judge.id, paper_id=paper.id) }}" {% endif %}
-        method="post" id="form">
+        method="post" id="form" data-parsley-validate="">
     <div class="form-group" id="classify">
         <label>知识点&nbsp&nbsp</label>
-        <select class="selectpicker" name="classify" multiple data-live-search="true">
+        <select class="selectpicker" name="classify" multiple data-live-search="true" required>
             {% for classify in classifies %}
                 <option value="{{ classify.id }}">{{ classify.name }}</option>
             {% endfor %}
@@ -15,23 +19,24 @@
     {% if mode == 'paper' %}
         <div class="form-group">
             <label>分值&nbsp&nbsp</label>
-            <input class="form-control" value="{{ point if op == 'edit' }}" id="point" name="point" style="width:50px;height:30px;display:inline;margin-top:10px;">
+            <input class="form-control" value="{{ point if op == 'edit' }}" id="point" name="point" style="width:50px;height:30px;display:inline;margin-top:10px;"
+                   required data-parsley-type="integer" data-parsley-range="[1, 100]">
         </div>
     {% endif %}
 
     <div class="form-group">
         <label>题干</label>
         <textarea name="content" id="content-editor"
-                  data-img-upload-url="{{ url_for("markdown_files.images") }}"
+                  data-img-upload-url="{{ url_for("markdown_files.images") }}" required
         >{% if op == 'edit' %}{{ judge.content }}{% endif %}</textarea>
     </div>
 
     <div class="form-group">
         <label>答案</label><br>
-        <input id="radio-box1" type="radio" name="solution" value="1">正确
+        <input id="radio-box1" type="radio" name="solution" value="1" required>正确
         <input id="radio-box2" type="radio" name="solution" value="0">错误
     </div>
-
+    <br>
     <div class="form-group">
         <label>答案解析</label>
         <textarea name="analysis" id="analysis-editor"

@@ -3,16 +3,18 @@
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
 {% endblock %}
 
 {% block content %}
     <div id="content-container" class="container">
         <div class="panel panel-default">
             <div class="panel-body">
-                <form action="{{ url_for('admin.case_create') }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <form action="{{ url_for('admin.case_create') }}" method="POST" enctype="multipart/form-data" data-parsley-validate="">
                     <div class="form-group">
                         <label>案例名称</label>
-                        <input type="text" class="form-control" name='name' placeholder="在此输入案例名字" required>
+                        <input type="text" class="form-control" name='name' placeholder="在此输入案例名字"
+                               data-parsley-maxlength="256" required>
                         <br>
                     </div>
 
@@ -30,7 +32,8 @@
 
                     <div class="form-group">
                         <label>案例描述</label>
-                        <textarea name="description" id="target-editor" rows="30" data-img-upload-url="{{ url_for("markdown_files.images") }}"></textarea>
+                        <textarea name="description" id="target-editor" rows="30" data-img-upload-url="{{ url_for("markdown_files.images") }}"
+                            required></textarea>
                     </div>
 
                     {% include 'widget/load_img_progress.html' %}
@@ -51,6 +54,7 @@
     <script src="{{ url_for('static', filename='js/custom_simplemde.js') }}"></script>
     <script>
         var post_to = "{{ url_for("admin.case_create") }}";
+        var simplemde = drop_img_simplemde();
     </script>
     <script src="{{ url_for('static',filename='js/admin/case/case.js') }}"></script>
 {% endblock %}

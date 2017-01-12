@@ -34,7 +34,7 @@ $(document).ready(function () {
         $(this).click(function () {
             var len = $("#options").find(".btn.btn-default").length;
             if(len==2){
-                alert("选项过少");
+                alert("至少需要两个选项");
                 return;
             }
 
@@ -77,13 +77,18 @@ $(document).ready(function () {
     //保存提交
     $("#save-problem").click(function () {
         if ($(".selectpicker").selectpicker('val').length == 0){
-            alert("请至少选则一个知识点");
+            show_invalid_info("#choice-save-info","#choice-save-info span","请至少选则一个知识点");
+            return;
+        }
+
+        if(mode == "paper" && !$("#point").val()) {
+            show_invalid_info("#choice-save-info","#choice-save-info span","请设置分值");
             return;
         }
 
         var choiceDetail = simplemde.value();
         if (choiceDetail.length == 0) {
-            alert("题干不能为空");
+            show_invalid_info("#choice-save-info","#choice-save-info span","题干不能为空");
             return;
         }
 
@@ -97,7 +102,7 @@ $(document).ready(function () {
             }
         });
         if (count == 0) {
-            alert("请选择正确答案");
+            show_invalid_info("#choice-save-info","#choice-save-info span","请选择正确答案");
             return;
         }
 
@@ -114,7 +119,7 @@ $(document).ready(function () {
         var hasEmptyChoice = false;
         $("input[name=options]").each(function () {
             if ($(this).val() == "") {
-                alert("请填写所有选项");
+                show_invalid_info("#choice-save-info","#choice-save-info span","请填写所有选项");
                 hasEmptyChoice = true;
             }
             content[$(this).parent().find('input[name=option_index]').eq(0).val().toString()] = $(this).val();

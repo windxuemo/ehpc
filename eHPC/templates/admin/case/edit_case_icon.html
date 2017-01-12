@@ -1,5 +1,12 @@
 {% extends 'admin/base.html' %}
 
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+    <!--script-- src="https://cdn.bootcss.com/parsley.js/2.6.2/parsley.js"></script-->
+    <script src="{{ url_for('static', filename='js/parsley-add.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 
     <div class="container" id="content-container">
@@ -22,19 +29,19 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">案例图片</div>
                     <div class="panel-body">
-                        <form id="case-icon-form" method="post" enctype="multipart/form-data">
+                        <form id="case-icon-form" method="post" data-parsley-validate="">
 
                             <div class="form-group clearfix">
                                 <div class="col-md-offset-2 col-md-8 controls">
-                                    <img id="case-icon" src="{{ case.icon }}">
+                                    <img id="case-icon" src="{{ case.icon }}" style="height: 171px;width: 304px;">
                                 </div>
                             </div>
 
                             <div class="form-group clearfix">
                                 <div class="col-md-offset-2 col-md-8 controls">
                                     <input id="case-icon-field" name="pic" accept="image/bmp,image/jpeg,image/png"
-                                           type="file">
-                                    <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
+                                           type="file" data-parsley-max-file-size="128" required>
+                                    <p class="help-block">你可以上传jpg, bmp, png格式的文件，不超过1M</p>
                                 </div>
                             </div>
                             <div class="form-group clearfix">
@@ -55,29 +62,33 @@
 {% block footer_ext %}
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#case-icon-field').change("#case-icon", preview_picture);
+
             $('#upload-icon-btn').click(function () {
-                $.ajax({
-                    url: "{{ url_for('admin.case_icon', case_id=case.id) }}",
-                    type: "post",
-                    data: new FormData($('#case-icon-form')[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        if (data["status"] == "success") {
-                            location.reload();
+                var p_instance = $('#case-icon-form').parsley();
+                p_instance.validate();
+                if (p_instance.isValid()) {
+                    $.ajax({
+                        url: "{{ url_for('admin.case_icon', case_id=case.id) }}",
+                        type: "post",
+                        data: new FormData($('#case-icon-form')[0]),
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data["status"] == "success") {
+                                alert("上传成功");
+                                location.reload();
+                            }
+                            else if(data.status == "fail"){
+                                alert("上传失败");
+                            }
+                            else {
+                                alert("文件错误")
+                            }
                         }
-                        else if(data.status == "no_file"){
-                            alert("未选择上传文件");
-                        }
-                        else if(data.status == "fail"){
-                            alert("上传失败");
-                        }
-                        else {
-                            alert("文件错误")
-                        }
-                    }
-                });
+                    });
+                }
             });
         });
     </script>

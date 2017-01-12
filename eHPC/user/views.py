@@ -64,26 +64,12 @@ def reg():
 
         message_e, message_u, message_p = "", "", ""
         # Check username is valid or not.
-        if not username:
-            message_u = gettext('Username can not be empty.')
-        elif not alphanumeric.match(username):
-            message_u = gettext('Username can only contain letters digits and underscore.')
-        elif User.query.filter_by(username=username).first():
+        if User.query.filter_by(username=username).first():
             message_u = gettext('Username already exists.')
 
         # Check email is valid or not.
-        if not email:
-            message_e = gettext('Email address can not be empty.')
-        elif not email_address.match(email):
-            message_e = gettext('Email address is invalid.')
-        elif User.query.filter_by(email=email).first():
+        if User.query.filter_by(email=email).first():
             message_e = gettext('Email already exists.')
-
-        # Check the password is valid or not.
-        if password != password2:
-            message_p = gettext("Passwords don't match.")
-        elif password == "" or password2 == "":
-            message_p = gettext("Passwords can not be empty.")
 
         if message_u or message_p or message_e:
             return render_template("user/reg.html", form=_form,
@@ -220,9 +206,7 @@ def setting_info():
         web_addr = _form["website"]
 
         message_email = ""
-        if not email_addr:
-            message_email = gettext('Email address can not be empty.')
-        elif not email_address.match(email_addr):
+        if not email_address.match(email_addr):
             message_email = gettext('Email address is invalid.')
 
         # TODO
@@ -247,11 +231,6 @@ def setting_avatar():
 
     elif request.method == 'POST':
         _file = request.files['file']
-        # If user does not select file, browser also submit a empty part without filename
-        if _file.filename == '':
-            message_fail = gettext('No selected file')
-            return jsonify(content=render_template('user/ajax_setting_avatar.html',
-                                                   message_fail=message_fail))
 
         upload_folder = current_app.config['UPLOAD_FOLDER']
         file_type = get_file_type(_file.mimetype)
@@ -282,20 +261,18 @@ def setting_password():
 
     elif request.method == 'POST':
         _form = request.form
-        cur_password = _form['old_password']
-        new_password = _form['password']
+        cur_password = _form['old-password']
+        new_password = _form['password1']
         new_password_2 = _form['password2']
 
         message_cur, message_new = "", ""
-        if not cur_password:
-            message_cur = "The old password can not be empty."
-        elif not current_user.verify_password(cur_password):
+        if not current_user.verify_password(cur_password):
             message_cur = "The old password is not correct."
 
-        if new_password != new_password_2:
-            message_new = gettext("Passwords don't match.")
-        elif new_password_2 == "" or new_password == "":
-            message_new = gettext("Passwords can not be empty.")
+        #if new_password != new_password_2:
+        #    message_new = gettext("Passwords don't match.")
+        #elif new_password_2 == "" or new_password == "":
+        #    message_new = gettext("Passwords can not be empty.")
 
         if message_cur or message_new:
             return jsonify(content=render_template('user/ajax_setting_passwd.html', form=_form,

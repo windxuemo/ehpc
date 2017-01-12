@@ -3,6 +3,7 @@
 {% block header_ext %}
     <script src="//cdn.bootcss.com/datatables/1.10.13/js/jquery.dataTables.min.js"></script>
     <link href="//cdn.bootcss.com/datatables/1.10.13/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -55,10 +56,14 @@
                 </div>
                 <div class="modal-body">
                     <label>知识点名称</label>
-                    <input class="form-control" name="name">
+                    <input id="classify-name-field" class="form-control" name="name">
                 </div>
                 <div class="modal-footer">
-                    <button id="confirm-submit" type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                    <span id="classify-save-info" class="hide" style="margin-right:20px;color:red;">
+                        <i class="es-icon es-icon-warning"></i>&nbsp;
+                        <span></span>
+                    </span>
+                    <button id="confirm-submit" type="button" class="btn btn-primary">确定</button>
                 </div>
             </div>
         </div>
@@ -87,6 +92,14 @@
                 var cid = -1;
                 if($(this).data('op') == 'edit'){
                     cid = $(this).data('cid');
+                }
+                if (!$("#classify-name-field").val()) {
+                    show_invalid_info("#classify-save-info","#classify-save-info span","知识点内容不能为空");
+                    return;
+                }
+                if (!$("#classify-name-field").val().length > 128) {
+                    show_invalid_info("#classify-save-info","#classify-save-info span","知识点名称过长（长度不超过128）");
+                    return;
                 }
                 $.ajax({
                     type: "post",

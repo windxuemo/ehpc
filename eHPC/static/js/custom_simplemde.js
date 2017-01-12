@@ -4,8 +4,7 @@
 //提交时，img为图片文件的key，键op表示操作为上传图片
 //上传成功后，后台会返回图片地址（例如：static/case/1.png）
 //该地址将按照markdown图片格式自动插入到光标处
-document.write('<script type="text/javascript" src="/static/js/markdown_latex_support.js" async></script>');
-//使用document.write时，请在script标签中加入async属性，否则可能导致页面渲染时不响应
+document.write('<script type="text/javascript" src="/static/js/markdown_latex_support.js"></script>');
 
 function custom_simplemde() {
     if (arguments[0]){

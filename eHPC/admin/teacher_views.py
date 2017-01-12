@@ -91,20 +91,16 @@ def course_picture(course_id):
                                title=gettext('Course Picture'))
     elif request.method == 'POST':
         # 上传图片和保存图片
-        if request.form['op'] == 'save':
-            curr_course = Course.query.filter_by(id=course_id).first_or_404()
-            curr_course.smallPicture = os.path.join('images/course', "cover_%d.png" % curr_course.id)
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        curr_course.smallPicture = os.path.join('images/course', "cover_%d.png" % curr_course.id)
+        filename = "cover_%d.png" % curr_course.id
+        cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], filename)
+        status = upload_img(request.files['pic'], 171, 304, cover_path)
+        if status[0]:
             db.session.commit()
-            return jsonify(status='success', id=curr_course.id)
-        elif request.form['op'] == 'upload':
-            curr_course = Course.query.filter_by(id=course_id).first_or_404()
-            filename = "cover_%d.png" % curr_course.id
-            cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], filename)
-            status = upload_img(request.files['pic'], 171, 304, cover_path)
-            if status[0]:
-                return jsonify(status='success', uri=os.path.join('/static/images/course', filename))
-            else:
-                return jsonify(status="fail", id=curr_course.id)
+            return jsonify(status='success')
+        else:
+            return jsonify(status="fail")
 
 
 @admin.route('/course/<int:course_id>/lesson/', methods=['GET', 'POST'])
@@ -223,8 +219,12 @@ def course_permission(course_id):
     elif request.method == 'POST':
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
         curr_course.public = int(request.form['public'])
-        curr_course.beginTime = datetime.strptime(request.form['begin'], '%Y-%m-%d %X')
-        curr_course.endTime = datetime.strptime(request.form['end'], '%Y-%m-%d %X')
+        if curr_course.public:
+            curr_course.beginTime = None
+            curr_course.endTime = None
+        else:
+            curr_course.beginTime = datetime.strptime(request.form['begin'], '%Y-%m-%d %X')
+            curr_course.endTime = datetime.strptime(request.form['end'], '%Y-%m-%d %X')
         db.session.commit()
         return jsonify(status="success", course_id=course_id)
 
@@ -452,6 +452,7 @@ def paper_edit(course_id, paper_id):
             curr_paper = Paper.query.filter_by(id=paper_id).first_or_404()
             question_id = request.form.getlist('question_id[]')
             for idx in question_id:
+                print idx
                 aux = curr_paper.questions.filter_by(question_id=idx).first_or_404()
                 curr_paper.questions.remove(aux)
                 curr_question = aux.questions

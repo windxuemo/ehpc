@@ -150,6 +150,8 @@ def homework_upload(hid):
     cur_homework = Homework.query.filter_by(id=hid).first_or_404()
     cur_course = cur_homework.course
     homework_file = request.files['file']
+    if not homework_file:
+        return jsonify(status="empty")
     homework_file_name = custom_secure_filename(homework_file.filename)
     homework_uri = os.path.join("course_%d" % cur_course.id, "homework_%d" % hid, homework_file_name)
     upload_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], homework_uri)

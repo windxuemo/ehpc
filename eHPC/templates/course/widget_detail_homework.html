@@ -1,3 +1,7 @@
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
+{% endblock %}
+
 <div class="course-detail-content" data-widget-cid="widget-1">
     <div class="es-piece">
         <div class="piece-body">
@@ -27,7 +31,7 @@
                                 </div>
                                 <div class="form-group">
                                     <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
-                                    <span id="homework-upload-status" class="col-md-2 col-sm-2 text-center homework-file-item hide" style="padding-top: 5px;"></span>
+                                    <span id="homework-upload-status" class="col-md-4 col-sm-4 text-center homework-file-item hide" style="padding-top: 5px;"></span>
                                 </div>
                                 <!--input type="hidden" name="" value=""-->
                             </form>
@@ -85,22 +89,21 @@
                 processData: false,
                 success: function(data) {
                     if(data.status == "success") {
-                        $("#homework-upload-status").removeClass("hide");
-                        $("#homework-upload-status")[0].innerHTML="上传成功！";
+                        show_invalid_info("#homework-upload-status","#homework-upload-status","上传成功！");
                         $('#filenameCover').val("");
-                        setTimeout(function() { $("#homework-upload-status").addClass("hide")}, 3000);
+                    }
+                    else if (data.status == "empty") {
+                        show_invalid_info("#homework-upload-status","#homework-upload-status","未选择文件！");
+                        $('#filenameCover').val("");
                     }
                     else {
-                        $("#homework-upload-status").removeClass("hide");
-                        $("#homework-upload-status")[0].innerHTML="文件格式不支持！";
+                        show_invalid_info("#homework-upload-status","#homework-upload-status","文件格式不支持！");
                         $('#filenameCover').val("");
-                        setTimeout(function() { $("#homework-upload-status").addClass("hide")}, 3000);
                     }
                 },
                 error: function() {
-                    $("#homework-upload-status").removeClass("hide");
-                    $("#homework-upload-status")[0].innerHTML="上传失败！";
-                        setTimeout(function() { $("#homework-upload-status").addClass("hide")}, 3000);
+                    show_invalid_info("#homework-upload-status","#homework-upload-status","上传失败！");
+                    $('#filenameCover').val("");
                 }
             });
         });

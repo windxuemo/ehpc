@@ -3,30 +3,34 @@
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parsley-add.js') }}"></script>
 {% endblock %}
 
 {% block content %}
     <div id="content-container" class="container">
         <div class="panel panel-default">
             <div class="panel-body">
-                <form action="{{ url_for('admin.group_create') }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <form action="{{ url_for('admin.group_create') }}" method="POST" enctype="multipart/form-data"
+                      data-parsley-validate="">
                     <div class="form-group">
                         <label>群组名称</label>
-                        <input type="text" class="form-control" name='title' placeholder="在此输入名字" required>
+                        <input type="text" class="form-control" name='title' placeholder="在此输入名字" required data-parsley-maxlength="128">
                         <br>
                     </div>
 
                     <div class="form-group">
                         <label>群组Logo</label>
                         <img id="group-picture" src="">
-                        <input name="logo" accept="image/bmp,image/jpeg,image/png" type="file" required>
-                        <p class="help-block">你可以上传jpg, bmp, png格式的文件</p>
+                        <input name="logo" accept="image/bmp,image/jpeg,image/png" type="file" data-parsley-max-file-size="1024" required>
+                        <p class="help-block">你可以上传jpg, bmp, png格式的文件，不超过1M</p>
                         <br>
                     </div>
 
                     <div class="form-group">
                         <label>群组介绍</label>
-                        <textarea name="about" id="target-editor" rows="30" data-img-upload-url="{{ url_for("markdown_files.images") }}"></textarea>
+                        <textarea name="about" id="target-editor" rows="30" data-img-upload-url="{{ url_for("markdown_files.images") }}"
+                            required></textarea>
 
                         {% include 'widget/load_img_progress.html' %}
                     </div>
@@ -45,13 +49,5 @@
     <script language=javascript src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
     <script>
         var simplemde = custom_simplemde();
-
-        function validateForm() {
-            var x = simplemde.value();
-            if (x == null || x == "") {
-                alert("请输入群组介绍");
-                return false;
-            }
-        }
     </script>
 {% endblock %}

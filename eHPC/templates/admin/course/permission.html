@@ -3,6 +3,7 @@
 {% block header_ext %}
     <script src="//cdn.bootcss.com/bootstrap-datetimepicker/4.17.44/js/bootstrap-datetimepicker.min.js"></script>
     <link href="//cdn.bootcss.com/bootstrap-datetimepicker/4.17.44/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -38,10 +39,10 @@
                                 <label class="col-md-2 control-label">是否公开</label>
                                 <div class="col-md-8">
                                     <div class="radio-inline">
-                                        <input type="radio" name="public" value="1" {% if course.public == True %}checked{% endif %}>是
+                                        <input id="is-public" type="radio" name="public" value="1" {% if course.public == True %}checked{% endif %} onclick="checkYes();">是
                                     </div>
                                     <div class="radio-inline">
-                                        <input type="radio" name="public" value="0" {% if course.public == False %}checked{% endif %}>否
+                                        <input type="radio" name="public" value="0" {% if course.public == False %}checked{% endif %} onclick="checkNo();">否
                                     </div>
                                 </div>
                             </div>
@@ -87,6 +88,18 @@
 
 {% block footer_ext %}
     <script type="text/javascript">
+        function checkYes() {
+            $("#dtp_input1").val(null);
+            $("#dtp_input2").val(null);
+            $(".form_datetime input").val(null);
+        }
+        function checkNo() {
+            $("#dtp_input1").val("{{ course.beginTime }}");
+            $("#dtp_input2").val("{{ course.beginTime }}");
+            $("#dtp1 input").val("{{ course.beginTime | unite_time_format }}");
+            $("#dtp2 input").val("{{ course.endTime | unite_time_format }}");
+        }
+
         $(document).ready(function () {
             $('#dtp1').datetimepicker({
                 format: "yyyy-mm-dd hh:ii",
@@ -107,17 +120,15 @@
                 forceParse: 0
             });
             $("#course-permission-save").click(function() {
-                if ($("#dtp_input1").val() == "" || $("#dtp_input1").val() == "None" || $("#dtp_input1").val() == null) {
-                    $("#course-permission-info").removeClass("hide");
-                    $("#course-permission-info span")[0].innerHTML = "请设置开始时间";
-                    setTimeout(function() { $("#course-permission-info").addClass("hide")}, 3000);
-                    return;
-                }
-                if ($("#dtp_input2").val() == "" || $("#dtp_input2").val() == "None" || $("#dtp_input1").val() == null) {
-                    $("#course-permission-info").removeClass("hide");
-                    $("#course-permission-info span")[0].innerHTML = "请设置截止时间";
-                    setTimeout(function() { $("#course-permission-info").addClass("hide")}, 3000);
-                    return;
+                if (!$("#is-public")[0].checked) {
+                    if ($("#dtp_input1").val() == "" || $("#dtp_input1").val() == "None" || $("#dtp_input1").val() == null) {
+                        show_invalid_info("#course-permission-info","#course-permission-info span","请设置开始时间");
+                        return;
+                    }
+                    if ($("#dtp_input2").val() == "" || $("#dtp_input2").val() == "None" || $("#dtp_input1").val() == null) {
+                        show_invalid_info("#course-permission-info","#course-permission-info span","请设置截止时间");
+                        return;
+                    }
                 }
 
                 $.ajax({

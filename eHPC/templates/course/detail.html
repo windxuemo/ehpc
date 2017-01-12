@@ -5,6 +5,7 @@
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
 
 
@@ -78,6 +79,10 @@
                             <div class="pull-right">
                                 <button id="comment-save-btn" class="btn btn-primary">保存</button>
                             </div>
+                            <span id="comment-save-info" class="hide pull-right" style="margin-right: 20px;color: red;">
+                                <i class="es-icon es-icon-warning"></i>&nbsp;
+                                <span></span>
+                            </span>
                         </div>
                     </div>
                     <div id="comment-list" class="markdown-body"></div>
@@ -286,6 +291,17 @@
                 });
 
                 $("#comment-save-btn").click(function () {
+
+                    /*判断评价等级和评论内容是否为空*/
+                    if (!$("#raty").raty("score")) {
+                        show_invalid_info("#comment-save-info","#comment-save-info span","请选择评价等级");
+                        return;
+                    }
+                    if ($("#comment-editor").val() == "" || $("#comment-editor").val() == null) {
+                        show_invalid_info("#comment-save-info","#comment-save-info span","请输入评论内容");
+                        return;
+                    }
+
                     $.ajax({
                         url: "{{ url_for('course.process_comment') }}",
                         type: "post",

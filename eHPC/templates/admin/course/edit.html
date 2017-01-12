@@ -3,6 +3,7 @@
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -30,12 +31,12 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">基本信息</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="course-form">
+                        <form class="form-horizontal" id="course-form" data-parsley-validate="">
                             <div class="form-group">
                                 <label class="col-md-2 control-label">标题</label>
                                 <div class="col-md-8">
                                     <input id="course_title" name="title" required class="form-control"
-                                           type="text" value="{{ course.title }}">
+                                           type="text" value="{{ course.title }}" data-parsley-maxlength="128">
                                 </div>
                             </div>
 
@@ -43,7 +44,7 @@
                                 <label class="col-md-2 control-label">副标题</label>
                                 <div class="col-md-8">
                                     <textarea id="course_subtitle" required name="subtitle"
-                                              class="form-control">{{ course.subtitle }}</textarea>
+                                              class="form-control" data-parsley-maxlength="128">{{ course.subtitle }}</textarea>
                                 </div>
                             </div>
 
@@ -52,7 +53,8 @@
 
                                 <div class="col-md-8 controls">
                                     <textarea id="course_about" name="about" data-provide="markdown"
-                                              rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}">{{ course.about }}</textarea>
+                                              rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"
+                                              required>{{ course.about }}</textarea>
 
                                     {% include 'widget/load_img_progress.html' %}
                                 </div>
@@ -60,8 +62,8 @@
                         </form>
 
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-8 text-right">
-                                <button class="btn btn-fat btn-primary" id="course-create-btn" type='submit'>保存</button>
+                            <div class="col-md-offset-2 col-md-8">
+                                <button class="btn btn-fat btn-primary" id="course-edit-btn" type='submit'>保存</button>
                             </div>
                         </div>
 
@@ -87,29 +89,30 @@
                 spellChecker: false
             });
 
-            $('#course-create-btn').click(function () {
-                if (edt.value() == "") {
-                    alert("请填写课程简介");
-                    return;
+            $('#course-edit-btn').click(function () {
+                var p_instance = $('#course-form').parsley();
+                $("#course_about").val(edt.value());
+                p_instance.validate();
+                if (p_instance.isValid()) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.course_edit', course_id=course.id) }}",
+                        data: {
+                            op: "edit",
+                            title: $('#course_title').val(),
+                            subtitle: $('#course_subtitle').val(),
+                            about: edt.value()
+                        },
+                        success: function (data) {
+                            if (data["status"] == "success") {
+                                alert("保存成功");
+                            }
+                            else {
+                                alert("保存失败");
+                            }
+                        }
+                    });
                 }
-                $.ajax({
-                    type: "post",
-                    url: "{{ url_for('admin.course_edit', course_id=course.id) }}",
-                    data: {
-                        op: "edit",
-                        title: $('#course_title').val(),
-                        subtitle: $('#course_subtitle').val(),
-                        about: edt.value()
-                    },
-                    success: function (data) {
-                        if (data["status"] == "success") {
-                            alert("保存成功");
-                        }
-                        else {
-                            alert("保存失败");
-                        }
-                    }
-                });
             });
         });
     </script>

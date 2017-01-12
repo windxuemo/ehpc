@@ -1,3 +1,7 @@
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
+{% endblock %}
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <h2 class="panel-title list-post-title-in-topic">
@@ -58,11 +62,15 @@
             <form onsubmit="submit_post(); return false;">
                 <div class="form-group ">
                     <label class="sr-only" for="content">{{ _('Content') }}</label>
-                    <textarea class="form-control" id="content" name="content" required
+                    <textarea class="form-control" id="content" name="content"
                               style="margin: 0px -9px 0px 0px;width:100%;height: 120px;"></textarea>
                 </div>
 
                 <div class="form-submit text-right">
+                    <span id="comment-submit-info" class="hide" style="margin-right: 20px;color: red;">
+                        <i class="es-icon es-icon-warning"></i>&nbsp;
+                        <span></span>
+                    </span>
                     <button class="btn btn-success" type="submit" id="submit">
                         {{ _('Submit') }}
                     </button>
@@ -105,6 +113,15 @@
 
     <script>
         function submit_post() {
+            if ($("#content").val() == "" || $("#content").val() == null || $("#content").val() == "None") {
+                show_invalid_info("#comment-submit-info","#comment-submit-info span","请输入评论内容");
+                return;
+            }
+            if ($("#content").val() > 1024) {
+                show_invalid_info("#comment-submit-info","#comment-submit-info span","评论过长，不能超过1024个字");
+                return;
+            }
+
             var data = $("form").serialize();
             $.ajax({
                 method: "post",

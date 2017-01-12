@@ -7,7 +7,6 @@ $(function () {
         $(".selectpicker").selectpicker('val', selected_classifies);
     }
 
-
     var edt1 = custom_simplemde({
         element: $("#content-editor")[0],
         autosave: true,

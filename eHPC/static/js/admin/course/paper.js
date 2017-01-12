@@ -8,22 +8,26 @@ $(document).ready(function () {
     });
 
     $('#paper-save-btn').click(function () {
-        $.ajax({
-            type: "post",
-            url: location.href,
-            data: new FormData($('#course-paper-form')[0]),
-            cache: false,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                if (data["status"] == "success") {
-                    location.reload();
+        var p_instance = $('#course-paper-form').parsley();
+        p_instance.validate();
+        if (p_instance.isValid()) {
+            $.ajax({
+                type: "post",
+                url: location.href,
+                data: new FormData($('#course-paper-form')[0]),
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data["status"] == "success") {
+                        location.reload();
+                    }
+                    else {
+                        alert("保存失败");
+                    }
                 }
-                else {
-                    alert("保存失败");
-                }
-            }
-        });
+            });
+        }
     });
 
     var obj = null;

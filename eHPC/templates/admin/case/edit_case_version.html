@@ -1,6 +1,7 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -67,13 +68,14 @@
                     <h4 class="modal-title" id="myModalLabel">添加案例版本</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="case-version-form" class="form-horizontal" enctype="multipart/form-data">
+                    <form id="case-version-form" class="form-horizontal" data-parsley-validate="">
                         <div class="form-group">
                             <div class="col-md-2 control-label">
                                 <label for="version-name-field">版本标题</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <input id="version-name-field" class="form-control" name="name" type="text">
+                                <input id="version-name-field" class="form-control" name="name" type="text"
+                                    data-parsley-maxlength="256" required>
                             </div>
                         </div>
 
@@ -82,7 +84,8 @@
                                 <label for="version-description-field">版本描述</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <textarea class="form-control" id="version-description-field" name="description" style="height: 200px"></textarea>
+                                <textarea class="form-control" id="version-description-field" name="description" style="height: 200px"
+                                    data-parsley-maxlength="256" required></textarea>
                             </div>
                         </div>
 
@@ -117,19 +120,23 @@
             });
 
             $('#version-save-btn').click(function () {
-                $.ajax({
-                    type: "post",
-                    url: "{{ url_for('admin.case_version', case_id=case.id) }}", 
-                    data: new FormData($('#case-version-form')[0]),
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (data["status"] == "success") {
-                            location.reload();
+                var p_instance = $('#case-version-form').parsley();
+                p_instance.validate();
+                if (p_instance.isValid()) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.case_version', case_id=case.id) }}",
+                        data: new FormData($('#case-version-form')[0]),
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data["status"] == "success") {
+                                location.reload();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
 
             var obj = null;

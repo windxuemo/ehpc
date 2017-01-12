@@ -1,6 +1,7 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -74,13 +75,14 @@
                     <h4 class="modal-title" id="myModalLabel">添加课时</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="course-lesson-form" class="form-horizontal" enctype="multipart/form-data">
+                    <form id="course-lesson-form" class="form-horizontal" data-parsley-validate="">
                         <div class="form-group">
                             <div class="col-md-2 control-label">
                                 <label for="lesson-title-field">标题</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <input id="lesson-title-field" class="form-control" name="title" type="text">
+                                <input id="lesson-title-field" class="form-control" name="title" type="text"
+                                    data-parsley-maxlength="128" required>
                             </div>
                         </div>
 
@@ -122,20 +124,24 @@
             });
 
             $('#lesson-save-btn').click(function () {
-                $.ajax({
-                    type: "post",
-                    url: "{{ url_for('admin.course_lesson', course_id=course.id) }}",
-                    data: new FormData($('#course-lesson-form')[0]),
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (data["status"] == "success") {
-                            alert("保存成功");
-                            location.reload();
+                var p_instance = $('#course-lesson-form').parsley();
+                p_instance.validate();
+                if (p_instance.isValid()) {
+                    $.ajax({
+                        type: "post",
+                        url: "{{ url_for('admin.course_lesson', course_id=course.id) }}",
+                        data: new FormData($('#course-lesson-form')[0]),
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data["status"] == "success") {
+                                alert("保存成功");
+                                location.reload();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
 
             var obj = null;

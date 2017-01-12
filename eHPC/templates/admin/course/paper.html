@@ -1,6 +1,7 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -73,13 +74,13 @@
                     <h4 class="modal-title" id="myModalLabel">试卷信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="course-paper-form" class="form-horizontal" enctype="multipart/form-data">
+                    <form id="course-paper-form" class="form-horizontal" data-parsley-validate="">
                         <div class="form-group">
                             <div class="col-md-2 control-label">
                                 <label for="paper-title-field">标题</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <input id="paper-title-field" class="form-control" name="title" type="text">
+                                <input id="paper-title-field" class="form-control" name="title" type="text" data-parsley-maxlength="128" required>
                             </div>
                         </div>
 
@@ -89,7 +90,7 @@
                             </div>
                             <div class="col-md-9 controls">
                                 <textarea class="form-control" id="paper-content-field" name="content"
-                                          style="height: 200px"></textarea>
+                                          style="height: 200px" data-parsley-maxlength="128" required></textarea>
                             </div>
                         </div>
 

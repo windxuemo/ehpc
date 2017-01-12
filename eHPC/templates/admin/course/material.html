@@ -1,7 +1,8 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-<script src="{{ url_for('static', filename='js/dropzone.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropzone.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -28,7 +29,7 @@
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
-                        <button class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#myModal">
+                        <button id="add-link-file" class="btn btn-info btn-sm pull-right" data-toggle="modal" data-target="#myModal">
                             <i class="glyphicon glyphicon-link"></i>
                             添加外链接文件
                         </button>
@@ -114,26 +115,28 @@
                     <h4 class="modal-title" id="myModalLabel"><i class="glyphicon glyphicon-link"></i> 添加外链接文件</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="course-material-form" enctype="application/x-www-form-urlencoded">
+                    <form id="course-material-form" data-parsley-validate="">
 
                         <div class="form-group clearfix">
                             <div class="controls">
                                 <label for="course-link-field">文件链接：</label>
-                                <input class="form-control" id="course-link-field" name="file-link" type="text" placeholder="请输入文件外链接" style="width: 70%;" required>
+                                <input class="form-control" id="course-link-field" name="file-link" type="text" placeholder="请输入文件外链接" style="width: 70%;"
+                                    data-parsley-maxlength="2048" data-parsley-type="url" required>
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="controls">
                                 <label for="course-name-field">自定义文件名：</label>
-                                <input class="form-control" id="course-name-field" name="file-name" type="text" placeholder="请指定文件名" style="width: 70%;" required>
+                                <input class="form-control" id="file-name-field" name="file-name" type="text" placeholder="请指定文件名" style="width: 70%;"
+                                       data-parsley-maxlength="1024" required>
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="controls">
                                 <label for="file-type">请选择文件类型：</label>
                                 <div>
-                                    <input id="course-type-field2" name="file-type" type="radio" value="video"><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
-                                    <input id="course-type-field3" name="file-type" type="radio" value="radio"><label for="course-type-field3">Radio</label>
+                                    <input id="course-type-field1" name="file-type" type="radio" value="video" required><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
+                                    <input id="course-type-field2" name="file-type" type="radio" value="radio"><label for="course-type-field3">Radio</label>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +148,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="upload-material-btn" data-dismiss="modal">添加</button>
+                    <button type="button" class="btn btn-primary" id="upload-material-btn">添加</button>
                 </div>
             </div><!--/.modal-content-->
         </div><!--/.modal-->

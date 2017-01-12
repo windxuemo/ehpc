@@ -5,6 +5,7 @@
     <link href="//cdn.bootcss.com/datatables/1.10.13/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -20,7 +21,7 @@
                             <div class="form-group row">
                                 <label class="col-md-2" style="text-align: right;">标题</label>
                                 <div class="col-md-8">
-                                    <input id="challenge-title" name="title" required class="form-control"
+                                    <input id="challenge-title" name="title" class="form-control"
                                            type="text" value="{{ '' if op == 'create' else challenge.title }}">
                                 </div>
                             </div>
@@ -46,7 +47,7 @@
                             </div>
 
                             <div class="form-group row" id="selected-question">
-                                <label class="col-md-2" style="text-align: right;">任务</label>
+                                <label class="col-md-2" style="text-align: right;">习题</label>
                                 <div class="col-md-10">
                                     <span>
                                     {% if op == 'edit' and challenge.question_type != 6 %}
@@ -66,7 +67,11 @@
                     </div>
 
                     <div class="panel-footer">
-                        <button id="challenge-save-btn" class="btn btn-primary" style="margin-left: 92%">保存</button>
+                        <span id="challenge-save-info" class="hide" style="position:absolute; left:16.67%; bottom: 40px; color:red;">
+                            <i class="es-icon es-icon-warning"></i>&nbsp;
+                            <span></span>
+                        </span>
+                        <button id="challenge-save-btn" class="btn btn-primary" style="margin-left: 92%;">保存</button>
                     </div>
                 </div>
             </div>
@@ -96,7 +101,7 @@
         <div class="modal-dialog" style="width: 50%">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">材料列表</h4>
+                    <h4 class="modal-title" id="myModalLabel">习题列表</h4>
                 </div>
                 <div class="modal-body">
                     <div style="margin-bottom: 20px;">
@@ -168,14 +173,21 @@
             });
 
             $("#challenge-save-btn").click(function () {
-                if (question_id == -1) {
-                    alert("请选择一个习题");
-                    return;
-                }
                 if ($("#challenge-title").val() == "") {
-                    alert("请填写标题");
+                    show_invalid_info("#challenge-save-info","#challenge-save-info span","任务标题不能为空");
                     return;
                 }
+
+                if(!edt.value()) {
+                    show_invalid_info("#challenge-save-info","#challenge-save-info span","任务内容不能为空");
+                    return;
+                }
+
+                if (question_id == -1) {
+                    show_invalid_info("#challenge-save-info","#challenge-save-info span","请选择一个习题");
+                    return;
+                }
+
                 $.ajax({
                     type: "post",
                     url: location.href,

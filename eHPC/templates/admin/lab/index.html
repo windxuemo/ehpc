@@ -1,12 +1,16 @@
 {% extends 'admin/base.html' %}
 
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container" id="content-container">
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
-                        任务列表
+                        实验列表
                         <span class="pull-right">
                             <button class="btn btn-primary btn-sm" id="knowledge-create-btn"
                                     data-toggle="modal" data-target="#knowledgeModal">
@@ -75,7 +79,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="knowledge-save-btn" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                    <span id="knowledge-save-info" class="hide" style="margin-right:20px;color:red;">
+                        <i class="es-icon es-icon-warning"></i>&nbsp;
+                        <span></span>
+                    </span>
+                    <button id="knowledge-save-btn" type="button" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>
@@ -97,6 +105,14 @@
             });
 
             $("#knowledge-save-btn").click(function () {
+                if(!$("#knowledge-title-field").val()) {
+                    show_invalid_info("#knowledge-save-info","#knowledge-save-info span","标题不能为空");
+                    return;
+                }
+                if($("#knowledge-title-field").val().length > 1024) {
+                    show_invalid_info("#knowledge-save-info","#knowledge-save-info span","标题内容过长（最多1024个字符）");
+                    return;
+                }
                 $.ajax({
                     type: "post",
                     url: location.href,

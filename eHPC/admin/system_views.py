@@ -250,8 +250,6 @@ def case_icon(case_id):
         # 上传图片和保存图片
         cur_case = Case.query.filter_by(id=case_id).first_or_404()
         icon = request.files['pic']
-        if icon.filename == '':
-            return jsonify(status='no_file')
 
         file_type = get_file_type(icon.mimetype)
         if icon and '.' in icon.filename and file_type == 'img':

@@ -19,7 +19,8 @@
                 <label class="col-md-offset-1 col-md-2 control-label"
                        for="old-password">{{ _('Current Password') }}</label>
                 <div class="col-md-7">
-                    <input type="password" id="old-password" name="old-password" class="form-control" data-parsley-maxlength="128" required="required">
+                    <input type="password" id="old-password" name="old-password" class="form-control"
+                           data-parsley-required-message="请输入当前密码" data-parsley-maxlength="128" required="required">
                 </div>
                 {% if message_cur %}
                     <div class="col-md-offset-3 col-md-12 text-danger">{{ message_cur }}</div>
@@ -29,7 +30,8 @@
                 <label class="col-md-offset-1 col-md-2 control-label" for="password1">{{ _('New Password') }}</label>
                 <div class="col-md-7">
                     <input type="password" id="password1" name="password1" class="form-control"
-                           placeholder="{{ _('At least 6 characters') }}" data-parsley-length="[6,128]" required="required">
+                           placeholder="{{ _('At least 6 characters') }}" data-parsley-length="[6,128]"
+                           data-parsley-required-message="请输入新的密码" required="required">
                 </div>
             </div>
 
@@ -37,7 +39,8 @@
                 <label class="col-md-offset-1 col-md-2 control-label" for="password2">{{ _('Repeat Password') }}</label>
                 <div class="col-md-7">
                     <input type="password" id="password2" name="password2" class="form-control"
-                           placeholder="{{ _('At least 6 characters') }}" data-parsley-equalto="#password1" data-parsley-length="[6,128]" required="required">
+                           placeholder="{{ _('At least 6 characters') }}" data-parsley-equalto="#password1"
+                           data-parsley-required-message="请再次输入确认新的密码" data-parsley-length="[6,128]" required="required">
                 </div>
                 {% if message_new %}
                     <div class="col-md-offset-3 col-md-12 text-danger">{{ message_new }}</div>

@@ -39,7 +39,7 @@ $(document).ready(function () {
             show_invalid_info("#homework-edit-info","#homework-edit-info span","请编辑作业标题");
             return;
         }
-        if ($("#homework-title").val().length > 6) {
+        if ($("#homework-title").val().length > 256) {
             show_invalid_info("#homework-edit-info","#homework-edit-info span","作业标题过长（长度不超过256）");
             return;
         }

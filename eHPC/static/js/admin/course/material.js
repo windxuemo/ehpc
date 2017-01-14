@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    var p_instance = $('#course-material-form').parsley();
     $("#material-table-body").find("input").prop("checked", false);
 
     $("#all-select").click(function () {
@@ -11,10 +12,10 @@ $(document).ready(function () {
         $("#course-link-field").val("");
         $("#course-type-field1").prop("checked", false);
         $("#course-type-field2").prop("checked", false);
+        p_instance.reset();
     });
 
     $("#upload-material-btn").click(function () {
-        var p_instance = $('#course-material-form').parsley();
         p_instance.validate();
         if (p_instance.isValid()) {
             $.ajax({

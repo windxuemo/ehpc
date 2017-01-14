@@ -19,7 +19,8 @@
                 <label class="col-md-offset-1 col-md-2 control-label" for="email">{{ _('Email') }}</label>
                 <div class="col-md-7">
                     <input type="email" id="email" name="email" class="form-control"
-                           value="{{ current_user.email }}" data-parsley-type="email" data-parsley-maxlength="128" required="required">
+                           value="{{ current_user.email }}" data-parsley-type="email" data-parsley-maxlength="128"
+                           data-parsley-required-message="请输入邮箱地址" required="required">
                 </div>
                 {% if message_email %}
                     <div class="col-md-offset-3 col-md-12 text-danger">{{ message_email }}</div>

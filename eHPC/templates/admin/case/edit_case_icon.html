@@ -2,7 +2,6 @@
 
 {% block header_ext %}
     <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
-    <!--script-- src="https://cdn.bootcss.com/parsley.js/2.6.2/parsley.js"></script-->
     <script src="{{ url_for('static', filename='js/parsley-add.js') }}"></script>
     <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
@@ -40,7 +39,7 @@
                             <div class="form-group clearfix">
                                 <div class="col-md-offset-2 col-md-8 controls">
                                     <input id="case-icon-field" name="pic" accept="image/bmp,image/jpeg,image/png"
-                                           type="file" data-parsley-max-file-size="128" required>
+                                           type="file" data-parsley-required-message="请选择要上传的图片" data-parsley-max-file-size="128" required>
                                     <p class="help-block">你可以上传jpg, bmp, png格式的文件，不超过1M</p>
                                 </div>
                             </div>

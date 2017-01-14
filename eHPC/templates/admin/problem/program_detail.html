@@ -28,15 +28,17 @@
                                 <div style="margin-bottom: 5px">
                                     <label>标题</label>
                                     <div><input required type="text" class="form-control" name="title" placeholder="请输入题目标题"
-                                        {% if op == 'edit' %}value="{{ program_problem.title }}"{% endif %} data-parsley-maxlength="128">
+                                        {% if op == 'edit' %}value="{{ program_problem.title }}"{% endif %}
+                                                data-parsley-required-message="请输入题目标题" data-parsley-maxlength="128">
                                     </div>
                                 </div>
 
                                 <label>题干</label>
                                 <textarea name="content" id="target-editor"
-                                          data-img-upload-url="{{ url_for("markdown_files.images") }}" required
+                                          data-img-upload-url="{{ url_for("markdown_files.images") }}"
+                                          data-parsley-required-message="请输入题目题干" data-parsley-errors-container=".textarea-errors" required
                                 >{% if op == 'edit' %}{{ program_problem.detail }}{% endif %}</textarea>
-                                {% include 'widget/load_img_progress.html' %}
+                                <div class="textarea-errors"></div>
                             </div>
                             <input type="hidden" name="op" value="{{ op }}">
                             {% if op == 'edit' %}<input type="hidden" name="id" value="{{ program_problem.id }}">{% endif %}

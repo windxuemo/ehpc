@@ -13,8 +13,8 @@
                 <form action="{{ url_for('admin.case_create') }}" method="POST" enctype="multipart/form-data" data-parsley-validate="">
                     <div class="form-group">
                         <label>案例名称</label>
-                        <input type="text" class="form-control" name='name' placeholder="在此输入案例名字"
-                               data-parsley-maxlength="256" required>
+                        <input type="text" class="form-control" name='name' placeholder="在此输入案例名称"
+                               data-parsley-required-message="请输入案例名称" data-parsley-maxlength="256" required>
                         <br>
                     </div>
 
@@ -33,7 +33,8 @@
                     <div class="form-group">
                         <label>案例描述</label>
                         <textarea name="description" id="target-editor" rows="30" data-img-upload-url="{{ url_for("markdown_files.images") }}"
-                            required></textarea>
+                            data-parsley-required-message="请输入案例描述" data-parsley-errors-container=".textarea-errors" required></textarea>
+                        <div class="textarea-errors"></div>
                     </div>
 
                     {% include 'widget/load_img_progress.html' %}
@@ -54,7 +55,7 @@
     <script src="{{ url_for('static', filename='js/custom_simplemde.js') }}"></script>
     <script>
         var post_to = "{{ url_for("admin.case_create") }}";
-        var simplemde = drop_img_simplemde();
+        var simplemde = custom_simplemde();
     </script>
     <script src="{{ url_for('static',filename='js/admin/case/case.js') }}"></script>
 {% endblock %}

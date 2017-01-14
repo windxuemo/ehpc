@@ -121,23 +121,26 @@
                             <div class="controls">
                                 <label for="course-link-field">文件链接：</label>
                                 <input class="form-control" id="course-link-field" name="file-link" type="text" placeholder="请输入文件外链接" style="width: 70%;"
-                                    data-parsley-maxlength="2048" data-parsley-type="url" required>
+                                    data-parsley-maxlength="2048" data-parsley-type="url" data-parsley-required-message="请输入文件链接" required>
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="controls">
                                 <label for="course-name-field">自定义文件名：</label>
                                 <input class="form-control" id="file-name-field" name="file-name" type="text" placeholder="请指定文件名" style="width: 70%;"
-                                       data-parsley-maxlength="1024" required>
+                                       data-parsley-maxlength="1024" data-parsley-required-message="请输入自定义文件名" required>
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="controls">
                                 <label for="file-type">请选择文件类型：</label>
                                 <div>
-                                    <input id="course-type-field1" name="file-type" type="radio" value="video" required><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
+                                    <input id="course-type-field1" name="file-type" type="radio" value="video"
+                                           data-parsley-required-message="请选择文件类型"
+                                           data-parsley-errors-container="#textarea-errors" required><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
                                     <input id="course-type-field2" name="file-type" type="radio" value="radio"><label for="course-type-field3">Radio</label>
                                 </div>
+                                <div id="radio-errors"></div>
                             </div>
                         </div>
 

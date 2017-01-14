@@ -5,6 +5,8 @@ $(document).ready(function () {
         $("#paper-op-field").val("create");
         $("#paper-title-field").val("");
         $("#paper-content-field").val("");
+        var p_instance = $('#course-paper-form').parsley();
+        p_instance.reset();
     });
 
     $('#paper-save-btn').click(function () {

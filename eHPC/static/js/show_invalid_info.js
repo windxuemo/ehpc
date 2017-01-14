@@ -13,6 +13,7 @@ function preview_picture(event) {
     var reader = new FileReader();
     reader.onload = function (e) {
         $(event.data).attr("src", e.target.result);
+        $(event.data).css("display", "block");
     };
     reader.readAsDataURL(this.files[0]);
 }

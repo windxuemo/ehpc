@@ -80,7 +80,8 @@
                                 <label for="paper-title-field">标题</label>
                             </div>
                             <div class="col-md-9 controls">
-                                <input id="paper-title-field" class="form-control" name="title" type="text" data-parsley-maxlength="128" required>
+                                <input id="paper-title-field" class="form-control" name="title" type="text"
+                                       data-parsley-required-message="请输入试卷标题" data-parsley-maxlength="128" required>
                             </div>
                         </div>
 
@@ -90,7 +91,7 @@
                             </div>
                             <div class="col-md-9 controls">
                                 <textarea class="form-control" id="paper-content-field" name="content"
-                                          style="height: 200px" data-parsley-maxlength="128" required></textarea>
+                                          style="height: 200px" data-parsley-maxlength="128" data-parsley-required-message="请输入试卷简介" required></textarea>
                             </div>
                         </div>
 

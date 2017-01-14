@@ -4678,3 +4678,13 @@ div.no-margin {
     max-width: 100%;
     margin: 0;
 }
+
+/*表单验证信息样式自定义*/
+.parsley-errors-list {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.textarea-errors .parsley-errors-list {
+    margin-top: -15px;
+}

@@ -94,7 +94,7 @@
                     cid = $(this).data('cid');
                 }
                 if (!$("#classify-name-field").val()) {
-                    show_invalid_info("#classify-save-info","#classify-save-info span","知识点内容不能为空");
+                    show_invalid_info("#classify-save-info","#classify-save-info span","请输入知识点名称");
                     return;
                 }
                 if (!$("#classify-name-field").val().length > 128) {

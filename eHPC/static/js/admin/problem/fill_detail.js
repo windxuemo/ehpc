@@ -7,24 +7,6 @@ $(function () {
         $(".selectpicker").selectpicker('val', selected_classifies);
     }
 
-    var edt1 = custom_simplemde({
-        element: document.getElementById("content-editor"),
-        autosave: true,
-        showIcons: ["code", "table"],
-        tabSize: 4,
-        spellChecker: false,
-        previewRender: latex_support
-    });
-
-    var edt2 = custom_simplemde({
-        element: document.getElementById("analysis-editor"),
-        autosave: true,
-        showIcons: ["code", "table"],
-        tabSize: 4,
-        spellChecker: false,
-        previewRender: latex_support
-    });
-
     $("#form").submit(function (evt) {
         var array = edt1.value().split('*');
         var solution = {}, count = 0;

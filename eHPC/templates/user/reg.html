@@ -19,6 +19,7 @@
                                class="form-control input-lg" data-url="/register/nickname/check"
                                placeholder="{{ _('letters,digits,underscore') }}"
                                data-com.agilebits.onepassword.user-edited="yes"
+                               data-parsley-required-message="用户名不能为空"
                                data-widget-cid="widget-3" data-explain="" data-parsley-type="alphanum" data-parsley-maxlength="128">
                         <p class="help-block"></p>
                         {% if message_u %}
@@ -30,7 +31,8 @@
                         <label class="control-label required" for="register_mobile">{{ _('Email Address') }}</label>
                         <input type="text" id="login_email" name="email" required="required"
                                class="form-control input-lg"
-                               placeholder="{{ _('Email Address') }}" data-widget-cid="widget-2" data-explain="" data-parsley-type="email" data-parsley-maxlength="128">
+                               placeholder="{{ _('Email Address') }}" data-widget-cid="widget-2" data-explain=""
+                               data-parsley-required-message="邮箱地址不能为空" data-parsley-type="email" data-parsley-maxlength="128">
                         <p class="help-block"></p>
                         {% if message_e %}
                             <p class="help-block"><span class="text-danger"> {{ message_e }}</span></p>
@@ -42,6 +44,7 @@
                         <input type="password" id="register_password1" name="password" required="required"
                                class="form-control input-lg" data-widget-cid="widget-4" data-explain=""
                                data-com.agilebits.onepassword.user-edited="yes"
+                               data-parsley-required-message="请设置登录密码"
                                placeholder="{{ _('At least 6 characters') }}" data-parsley-length="[6,128]">
                         <p class="help-block"></p>
                     </div>
@@ -51,6 +54,7 @@
                             <input type="password" id="register_password2" name="password2" required="required"
                                    class="form-control input-lg" data-widget-cid="widget-4" data-explain=""
                                    data-com.agilebits.onepassword.user-edited="yes"
+                                   data-parsley-required-message="请再次输入确认您的密码"
                                    placeholder="{{ _('At least 6 characters') }}" data-parsley-equalto="#register_password1" data-parsley-length="[6,128]">
                             <p class="help-block"></p>
                         </div>

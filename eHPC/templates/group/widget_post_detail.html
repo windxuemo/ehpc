@@ -1,7 +1,7 @@
 <div class="list-group-item list-topic-item" id="comment-{{ index }}">
     <div class="row">
         <a href="{{ url_for('user.view', uid=p.userID) }}" class="col-md-1"><img
-                title="{{ p.user.username }}" class="avatar-middle" src=" {{ p.user.avatar_url }} "></a>
+                title="{{ p.user.username }}" class="avatar-middle" src=" {{ p.user.avatar_url | get_avatar_path }} "></a>
         <div class="col-xs-11">
             <div class="row list-meta color-gray">
                 <div class="col-sm-10">

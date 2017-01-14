@@ -4,7 +4,9 @@
 from . import filter_blueprint
 import re
 from ..models import User
-from flask import url_for
+from flask import url_for, current_app
+import os
+
 # import misaka as m
 
 # 后台不再渲染 Markdown, 改为用 js 在前端渲染。
@@ -41,3 +43,14 @@ def add_user_links_in_content(content):
             content)
 
     return content
+
+
+@filter_blueprint.app_template_filter('get_avatar_path')
+def get_avatar_path(avatar_name):
+    """ 获取用户图像的完整路径
+
+    目前配置文件中头像存储位置为: static/upload/avatar/...
+    """
+    avatar_folder = current_app.config['AVATAR_PATH']
+    avatar_path = os.path.join(avatar_folder, avatar_name)
+    return avatar_path

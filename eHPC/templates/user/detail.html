@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="user-center-header has-blurr" data-href="{{ user.avatar_url }}"
+    <div class="user-center-header has-blurr" data-href="{{ user.avatar_url | get_avatar_path }}"
          data-sharpness="40" style="height: 220px; overflow: hidden; position: relative;">
         <div class="blurr-bg"
-             style="background: url('{{ user.avatar_url }}') center center / 150%; left: 0px; right: 0px; top: -50px; bottom: -50px; width: 1916px; filter: blur(60px); transform: translateZ(0px); position: absolute;"></div>
+             style="background: url('{{ user.avatar_url | get_avatar_path}}') center center / 150%; left: 0px; right: 0px; top: -50px; bottom: -50px; width: 1916px; filter: blur(60px); transform: translateZ(0px); position: absolute;"></div>
         <div class="container clearfix" style="position: absolute; left: 0px; right: 0px; z-index: 1;">
             <div class="user-avatar">
                 <div class="avatar-wrap">
-                    <img class="avatar-lg" src="{{ user.avatar_url }}">
+                    <img class="avatar-lg" src="{{ user.avatar_url | get_avatar_path }}">
                 </div>
                 <div class="name">
                     {{ user.username }}

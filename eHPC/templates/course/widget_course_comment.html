@@ -1,7 +1,7 @@
 {% for comment in course.comments.order_by('-createdTime') %}
     <div class="media">
         <a class="pull-left js-user-card" href="/user/{{ comment.user.id }}">
-            <img class="media-object avatar-sm" src="{{ comment.user.avatar_url }}">
+            <img class="media-object avatar-sm" src="{{ comment.user.avatar_url | get_avatar_path}}">
         </a>
         <div class="media-body" style="border-bottom: 1px solid #f5f5f5;padding-bottom: 15px;">
             <div>

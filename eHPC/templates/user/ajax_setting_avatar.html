@@ -12,7 +12,7 @@
               enctype="multipart/form-data" data-parsley-validate="">
             <div class="form-group clearfix">
                 <div class="col-md-offset-2 col-md-8 controls">
-                    <img id="user-avatar" src="{{ current_user.avatar_url }}" style="height: 128px;width: 128px;">
+                    <img id="user-avatar" src="{{ current_user.avatar_url | get_avatar_path }}" style="height: 128px;width: 128px;">
                 </div>
             </div>
             <div class="form-group clearfix">

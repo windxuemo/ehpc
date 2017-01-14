@@ -28,6 +28,8 @@ class Config:
 
     PER_PAGE = 10
     UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/upload')
+
+
     HOMEWORK_FOLDER = os.path.join(basedir, 'eHPC/static/homework')
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
     CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/case')
@@ -39,6 +41,9 @@ class Config:
     # 这个路径用来保存 Markdown 编辑框拖拽上传的文件
     MD_UPLOAD_IMG = 'static/upload/md_images/'
     IMAGES_FOLDER = os.path.join(basedir, 'eHPC/', MD_UPLOAD_IMG)
+    # 用户头像保存的地址
+    AVATAR_PATH = "/static/upload/avatar"
+    AVATAR_FOLDER = os.path.join(basedir, 'eHPC/', MD_UPLOAD_IMG)
 
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
     ALLOWED_RESOURCE_TYPE = {'pdf', 'video', 'audio'}

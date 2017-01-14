@@ -227,22 +227,23 @@ def setting_info():
 @login_required
 def setting_avatar():
     if request.method == 'GET':
-        return jsonify(content=render_template('user/ajax_setting_avatar.html', form=None))
+        return jsonify(content=render_template('user/ajax_setting_avatar.html',
+                                               form=None))
 
     elif request.method == 'POST':
         _file = request.files['file']
 
-        upload_folder = current_app.config['UPLOAD_FOLDER']
+        avatar_folder = current_app.config['AVATAR_FOLDER']
         file_type = get_file_type(_file.mimetype)
         if _file and '.' in _file.filename and file_type == "img":
             im = Image.open(_file)
             im.thumbnail((128, 128), Image.ANTIALIAS)
-            im.save("%s/%d.png" % (upload_folder, current_user.id), 'PNG')
 
-            image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], "%d.png" % current_user.id)
+            image_path = os.path.join(avatar_folder, "%d.png" % current_user.id)
+            im.save(image_path, 'PNG')
             unique_mark = os.stat(image_path).st_mtime
-            current_user.avatar_url = url_for('static',
-                                              filename='upload/%d.png' % current_user.id, t=unique_mark)
+            current_user.avatar_url = '%d.png?t=%s' % (current_user.id, unique_mark)
+
             db.session.commit()
             message_success = gettext('Update avatar done!')
             return jsonify(content=render_template('user/ajax_setting_avatar.html',
@@ -269,16 +270,10 @@ def setting_password():
         if not current_user.verify_password(cur_password):
             message_cur = "The old password is not correct."
 
-        #if new_password != new_password_2:
-        #    message_new = gettext("Passwords don't match.")
-        #elif new_password_2 == "" or new_password == "":
-        #    message_new = gettext("Passwords can not be empty.")
-
         if message_cur or message_new:
             return jsonify(content=render_template('user/ajax_setting_passwd.html', form=_form,
                                                    message_cur=message_cur,
-                                                   message_new=message_new
-                                                   ))
+                                                   message_new=message_new))
         else:
             current_user.password = new_password
             db.session.commit()

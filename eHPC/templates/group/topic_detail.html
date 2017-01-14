@@ -20,7 +20,7 @@
                         <div class="media">
                             <div class="media-left prm">
                                 <a class="" href="{{ url_for('user.view', uid=topic.userID) }}">
-                                    <img src="{{ topic.user.avatar_url }}" class="avatar-md">
+                                    <img src="{{ topic.user.avatar_url | get_avatar_path }}" class="avatar-md">
                                 </a>
                             </div>
                             <div class="media-body ptm list-meta">

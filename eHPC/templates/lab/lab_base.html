@@ -44,7 +44,7 @@
             <ul class="nav user-nav">
                 <li class="user-avatar-li nav-hover">
                     <a href="javascript:;" class="dropdown-toggle">
-                        <img class="avatar-xs" src="{{ current_user.avatar_url }}">
+                        <img class="avatar-xs" src="{{ current_user.avatar_url | get_avatar_path }}">
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>

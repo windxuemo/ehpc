@@ -16,7 +16,7 @@
 
                         <div class="metas">
                             <a class="userImg js-user-card" href="{{ url_for('user.view', uid=t.userID) }}">
-                                <img class="avatar-xxs" src="{{ t.user.avatar_url }} ">
+                                <img class="avatar-xxs" src="{{ t.user.avatar_url | get_avatar_path }} ">
                             </a>
 
                             <a class="link-dark pls"

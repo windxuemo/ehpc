@@ -2,7 +2,7 @@
     {% for u in group.members[:30] %}
         <li id="member-{{ u.id }}">
             <a class="js-user-card" href="{{ url_for('user.view', uid=u.id) }}">
-                <img class="avatar-sm" src="{{ u.avatar_url }}">
+                <img class="avatar-sm" src="{{ u.avatar_url | get_avatar_path }}">
             </a>
         </li>
     {% endfor %}

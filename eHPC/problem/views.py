@@ -4,11 +4,12 @@
 from flask import render_template, jsonify, request, abort
 from flask_login import current_user, login_required
 from . import problem
-from ..models import Program, Classify, SubmitProblem, Question
+from ..models import Program, Classify, SubmitProblem, Question, UserQuestion
 from flask_babel import gettext
 from ..problem.code_process import ehpc_client
 from .. import db
 from sqlalchemy import or_
+from datetime import datetime
 
 
 @problem.route('/')
@@ -100,6 +101,18 @@ def question_view(cid, question_type):
         practices = classify_name.questions.filter_by(type=5).all()
     else:
         abort(404)
+
+    if current_user.is_authenticated:
+        user_question = UserQuestion.query.filter_by(user_id=current_user.id, classify_id=cid,
+                                                     question_type=question_type).first()
+        if user_question:
+            user_question.last_time = datetime.now()
+            db.session.commit()
+        else:
+            user_question = UserQuestion(user_id=current_user.id, classify_id=cid,
+                                         question_type=question_type, last_time=datetime.now())
+            db.session.add(user_question)
+            db.session.commit()
 
     return render_template('problem/practice_detail.html',
                            classify_id=classify_name.id,

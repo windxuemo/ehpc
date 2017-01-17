@@ -1035,14 +1035,14 @@ LOCK TABLES `programs` WRITE;
 
 INSERT INTO `programs` (`id`, `title`, `detail`, `difficulty`, `acceptedNum`, `submitNum`, `createdTime`, `user_id`)
 VALUES
-	(5,'编写Pthreads程序','编写Pthreads程序，求小于2n的素数。\r\n\r\na)	输入：整数n，10\\<n\\<48。\r\n\r\nb)	输出：二进制文件。每个素数用一个int64_t型的整数表示，找到的全部素数按照从小到大顺序存储在输出文件中。\r\n',0,0,0,'2016-12-29 23:53:11',3),
-	(6,'编写MPI程序','编写MPI程序，求小于2n的素数。\r\n\r\na)	输入：整数n，10\\<n\\<48。\r\n\r\nb)	输出：二进制文件。每个素数用一个int64_t型的整数表示，找到的全部素数按照从小到大顺序存储在输出文件中。\r\n',0,0,0,'2016-12-29 23:53:40',3),
-	(7,'计算π的近似值','公式![](/static/upload/md_images/20161229235552.png)可用于计算π的近似值。编写串行程序、Pthreads程序、和MPI程序实现该公式，分别计算π的近似值。\r\n\r\na)	输入：整数k和p，10\\<k\\<48。n=2k表示计算精度，p是并行执行时处理器的数量。\r\n\r\nb)	输出：每个版本分别以科学表示法输出所计算的π。\r\n',0,0,0,'2016-12-29 23:56:26',3),
-	(8,'计算两个矩阵的乘积','计算两个矩阵A和B的乘积A×B，其中A是m×n的单精度浮点数矩阵、B是n×k的单精度浮点数矩阵。\r\n\r\na)	输入：m、n、k、fa、fb、of。m、n、k是三个正整数，分别表示矩阵A和B的行数、列数。fa和fb是两个二进制输入文件，fa按行优先顺序存储A的元素值，fb按行优先顺序存储B的元素值；of是输出文件的名称。\r\n\r\nb)	输出：名为of的二进制文件，按行优先顺序存储结果矩阵的元素。\r\n\r\n',0,0,0,'2016-12-29 23:58:14',3),
-	(9,'整型数组排序','对长度为2n的整型数组排序。原始数组的每个元素类型为int32_t，以二进制存储在数据文件data.in中。\r\n\r\na)	输入：n。\r\n\r\nb)	输出：对data.in中前2n个元素从小到大排序，并将排序结果以二进制存储在文件data.out中。\r\n',0,0,0,'2016-12-29 23:58:44',3),
-	(10,'求粒子状态','在某个粒子系统中共有2n个粒子，粒子之间的互相吸引力导致其状态不断变化。为简化问题，我们将任意两个粒子b1和b2之间的吸引力用公式![](/static/upload/md_images/20161230000108.png)表示，其中m1、m2分别是b1和b2的质量，→┬r_12是b1和b2之间的矢量距离；粒子b的移动速度用矢量表示f ⃗/m表示，其中f ⃗、m分别是b的受力和质量。计算经过t个时间步后，该粒子系统的状态。粒子的原始状态存储在二进制文件data.in中，每个粒子的状态占用4个双精度浮点数，依次是质量、x轴坐标、y轴坐标、z轴坐标。\r\n\r\na)	输入：n，t。n表示粒子系统中共有2n个粒子，t是模拟计算的时间步数量。\r\n\r\nb)	输出：经过t步后各个粒子的状态，存储在二进制文件data.out中data.in。粒子在输出文件中的存储顺序与输入文件的一致，每个粒子的状态占用4个双精度浮点数，依次是质量、x轴坐标、y轴坐标、z轴坐标。\r\n',0,0,0,'2016-12-30 00:02:31',3),
-	(11,'统计图顶点的度数','给定图G=\\<V, E\\>的全部边，统计其中各顶点的度数。假设G是无向图，其顶点从0开始顺序编号。\r\n\r\na)	输入：graph.mtx。二进制文件名，其中每条记录表示G的一条边，由两个 int32_t型的整数组成，分别是端点的序号。\r\n\r\nb)	输出：graph.deg。与输入文件相同前缀的二进制文件名，存储G中各个顶点的度数。每个顶点的度数用一个int32_t型的整数表示，各顶点度数的存储顺序与其编号顺序一致。\r\n',0,0,0,'2016-12-30 00:03:11',3),
-	(12,'浮点数数组排序','对长度为2n的浮点数数组排序。原始数组的每个元素类型为双精度浮点数，以二进制存储在数据文件data.in中。\r\n\r\na)	输入：n。\r\n\r\nb)	输出：对data.in中前2n个元素从小到大排序，并将排序结果以二进制存储在文件data.out中。\r\n',0,0,0,'2016-12-30 00:03:33',3);
+	(1,'编写Pthreads程序','编写Pthreads程序，求小于2n的素数。\r\n\r\na)	输入：整数n，10\\<n\\<48。\r\n\r\nb)	输出：二进制文件。每个素数用一个int64_t型的整数表示，找到的全部素数按照从小到大顺序存储在输出文件中。\r\n',0,0,0,'2016-12-29 23:53:11',3),
+	(2,'编写MPI程序','编写MPI程序，求小于2n的素数。\r\n\r\na)	输入：整数n，10\\<n\\<48。\r\n\r\nb)	输出：二进制文件。每个素数用一个int64_t型的整数表示，找到的全部素数按照从小到大顺序存储在输出文件中。\r\n',0,0,0,'2016-12-29 23:53:40',3),
+	(3,'计算π的近似值','公式![](/static/upload/md_images/20161229235552.png)可用于计算π的近似值。编写串行程序、Pthreads程序、和MPI程序实现该公式，分别计算π的近似值。\r\n\r\na)	输入：整数k和p，10\\<k\\<48。n=2k表示计算精度，p是并行执行时处理器的数量。\r\n\r\nb)	输出：每个版本分别以科学表示法输出所计算的π。\r\n',0,0,0,'2016-12-29 23:56:26',3),
+	(4,'计算两个矩阵的乘积','计算两个矩阵A和B的乘积A×B，其中A是m×n的单精度浮点数矩阵、B是n×k的单精度浮点数矩阵。\r\n\r\na)	输入：m、n、k、fa、fb、of。m、n、k是三个正整数，分别表示矩阵A和B的行数、列数。fa和fb是两个二进制输入文件，fa按行优先顺序存储A的元素值，fb按行优先顺序存储B的元素值；of是输出文件的名称。\r\n\r\nb)	输出：名为of的二进制文件，按行优先顺序存储结果矩阵的元素。\r\n\r\n',0,0,0,'2016-12-29 23:58:14',3),
+	(5,'整型数组排序','对长度为2n的整型数组排序。原始数组的每个元素类型为int32_t，以二进制存储在数据文件data.in中。\r\n\r\na)	输入：n。\r\n\r\nb)	输出：对data.in中前2n个元素从小到大排序，并将排序结果以二进制存储在文件data.out中。\r\n',0,0,0,'2016-12-29 23:58:44',3),
+	(6,'求粒子状态','在某个粒子系统中共有2n个粒子，粒子之间的互相吸引力导致其状态不断变化。为简化问题，我们将任意两个粒子b1和b2之间的吸引力用公式![](/static/upload/md_images/20161230000108.png)表示，其中m1、m2分别是b1和b2的质量，→┬r_12是b1和b2之间的矢量距离；粒子b的移动速度用矢量表示f ⃗/m表示，其中f ⃗、m分别是b的受力和质量。计算经过t个时间步后，该粒子系统的状态。粒子的原始状态存储在二进制文件data.in中，每个粒子的状态占用4个双精度浮点数，依次是质量、x轴坐标、y轴坐标、z轴坐标。\r\n\r\na)	输入：n，t。n表示粒子系统中共有2n个粒子，t是模拟计算的时间步数量。\r\n\r\nb)	输出：经过t步后各个粒子的状态，存储在二进制文件data.out中data.in。粒子在输出文件中的存储顺序与输入文件的一致，每个粒子的状态占用4个双精度浮点数，依次是质量、x轴坐标、y轴坐标、z轴坐标。\r\n',0,0,0,'2016-12-30 00:02:31',3),
+	(7,'统计图顶点的度数','给定图G=\\<V, E\\>的全部边，统计其中各顶点的度数。假设G是无向图，其顶点从0开始顺序编号。\r\n\r\na)	输入：graph.mtx。二进制文件名，其中每条记录表示G的一条边，由两个 int32_t型的整数组成，分别是端点的序号。\r\n\r\nb)	输出：graph.deg。与输入文件相同前缀的二进制文件名，存储G中各个顶点的度数。每个顶点的度数用一个int32_t型的整数表示，各顶点度数的存储顺序与其编号顺序一致。\r\n',0,0,0,'2016-12-30 00:03:11',3),
+	(8,'浮点数数组排序','对长度为2n的浮点数数组排序。原始数组的每个元素类型为双精度浮点数，以二进制存储在数据文件data.in中。\r\n\r\na)	输入：n。\r\n\r\nb)	输出：对data.in中前2n个元素从小到大排序，并将排序结果以二进制存储在文件data.out中。\r\n',0,0,0,'2016-12-30 00:03:33',3);
 
 /*!40000 ALTER TABLE `programs` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1057,6 +1057,7 @@ CREATE TABLE `progress` (
   `user_id` int(11) NOT NULL,
   `knowledge_id` int(11) NOT NULL,
   `cur_progress` int(11) DEFAULT NULL,
+	`update_time` datetime NOT NULL,
   PRIMARY KEY (`user_id`,`knowledge_id`),
   KEY `knowledge_id` (`knowledge_id`),
   CONSTRAINT `progress_ibfk_1` FOREIGN KEY (`knowledge_id`) REFERENCES `knowledges` (`id`),
@@ -1070,7 +1071,6 @@ INSERT INTO `progress` (`user_id`, `knowledge_id`, `cur_progress`)
 VALUES
 	(1,4,1),
 	(2,4,6),
-	(3,2,0),
 	(3,4,6),
 	(5,4,2),
 	(10,4,0),
@@ -1767,7 +1767,9 @@ CREATE TABLE `submit_problem` (
   `language` varchar(128) NOT NULL,
   `submit_time` datetime DEFAULT NULL,
   `status` varchar(128) DEFAULT '',
-  PRIMARY KEY (`id`)
+	KEY `pid` (`pid`),
+  PRIMARY KEY (`id`),
+	CONSTRAINT `submit_problem_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `programs` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 LOCK TABLES `submit_problem` WRITE;
@@ -1948,6 +1950,20 @@ VALUES
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+DROP TABLE IF EXISTS `user_questions`;
+
+CREATE TABLE `user_questions` (
+  `user_id` int(11) NOT NULL,
+  `classify_id` int(11) NOT NULL,
+	`question_type` varchar(128) NOT NULL,
+	`last_time` datetime NOT NULL,
+	PRIMARY KEY (`user_id`, `classify_id`, `question_type`),
+  KEY `user_id` (`user_id`),
+	KEY `classify_id` (`classify_id`),
+  CONSTRAINT `user_questions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+	CONSTRAINT `user_questions_ibfk_2` FOREIGN KEY (`classify_id`) REFERENCES `classifies` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

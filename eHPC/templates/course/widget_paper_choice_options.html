@@ -3,8 +3,7 @@
         <li class="media choice-options" data-check="0">
             <i class="glyphicon glyphicon-ok pull-left" style="margin-top: 3px;display: none"></i>
             <div class="pull-left" style="width: 5%;padding: 0">
-                <span data-id="option" style="font-weight: bold">{{ i | get_char }}</span>
-                <span>、 </span>
+                <span data-id="option" style="font-weight: bold">{{ i | get_char }}</span><span>、 </span>
             </div>
             <div class="pull-right" style="width: 91%;padding: 0">{{ choice.content | get_json_value(i | string) }}</div>
         </li>

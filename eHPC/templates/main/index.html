@@ -2,6 +2,7 @@
 
 {% block header_ext %}
     <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="{{ url_for('static', filename='css/problem.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -39,6 +40,81 @@
             </a>
         </div>
     </section>
+
+    {% if current_user.is_authenticated %}
+        {% if user_courses or user_topics or user_question or user_program or user_challenges %}
+        <section class="course-list-section">
+            <div class="container">
+                <div class="text-line">
+                    <h5><span>最近浏览</span>
+                        <div class="line"></div>
+                    </h5>
+                </div>
+                {% if user_courses %}
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="margin-bottom: 10px"><h3 class="panel-title">已加入的课程</h3></div>
+                    <div class="course-list">
+                        <div class="row">
+                            {% with courses=user_courses %}
+                            {% include 'course/widget_course_list.html' %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if user_topics %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">最近评论过的话题</h3></div>
+                    {% with latest_topics=user_topics %}
+                        {% include 'group/widget_topic_list.html' %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+                {% if user_question %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">最近浏览过的知识点题目</h3></div>
+                    <div>
+                        {% for uq in user_question %}
+                            <a class="media choice-options btn-block color-primary" href="{{ url_for('problem.question_view', question_type=uq.question_type,
+                            cid=uq.classify_id) }}" style="margin: 10px 0">
+                                {{ uq.classify.name }}
+                                ({% if uq.question_type == 'choice' %}
+                                    选择题
+                                {% elif uq.question_type == 'fill' %}
+                                    填空题
+                                {% elif uq.question_type == 'judge' %}
+                                    判断题
+                                {% elif uq.question_type == 'essay' %}
+                                    问答题
+                                {% endif %})</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if user_program %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">最近提交过的编程题</h3></div>
+                    <div>
+                        {% for up in user_program %}
+                            <a class="media choice-options btn-block color-primary" href="{{ url_for('problem.program_view', pid=up.id) }}">{{ up.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if user_challenges %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">正在进行的实验小任务</h3></div>
+                    <div>
+                        {% for uc in user_challenges %}
+                            <a class="media choice-options btn-block color-primary" href="{{ url_for('lab.knowledge', kid=uc.knowledge_id, progress=uc.cur_progress) }}">{{ uc.knowledge.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+    {% endif %}
 
     <section class="course-list-section open-course-list-section ">
         <div class="container">

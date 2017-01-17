@@ -8,6 +8,7 @@ from flask_login import login_required, current_user
 from ..models import Challenge, Question, Knowledge, Progress, Material
 from ..lab.lab_util import get_question_and_type, check_if_correct
 from .. import db
+from datetime import datetime
 
 
 @lab.route('/')
@@ -40,9 +41,10 @@ def knowledge(kid):
     if request.method == 'GET':
         pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
         if pro is None:     # 如果用户在此knowledge上无progress记录，则添加一条新纪录
-            pro = Progress(user_id=current_user.id, knowledge_id=kid)
+            pro = Progress(user_id=current_user.id, knowledge_id=kid, update_time=datetime.now())
             db.session.add(pro)
-            db.session.commit()
+        pro.update_time = datetime.now()
+        db.session.commit()
 
         cur_progress = pro.cur_progress + 1
 

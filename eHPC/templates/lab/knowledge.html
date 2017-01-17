@@ -42,19 +42,19 @@
         <!--Challenge的题目展示-->
         <div data-name="question" data-id="{{ practice.id }}" data-type="{{ practice.id }}">
             <!--题干-->
-            <div class="markdown-body">
+            <div>
                 <p class="text-center text-xlarge">小测试</p>
                 <hr>
                 {% if question_type == 'choice' %}
-                    <span id="question_content" data-to-render="{{ practice | get_question_content }}"></span>
+                    <span class="markdown-body" id="question_content" data-to-render="{{ practice | get_question_content }}"></span>
                 {% elif question_type == 'fill' %}
-                    <span id="question_content" data-id="fill-id" data-len="{{ practice.solution | get_fill_solution_len }}" data-to-render="{{ practice.content | split_fill }}"></span>
+                    <span class="markdown-body" id="question_content" data-id="fill-id" data-len="{{ practice.solution | get_fill_solution_len }}" data-to-render="{{ practice.content | split_fill }}"></span>
                 {% elif question_type == 'judge' or question_type == 'essay' %}
-                    <span id="question_content" data-to-render="{{ practice.content }}"></span>
+                    <span class="markdown-body" id="question_content" data-to-render="{{ practice.content }}"></span>
                 {% endif %}
             </div>
 
-            <div class="markdown-body">
+            <div class="markdown-body" id="question_detail">
                 {% if question_type != 'program' %}
                     {% with question=practice %}
                         {% include 'course/widget_paper_question_detail.html' %}
@@ -62,7 +62,7 @@
                 {% endif %}
             </div>
 
-            <button class="btn btn-primary pull-right" data-id="confirm">确认</button>
+            <button class="btn btn-primary pull-right" style="margin-top: 10px" data-id="confirm">确认</button>
         </div>
     </div>
 

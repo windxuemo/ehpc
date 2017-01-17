@@ -272,6 +272,8 @@ class Program(db.Model):
     # 题目相关的实验任务
     challenges = db.relationship('Challenge', backref='program', lazy='dynamic')
 
+    submit_problems = db.relationship('SubmitProblem', backref='program', lazy='dynamic')
+
 
 class SubmitProblem(db.Model):
     # 一个题目可以有很多人提交,一个人可以提交多个题目。所以题目和用户是多对多的关系
@@ -284,7 +286,7 @@ class SubmitProblem(db.Model):
 
     __tablename__ = "submit_problem"
     id = db.Column(db.Integer, primary_key=True)            # 提交记录id
-    pid = db.Column(db.Integer, nullable=False)             # 本次提交的题目ID
+    pid = db.Column(db.Integer, db.ForeignKey('programs.id'))             # 本次提交的题目ID
     uid = db.Column(db.Integer, nullable=False)             # 本次提交的用户ID
     code = db.Column(db.Text(), nullable=False)             # 本次提交的提交代码
     language = db.Column(db.String(128), nullable=False)     # 本次提交的代码语言
@@ -341,6 +343,8 @@ class Classify(db.Model):
     __tablename__ = "classifies"
     id = db.Column(db.Integer, primary_key=True)        # 分类 ID
     name = db.Column(db.String(128), nullable=False)     # 分类名字
+
+    user_questions = db.relationship('UserQuestion', backref='classify', lazy='dynamic')
 
 
 """ 咨询信息
@@ -403,6 +407,7 @@ class Progress(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)                # 用户 ID
     knowledge_id = db.Column(db.Integer, db.ForeignKey('knowledges.id'), primary_key=True)      # 技能 ID
     cur_progress = db.Column(db.Integer, default=0)     # 用户 user_id 在知识点 knowledge_id 上已经完成的最后一个任务
+    update_time = db.Column(db.DateTime, nullable=False)
 
     knowledge = db.relationship('Knowledge', backref=db.backref('users',
                                                                 lazy='dynamic', cascade="delete, delete-orphan"))
@@ -494,3 +499,11 @@ class QRcode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     end_time = db.Column(db.DateTime, nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
+
+
+class UserQuestion(db.Model):
+    __tablename__ = "user_questions"
+    user_id = db.Column(db.Integer, nullable=False, primary_key=True)
+    classify_id = db.Column(db.Integer, db.ForeignKey('classifies.id'), primary_key=True)
+    question_type = db.Column(db.String(128), nullable=False, primary_key=True) # choice fill judge essay
+    last_time = db.Column(db.DateTime, nullable=False)

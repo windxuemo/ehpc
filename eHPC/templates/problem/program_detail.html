@@ -32,8 +32,9 @@
         </div>
 
         <form onsubmit="submit_code(); return false;">
-            <div class="row form-group">
-                <div class="col-md-4">
+            <div class="row">
+
+                <div class="col-md-4 form-group">
                     <select class="form-control" id="language">
                         <option value="ace/mode/c_cpp">C</option>
                         <option value="ace/mode/c_cpp">C++</option>
@@ -41,6 +42,54 @@
                         <option value="ace/mode/fortran">Fortran</option>
                     </select>
                 </div>
+            </div>
+                <!--
+                <div class="checkbox">
+                    <label class="col-md-4">
+                        <input value="mpi" id="mpi" type="checkbox" checked="checked">mpi
+                    </label>
+                    <label class="col-md-4">
+                        <input value="openmp" id="openmp" type="checkbox">openmp
+                    </label>
+                </div>
+                -->
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label class="col-md-3" for="task_number">任务数</label>
+                    <select class="col-md-4" name="task_number" id="task_number">
+                        <option value="1">1</option>
+                        <option value="4">4</option>
+                        <option value="16">16</option>
+                        <option value="64">64</option>
+                        <option value="128">128</option>
+                        <option value="512">512</option>
+                        <option value="1024">1024</option>
+                        <option value="2400">2400</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label class="col-md-3" for="cpu_number_per_task">CPU/任务</label>
+                    <select class="col-md-4" name="cpu_number_per_task" id="cpu_number_per_task">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 form-group">
+                    <label class="col-md-3" for="node_number">结点数</label>
+                    <select class="col-md-4" name="node_number" id="node_number">
+                        <option value="1">1</option>
+                        <option value="4">4</option>
+                        <option value="16">16</option>
+                        <option value="64">64</option>
+                        <option value="128">128</option>
+                        <option value="256">256</option>
+                    </select>
+                </div>
+
             </div>
 
             <div class="row form-group">
@@ -50,7 +99,6 @@
 
             <div class="row form-group">
                 <div class="pull-right">
-                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal">参数设置</button>
                     <button id="submit" class="btn btn-primary"
                             type="submit">{{ _('Submit Solution') }}
                     </button>
@@ -61,75 +109,28 @@
             <input class="hide" name="problem_id" value="{{ problem.id }}">
             <input id="source_code" name="source_code" value="" type="hidden">
 
-			<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modallabel" aria-hidden="true">
-			    <div class="modal-dialog" role="document">
-			        <div class="modal-content">
-			            <div class="modal-content">
-
-			                <div class="modal-header">
-			                    <h4 class="modal-title" id="modallabel">参数设置</h4>
-			                </div>
-
-			                <div class="modal-body">
-			                    <div class="row">
-			                        <label class="col-md-3" for="compiler_setting">编译器</label>
-			                        <select class="col-md-4" name="compiler_setting" id="compiler_setiting">
-			                            <option value="mpicc">mpicc</option>
-			                        </select>
-			                    </div>
-
-			                    <div class="row">
-			                        <label class="col-md-3" for="task_number">任务数</label>
-			                        <select class="col-md-4" name="task_number" id="task_number">
-			                            <option value="4">4</option>
-			                            <option value="8">8</option>
-			                        </select>
-			                    </div>
-
-			                    <div class="row">
-			                        <label class="col-md-3" for="cpu_number_per_task">CPU/任务</label>
-			                        <select class="col-md-4" name="cpu_number_per_task" id="cpu_number_per_task">
-			                            <option value="1">1</option>
-			                        </select>
-			                    </div>
-
-			                    <div class="row">
-			                        <label class="col-md-3" for="node_number">结点数</label>
-			                        <select class="col-md-4" name="node_number" id="node_number">
-			                            <option value="1">1</option>
-			                        </select>
-			                    </div>
-			                </div>
-
-			                <div class="modal-footer">
-			                    <button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
-			                </div>
-
-			            </div>
-			        </div>
-			    </div>
-			</div>
-
         </form>
 
         {#  keep the result #}
         <div class="row">
             <div class="es-section" id="result-show" style="display: none">
-                <!-- Nav tabs -->
-                <ul id="program-run-tab" class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active">
-                        <a href="#compiler" role="tab" data-toggle="tab">编译结果</a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#run" role="tab" data-toggle="tab">运行结果</a>
-                    </li>
-                </ul>
 
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div id="compiler" role="tabpanel" class="tab-pane active" style="white-space: pre"></div>
-                    <div id="run" role="tabpanel" class="tab-pane" style="white-space: pre"></div>
+                <div id="compiler" class="col-md-6 form-group">
+                    <div class="markdown-body">
+                        <p class="text-center text-large">编译结果</p>
+                        <hr>
+                        <div id="compiler-content"></div>>
+                    </div>
                 </div>
+
+                <div id="run" class="form-group">
+                    <div class="markdown-body">
+                        <p class="text-center text-large">运行结果</p>
+                        <hr>
+                        <div id="run-content"></div>>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -153,7 +154,7 @@
 
     <script>
         var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/tomorrow");
+        editor.setTheme("ace/theme/tomorrow-night");
         editor.getSession().setMode("ace/mode/c_cpp");
     </script>
 
@@ -161,16 +162,16 @@
         function submit_code() {
             document.getElementById('source_code').value = editor.getValue();
             $("input[name=language]").val($("#language").find("option:selected").text());
-            $("input[name=compiler_setting]").val($("#compiler_setting").find("option:selected").text());
             $("input[name=task_number]").val($("#task_number").find("option:selected").text());
             $("input[name=cpu_number_per_task]").val($("#cpu_number_per_task").find("option:selected").text());
             $("input[name=node_number]").val($("#node_number").find("option:selected").text());
+
             var data = $("form").serialize();
             $('#result-show').css("display", 'block');
             var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>";
 
-            $("#compiler").empty().append(loading);
-            $('#program-run-tab a:first').tab('show');
+            $("#compiler-content").empty().append(loading);
+            //$('#program-run-tab a:first').tab('show');
             $.ajax({
                 method: "post",
                 cache: false,
@@ -178,17 +179,17 @@
 				data : data,
                 success: function (data) {
                     if(data.status==='success') {
-                        $("#compiler").empty().append(data.compile_out);
-                        $("#run").empty().html(data.run_out);
+                        $("#compiler-content").empty().append(data.compile_out);
+                        $("#run-content").empty().html(data.run_out);
                     }
                     else{
-                        $("#compiler").empty().append(data.msg);
-                        $("#run").empty().html("<p class='text-center'>  暂时无法运行...</p>");
+                        $("#compiler-content").empty().append(data.msg);
+                        $("#run-content").empty().html("<p class='text-center'>  暂时无法运行...</p>");
                     }
                 },
                 error: function (data) {
-                    $("#compiler").empty().append("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
-                    $("#run").html("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
+                    $("#compiler-content").empty().append("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
+                    $("#run-content").html("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
                 }
             });
         }

@@ -9,6 +9,7 @@ from flask_babel import gettext
 from ..problem.code_process import ehpc_client
 from .. import db
 from sqlalchemy import or_
+import os
 from datetime import datetime
 
 
@@ -127,31 +128,21 @@ def submit(pid):
     uid = current_user.id
     problem_id = request.form['problem_id']
     source_code = request.form['source_code']
-    compiler = request.form['compiler_setting']
     language = request.form['language']
     submit_problem = SubmitProblem(uid, problem_id, source_code, language)
     db.session.add(submit_problem)
     db.session.commit()
 
-    path = "/HOME/sysu_dwu_1/coreos"
+    myPath = os.environ.get("EHPC_PATH")
     # 之后需要改进
 
+    job_filename = "%s_%s.sh" % (str(pid), str(uid))
     input_filename = "%s_%s.c" % (str(pid), str(uid))
     output_filename = "%s_%s.o" % (str(pid), str(uid))
-
     task_number = request.form['task_number']
     cpu_number_per_task = request.form['cpu_number_per_task']
     node_number = request.form['node_number']
-    partition = "free"
-
-
-    # print language, type(language)
-    # print compiler, type(compiler)
-    # print task_number, type(task_number)
-    # print cpu_number_per_task, type(cpu_number_per_task)
-    # print node_number, type(node_number)
-    # with open(input_filename, 'w') as src_file:
-    # src_file.write(source_code)
+    #partition = os.environ.get("EHPC_PARTITION")
 
     client = ehpc_client()
     is_success = [False]
@@ -160,16 +151,16 @@ def submit(pid):
     if not is_success[0]:
         return jsonify(status="fail", msg="连接超算主机失败!")
 
-    is_success[0] = client.upload(path, input_filename, source_code)
+    is_success[0] = client.upload(myPath, input_filename, source_code)
     if not is_success[0]:
         return jsonify(status="fail", msg="上传程序到超算主机失败!")
 
-    compile_out = client.ehpc_compile(is_success, path, input_filename, output_filename, compiler)
+    compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpicc")
 
     if is_success[0]:
-        run_out = client.ehpc_run(output_filename, path, task_number, cpu_number_per_task, node_number, compiler)
+        run_out = client.ehpc_run(output_filename, job_filename, myPath, task_number, cpu_number_per_task, node_number)
     else:
-        run_out = "编译不通过, 无法运行..."
+        run_out = "编译失败，无法运行！"
 
     result = dict()
     result['status'] = 'success'

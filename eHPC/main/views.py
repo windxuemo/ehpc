@@ -32,16 +32,20 @@ def index():
                 if ac.cur_progress < challenges_count:
                     user_challenges.append(ac)
                     count += 1
-            return render_template('main/index.html',
-                                   title=gettext('Education Practice Platform'),
-                                   courses=courses,
-                                   groups=groups,
-                                   articles=articles,
-                                   user_courses=user_courses,
-                                   user_topics=user_topics,
-                                   user_question=user_question,
-                                   user_program=user_program,
-                                   user_challenges=user_challenges)
+            if user_courses or user_topics or user_question or user_program or user_challenges:
+                return render_template('main/personal_index.html',
+                                       title=gettext('Education Practice Platform'),
+                                       user_courses=user_courses,
+                                       user_topics=user_topics,
+                                       user_question=user_question,
+                                       user_program=user_program,
+                                       user_challenges=user_challenges)
+            else:
+                return render_template('main/index.html',
+                                       title=gettext('Education Practice Platform'),
+                                       courses=courses,
+                                       groups=groups,
+                                       articles=articles)
         else:
             return render_template('main/index.html',
                                    title=gettext('Education Practice Platform'),

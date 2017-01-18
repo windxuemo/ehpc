@@ -9,10 +9,8 @@ from ..user.authorize import teacher_login
 from wechat_tools import Wechat
 import qrcode, os
 from datetime import datetime, timedelta
-from manage import csrf
 
 
-@csrf.exempt
 @wechat.route('/', methods=['GET', 'POST'])
 def process():
     """处理微信方发来的指令，目前只支持"绑定"指令

@@ -106,9 +106,10 @@ class Wechat(object):
            @param cls:  类本身
            @param data: 字典格式数据
         """
+        keys = ['ToUserName', 'FromUserName', 'CreateTime', 'MsgType', 'Content']
         temp = []
-        for k, v in data.items():
-            temp.append("<%s><![CDATA[%s]]></%s>" % (k, v, k))
+        for i in range(len(keys)):
+            temp.append("<%s><![CDATA[%s]]></%s>" % (keys[i], data[i], keys[i]))
         return "\n".join(temp)
 
     @classmethod
@@ -122,14 +123,8 @@ class Wechat(object):
            @param Content: 消息内容
            @param nonce: 随机字符串
         """
-        response_data = {
-            "ToUserName": ToUserName,
-            "FromUserName": FromUserName,
-            "CreateTime": CreateTime,
-            "MsgType": MsgType,
-            "Content": Content
-        }
+        response_data = [ToUserName, FromUserName, CreateTime, MsgType, Content]
         response_data = cls.to_xml(response_data)
         response_data = "<xml>\n" + response_data + "\n</xml>"
-        cls.encrypt(xml=response_data, nonce=nonce)
+        #response_data = cls.encrypt(response_data, nonce)
         return response_data

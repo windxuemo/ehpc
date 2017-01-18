@@ -94,7 +94,7 @@ class XMLParse:
         """
         resp_dict = {
             'msg_encrypt': encrypt,
-            'msg_signaturet': signature,
+            'msg_signature': signature,
             'timestamp': timestamp,
             'nonce': nonce,
         }
@@ -148,6 +148,7 @@ class Prpcrypt(object):
         """
         # 16位随机字符串添加到明文开头
         text = self.get_random_str() + struct.pack("I", socket.htonl(len(text))) + text + appid
+        text = text.encode('utf-8')
         # 使用自定义的填充方式对明文进行补位填充
         pkcs7 = PKCS7Encoder()
         text = pkcs7.encode(text)
@@ -158,7 +159,6 @@ class Prpcrypt(object):
             # 使用BASE64对加密后的字符串进行编码
             return ierror.WXBizMsgCrypt_OK, base64.b64encode(ciphertext)
         except Exception, e:
-            # print e
             return ierror.WXBizMsgCrypt_EncryptAES_Error, None
 
     def decrypt(self, text, appid):

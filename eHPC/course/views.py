@@ -2,13 +2,11 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, jsonify, request, current_app
 from . import course
-from ..models import Course, Material, Paper, Question, Comment, User, Homework, HomeworkUpload, Apply
+from ..models import Course, Material, Paper, Comment, Homework, HomeworkUpload, Apply
 from flask_babel import gettext
 from flask_login import current_user, login_required
-from ..util.file_manage import upload_file, get_file_type, custom_secure_filename
+from ..util.file_manage import upload_file, custom_secure_filename
 from ..course.course_util import student_not_in_course, student_in_course
-from ..user.authorize import student_login
-from ..problem.code_process import ehpc_client
 from .. import db
 import json
 import os

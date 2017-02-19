@@ -41,8 +41,8 @@ class Config:
     MD_UPLOAD_IMG = 'static/upload/md_images/'
     IMAGES_FOLDER = os.path.join(basedir, 'eHPC/', MD_UPLOAD_IMG)
     # 用户头像保存的地址
-    AVATAR_PATH = "/static/upload/avatar"
-    AVATAR_FOLDER = os.path.join(basedir, 'eHPC/', MD_UPLOAD_IMG)
+    AVATAR_PATH = "static/upload/avatar/"
+    AVATAR_FOLDER = os.path.join(basedir, 'eHPC/', AVATAR_PATH)
 
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
     ALLOWED_RESOURCE_TYPE = {'pdf', 'video', 'audio'}

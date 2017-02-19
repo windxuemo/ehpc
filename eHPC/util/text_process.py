@@ -52,5 +52,6 @@ def get_avatar_path(avatar_name):
     目前配置文件中头像存储位置为: static/upload/avatar/...
     """
     avatar_folder = current_app.config['AVATAR_PATH']
-    avatar_path = os.path.join(avatar_folder, avatar_name)
+    # 这里图片需要是绝对路径, 所以用 / 开头
+    avatar_path = "/" + os.path.join(avatar_folder, avatar_name)
     return avatar_path

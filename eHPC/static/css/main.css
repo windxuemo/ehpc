@@ -117,15 +117,11 @@ select:-webkit-autofill {
     z-index: 1;
 }
 
-.navbar-collapse {
-    border-top: none;
-}
-
 .content-header {
     background: white;
-    height: 60px;
+    height: 80px;
     border: none;
-    padding: 0 20px;
+    padding: 0px 20px;
 }
 
 .content-header .container {
@@ -149,8 +145,8 @@ select:-webkit-autofill {
 }
 
 .content-header .navbar-header .navbar-brand {
-    height: 60px;
-    line-height: 50px;
+    height: 80px;
+    line-height: 70px;
     padding: 5px 10px;
     color: #fff;
 }
@@ -163,13 +159,13 @@ select:-webkit-autofill {
 }
 
 .content-header .navbar-header .navbar-brand > img {
-    height: 50px;
+    height: 70px;
     width: auto;
 }
 
 @media (max-width: 767px) {
     .content-header .navbar-header .navbar-brand > img {
-        height: 40px;
+        height: 50px;
     }
 }
 
@@ -181,7 +177,7 @@ select:-webkit-autofill {
 }
 
 .content-header .nav.navbar-nav > li > a {
-    padding: 20px 20px;
+    padding: 30px 20px;
     line-height: 20px;
     color: black;
     background: none;
@@ -201,7 +197,7 @@ select:-webkit-autofill {
 
 @media (max-width: 1199px) {
     .content-header .nav.navbar-nav > li > a {
-        padding-left: 20px;
+        padding-left: 30px;
         padding-right: 20px;
     }
 }
@@ -237,12 +233,12 @@ select:-webkit-autofill {
 }
 
 .content-header .navbar-form {
-    margin: 15px 10px;
+    margin: 25px 10px;
 }
 
 @media (max-width: 1199px) {
     .content-header .navbar-form {
-        margin: 15px 0;
+        margin: 25px 0;
     }
 }
 
@@ -310,7 +306,6 @@ select:-webkit-autofill {
 .navbar-user {
     z-index: 1;
     position: absolute;
-    top: 0;
     right: 20px;
 }
 
@@ -337,7 +332,8 @@ select:-webkit-autofill {
 
 .nav.user-nav > li > a {
     display: block;
-    padding: 20px 15px;
+    padding: 30px 15px;
+    line-height: 20px;
     color: black;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -347,7 +343,7 @@ select:-webkit-autofill {
 
 @media (max-width: 1199px) {
     .nav.user-nav > li > a {
-        padding: 20px 10px;
+        padding: 30px 10px;
     }
 }
 
@@ -3745,12 +3741,17 @@ textarea {
     font-size: 16px;
 }
 
-.carousel-inner > .item > img, .carousel-inner > .item > a > img {
-    margin: 0 auto;
+.carousel-inner > .item {
+    overflow: hidden;
 }
 
-.carousel img {
-    min-width: 100%;
+.carousel-inner>.item>a>img, .carousel-inner>.item>img {
+    height: 100%;
+    max-width: none;
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
 }
 
 .list-post-title-in-topic {

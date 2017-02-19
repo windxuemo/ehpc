@@ -27,7 +27,10 @@ def override_url_for():
 def dated_url_for(endpoint, **values):
     if endpoint == 'static':
         filename = values.get('filename', None)
-        if filename:
+        # pdf.js 用来加载 PDF, 这个特例不需要加查询戳
+        if filename == 'js/pdfjs/web/viewer.html':
+            pass
+        elif filename:
             file_path = os.path.join(app.root_path,
                                      endpoint, filename)
             # 如果静态资源不存在, 则会抛出异常, 异常中不用做处理。

@@ -11,11 +11,10 @@
     <script>
         var js_material_selector = '#material' + '{{ cur_material.id }}';
         var js_material_type = "{{ cur_material.m_type }}";
-        var js_pdf_src = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
-        var js_pdf_data = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource') }}/";
-
+        var js_pdf_src = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{ url_for('static', filename='resource/' + cur_material.uri) }}";
+        var js_pdf_data = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file=/static/resource/";
         var video_src = "{{ cur_material.uri }}";
-        var js_material_src = "{{ url_for('static', filename='resource') }}/" + "{{cur_material.uri}}";
+        var js_material_src = "{{ url_for('static', filename='resource/' + cur_material.uri)}}/";
         /* 外链视频资源直接引用地址 */
         if(video_src.startsWith('http://') || video_src.startsWith('https://')){
             js_material_src = video_src;

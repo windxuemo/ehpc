@@ -348,12 +348,12 @@ select:-webkit-autofill {
 }
 
 .nav.user-nav > li > a.dropdown-toggle {
-    padding: 15px 15px;
+    padding: 25px 15px;
 }
 
 @media (max-width: 991px) {
     .nav.user-nav > li > a.dropdown-toggle {
-        padding: 15px 5px;
+        padding: 25px 5px;
     }
 }
 
@@ -3708,13 +3708,14 @@ textarea {
     margin-bottom: 10px;
 }
 
+/*保证导航栏和底部栏目在页面的头部和尾部*/
 .content-wrap {
     min-height: 100%;
     margin-bottom: -71px;
-    margin-top: -60px;
+    margin-top: -80px;
     height: auto;
     padding-bottom: 71px;
-    padding-top: 60px;
+    padding-top: 80px;
 }
 
 .lab-content-wrap {

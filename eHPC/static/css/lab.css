@@ -1,0 +1,218 @@
+/* 虚拟实验室页面用到的 css */
+
+/* 页面总体布局 */
+#challenge-head {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+}
+
+#challenge-body {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#challenge-left, #challenge-right {
+    margin-top: 60px;
+    padding-top: 20px;
+    margin-left: 4%;
+    float: left;
+    width: 44%;
+    display: block;
+    position: absolute;
+    height: auto;
+    bottom: 0;
+    top: 0;
+    overflow-y: auto;
+}
+
+#challenge-right {
+    left: 48%;
+}
+
+/* 挑战点的导航栏样式 */
+#steps{
+    padding-bottom:46px;
+    border-bottom:1px 
+    solid #D4D4D4
+}
+
+.steps{
+    list-style:none outside none;
+    padding:0;
+    margin:0;
+    width:4000px
+}
+
+.steps.previous-disabled li.complete{
+    cursor:default
+}
+
+.steps.previous-disabled li.complete:hover{
+    background:#f3f4f5;
+    color:#468847;
+    cursor:default
+}
+
+.steps.previous-disabled li.complete:hover .chevron:before{
+    border-left-color:#f3f4f5
+}
+
+.steps li{
+    float:left;
+    margin:0;
+    padding:0 20px 0 30px;
+    height:46px;
+    line-height:46px;
+    position:relative;
+    background:#ededed;
+    color:#999;
+    font-size:16px
+}
+
+.steps li .chevron{
+    border:24px solid transparent;
+    border-left:14px solid #d4d4d4;
+    border-right:0;
+    display:block;
+    position:absolute;
+    right:-14px;
+    top:0;
+    z-index:1
+}
+
+.steps li .chevron:before{
+    border:24px solid transparent;
+    border-left:14px solid #ededed;
+    border-right:0;
+    content:"";
+    display:block;
+    position:absolute;
+    right:1px;
+    top:-24px
+    }
+
+.steps li.complete{
+    background:#f3f4f5;
+    color:#468847
+}
+
+.steps li.complete:hover{
+    background:#e7eff8;
+    cursor:pointer
+}
+
+.steps li.complete:hover .chevron:before{
+    border-left:14px solid #e7eff8
+}
+
+.steps li.complete .chevron:before{
+    border-left:14px solid #f3f4f5
+}
+
+.steps li.active{
+    background:#f1f6fc;
+    color:#3a87ad;
+    cursor:default
+}
+
+.steps li.active .chevron:before{
+    border-left:14px solid #f1f6fc
+}
+
+.steps li.active .badge{
+    background-color:#3a87ad
+}
+
+.steps li .badge{
+    margin-right:8px
+}
+
+.steps li .badge-success{
+    background-color:#468847
+}
+
+.steps li:first-child{
+    border-radius:4px 0 0 4px;
+    padding-left:20px
+}
+
+.actions {
+    z-index: 1000;
+    position: absolute;
+    right: 0;
+    top: 20px;
+    line-height: 46px;
+    float: right;
+    padding-left: 15px;
+    padding-right: 15px;
+    vertical-align: middle;
+    background-color: #e5e5e5;
+    border-left: 1px solid #d4d4d4;
+    font-family: Consolas,Monaco,'Lucida Console','Courier New',monospace;
+}
+
+/*代码框样式*/
+.editor-header {
+    background-color: #3D3D3D;
+    height: 45px;
+    color: white;
+    padding: 6px 0 0 45px;
+    margin: 0;
+}
+
+#run{
+    float: right;
+    margin-right: 12px;
+}
+
+#laboratory {
+    overflow: hidden;
+    height: 60%;
+    padding: 0;
+    margin-top: 0;
+}
+
+#editor{
+    border-color: #3D3D3D;
+}
+
+.editor {
+    position: relative;
+    height: 100%;
+    transition: transform .5s;
+    transform: translateX(0);
+}
+
+#terminal {
+    position: absolute; 
+    height: 40%;
+    bottom: 10px;
+    border: 0;
+    border-top: 1px solid #3D3D3D;
+    border-left: 42px solid #3D3D3D;
+    color: #E6E1DC;
+    width: 100%;
+    font-weight: bolder;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    background-color: #303030;
+    padding: 5px;
+    box-shadow: inset 0 0 10px black;
+}
+
+.terminal{
+    font-family: 'Courier New';
+    font-size: 14px;
+    outline: none;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#terminal .terminal {
+    font-size: 14px;
+    background-color: transparent;
+    border-color: transparent;
+}

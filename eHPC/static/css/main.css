@@ -4433,39 +4433,6 @@ ul#program-run-tab li a {
     vertical-align: middle;
 }
 
-/* 虚拟实验室页面用到的 css */
-#challenge-head {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    width: 100%;
-}
-
-#challenge-body {
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-}
-
-#challenge-left, #challenge-right {
-    margin-top: 60px;
-    padding-top: 20px;
-    margin-left: 4%;
-    float: left;
-    width: 44%;
-    display: block;
-    position: absolute;
-    height: auto;
-    bottom: 0;
-    top: 0;
-    overflow-y: auto;
-}
-
-#challenge-right {
-    left: 48%;
-}
-
 hr {
     border: 0;
     height: 1px;

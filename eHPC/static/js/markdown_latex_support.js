@@ -3,7 +3,7 @@ var import_mathjax = '<script type="text/x-mathjax-config">\
                           skipStartupTypeset: true\
                       })\
                       </script>\
-                      <script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async></script>';
+                      <script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
 //使用document.write时，请在script标签中加入async属性，否则可能导致页面渲染时不响应
 
 document.write(import_mathjax);

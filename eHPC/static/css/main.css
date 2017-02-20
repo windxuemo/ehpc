@@ -3756,15 +3756,6 @@ textarea {
     -webkit-transform: translateX(-50%);
 }
 
-.carousel-inner>.item>a>img, .carousel-inner>.item>img {
-    height: 100%;
-    max-width: none;
-    left: 50%;
-    position: relative;
-    transform: translateX(-50%);
-    -webkit-transform: translateX(-50%);
-}
-
 .swiper-container {
     position: relative;
 }
@@ -3788,7 +3779,7 @@ textarea {
 	width: 300px;
 	height: 500px;
 	position: absolute;
-	right: 80px;
+	right: 0px;
 }
 
 #inputLogin li {

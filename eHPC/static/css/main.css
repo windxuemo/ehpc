@@ -4616,37 +4616,7 @@ hr {
     overflow: hidden;
 }
 
-/* 虚拟实验室中的提示信息*/
-.page-message-panel {
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 50px 50px;
-}
 
-.page-message-heading {
-    margin-bottom: 25px;
-}
-
-.page-message-title {
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-    font-size: 24px;
-}
-
-.page-message-body {
-    font-size: 16px;
-}
-
-/* 虚拟实验室 */
-#lab-head-empty {
-    margin-top: 100px;
-    min-height: 200px;
-}
-
-.modal {
-    overflow: visible;
-}
 
 /* 创建案例 */
 .case-tags {

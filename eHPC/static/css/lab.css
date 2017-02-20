@@ -16,7 +16,7 @@
 }
 
 #challenge-left, #challenge-right {
-    margin-top: 60px;
+    margin-top: 80px;
     padding-top: 20px;
     margin-left: 4%;
     float: left;
@@ -33,111 +33,36 @@
     left: 48%;
 }
 
-/* 挑战点的导航栏样式 */
-#steps{
-    padding-bottom:46px;
-    border-bottom:1px 
-    solid #D4D4D4
+/* 虚拟实验室中的提示信息*/
+.page-message-panel {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 50px 50px;
 }
 
-.steps{
-    list-style:none outside none;
-    padding:0;
-    margin:0;
-    width:4000px
+.page-message-heading {
+    margin-bottom: 25px;
 }
 
-.steps.previous-disabled li.complete{
-    cursor:default
+.page-message-title {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-size: 24px;
 }
 
-.steps.previous-disabled li.complete:hover{
-    background:#f3f4f5;
-    color:#468847;
-    cursor:default
+.page-message-body {
+    font-size: 16px;
 }
 
-.steps.previous-disabled li.complete:hover .chevron:before{
-    border-left-color:#f3f4f5
+/* 虚拟实验室 */
+#lab-head-empty {
+    margin-top: 100px;
+    min-height: 200px;
 }
 
-.steps li{
-    float:left;
-    margin:0;
-    padding:0 20px 0 30px;
-    height:46px;
-    line-height:46px;
-    position:relative;
-    background:#ededed;
-    color:#999;
-    font-size:16px
-}
-
-.steps li .chevron{
-    border:24px solid transparent;
-    border-left:14px solid #d4d4d4;
-    border-right:0;
-    display:block;
-    position:absolute;
-    right:-14px;
-    top:0;
-    z-index:1
-}
-
-.steps li .chevron:before{
-    border:24px solid transparent;
-    border-left:14px solid #ededed;
-    border-right:0;
-    content:"";
-    display:block;
-    position:absolute;
-    right:1px;
-    top:-24px
-    }
-
-.steps li.complete{
-    background:#f3f4f5;
-    color:#468847
-}
-
-.steps li.complete:hover{
-    background:#e7eff8;
-    cursor:pointer
-}
-
-.steps li.complete:hover .chevron:before{
-    border-left:14px solid #e7eff8
-}
-
-.steps li.complete .chevron:before{
-    border-left:14px solid #f3f4f5
-}
-
-.steps li.active{
-    background:#f1f6fc;
-    color:#3a87ad;
-    cursor:default
-}
-
-.steps li.active .chevron:before{
-    border-left:14px solid #f1f6fc
-}
-
-.steps li.active .badge{
-    background-color:#3a87ad
-}
-
-.steps li .badge{
-    margin-right:8px
-}
-
-.steps li .badge-success{
-    background-color:#468847
-}
-
-.steps li:first-child{
-    border-radius:4px 0 0 4px;
-    padding-left:20px
+.modal {
+    overflow: visible;
 }
 
 .actions {

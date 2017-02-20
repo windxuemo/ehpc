@@ -25,9 +25,10 @@
 
             <div class="form-group clearfix">
                 <div class="col-md-offset-2 col-md-8 controls">
-                    <div class="col-md-7 col-md-offset-8">
-                        <button type="submit" class="btn btn-primary">{{ _('Save') }}</button>
-                    </div>
+                    <button type="submit" class="btn btn-primary">{{ _('Save') }}</button>
+                    {% if message_success %}
+                        <span id="avatar-setting-info" style="margin-left: 20px;">{{ message_success }}</span>
+                    {% endif %}
                 </div>
             </div>
         </form>
@@ -38,6 +39,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#user-avatar-field').change("#user-avatar",preview_picture);
+            setTimeout(function () {
+                $("#avatar-setting-info").addClass("hide")
+            }, 3000);
         });
     </script>
 {% endblock %}

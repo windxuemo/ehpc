@@ -1,8 +1,6 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-    <script src="//cdn.bootcss.com/datatables/1.10.13/js/jquery.dataTables.min.js"></script>
-    <link href="//cdn.bootcss.com/datatables/1.10.13/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
 
@@ -20,30 +18,24 @@
             </div>
 
             <div class="panel-body">
-                <table class="table" id="classify-table" style="word-break:break-all;">
-                    <thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>知识点名称</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tb">
-                    {% for c in classifies %}
-                        <tr data-cid="{{ c.id }}">
-                            <td>{{ loop.index }}</td>
-                            <td data-id="cname">{{ c.name }}</td>
-                            <td>
-                                <a href="javascript:void(0)" data-id="edit">编辑</a>
-                                {% if c.questions.count() == 0 %}
-                                <span class="divider"> | </span>
-                                <a href="javascript:void(0)" name="del-btn">删除</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <section class="admin-list">
+                    <div class="row">
+                        {% for c in classifies %}
+                            <div class="col-sm-6 col-md-3">
+                                <div class="admin-item">
+                                    <div style="padding-top: 30px;font-size: 20px">{{ c.name }}</div>
+                                    <div style="padding-top: 10px" data-cid="{{ c.id }}">
+                                        <a href="javascript:void(0)" data-id="edit">编辑</a>
+                                        {% if c.questions.count() == 0 %}
+                                        <span class="divider"> | </span>
+                                        <a href="javascript:void(0)" name="del-btn">删除</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
             </div>
         </div>
     </div>
@@ -82,9 +74,9 @@
                 $("#createModal").modal("show");
             });
             $("a[data-id=edit]").click(function () {
-                $("input[name=name]").val($(this).parent().parent().find('td[data-id=cname]').eq(0).text());
+                $("input[name=name]").val($(this).parent().prev().text().trim());
                 $("#confirm-submit").data('op','edit');
-                $("#confirm-submit").data('cid', $(this).parent().parent().data('cid'));
+                $("#confirm-submit").data('cid', $(this).parent().data('cid'));
                 $("#createModal").modal("show");
             });
 
@@ -134,7 +126,7 @@
                     url: location.href,
                     data: {
                         op: 'del',
-                        cid: $(obj).parent().parent().data('cid')
+                        cid: $(obj).parent().data('cid')
                     },
                     success: function (data) {
                         if (data['status'] == 'success') {

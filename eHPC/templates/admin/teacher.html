@@ -2,6 +2,43 @@
 
 {% block content %}
     <div id="content-container" class="container">
+        <section class="admin-list">
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="admin-item">
+                        <div class="info">共有 {{ current_user.teacher_courses.count() }} 课程</div>
+                        <div class="bottom">
+                            <a class="btn btn-primary" href="{{ url_for('admin.course') }}" data-id="3">课程管理</a>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-sm-6 col-md-4">
+                    <div class="admin-item">
+                        <div class="info">共有 {{ current_user.teacher_questions.count() +  current_user.teacher_program.count()}} 题目</div>
+                        <div class="bottom">
+                            <a class="btn btn-primary" href="{{ url_for('admin.problem') }}" data-id="3">题目管理</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="admin-item">
+                        <div class="info">共有 {{ current_user.teacher_knowledge.count() }} 实验</div>
+                        <div class="bottom">
+                            <a class="btn btn-primary" href="{{ url_for('admin.lab') }}" data-id="3">实验管理</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="admin-item">
+                        <div class="info">共有 {{ classify | length }} 知识点</div>
+                        <div class="bottom">
+                            <a class="btn btn-primary" href="{{ url_for('admin.classify') }}" data-id="3">知识点管理</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 {% endblock %}

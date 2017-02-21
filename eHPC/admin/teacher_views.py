@@ -467,7 +467,9 @@ def paper_edit(course_id, paper_id):
 @admin.route('/problem/')
 @teacher_login
 def problem():
-    return redirect(url_for("admin.question", question_type='choice'))
+    return render_template('admin/problem/index.html', classify=Classify.query.all(),
+                           questions=current_user.teacher_questions,
+                           programs=current_user.teacher_program)
 
 
 @admin.route('/problem/<question_type>/', methods=['GET', 'POST'])
@@ -493,6 +495,45 @@ def question(question_type):
         db.session.delete(curr_question)
         db.session.commit()
         return jsonify(status="success", question_id=curr_question.id)
+
+
+@admin.route('/problem/<question_type>/<int:question_classify>/', methods=['GET', 'POST'])
+@teacher_login
+def question_filter_by_classify(question_type, question_classify):
+    if request.method == 'GET':
+        questions = None
+        if question_type == 'choice':
+            questions = Classify.query.filter_by(id=question_classify).first().questions.filter(or_(Question.type == 0, Question.type == 1, Question.type == 2))
+        elif question_type == 'judge':
+            questions = Classify.query.filter_by(id=question_classify).first().questions.filter_by(type=4)
+        elif question_type == 'fill':
+            questions = Classify.query.filter_by(id=question_classify).first().questions.filter_by(type=3)
+        elif question_type == 'essay':
+            questions = Classify.query.filter_by(id=question_classify).first().questions.filter_by(type=5)
+        return render_template('admin/problem/question.html',
+                               title=gettext('Question Manage'),
+                               questions=questions,
+                               type=question_type)
+    elif request.method == 'POST':
+        # 删除练习题目
+        curr_question = Question.query.filter_by(id=request.form['id']).first_or_404()
+        db.session.delete(curr_question)
+        db.session.commit()
+        return jsonify(status="success", question_id=curr_question.id)
+
+
+@admin.route('/problem/program/<int:question_classify>/', methods=['GET', 'POST'])
+@teacher_login
+def program_filter_by_classify(question_classify):
+    """ 题库中编程题的入口页面 """
+    if request.method == 'GET':
+        return render_template('admin/problem/program.html', title=gettext('Program question'))
+    elif request.method == 'POST':
+        # 删除编程题目
+        curr_program = Program.query.filter_by(id=request.form['id']).first_or_404()
+        db.session.delete(curr_program)
+        db.session.commit()
+        return unicode(curr_program.id)
 
 
 @admin.route('/problem/<question_type>/create/', methods=['GET', 'POST'])

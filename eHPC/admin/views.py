@@ -6,7 +6,7 @@ from datetime import datetime
 from ..user.authorize import admin_login, system_login, teacher_login
 from ..util.user_manage import is_admin_user, is_teacher_user
 from . import admin
-from ..models import User, Article, Group, Case, CaseVersion, CaseCodeMaterial
+from ..models import User, Article, Group, Case, CaseVersion, CaseCodeMaterial, Classify
 from .. import db
 from flask_babel import gettext
 
@@ -41,7 +41,7 @@ def logout():
 @admin.route('/teacher/')
 @teacher_login
 def teacher():
-    return render_template("admin/teacher.html", title=gettext("Teacher Setting"))
+    return render_template("admin/teacher.html", title=gettext("Teacher Setting"), classify=Classify.query.all())
 
 
 @admin.route('/system/')

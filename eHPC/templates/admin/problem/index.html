@@ -1,0 +1,34 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+    <div class="container" id="content-container">
+        <section class="admin-list">
+            <div class="row">
+                <div class="col-sm-6 col-md-4 ">
+                    <a style="text-decoration: none;" href="{{ url_for('admin.question', question_type='choice') }}">
+                        <div class="admin-item">
+                            <div style="padding-top: 40px;font-size: 20px"> 所有分类 </div>
+                            <div class="info">共有 {{ questions.count() }} 题</div>
+                        </div>
+                    </a>
+                </div>
+                {% for c in classify %}
+                <div class="col-sm-6 col-md-4 ">
+                    <a style="text-decoration: none;" href="{{ url_for('admin.question_filter_by_classify', question_type='choice', question_classify=c.id) }}">
+                    <div class="admin-item">
+                        <div style="padding-top: 40px;font-size: 20px">{{ c.name }}</div>
+                        <div class="info">共有 {{ c.questions.count() }} 题</div>
+                    </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+
+    </script>
+{% endblock %}

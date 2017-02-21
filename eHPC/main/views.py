@@ -12,15 +12,15 @@ from flask_login import current_user
 
 @main.route('/')
 def index():
-    courses = Course.query.limit(8)
-    groups = Group.query.order_by(Group.memberNum.desc()).limit(6)
-    articles = Article.query.order_by(Article.updatedTime.desc()).limit(5)
+    courses = Course.query.limit(8).all()
+    groups = Group.query.order_by(Group.memberNum.desc()).limit(6).all()
+    articles = Article.query.order_by(Article.updatedTime.desc()).limit(5).all()
     if current_user.is_authenticated:
         user_posts = current_user.posts.order_by(Post.createdTime.desc()).limit(8).all()
         user_topics = []
         for p in user_posts:
             user_topics.append(p.topic)
-        user_courses = current_user.courses
+        user_courses = current_user.courses.limit(8).all()
         user_question = UserQuestion.query.order_by(UserQuestion.last_time.desc()).limit(5).all()
         user_submits = SubmitProblem.query.order_by(SubmitProblem.submit_time.desc()).filter_by(
             uid=current_user.id).limit(5).all()

@@ -148,7 +148,7 @@ select:-webkit-autofill {
     height: 80px;
     line-height: 70px;
     padding: 5px 10px;
-    color: #fff;
+    color: black;
 }
 
 @media (max-width: 767px) {

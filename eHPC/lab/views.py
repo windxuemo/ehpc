@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, abort
 from . import lab
 from flask_babel import gettext
 from flask_login import login_required, current_user
@@ -9,7 +9,8 @@ from ..models import Challenge, Question, Knowledge, Progress, Material
 from ..lab.lab_util import get_question_and_type, check_if_correct
 from .. import db
 from datetime import datetime
-
+from ..problem.code_process import ehpc_client
+import os
 
 @lab.route('/')
 @login_required
@@ -51,8 +52,10 @@ def knowledge(kid):
         request_progress = request.args.get('progress', None)
         if not request_progress:
             pass
-        elif int(request_progress) <= cur_progress:
+        elif 0 < int(request_progress) <= cur_progress:
             cur_progress = int(request_progress)
+        elif int(request_progress) <= 0 or int(request_progress) > challenges_count:
+            return abort(404)
         else:
             # 前面还有任务没有完成, 不能直接到请求的任务页面, 这里返回一个简单的提示页面
             return render_template("lab/out_progress.html",
@@ -67,35 +70,65 @@ def knowledge(kid):
                                    title="Finish All",
                                    kid=kid)
 
-        # 保证每个challenge都有一个题目, 可以是一般的选择题、填空题等或者在线编程题目
-        question, question_type = get_question_and_type(cur_challenge)
-
         # challenge 可能没有相应的 material 存在, cur_material 对应为空。
         return render_template('lab/knowledge.html',
                                title=cur_challenge.title,
                                c_content=cur_challenge.content,
                                cur_material=cur_challenge.material,
-                               practice=question,
-                               question_type=question_type,
                                kid=kid,
                                next_progress=cur_progress+1)
 
     elif request.method == 'POST':
-        # 判断用户是否通过当前challenge
-        question_type = request.form['question_type']
-        question_id = request.form['question_id']
-        user_sol = request.form['user_sol']
-        if question_type != 6:  # 暂不考虑编程题
-            cur_question = Question.query.filter_by(id=question_id).first_or_404()
-            if check_if_correct(cur_question, user_sol):    # 如果对则通过，且用户已通过的challenge加1
-                pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
-                # 判断是否已经做完了所有的挑战
+        if request.form['op'] == 'run':
+            source_code = request.form['code']
+            k_num = request.form['k_num']
+
+            myPath = os.environ.get("EHPC_PATH")
+
+            job_filename = "%s_%s_%s.sh" % (str(kid), str(k_num), str(current_user.id))
+            input_filename = "%s_%s_%s.c" % (str(kid), str(k_num), str(current_user.id))
+            output_filename = "%s_%s_%s.o" % (str(kid), str(k_num), str(current_user.id))
+            task_number = 1
+            cpu_number_per_task = 1
+            node_number = 1
+
+            client = ehpc_client()
+            is_success = [False]
+            is_success[0] = client.login()
+            if not is_success[0]:
+                return jsonify(status="fail", msg="连接超算主机失败!")
+
+            is_success[0] = client.upload(myPath, input_filename, source_code)
+            if not is_success[0]:
+                return jsonify(status="fail", msg="上传程序到超算主机失败!")
+
+            compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpicc")
+
+            result = dict()
+            result['compile_success'] = 'true'
+            if is_success[0]:
+                run_out = client.ehpc_run(output_filename, job_filename, myPath, task_number, cpu_number_per_task, node_number)
+            else:
+                result['compile_success'] = 'false'
+                run_out = "编译失败，无法运行！"
+
+            result['compile_out'] = compile_out
+            result['run_out'] = run_out
+
+            # 提交过代码则认为已完成该知识点学习
+            pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
+            if k_num == pro.cur_progress + 1:
                 if pro.cur_progress + 1 <= challenges_count:
                     pro.cur_progress += 1
-                db.session.commit()
-                return jsonify(status='success')
-            else:
-                return jsonify(status='fail')
+                    db.session.commit()
+
+            return jsonify(result=result, status='success')
+        elif request.form['op'] == 'get_source_code':
+            cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=request.form['k_num']).first()
+            return jsonify(source_code=cur_challenge.lab_program.source_code, status='success')
+        elif request.form['op'] == 'get_default_code':
+            cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=request.form['k_num']).first()
+            return jsonify(default_code=cur_challenge.lab_program.default_code, status='success')
 
 
 @lab.route('/my_progress/<int:kid>/')

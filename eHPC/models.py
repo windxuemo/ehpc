@@ -269,9 +269,6 @@ class Program(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    # 题目相关的实验任务
-    challenges = db.relationship('Challenge', backref='program', lazy='dynamic')
-
     submit_problems = db.relationship('SubmitProblem', backref='program', lazy='dynamic')
 
 
@@ -323,9 +320,6 @@ class Question(db.Model):
     classifies = db.relationship('Classify', secondary=question_classifies,
                                  backref=db.backref('questions', lazy='dynamic'))
 
-    # 题目相关联的实验任务
-    challenges = db.relationship('Challenge', backref='question', lazy='dynamic')
-
 
 class Paper(db.Model):
     def __init__(self, title, about):
@@ -369,6 +363,15 @@ class Article(db.Model):
 """
 
 
+class LabProgram(db.Model):
+    __tablename__ = "lab_programs"
+    id = db.Column(db.Integer, primary_key=True)
+    source_code = db.Column(db.Text(), nullable=False)
+    default_code = db.Column(db.Text(), default=None)
+    # 题目相关的实验任务
+    challenges = db.relationship('Challenge', backref='lab_program', lazy='dynamic')
+
+
 class Knowledge(db.Model):
     __tablename__ = "knowledges"
     id = db.Column(db.Integer, primary_key=True)        # 技能 ID
@@ -394,11 +397,7 @@ class Challenge(db.Model):
     # 每一个任务可能有一个教学材料, 如果为空, 则表示没有材料, 纯图文内容。
     materialId = db.Column(db.Integer, db.ForeignKey('materials.id'))
 
-    # 每一个任务有一个测试题目
-    # 对应题目的类型0:单选题 1:多选题 2:不定项选择题 3: 填空题 4: 判断题 5: 问答题 6: 编程题目
-    question_type = db.Column(db.Integer, nullable=False)
-    questionId = db.Column(db.Integer, db.ForeignKey('questions.id'))
-    programId = db.Column(db.Integer, db.ForeignKey('programs.id'))
+    programId = db.Column(db.Integer, db.ForeignKey('lab_programs.id'))
 
 
 class Progress(db.Model):

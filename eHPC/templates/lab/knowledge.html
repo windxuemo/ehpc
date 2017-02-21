@@ -35,13 +35,15 @@
             <div id="player-content" class="col-md-12 material-container"></div>
         {% endif %}
 
-        <button type="button" class="btn btn-success btn-block next-step"> 继续学习 <span class="glyphicon glyphicon-forward"></span></button>
+        <button id="continue" type="button" class="btn btn-success btn-block next-step"> 继续学习 <span class="glyphicon glyphicon-forward"></span></button>
     </div>
 
     <div id="challenge-right">
         <div class="editor-header">
             <button id="run" class="btn btn-primary">
                 <i class="glyphicon glyphicon-play"></i> 提交运行</button>
+            <button id="check-source-code" class="btn btn-primary pull-right" style="margin-right: 10px">
+                <i class="glyphicon glyphicon-play"></i> 查看答案</button>
         </div>
         <div id="laboratory">
             <div id="editor" class="editor"></div>
@@ -61,10 +63,6 @@
             var c_content = $("#c_content");
             c_content.html(latex_support(c_content.data('to-render')));
             c_content.attr('data-to-render', null);
-
-            var q_content = $("#question_content");
-            q_content.html(latex_support(q_content.data('to-render')));
-            q_content.attr('data-to-render', null);
         });
     </script>
 
@@ -74,16 +72,76 @@
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/tomorrow-night");
         editor.getSession().setMode("ace/mode/c_cpp");
+
+        $(function () {
+            $.ajax({
+                url: address,
+                type: "post",
+                data: {
+                    op: "get_default_code",
+                    k_num: {{ next_progress - 1 }}
+                },
+                success: function (data) {
+                    if(data["status"] == "success"){
+                        editor.setValue(data['default_code']);
+                    }
+                }
+            });
+        });
+
     </script>
 
     <script>
         var address = "{{ url_for('lab.knowledge', kid=kid) }}";
         var next_challenge_uri = "{{ url_for('lab.knowledge', kid=kid, progress=next_progress) }}";
-        {% if question_type != 'program' %}
-            var question_type = {{ practice.type }};
-        {% else %}
-            var question_type = 6;
-        {% endif %}
+        $(function () {
+            $("#continue").click(function () {
+                location.href = next_challenge_uri;
+            });
+            $("#run").click(function () {
+                var code = editor.getValue();
+                $.ajax({
+                    url: address,
+                    type: "post",
+                    data: {
+                        op: "run",
+                        code: code,
+                        k_num: {{ next_progress - 1 }}
+                    },
+                    success: function (data) {
+                        var terminal = $(".terminal");
+                        if(data["status"] == "success"){
+                            if(data['result']['compile_success'] == 'true'){
+                                terminal.eq(0).text(data['result']['run_out']);
+                            }
+                            else if(data['result']['compile_success'] == 'false'){
+                                terminal.eq(0).text(data['result']['compile_out']);
+                            }
+                        }
+                        else if(data['status'] == 'fail'){
+                            terminal.eq(0).text(data['msg']);
+                        }
+                    }
+                });
+            });
+
+            $("#check-source-code").click(function () {
+                $.ajax({
+                    url: address,
+                    type: "post",
+                    data: {
+                        op: "get_source_code",
+                        k_num: {{ next_progress - 1 }}
+                    },
+                    success: function (data) {
+                        if(data["status"] == "success"){
+                            editor.setValue(data['source_code']);
+                        }
+                    }
+                });
+            });
+        });
+
     </script>
 
     <script>
@@ -121,14 +179,12 @@
 
     </script>
 
-    <script src="{{ url_for('static', filename='js/lab/practice.js') }}"></script>
     <script src="//cdn.bootcss.com/clappr/0.2.64/clappr.min.js"></script>
 {% endblock %}
 
 {#title#}
 {#c_content#}
 {#cur_material: 可能为空, 也就是说当前 challenge 并没有引用 material #}
-{#practice#}
-{#question_type#}
+{#program#}
 {#kid#}
 {#next_progress#}

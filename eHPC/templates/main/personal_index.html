@@ -71,7 +71,7 @@
                             <div style="padding: 5px">
                                 {% for uc in user_challenges %}
                                     <a class="media choice-options btn-block color-primary"
-                                       href="{{ url_for('lab.knowledge', kid=uc.knowledge_id, progress=uc.cur_progress) }}">{{ uc.knowledge.title }}(已通过 {{ uc.cur_progress }} 个)</a>
+                                        href="{{ url_for('lab.knowledge', kid=uc.knowledge_id, progress=uc.cur_progress+1) }}">{{ uc.knowledge.title }}(已通过 {{ uc.cur_progress }} 个)</a>
                                 {% endfor %}
                             </div>
                         </div>

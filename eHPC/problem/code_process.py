@@ -6,46 +6,40 @@ import urllib2, urllib
 import json
 import time
 
-# 参数设置
+# # 天河接口参数设置(去掉注释可测试脚本)
+# # 基本的请求地址
+# TH2_base_url = os.environ.get("EHPC_BASE_URL")
+# # 表示请求功能的地址
+# TH2_login_url = "/auth"
+# # 异步获取功能的地址
+# TH2_async_url = "/async"
+# # 首次转到异步获取的等待时间
+# TH2_async_first_wait_time = 1
+# # 异步获取的等待时间
+# TH2_async_wait_time = 5
+# # 天河账户名
+# TH2_username = os.environ.get("EHPC_USERNAME")
+# # 天河账户密码
+# TH2_password = os.environ.get("EHPC_PASSWORD")
+# # 登录数据
+# TH2_login_data = {"username": TH2_username, "password": TH2_password}
+# # 是否开启异步获取的DEBUG模式
+# TH2_DEBUG_ASYNC = True
+# # 登录天河内部的机器名，联系超算中心获取
+# TH2_machine_name = os.environ.get("EHPC_MACHINE")
+# # 路径
+# TH2_myPath = os.environ.get("EHPC_PATH")
 
-# 基本的请求地址
-base_url = os.environ.get("EHPC_BASE_URL")
-# 表示请求功能的地址
-login_url = "/auth"
-# 异步获取功能的地址
-async_url = "/async"
-# 首次转到异步获取的等待时间
-async_first_wait_time = 1
-# 异步获取的等待时间
-async_wait_time = 5
-# 天河账户名
-username = os.environ.get("EHPC_USERNAME")
-# 天河账户密码
-password = os.environ.get("EHPC_PASSWORD")
-# 登录数据
-login_data = {"username": username, "password": password}
-# 是否开启异步获取的DEBUG模式
-DEBUG_ASYNC = True
-# 登录天河内部的机器名，联系超算中心获取
-machine_name = os.environ.get("EHPC_MACHINE")
-# 输入文件名
-input_filename = "mpicc_demo.c"
-# 输出文件名
-output_filename = "ab.out"
-# 路径
-myPath = os.environ.get("EHPC_PATH")
-# 上传的脚本文件名
-job_filename = "job.sh"
 
 
 # 完成天河2号接口的功能的客户端
 class ehpc_client:
-    def __init__(self, base_url=base_url, headers={}, login_cookie=None, login_data=login_data):
+    def __init__(self, base_url=TH2_base_url, headers={}, login_cookie=None, login_data=TH2_login_data):
         self.headers = headers
         self.base_url = base_url
         self.login_cookie = login_cookie
         self.login_data = login_data
-        self.async_wait_time = async_wait_time
+        self.async_wait_time = TH2_async_wait_time
 
     def open(self, url, data=None, method=None, login=True, async_get=True, async_wait=True, retjson=True):
         """ 入口函数，完成接收前端数据-发送请求到特定api接口-接收并保存返回数据的功能
@@ -115,18 +109,18 @@ class ehpc_client:
         # 如果开启了异步获取并且返回码是201,表示转入异步获取请求结果的状态
         if self.status_code == 201 and async_get:
             self.async_wait_time = 5
-            time.sleep(async_first_wait_time)
-            if DEBUG_ASYNC:
+            time.sleep(TH2_async_first_wait_time)
+            if TH2_DEBUG_ASYNC:
                 print "jump to async"
-            return self.open(async_url + '/' + self.output)
+            return self.open(TH2_async_url + '/' + self.output)
 
         # 如果返回码是100 continue并且设置了异步获取等待，继续请求
         if self.status_code == 100 and async_wait and self.async_wait_time > 0:
             time.sleep(1)
             self.async_wait_time -= 1
-            if DEBUG_ASYNC:
+            if TH2_DEBUG_ASYNC:
                 print "async retry"
-            self.open(async_url + '/' + self.output)
+            self.open(TH2_async_url + '/' + self.output)
 
         # 超时
         if self.async_wait_time <= 0:
@@ -151,7 +145,7 @@ class ehpc_client:
     # 登录，返回值为是否成功（布尔型）
     # POST /api/auth
     def login(self):
-        tmpdata = self.open(login_url, data=self.login_data, login=False)
+        tmpdata = self.open(TH2_login_url, data=self.login_data, login=False)
         self.login_cookie = 'newt_sessionid=' + tmpdata["output"]["newt_sessionid"]
         return self.ret200()
 
@@ -164,7 +158,7 @@ class ehpc_client:
     # 暂时没有使用
     # GET /api/file/<machine>/<path>列目录
     def get_directory(self, myPath):
-        tmpdata = self.open("/file/" + machine_name + myPath + '/')
+        tmpdata = self.open("/file/" + TH2_machine_name + myPath + '/')
         return tmpdata['output']
 
     # GET /api/async/<id>获取
@@ -175,7 +169,7 @@ class ehpc_client:
 
         返回值：成功则返回文件内容，否则返回none
         """
-        tmpdata = self.open(async_url + '/' + file_id)
+        tmpdata = self.open(TH2_async_url + '/' + file_id)
         if self.ret200():
             return tmpdata["output"]["output"]
         else:
@@ -193,10 +187,10 @@ class ehpc_client:
         """
         if isjob:
             filename = "slurm-%s.out" % filename
-        tmpdata = self.open("/file/" + machine_name + myPath + '/' + filename + "?download=True")
+        tmpdata = self.open("/file/" + TH2_machine_name + myPath + '/' + filename + "?download=True")
         async_id = tmpdata["output"]
         # print async_id
-        tmpdata = self.open("/file/" + machine_name + "/%s?download=True" % async_id)
+        tmpdata = self.open("/file/" + TH2_machine_name + "/%s?download=True" % async_id)
         return tmpdata
 
     # 上传文件，需要注意的是data指文件内容，filename指保存在天河内部的文件名
@@ -208,7 +202,7 @@ class ehpc_client:
 
         返回值为是否成功（布尔型）
         """
-        tmpdata = self.open("/file/" + machine_name + myPath + '/' + filename, method="PUT", data=data)
+        tmpdata = self.open("/file/" + TH2_machine_name + myPath + '/' + filename, method="PUT", data=data)
         # print tmpdata
         return self.ret200()
 
@@ -226,7 +220,7 @@ class ehpc_client:
             3)请求出错，返回字符串
         """
         is_success[0] = False
-        tmpdata = self.open("/command/" + machine_name, data={"command": command})
+        tmpdata = self.open("/command/" + TH2_machine_name, data={"command": command})
         # print tmpdata
         # 返回结果正确
         if self.ret200() and isinstance(tmpdata, dict) and tmpdata["output"]["retcode"] == 0:
@@ -262,7 +256,7 @@ class ehpc_client:
         if not self.upload(myPath, job_filename, jobscript):
             return "ERROR"
         jobPath = myPath + "/" + job_filename
-        tmpdata = self.open("/job/" + machine_name + "/", data={"jobfile": jobPath})
+        tmpdata = self.open("/job/" + TH2_machine_name + "/", data={"jobfile": jobPath})
         return tmpdata["output"]["jobid"]
 
     def ehpc_compile(self, is_success, myPath, input_filename, output_filename, language):
@@ -314,14 +308,14 @@ class ehpc_client:
             return run_out
 
         time.sleep(5)
-        tmpdata = self.open("/job/" + machine_name + "/" + str(jobid) + "/")
+        tmpdata = self.open("/job/" + TH2_machine_name + "/" + str(jobid) + "/")
         # print tmpdata
         while True:
             if tmpdata["output"][str(jobid)]["State"] == "COMPLETED" or tmpdata["output"][str(jobid)]["State"] == "FAILED":
                 break
 
             time.sleep(5)
-            tmpdata = self.open("/job/" + machine_name + "/" + str(jobid) + "/")
+            tmpdata = self.open("/job/" + TH2_machine_name + "/" + str(jobid) + "/")
 
         run_output = self.download(myPath, jobid, isjob=True)
         run_out = run_output or "No output."
@@ -332,14 +326,64 @@ class ehpc_client:
         return run_out
 
 
+def summit_code(pid, uid, source_code, task_number, cpu_number_per_task, node_number):
+    """ 后台提交从前端获取的代码到天河系统，编译运行并返回结果
+    
+    pid为编程题ID（对于非编程题的代码，可自行赋予ID），uid为用户ID，source_code为所提交代码的文本，
+
+    task_number为任务数，cpu_number_per_task为CPU/任务比，node_number为使用节点数。
+
+    返回值为字符串类型的运行结果。
+
+    """
+    job_filename = "%s_%s.sh" % (str(pid), str(uid))
+    input_filename = "%s_%s.c" % (str(pid), str(uid))
+    output_filename = "%s_%s.o" % (str(pid), str(uid))
+
+    client = ehpc_client()
+    is_success = [False]
+
+    is_success[0] = client.login()
+    if not is_success[0]:
+        return jsonify(status="fail", msg="连接超算主机失败!")
+
+    is_success[0] = client.upload(myPath, input_filename, source_code)
+    if not is_success[0]:
+        return jsonify(status="fail", msg="上传程序到超算主机失败!")
+
+    compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpicc")
+
+    if is_success[0]:
+        run_out = client.ehpc_run(output_filename, job_filename, myPath, task_number, cpu_number_per_task, node_number)
+    else:
+        run_out = "编译失败，无法运行！"
+
+    result = dict()
+    result['status'] = 'success'
+    result['problem_id'] = pid
+    result['compile_out'] = compile_out
+    result['run_out'] = run_out
+
+    return jsonify(**result)
+
+
+
 if __name__ == '__main__':
+
+    # 输入文件名
+    input_filename = "mpicc_demo.c"
+    # 输出文件名
+    output_filename = "ab.out"
+    # 上传的脚本文件名
+    job_filename = "job.sh"
+
     mc = ehpc_client()
     test_text = open("mpicc_demo.c").read()
 
     if not mc.login():
         print "login fail."
         exit(-1)
-    if not mc.upload(myPath, input_filename, test_text):
+    if not mc.upload(TH2_myPath, input_filename, test_text):
         print "upload fail."
         exit(-1)
 
@@ -347,10 +391,10 @@ if __name__ == '__main__':
     # dirt = mc.run_command('mkdir -p %s'%(newPath))
     # print dirt
     is_success = [False]
-    compile_out = mc.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpicc")
+    compile_out = mc.ehpc_compile(is_success, TH2_myPath, input_filename, output_filename, "mpicc")
     # mc.run_command('cd %s;yhrun -n 2400 -N 200 -p work a.out'%(myPath))
     print compile_out, type(compile_out)
     if not is_success[0]:
         exit(-1)
-    run_out = mc.ehpc_run(output_filename, job_filename, myPath, "24", "1", "2")
+    run_out = mc.ehpc_run(output_filename, job_filename, TH2_myPath, "24", "1", "2")
     print run_out, type(run_out)

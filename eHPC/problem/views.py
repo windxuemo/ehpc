@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from . import problem
 from ..models import Program, Classify, SubmitProblem, Question, UserQuestion
 from flask_babel import gettext
-from ..problem.code_process import ehpc_client
+from ..problem.code_process import submit_code
 from .. import db
 from sqlalchemy import or_
 import os
@@ -133,39 +133,10 @@ def submit(pid):
     db.session.add(submit_problem)
     db.session.commit()
 
-    myPath = os.environ.get("EHPC_PATH")
-    # 之后需要改进
-
-    job_filename = "%s_%s.sh" % (str(pid), str(uid))
-    input_filename = "%s_%s.c" % (str(pid), str(uid))
-    output_filename = "%s_%s.o" % (str(pid), str(uid))
     task_number = request.form['task_number']
     cpu_number_per_task = request.form['cpu_number_per_task']
     node_number = request.form['node_number']
-    #partition = os.environ.get("EHPC_PARTITION")
 
-    client = ehpc_client()
-    is_success = [False]
+    return summit_code(pid=pid,uid=uid,source_code=source_code,
+        task_number=task_number,cpu_number_per_task=cpu_number_per_task,node_number=node_number)
 
-    is_success[0] = client.login()
-    if not is_success[0]:
-        return jsonify(status="fail", msg="连接超算主机失败!")
-
-    is_success[0] = client.upload(myPath, input_filename, source_code)
-    if not is_success[0]:
-        return jsonify(status="fail", msg="上传程序到超算主机失败!")
-
-    compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpicc")
-
-    if is_success[0]:
-        run_out = client.ehpc_run(output_filename, job_filename, myPath, task_number, cpu_number_per_task, node_number)
-    else:
-        run_out = "编译失败，无法运行！"
-
-    result = dict()
-    result['status'] = 'success'
-    result['problem_id'] = pid
-    result['compile_out'] = compile_out
-    result['run_out'] = run_out
-
-    return jsonify(**result)

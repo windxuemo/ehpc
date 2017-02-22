@@ -5,6 +5,31 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# 天河接口参数设置
+
+# 基本的请求地址
+TH2_base_url = os.environ.get("EHPC_BASE_URL")
+# 表示请求功能的地址
+TH2_login_url = "/auth"
+# 异步获取功能的地址
+TH2_async_url = "/async"
+# 首次转到异步获取的等待时间
+TH2_async_first_wait_time = 1
+# 异步获取的等待时间
+TH2_async_wait_time = 5
+# 天河账户名
+TH2_username = os.environ.get("EHPC_USERNAME")
+# 天河账户密码
+TH2_password = os.environ.get("EHPC_PASSWORD")
+# 登录数据
+TH2_login_data = {"username": TH2_username, "password": TH2_password}
+# 是否开启异步获取的DEBUG模式
+TH2_DEBUG_ASYNC = True
+# 登录天河内部的机器名，联系超算中心获取
+TH2_machine_name = os.environ.get("EHPC_MACHINE")
+# 路径
+TH2_myPath = os.environ.get("EHPC_PATH")
+
 
 class Config:
     def __init__(self):

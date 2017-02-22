@@ -5,7 +5,7 @@ from flask import render_template, abort, jsonify, request, redirect, url_for
 from flask_login import current_user, login_required
 from datetime import datetime
 from . import group
-from ..models import Group, Topic, Post, User
+from ..models import Group, Topic, Post
 from flask_babel import gettext
 from ..group.group_util import user_in_group, user_not_in_group
 from ..util.text_process import add_user_links_in_content

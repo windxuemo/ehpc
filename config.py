@@ -5,30 +5,35 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# 天河接口参数设置
+"""
+从环境变量中读取超算相关的接口配置
 
-# 基本的请求地址
-TH2_base_url = os.environ.get("EHPC_BASE_URL")
-# 表示请求功能的地址
-TH2_login_url = "/auth"
-# 异步获取功能的地址
-TH2_async_url = "/async"
-# 首次转到异步获取的等待时间
-TH2_async_first_wait_time = 1
-# 异步获取的等待时间
-TH2_async_wait_time = 5
-# 天河账户名
-TH2_username = os.environ.get("EHPC_USERNAME")
-# 天河账户密码
-TH2_password = os.environ.get("EHPC_PASSWORD")
-# 登录数据
-TH2_login_data = {"username": TH2_username, "password": TH2_password}
-# 是否开启异步获取的DEBUG模式
+TH2_BASE_URL: 基本的请求地址
+TH2_LOGIN_UR: 表示请求功能的地址
+TH2_ASYNC_URL: 异步获取功能的地址
+TH2_ASYNC_FIRST_WAIT_TIME: 首次转到异步获取的等待时间
+TH2_ASYNC_WAIT_TIME: 异步获取的等待时间
+TH2_USERNAME: 天河账户名
+TH2_PASSWORD: 天河账户密码
+TH2_DEBUG_ASYNC: 是否开启异步获取的DEBUG模式
+TH2_MACHINE_NAME: 登录天河内部的机器名
+TH2_MY_PATH: 路径
+
+关于参数的详细信息, 请阅读
+https://github.com/xuelangZF/ehpc/wiki/%E8%B6%85%E7%AE%97%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3
+"""
+
+TH2_BASE_URL = os.environ.get("EHPC_BASE_URL")
+TH2_LOGIN_URL = "/auth"
+TH2_ASYNC_URL = "/async"
+TH2_ASYNC_FIRST_WAIT_TIME = 1
+TH2_ASYNC_WAIT_TIME = 5
+TH2_USERNAME = os.environ.get("EHPC_USERNAME")
+TH2_PASSWORD = os.environ.get("EHPC_PASSWORD")
+TH2_LOGIN_DATA = {"username": TH2_USERNAME, "password": TH2_PASSWORD}
 TH2_DEBUG_ASYNC = True
-# 登录天河内部的机器名，联系超算中心获取
-TH2_machine_name = os.environ.get("EHPC_MACHINE")
-# 路径
-TH2_myPath = os.environ.get("EHPC_PATH")
+TH2_MACHINE_NAME = os.environ.get("EHPC_MACHINE")
+TH2_MY_PATH = os.environ.get("EHPC_PATH")
 
 
 class Config:
@@ -43,8 +48,8 @@ class Config:
     MAIL_SERVER = 'smtp.sina.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = 'milanlanlanlan@sina.com'   # os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = '1970025901a'               # os.environ.get('MAIL_PASSWORD')
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'milanlanlanlan@sina.com'
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or '1970025901a'
     FORUM_MAIL_SUBJECT_PREFIX = 'eHPC'
     FORUM_MAIL_SENDER = '<milanlanlanlan@sina.com>'
 

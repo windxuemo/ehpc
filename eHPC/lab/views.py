@@ -1,16 +1,18 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+from datetime import datetime
+
 from flask import render_template, request, jsonify, abort
-from . import lab
 from flask_babel import gettext
 from flask_login import login_required, current_user
-from ..models import Challenge, Question, Knowledge, Progress, Material
-from ..lab.lab_util import get_question_and_type, check_if_correct
+
+from eHPC.util.code_process import ehpc_client
+from . import lab
 from .. import db
-from datetime import datetime
-from ..problem.code_process import ehpc_client
-import os
+from ..models import Challenge, Knowledge, Progress
+
 
 @lab.route('/')
 @login_required

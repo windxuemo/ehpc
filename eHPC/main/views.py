@@ -4,7 +4,7 @@
 
 from flask import render_template
 from . import main
-from ..models import Course, Group, Article, User, Post, UserQuestion, SubmitProblem, Progress
+from ..models import Course, Group, Article, Post, UserQuestion, SubmitProblem, Progress
 from flask_babel import gettext
 from flask_wtf.csrf import CSRFError
 from flask_login import current_user

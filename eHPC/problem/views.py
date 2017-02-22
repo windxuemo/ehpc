@@ -1,16 +1,17 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
-from flask import render_template, jsonify, request, abort
-from flask_login import current_user, login_required
-from . import problem
-from ..models import Program, Classify, SubmitProblem, Question, UserQuestion
-from flask_babel import gettext
-from ..problem.code_process import submit_code
-from .. import db
-from sqlalchemy import or_
-import os
 from datetime import datetime
+
+from flask import render_template, request, abort
+from flask_babel import gettext
+from flask_login import current_user, login_required
+from sqlalchemy import or_
+
+from eHPC.util.code_process import submit_code
+from . import problem
+from .. import db
+from ..models import Program, Classify, SubmitProblem, Question, UserQuestion
 
 
 @problem.route('/')
@@ -137,6 +138,5 @@ def submit(pid):
     cpu_number_per_task = request.form['cpu_number_per_task']
     node_number = request.form['node_number']
 
-    return summit_code(pid=pid,uid=uid,source_code=source_code,
-        task_number=task_number,cpu_number_per_task=cpu_number_per_task,node_number=node_number)
-
+    return submit_code(pid=pid, uid=uid, source_code=source_code,
+                       task_number=task_number, cpu_number_per_task=cpu_number_per_task, node_number=node_number)

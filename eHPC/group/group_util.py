@@ -4,7 +4,7 @@
 from flask import redirect, url_for
 from functools import wraps
 from flask_login import current_user
-from ..models import Group, User
+from ..models import Group
 
 
 # 装饰器, 保证用户已经加入了群组

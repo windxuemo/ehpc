@@ -14,6 +14,7 @@ from .. import db
 from ..models import Challenge, Knowledge, Progress
 
 
+
 @lab.route('/')
 @login_required
 def index():
@@ -127,10 +128,10 @@ def knowledge(kid):
             return jsonify(result=result, status='success')
         elif request.form['op'] == 'get_source_code':
             cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=request.form['k_num']).first()
-            return jsonify(source_code=cur_challenge.lab_program.source_code, status='success')
+            return jsonify(source_code=cur_challenge.source_code, status='success')
         elif request.form['op'] == 'get_default_code':
             cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=request.form['k_num']).first()
-            return jsonify(default_code=cur_challenge.lab_program.default_code, status='success')
+            return jsonify(default_code=cur_challenge.default_code, status='success')
 
 
 @lab.route('/my_progress/<int:kid>/')

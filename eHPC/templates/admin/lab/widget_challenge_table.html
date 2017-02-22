@@ -2,10 +2,9 @@
     <thead><!--表格头-->
     <tr>
         <th width="10%">序号</th>
-        <th width="15%">标题</th>
-        <th width="25%">材料</th>
-        <th width="30%">习题</th>
-        <th width="20%">操作</th>
+        <th width="25%">标题</th>
+        <th width="35%">材料</th>
+        <th width="30%">操作</th>
     </tr>
     </thead>
     <tbody><!--表格主体-->
@@ -14,11 +13,6 @@
             <td>{{ c.knowledgeNum }}</td>
             <td>{{ c.title }}</td>
             <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ c.material.name }}">{{ c.material.name }}</td>
-            {% if c.question_type == 6 %}
-            <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ c.program.title }}">{{ c.program.title }}</td>
-            {% else %}
-            <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ c.question | get_question_content }}">{{ c.question | get_question_content }}</td>
-            {% endif %}
             <td>
                 <a class="btn btn-link"
                    href="{{ url_for('admin.lab_edit', knowledge_id=knowledge.id, challenge_id=c.id) }}">

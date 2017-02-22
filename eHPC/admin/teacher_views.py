@@ -780,30 +780,19 @@ def lab_create(knowledge_id):
             for l in c.lessons:
                 for m in l.materials:
                     materials.append(m)
-        questions = current_user.teacher_questions
-        programs = current_user.teacher_program
         return render_template('admin/lab/knowledge_detail.html',
                                title=gettext('Lab Create'),
                                op='create',
                                knowledge=curr_knowledge,
-                               materials=materials,
-                               questions=questions,
-                               programs=programs)
+                               materials=materials)
     elif request.method == 'POST':
         # 创建任务
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
-        curr_challenge = Challenge(title=request.form['title'], content=request.form['content'])
-        curr_challenge.question_type = int(request.form['question_type'])
+        curr_challenge = Challenge(title=request.form['title'], content=request.form['content'],
+                                   source_code=request.form['source_code'], default_code=request.form['default_code'])
         curr_challenge.knowledgeNum = curr_knowledge.challenges.count() + 1
         db.session.add(curr_challenge)
         curr_knowledge.challenges.append(curr_challenge)
-
-        if int(request.form['question_type']) != 6:
-            curr_question = Question.query.filter_by(id=request.form['question_id']).first_or_404()
-            curr_question.challenges.append(curr_challenge)
-        else:
-            curr_program = Program.query.filter_by(id=request.form['question_id']).first_or_404()
-            curr_program.challenges.append(curr_challenge)
 
         if int(request.form['material_id']) != -1:
             curr_material = Material.query.filter_by(id=request.form['material_id']).first_or_404()
@@ -824,40 +813,32 @@ def lab_edit(knowledge_id, challenge_id):
             for l in c.lessons:
                 for m in l.materials:
                     materials.append(m)
-        questions = current_user.teacher_questions
-        programs = current_user.teacher_program
         return render_template('admin/lab/knowledge_detail.html',
                                title=gettext('Lab Edit'),
                                op='edit', knowledge=curr_knowledge,
                                challenge=curr_challenge,
-                               materials=materials,
-                               questions=questions,
-                               programs=programs)
+                               materials=materials)
     elif request.method == 'POST':
-        # 编辑任务
-        curr_challenge = Challenge.query.filter_by(id=challenge_id).first_or_404()
-        curr_challenge.title = request.form['title']
-        curr_challenge.content = request.form['content']
-        curr_challenge.question_type = int(request.form['question_type'])
-
-        if curr_challenge.question_type != 6:
-            curr_challenge.question.challenges.remove(curr_challenge)
+        if 'op' in request.form:
+            if request.form['op'] == 'get_code':
+                curr_challenge = Challenge.query.filter_by(id=challenge_id).first_or_404()
+                return jsonify(status='success', default_code=curr_challenge.default_code,
+                               source_code=curr_challenge.source_code)
         else:
-            curr_challenge.program.challenges.remove(curr_challenge)
-        if int(request.form['question_type']) != 6:
-            curr_question = Question.query.filter_by(id=request.form['question_id']).first_or_404()
-            curr_question.challenges.append(curr_challenge)
-        else:
-            curr_program = Program.query.filter_by(id=request.form['question_id']).first_or_404()
-            curr_program.challenges.append(curr_challenge)
+            # 编辑任务
+            curr_challenge = Challenge.query.filter_by(id=challenge_id).first_or_404()
+            curr_challenge.title = request.form['title']
+            curr_challenge.content = request.form['content']
+            curr_challenge.source_code = request.form['source_code']
+            curr_challenge.default_code = request.form['default_code']
 
-        if int(request.form['material_id']) != -1:
-            curr_challenge.material.challenges.remove(curr_challenge)
-            curr_material = Material.query.filter_by(id=request.form['material_id']).first_or_404()
-            curr_material.challenges.append(curr_challenge)
+            if int(request.form['material_id']) != -1:
+                curr_challenge.material.challenges.remove(curr_challenge)
+                curr_material = Material.query.filter_by(id=request.form['material_id']).first_or_404()
+                curr_material.challenges.append(curr_challenge)
 
-        db.session.commit()
-        return jsonify(status="success")
+            db.session.commit()
+            return jsonify(status="success")
 
 
 @admin.route('/download/paper/<int:paper_id>/')

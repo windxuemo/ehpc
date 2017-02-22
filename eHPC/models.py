@@ -363,15 +363,6 @@ class Article(db.Model):
 """
 
 
-class LabProgram(db.Model):
-    __tablename__ = "lab_programs"
-    id = db.Column(db.Integer, primary_key=True)
-    source_code = db.Column(db.Text(), nullable=False)
-    default_code = db.Column(db.Text(), default=None)
-    # 题目相关的实验任务
-    challenges = db.relationship('Challenge', backref='lab_program', lazy='dynamic')
-
-
 class Knowledge(db.Model):
     __tablename__ = "knowledges"
     id = db.Column(db.Integer, primary_key=True)        # 技能 ID
@@ -396,8 +387,8 @@ class Challenge(db.Model):
 
     # 每一个任务可能有一个教学材料, 如果为空, 则表示没有材料, 纯图文内容。
     materialId = db.Column(db.Integer, db.ForeignKey('materials.id'))
-
-    programId = db.Column(db.Integer, db.ForeignKey('lab_programs.id'))
+    source_code = db.Column(db.Text(), nullable=False)
+    default_code = db.Column(db.Text(), default=None)
 
 
 class Progress(db.Model):

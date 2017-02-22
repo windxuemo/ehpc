@@ -6,6 +6,7 @@
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -15,52 +16,57 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">任务详情</div>
                     <div id="content" class="panel-body">
+                        <div class="form-group row">
+                        <label class="col-md-2" style="text-align: right;">标题</label>
+                        <div class="col-md-8">
+                            <input id="challenge-title" name="title" class="form-control"
+                                   type="text" value="{{ '' if op == 'create' else challenge.title }}">
+                        </div>
+                    </div>
 
-                        <div id="info-filed">
-
-                            <div class="form-group row">
-                                <label class="col-md-2" style="text-align: right;">标题</label>
-                                <div class="col-md-8">
-                                    <input id="challenge-title" name="title" class="form-control"
-                                           type="text" value="{{ '' if op == 'create' else challenge.title }}">
-                                </div>
+                        <div class="form-group row">
+                            <label class="col-md-2" style="text-align: right;">内容</label>
+                            <div class="col-md-8 controls">
+                                <textarea id="challenge-content" name="content" data-provide="markdown"
+                                          rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"
+                                >{{ '' if op == 'create' else challenge.content }}</textarea>
+                                {% include 'widget/load_img_progress.html' %}
                             </div>
+                        </div>
 
-                            <div class="form-group row">
-                                <label class="col-md-2" style="text-align: right;">内容</label>
-                                <div class="col-md-8 controls">
-                                    <textarea id="challenge-content" name="content" data-provide="markdown"
-                                              rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"
-                                    >{{ '' if op == 'create' else challenge.content }}</textarea>
-                                    {% include 'widget/load_img_progress.html' %}
-                                </div>
+                        <div class="form-group row" id="selected-material">
+                            <label class="col-md-2" style="text-align: right;">材料</label>
+                            <div class="col-md-8">
+                                <span>{{ '未选择' if op == 'create' else challenge.material.name }}</span>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#materialModal">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
                             </div>
+                        </div>
 
-                            <div class="form-group row" id="selected-material">
-                                <label class="col-md-2" style="text-align: right;">材料</label>
-                                <div class="col-md-8">
-                                    <span>{{ '未选择' if op == 'create' else challenge.material.name }}</span>
-                                    <button class="btn btn-info" data-toggle="modal" data-target="#materialModal">
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                    </button>
-                                </div>
+                        <div class="form-group row">
+                            <label class="col-md-2" style="text-align: right;">练习</label>
+                            <div class="col-md-10">
+                                <button class="btn btn-primary" id="default-code-btn">
+                                    题目预留代码
+                                </button>
+                                <button class="btn btn-primary" id="source-code-btn">
+                                    题目答案代码
+                                </button>
                             </div>
+                        </div>
 
-                            <div class="form-group row" id="selected-question">
-                                <label class="col-md-2" style="text-align: right;">习题</label>
-                                <div class="col-md-10">
-                                    <span>
-                                    {% if op == 'edit' and challenge.question_type != 6 %}
-                                        {{ challenge.question | get_question_content }}
-                                    {% elif op == 'edit' and challenge.question_type == 6 %}
-                                        {{ challenge.program.title }}
-                                    {% else %}
-                                        未选择
-                                    {% endif %}
-                                    </span>
-                                    <button class="btn btn-info" data-toggle="modal" data-target="#questionModal">
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                    </button>
+                        <div class="form-group row">
+                            <span class="col-md-2"></span>
+                            <div class="col-md-8">
+                                <div id="default-code-block" style="height: 400px">
+                                    <label>题目<span style="color: #46C37B">预留</span>代码</label>
+                                    <div id="editor-default-code" class="editor"></div>
+                                </div>
+
+                                <div id="source-code-block" style="height: 400px;display: none">
+                                    <label>题目<span style="color: #46C37B">答案</span>代码</label>
+                                    <div id="editor-source-code" class="editor"></div>
                                 </div>
                             </div>
                         </div>
@@ -96,34 +102,55 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width: 50%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">习题列表</h4>
-                </div>
-                <div class="modal-body">
-                    <div style="margin-bottom: 20px;">
-                        请点击需要选择的习题
-                    </div>
-                    {% include 'admin/lab/widget_question_table.html' %}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 
 
 {% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script>
+        var editor_source_code = ace.edit("editor-source-code");
+        editor_source_code.setTheme("ace/theme/tomorrow-night");
+        editor_source_code.getSession().setMode("ace/mode/c_cpp");
+
+        var editor_default_code = ace.edit("editor-default-code");
+        editor_default_code.setTheme("ace/theme/tomorrow-night");
+        editor_default_code.getSession().setMode("ace/mode/c_cpp");
+
+        $(function () {
+            $("#default-code-btn").click(function () {
+                $("#default-code-block").show();
+                $("#source-code-block").hide();
+            });
+
+            $("#source-code-btn").click(function () {
+                $("#source-code-block").show();
+                $("#default-code-block").hide();
+            });
+        });
+        {% if op=='edit' %}
+            $(function () {
+                $.ajax({
+                    url: location.href,
+                    type: "post",
+                    data: {
+                        op: "get_code"
+                    },
+                    success: function (data) {
+                        if(data["status"] == "success"){
+                            editor_default_code.setValue(data['default_code']);
+                            editor_source_code.setValue(data['source_code']);
+                        }
+                    }
+                });
+            });
+        {% endif %}
+    </script>
+
+
     <script language=javascript src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
     <script>
         $(document).ready(function () {
             $("#materials").dataTable();
-            $("#questions").dataTable();
             var edt = custom_simplemde({
                 element: $("#challenge-content")[0],
                 autosave: true,
@@ -132,44 +159,12 @@
                 spellChecker: false
             });
 
-            $("#list").find("a").click(function () {
-                $("#list").find("a").removeClass("active");
-                $(this).addClass("active");
-                if ($(this).attr("href") == "#info-filed") {
-                    $("#info-filed").show();
-                    $("#material-filed").hide();
-                    $("#question-filed").hide();
-                }
-                else if ($(this).attr("href") == "#material-filed") {
-                    $("#info-filed").hide();
-                    $("#material-filed").show();
-                    $("#question-filed").hide();
-                }
-                else if ($(this).attr("href") == "#question-filed") {
-                    $("#info-filed").hide();
-                    $("#material-filed").hide();
-                    $("#question-filed").show();
-                }
-            });
-
             var material_id = {{ -1 if op == 'create' else challenge.material.id or -1 }};
-            var question_id = {% if op == 'edit' and challenge.question_type != 6 %}{{ challenge.question.id }}
-                              {% elif op == 'edit' and challenge.question_type == 6 %}{{ challenge.program.id }}
-                              {% else %}-1
-                              {% endif %};
-            var question_type = {{ -1 if op == 'create' else challenge.question_type }};
             $("#materials").find("tbody").on("click", "tr", function () {
                 $("#materials").find("tbody").find("tr").removeClass("selected");
                 $(this).addClass("selected");
                 material_id = $(this).data("id");
                 $("#selected-material").children("div").children("span").text($(this).children().eq(1).text());
-            });
-            $("#questions").find("tbody").on("click", "tr", function () {
-                $("#questions").find("tbody").find("tr").removeClass("selected");
-                $(this).addClass("selected");
-                question_id = $(this).data("id");
-                question_type = $(this).data("type");
-                $("#selected-question").children("div").children("span").text($(this).children().eq(1).text());
             });
 
             $("#challenge-save-btn").click(function () {
@@ -183,11 +178,6 @@
                     return;
                 }
 
-                if (question_id == -1) {
-                    show_invalid_info("#challenge-save-info","#challenge-save-info span","请选择一个习题");
-                    return;
-                }
-
                 $.ajax({
                     type: "post",
                     url: location.href,
@@ -195,8 +185,8 @@
                         title: $("#challenge-title").val(),
                         content: edt.value(),
                         material_id: material_id,
-                        question_type: question_type,
-                        question_id: question_id
+                        source_code: editor_source_code.getValue(),
+                        default_code: editor_default_code.getValue()
                     },
                     success: function (data) {
                         if (data["status"] == "success") {

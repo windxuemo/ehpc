@@ -17,7 +17,7 @@
                     <a style="text-decoration: none;" href="{{ url_for('admin.question_filter_by_classify', question_type='choice', question_classify=c.id) }}">
                     <div class="admin-item">
                         <div style="padding-top: 40px;font-size: 20px">{{ c.name }}</div>
-                        <div class="info">共有 {{ c.questions.count() }} 题</div>
+                        <div class="info">共有 {{ c.questions.filter_by(user_id=current_user.id).count() }} 题</div>
                     </div>
                     </a>
                 </div>

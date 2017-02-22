@@ -510,6 +510,7 @@ def question_filter_by_classify(question_type, question_classify):
             questions = Classify.query.filter_by(id=question_classify).first().questions.filter_by(type=3)
         elif question_type == 'essay':
             questions = Classify.query.filter_by(id=question_classify).first().questions.filter_by(type=5)
+        questions = questions.filter_by(user_id=current_user.id)
         return render_template('admin/problem/question.html',
                                title=gettext('Question Manage'),
                                questions=questions,

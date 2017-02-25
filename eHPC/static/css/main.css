@@ -4775,3 +4775,9 @@ div.no-margin {
 .textarea-errors .parsley-errors-list {
     margin-top: -15px;
 }
+
+/* 题库首页图片大小限制 */
+.practice-item img{
+    width: 161px;
+    height: 161px;
+}

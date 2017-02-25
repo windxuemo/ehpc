@@ -103,28 +103,23 @@
         </form>
 
         {#  keep the result #}
-        <div class="row">
-            <div class="es-section" id="result-show" style="display: none">
-
-                <div id="compiler" class="col-md-6 form-group">
-                    <div class="markdown-body">
-                        <p class="text-center text-large">编译结果</p>
-                        <hr>
-                        <div id="compiler-content"></div>>
-                    </div>
+        <div class="row es-section" id="result-show" style="display: none">
+            <div id="compiler" class="col-md-6 form-group">
+                <div class="markdown-body">
+                    <p class="text-center text-large">编译结果</p>
+                    <hr>
+                    <div id="compiler-content"></div>
                 </div>
+            </div>
 
-                <div id="run" class="form-group">
-                    <div class="markdown-body">
-                        <p class="text-center text-large">运行结果</p>
-                        <hr>
-                        <div id="run-content"></div>>
-                    </div>
+            <div id="run" class="form-group">
+                <div class="markdown-body">
+                    <p class="text-center text-large">运行结果</p>
+                    <hr>
+                    <div id="run-content"></div>
                 </div>
-
             </div>
         </div>
-
 
     </div>
 
@@ -167,13 +162,13 @@
                 method: "post",
                 cache: false,
                 url: "{{ url_for('problem.submit', pid=problem.id) }}",
-				data : data,
+                data: data,
                 success: function (data) {
-                    if(data.status==='success') {
+                    if (data.status === 'success') {
                         $("#compiler-content").empty().append(data.compile_out);
                         $("#run-content").empty().html(data.run_out);
                     }
-                    else{
+                    else {
                         $("#compiler-content").empty().append(data.msg);
                         $("#run-content").empty().html("<p class='text-center'>  暂时无法运行...</p>");
                     }

@@ -165,7 +165,7 @@ select:-webkit-autofill {
 
 @media (max-width: 767px) {
     .content-header .navbar-header .navbar-brand > img {
-        height: 50px;
+        height: 60px;
     }
 }
 
@@ -195,17 +195,36 @@ select:-webkit-autofill {
     margin-right: 30px;
 }
 
-@media (max-width: 1199px) {
-    .content-header .nav.navbar-nav > li > a {
-        padding-left: 30px;
-        padding-right: 20px;
-    }
+.navbar-mobile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 80px;
+    margin: 0 20px;
+    z-index: 9999;
 }
 
-@media (max-width: 991px) {
-    .content-header .nav.navbar-nav > li > a {
-        padding-left: 10px;
-        padding-right: 10px;
+.navbar-mobile .dropdown-menu > li > a {
+    color: black;
+    font-size: 14px;
+}
+
+.navbar-mobile li.dropdown a i{
+    font-size: 60px;
+    color: black;
+}
+
+.navbar-mobile .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.navbar-mobile .dropdown-menu{
+    border-radius: 4px;
+}
+
+@media (max-width: 850px) {
+    .navbar-user {
+        display: none;
     }
 }
 
@@ -216,7 +235,7 @@ select:-webkit-autofill {
 .content-header .nav.navbar-nav > li.active > a,
 .content-header .nav.navbar-nav > li > a:hover,
 .content-header .nav.navbar-nav > li > a:focus {
-    background-color: rgba(77,85,93,.4);
+    background-color: rgba(77, 85, 93, .4);
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
@@ -321,10 +340,6 @@ select:-webkit-autofill {
     }
 }
 
-.nav.user-nav {
-    float: right;
-}
-
 .nav.user-nav > li {
     float: left;
     height: 80px;
@@ -332,7 +347,8 @@ select:-webkit-autofill {
 
 .nav.user-nav > li > a {
     display: block;
-    padding: 25px 15px;
+    padding: 30px 10px;
+    line-height: 20px;
     color: black;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -340,20 +356,14 @@ select:-webkit-autofill {
     transition: all 0.3s ease;
 }
 
-@media (max-width: 1199px) {
-    .nav.user-nav > li > a {
-        padding: 30px 10px;
-    }
-}
-
 .nav.user-nav > li > a.dropdown-toggle {
-    padding: 25px 15px;
+    padding: 20px 15px;
     height: 80px;
 }
 
 @media (max-width: 991px) {
     .nav.user-nav > li > a.dropdown-toggle {
-        padding: 25px 5px;
+        padding: 20px 5px;
     }
 }
 
@@ -365,25 +375,6 @@ select:-webkit-autofill {
     -moz-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
-}
-
-.nav.user-nav > li > a.hasmessage {
-    position: relative;
-    display: block;
-}
-
-.nav.user-nav > li > a.hasmessage > .dot {
-    position: absolute;
-    display: block;
-    width: 5px;
-    height: 5px;
-    top: 22px;
-    right: 12px;
-    font-size: 20px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    background-color: #e83d2c;
 }
 
 @media (min-width: 1200px) {
@@ -443,13 +434,6 @@ select:-webkit-autofill {
     padding: 20px 0;
     line-height: 30px;
     color: #c1c1c1;
-}
-
-@media (max-width: 767px) {
-    .content-footer .copyright {
-        padding: 10px 0;
-        line-height: 20px;
-    }
 }
 
 .content-footer .copyright a {
@@ -3747,7 +3731,7 @@ textarea {
     overflow: hidden;
 }
 
-.carousel-inner>.item>a>img, .carousel-inner>.item>img {
+.carousel-inner > .item > a > img, .carousel-inner > .item > img {
     height: 100%;
     max-width: none;
     left: 50%;
@@ -3756,38 +3740,44 @@ textarea {
     -webkit-transform: translateX(-50%);
 }
 
+@media (max-width: 1200px) {
+    .userLoginPart {
+        display: none;
+    }
+}
+
 .swiper-container {
     position: relative;
 }
 
-.swiper-container .userLoginPart{
-	width: 1180px;
-	margin: 0px auto;
-	position: absolute;
-	top:0px;
-	left: 50%;
-	margin-left: -590px;
-	z-index: 7;
+.swiper-container .userLoginPart {
+    width: 1180px;
+    margin: 0px auto;
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    margin-left: -590px;
+    z-index: 7;
 }
 
-.swiper-container .userLoginPart .innerPart{
-	width: 1180px;
-	position: relative;
+.swiper-container .userLoginPart .innerPart {
+    width: 1180px;
+    position: relative;
 }
 
-.swiper-container .userLoginPart .loginContent{
-	width: 300px;
-	height: 500px;
-	position: absolute;
-	right: 0px;
+.swiper-container .userLoginPart .loginContent {
+    width: 300px;
+    height: 500px;
+    position: absolute;
+    right: 0px;
 }
 
 #inputLogin li {
     list-style: none;
 }
 
-.swiper-container .userLoginPart .loginContent .loginInput{
-	margin: 80px 0px 0px 0px;
+.swiper-container .userLoginPart .loginContent .loginInput {
+    margin: 80px 0px 0px 0px;
 }
 
 .loginInput .parsley-errors-list {
@@ -3795,115 +3785,128 @@ textarea {
     padding-left: 35px;
 }
 
-.loginContent .loginInput{
-	background:#000000;
-	filter:alpha(opacity=42);
-	background:none repeat scroll 0 0 rgba(0, 0, 0, 0.42);
-	float: right;
-	width: 300px;
-	height: 320px;
-	margin: 20px 85px 0px 0px;
+.loginContent .loginInput {
+    background: #000000;
+    filter: alpha(opacity=42);
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.42);
+    float: right;
+    width: 300px;
+    height: 320px;
+    margin: 20px 85px 0px 0px;
     padding-left: 0px;
 }
-.loginContent .loginInput input[type='text']:focus{
-	border-color:#0096e0;
-    outline:0;
-    outline:thin dotted \9;
-    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
-    -moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
-    box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6)
+
+.loginContent .loginInput input[type='text']:focus {
+    border-color: #0096e0;
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6)
 }
-.loginContent .loginInput input[type='password']:focus{
-	border-color:#0096e0;
-    outline:0;
-    outline:thin dotted \9;
-    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
-    -moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
-    box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6)
+
+.loginContent .loginInput input[type='password']:focus {
+    border-color: #0096e0;
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6)
 }
-.loginContent .loginInput .loginAdmin,.loginPassword {
-	background-color: #ffffff;
-	border: 1px solid #ffffff;
-	border-radius: 3px;
-	color: #767f88;
-	font-size: 16px;
-	font-weight: normal;
-	height: 40px;
-	line-height: 20px;
-	line-height: 40px\9;
-	margin: 20px 0 10px 30px;
-	padding: 0 30px;
+
+.loginContent .loginInput .loginAdmin, .loginPassword {
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+    color: #767f88;
+    font-size: 16px;
+    font-weight: normal;
+    height: 40px;
+    line-height: 20px;
+    line-height: 40px \9;
+    margin: 20px 0 10px 30px;
+    padding: 0 30px;
 }
 
 .loginContent .loginInput .logineHPC {
-	margin: 16px 0 0 30px;
-	font-size:16px;
-	display:inline-block;
-	color:#ffffff;
+    margin: 16px 0 0 30px;
+    font-size: 16px;
+    display: inline-block;
+    color: #ffffff;
 }
 
-.adminImg{
-	width:18px;
-	height:18px;
-	display:inline-block;
-	z-index: 1;
-	position: absolute;
-	margin:30px 0 0 40px;
+.adminImg {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    z-index: 1;
+    position: absolute;
+    margin: 30px 0 0 40px;
 }
-.passwordImg{
-	width:18px;
-	height:18px;
-	display:block;
-	z-index: 1;
-	position: absolute;
-	margin:30px 0 0 40px;
+
+.passwordImg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    z-index: 1;
+    position: absolute;
+    margin: 30px 0 0 40px;
 }
 
 .loginContent .loginInput .loginButton {
-	background: none repeat scroll 0 0 #0096e0;
-	opacity:1;-moz-opacity:1;-khtml-opacity:1;filter:alpha(opacity=100);
-	border: 1px solid #0096e0;
-	border-radius: 3px;
-	color: #ffffff;
-	display: inline-block;
-	font-size: 16px;
-	height: 40px;
-	text-align: center;
-	margin: 20px 0 10px 30px;
-	width: 240px;
+    background: none repeat scroll 0 0 #0096e0;
+    opacity: 1;
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    filter: alpha(opacity=100);
+    border: 1px solid #0096e0;
+    border-radius: 3px;
+    color: #ffffff;
+    display: inline-block;
+    font-size: 16px;
+    height: 40px;
+    text-align: center;
+    margin: 20px 0 10px 30px;
+    width: 240px;
 }
+
 .loginContent .loginInput .loginButton:hover {
-	background: none repeat scroll 0 0 #00abff;
-	border: 1px solid #00abff;
+    background: none repeat scroll 0 0 #00abff;
+    border: 1px solid #00abff;
 }
-.loginContent .loginInput .register{
-	margin: 0 0 0 30px;
-	color: #e5e5e5;
+
+.loginContent .loginInput .register {
+    margin: 0 0 0 30px;
+    color: #e5e5e5;
 }
-.loginContent .loginInput .forget{
-	color: #e5e5e5;
-	float: right;
-	margin-right: 30px;
+
+.loginContent .loginInput .forget {
+    color: #e5e5e5;
+    float: right;
+    margin-right: 30px;
 }
-.loginContent .register:hover, .loginContent .forget:hover{
-	color: #006699;
+
+.loginContent .register:hover, .loginContent .forget:hover {
+    color: #006699;
 }
-.loginContent a:hover{
-	color: #0096e0;
-	/* 	text-decoration:none; */
+
+.loginContent a:hover {
+    color: #0096e0;
+    /* 	text-decoration:none; */
 }
-.loginContent .errorbg0,.errorSpan{
-	background:#fffbb5;
-	width:240px;
-	display:none;
-	height:25px;
-	line-height:25px;
-	float:left;
-	position: absolute;
-	margin: -9px 0 0 30px;
-	text-align: center;
-	color:#ff0000;
-	overflow:hidden;
+
+.loginContent .errorbg0, .errorSpan {
+    background: #fffbb5;
+    width: 240px;
+    display: none;
+    height: 25px;
+    line-height: 25px;
+    float: left;
+    position: absolute;
+    margin: -9px 0 0 30px;
+    text-align: center;
+    color: #ff0000;
+    overflow: hidden;
 }
 
 .list-post-title-in-topic {
@@ -4616,8 +4619,6 @@ hr {
     overflow: hidden;
 }
 
-
-
 /* 创建案例 */
 .case-tags {
     outline: none;
@@ -4686,13 +4687,13 @@ ul.version-list li {
 
 .overflow-ellipsis {
     overflow: hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 table.fixed-table {
-    table-layout:fixed;
-    word-break:break-all;
+    table-layout: fixed;
+    word-break: break-all;
 }
 
 /*作业展示部分样式*/
@@ -4701,7 +4702,7 @@ table.fixed-table {
 }
 
 .homework-body a {
-    color:#333333;
+    color: #333333;
 }
 
 .homework-body a:hover {
@@ -4709,20 +4710,20 @@ table.fixed-table {
 }
 
 .es-piece .homework-body .homework-content {
-    border-bottom:1px solid #f5f5f5;
+    border-bottom: 1px solid #f5f5f5;
     margin: 15px 0;
     padding-bottom: 5px;
 }
 
 .homework-content .homework-file-item {
-    margin:8px 0;
+    margin: 8px 0;
 }
 
 /*#homeworkModal .modal-dialog .modal-content{
     width: 750px;
 }*/
 
-#homework-manage-panel+.op-btn {
+#homework-manage-panel + .op-btn {
     position: absolute;
     bottom: 30px;
     right: 30px;
@@ -4731,7 +4732,7 @@ table.fixed-table {
 #back-to-homework-list {
     color: #616161;
     position: absolute;
-    top:15px;
+    top: 15px;
     left: 25px;
     z-index: 1;
 }
@@ -4746,13 +4747,13 @@ div.no-margin {
     margin-left: 0;
 }
 
-
 /*课程列表部分样式*/
 .tags {
     position: absolute;
     top: 0;
     left: 10px;
 }
+
 .tag-private {
     background: url(/static/images/tag_private.png) no-repeat;
     display: inline-block;

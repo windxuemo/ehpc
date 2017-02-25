@@ -56,7 +56,7 @@ def course_create():
     elif request.method == 'POST':
         # 创建课程
         curr_course = Course(title=request.form['title'], subtitle='', about='',
-                             lessonNum=0, smallPicture='images/course/noImg.jpg')
+                             lessonNum=0, smallPicture='upload/course/noImg.jpg')
         curr_course.teacher = current_user
         db.session.add(curr_course)
         db.session.commit()
@@ -92,7 +92,7 @@ def course_picture(course_id):
     elif request.method == 'POST':
         # 上传图片和保存图片
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
-        curr_course.smallPicture = os.path.join('images/course', "cover_%d.png" % curr_course.id)
+        curr_course.smallPicture = os.path.join('upload/course', "cover_%d.png" % curr_course.id)
         filename = "cover_%d.png" % curr_course.id
         cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], filename)
         status = upload_img(request.files['pic'], 171, 304, cover_path)

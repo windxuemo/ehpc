@@ -60,8 +60,8 @@ class Config:
     UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/upload')
 
     HOMEWORK_FOLDER = os.path.join(basedir, 'eHPC/static/homework')
-    COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/course')
-    CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/images/case')
+    COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/course')
+    CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/case')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     CASE_FOLDER = os.path.join(basedir, 'eHPC/static/case')
     DOWNLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/download')

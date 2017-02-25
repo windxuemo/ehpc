@@ -180,7 +180,7 @@ def case_create():
         name = request.form['name']
         tags = request.form['tags']
         description = request.form['description']
-        new_case = Case(name=name, description=description, tag=tags, icon="/static/images/case/test.png")
+        new_case = Case(name=name, description=description, tag=tags, icon="/static/upload/case/test.png")
         db.session.add(new_case)
         db.session.commit()
         path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
@@ -255,7 +255,7 @@ def case_icon(case_id):
         if icon and '.' in icon.filename and file_type == 'img':
             icon_name = '%d.png' % cur_case.id
             icon_path = os.path.join(current_app.config['CASE_COVER_FOLDER'], icon_name)
-            cur_case.icon = os.path.join('/static/images/case', '%d.png' % cur_case.id)
+            cur_case.icon = os.path.join('/static/upload/case', '%d.png' % cur_case.id)
             db.session.commit()
             status = upload_img(icon, 171, 304, icon_path)
             if status[0]:

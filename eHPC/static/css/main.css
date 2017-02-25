@@ -222,12 +222,6 @@ select:-webkit-autofill {
     border-radius: 4px;
 }
 
-@media (max-width: 850px) {
-    .navbar-user {
-        display: none;
-    }
-}
-
 .content-header .nav.navbar-nav > li.open.active > a,
 .content-header .nav.navbar-nav > li.open > a:hover,
 .content-header .nav.navbar-nav > li.open > a:focus,
@@ -1029,7 +1023,6 @@ a.transition:hover {
     position: relative;
     margin-bottom: 20px;
     font-size: 32px;
-    z-index: 1;
     color: #313131;
 }
 

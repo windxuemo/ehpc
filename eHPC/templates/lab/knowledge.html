@@ -3,11 +3,9 @@
 {% block header_ext %}
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-
     <div class="modal markdown-body" id="loading-gif" style="display: none">
         <p class="text-center">正在判题...</p>
         <img src="{{ url_for('static', filename='images/loading.gif') }}">
@@ -35,7 +33,8 @@
             <div id="player-content" class="col-md-12 material-container"></div>
         {% endif %}
 
-        <button id="continue" type="button" class="btn btn-success btn-block next-step"> 继续学习 <span class="glyphicon glyphicon-forward"></span></button>
+        <button id="continue" type="button" class="btn btn-primary btn-block next-step">继续学习
+            <span class="glyphicon glyphicon-forward"></span></button>
     </div>
 
     <div id="challenge-right">

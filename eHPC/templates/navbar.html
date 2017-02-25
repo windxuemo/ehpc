@@ -22,25 +22,26 @@
         </a>
     </div>
 
-    <ul class="navbar-user nav user-nav">
+    <ul class="navbar-user nav user-nav hidden-xs">
         {% if current_user.is_authenticated %}
             <li class="user-avatar-li nav-hover">
                 <a href="javascript:;" class="dropdown-toggle">
-                    <img class="avatar-xs" src="{{ current_user.avatar_url | get_avatar_path }}">
+                    <img class="avatar-sm" src="{{ current_user.avatar_url | get_avatar_path }}">
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>
-                    <li><a href="{{ url_for('user.view', uid=current_user.id) }}"><i
-                            class="es-icon es-icon-person"></i>{{ _('Personal Page') }}</a>
+                    <li><a href="{{ url_for('user.view', uid=current_user.id) }}">
+                        <i class="es-icon es-icon-person"></i>{{ _('Personal Page') }}</a>
                     </li>
-                    <li><a href=""><i class="es-icon es-icon-assignment"></i>{{ _("Job's List") }}</a>
+                    <li><a href="{{ url_for('lab.index') }}">
+                        <i class="es-icon es-icon-homework"></i>学习进度</a>
                     </li>
-                    <li><a href="{{ url_for('lab.index') }}"><i class="es-icon es-icon-homework"></i>学习进度</a>
+                    <li> <a href="{{ url_for('user.setting') }}">
+                        <i class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a>
                     </li>
-                    <li><a href="{{ url_for('user.setting') }}"><i
-                            class="es-icon es-icon-setting"></i>{{ _('Setting') }}</a></li>
-                    <li><a href="{{ url_for('user.signout') }}"><i
-                            class="es-icon es-icon-power"></i>{{ _('Logout') }}</a></li>
+                    <li><a href="{{ url_for('user.signout') }}">
+                        <i class="es-icon es-icon-power"></i>{{ _('Logout') }}</a>
+                    </li>
                 </ul>
             </li>
             {% if current_user.permissions == 2 %}
@@ -48,10 +49,10 @@
                     <i class="es-icon es-icon-administrator"></i>切换为老师</a></li>
             {% endif %}
         {% else %}
-            <li class="hidden-xs">
+            <li>
                 <a href="{{ url_for('user.signin', next=request.path) }}">{{ _('Sign In') }}</a>
             </li>
-            <li class="hidden-xs">
+            <li>
                 <a href="{{ url_for('user.reg', next=request.path) }}">{{ _('Registration') }}</a>
             </li>
         {% endif %}

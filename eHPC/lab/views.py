@@ -70,8 +70,10 @@ def knowledge(kid):
         cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=cur_progress).first()
         if cur_challenge is None:
             return render_template('lab/finish_progress.html',
-                                   title="Finish All",
-                                   kid=kid)
+                                   title=u"学习完成",
+                                   kid=kid,
+                                   challenges=cur_knowledge.challenges.all(),
+                                   cur_level=cur_progress)
 
         # challenge 可能没有相应的 material 存在, cur_material 对应为空。
         return render_template('lab/knowledge.html',

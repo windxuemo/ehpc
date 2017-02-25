@@ -16,6 +16,7 @@
     <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
     <script src="//cdn.bootcss.com/jquery-modal/0.8.0/jquery.modal.js"></script>
     <link href="//cdn.bootcss.com/jquery-modal/0.8.0/jquery.modal.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
 
     {% block header_ext %}
     {% endblock %}
@@ -23,34 +24,30 @@
 <body>
 <!-- 导航栏目开始 -->
 <nav class="content-header navbar" id="challenge-head">
-
     <nav class="collapse navbar-collapse">
-        <ul class="nav navbar-nav clearfix hidden-xs" id="nav">
+        <ul class="nav navbar-nav">
             <li>
                 <a href="{{ url_for('lab.index') }}">{{ _('Virutal Lab') }}</a>
             </li>
         </ul>
         
         <div class="navbar-user left">
-            <ul class="nav navbar-nav clearfix hidden-xs">
+            <ul class="nav navbar-nav">
                 <li>
-                    <a href="{{ url_for('lab.my_progress', kid=kid) }}" rel="modal:open">学习进度</a>
+                    <a href="{{ url_for('lab.my_progress', kid=kid) }}" rel="modal:open">实验进度</a>
                 </li>
                 <li>
                     <a href="{{ url_for('group.index') }}">社区讨论</a>
                 </li>
-            </ul>
-            <ul class="nav user-nav">
-                <li class="user-avatar-li nav-hover">
-                    <a href="javascript:;" class="dropdown-toggle">
-                        <img class="avatar-xs" src="{{ current_user.avatar_url | get_avatar_path }}">
+                <li class="nav-hover">
+                    <a href="javascript:;" class="dropdown-toggle" style="padding: 20px 30px">
+                        <img class="avatar-sm" src="{{ current_user.avatar_url | get_avatar_path }}">
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li role="presentation" class="dropdown-header">{{ current_user.username }}</li>
-                        <li><a href="{{ url_for('user.view', uid=current_user.id) }}"><i
-                                class="es-icon es-icon-person"></i>{{ _('Personal Page') }}</a>
-                        </li>
-                        <li><a href=""><i class="es-icon es-icon-homework"></i>{{ _("Job's List") }}</a>
+                        <li>
+                            <a href="{{ url_for('user.view', uid=current_user.id) }}">
+                                <i class="es-icon es-icon-person"></i>{{ _('Personal Page') }}
+                            </a>
                         </li>
                         <li><a href=""><i class="es-icon es-icon-homework"></i>学习进度</a></li>
                         <li><a href="{{ url_for('user.setting') }}"><i
@@ -61,7 +58,6 @@
                 </li>
             </ul>
         </div>
-
     </nav>
 </nav>
 <!-- 导航栏目结束 -->

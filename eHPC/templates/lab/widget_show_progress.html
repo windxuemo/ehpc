@@ -1,0 +1,22 @@
+<!-- 学习进度展示窗口 -->
+
+<div class="lab-time-line">
+    <ul class="period-list">
+        {% for c in challenges %}
+            <li class="period lesson-item">
+                <a href="{{ url_for('lab.knowledge', kid=kid, progress=c.knowledgeNum) }}">
+                    {% if loop.index <= cur_level %}
+                        <i class="es-icon es-icon-studydone status-icon color-primary"></i>
+                    {% else %}
+                        <i class="es-icon es-icon-study status-icon"></i>
+                    {% endif %}
+                    <span class="title"> {{ c.title }}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{# challenges: 所有的知识点 #}
+{# cur_level: 当前学到的地方, 从 1 开始计数#}
+{# kid: 当前知识点的 id #}

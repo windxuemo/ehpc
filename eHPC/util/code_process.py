@@ -215,6 +215,13 @@ class ehpc_client:
                    partition="work"):
         """ 将需要执行的命令写成脚本文件并上传，最后将任务添加到超算中心的队列中
 
+        @myPath: 编程题ID（对于非编程题的代码，可自行赋予ID）,
+        @job_filename:
+        @output_filename:
+        @task_number: 任务数,
+        @cpu_number_per_task: CPU/任务比,
+        @node_number: 使用节点数,
+
         将接收的参数编写进运行脚本中，并将脚本文件上传到超算中心的账户中，最后将其添加到超算中心的任务队列中
         需要特别说明的是，现在这个函数的脚本只是用来运行文件的，并且一定不能修改它的缩进，否则无法正常运行。
         返回的是脚本任务在队列中的id（数字与字母组成的字符串）
@@ -295,12 +302,14 @@ class ehpc_client:
 def submit_code(pid, uid, source_code, task_number, cpu_number_per_task, node_number):
     """ 后台提交从前端获取的代码到天河系统，编译运行并返回结果
     
-    pid为编程题ID（对于非编程题的代码，可自行赋予ID），
-    uid为用户ID，source_code为所提交代码的文本，
-    task_number为任务数，
-    cpu_number_per_task为CPU/任务比，
-    node_number为使用节点数。
-    返回值为字符串类型的运行结果。
+    @pid: 编程题ID（对于非编程题的代码，可自行赋予ID）,
+    @uid: 用户ID,
+    @source_code: 所提交的代码文本,
+    @task_number: 任务数,
+    @cpu_number_per_task: CPU/任务比,
+    @node_number: 使用节点数,
+
+    返回一个字典, 保存此次运行结果。
     """
     job_filename = "%s_%s.sh" % (str(pid), str(uid))
     input_filename = "%s_%s.c" % (str(pid), str(uid))

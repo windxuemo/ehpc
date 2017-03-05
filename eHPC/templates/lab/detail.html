@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li><a href="{{ url_for('lab.index') }}">所有实验</a></li>
+            <li class="active"><a href="#">{{ knowledge.title }}</a></li>
+        </ol>
+
+        <div class="row">
+            <!-- 知识点学习进度 -->
+            <div class="col-lg-9 col-md-8 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title"> 当前学习进度 </h1>
+                    </div>
+                    <div class="panel-body">
+                        <div class="editor-text">
+                            {% with challenges = knowledge.challenges.all(), kid = knowledge.id %}
+                                {% include 'lab/widget_show_progress.html' %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 知识点介绍 -->
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title"> 实验概述 </h1>
+                    </div>
+                    <div class="panel-body">
+                        <div class="well editor-text">
+                            <p>{{ knowledge.content }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{# knowledge: 知识点实体 #}

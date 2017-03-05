@@ -3150,6 +3150,7 @@ textarea {
 .period-list .period {
     position: relative;
     padding: 10px 100px 10px 45px;
+    font-size: 16px;
 }
 
 .period-list .period:hover,
@@ -3591,6 +3592,7 @@ textarea {
     border-radius: 4px;
     height: 150px;
     position: relative;
+    background:url(/static/images/background_group.jpg); background-repeat: no-repeat; background-size: 100% 100%;
 }
 
 .group-header .media {

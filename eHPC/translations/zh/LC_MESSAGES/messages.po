@@ -100,7 +100,7 @@ msgstr "课程作业"
 
 #: admin/teacher_views.py:381
 msgid "Course Paper"
-msgstr "课程试卷"
+msgstr "课程测验"
 
 #: admin/teacher_views.py:489
 msgid "Question Manage"

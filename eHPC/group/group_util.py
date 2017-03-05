@@ -30,5 +30,3 @@ def user_not_in_group(func):
             return redirect(url_for('group.group_view', gid=gid))
 
     return wrap
-
-

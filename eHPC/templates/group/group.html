@@ -8,8 +8,7 @@
                 <a href="{{ url_for('group.group_view', gid=group.id) }}">{{ group.title | truncate(20) }}</a></li>
         </ol>
 
-        <div class="group-header"
-             style="background:url({{ url_for('static', filename='images/background_group.jpg') }});background-repeat:no-repeat;background-size: 100% 100%;">
+        <div class="group-header">
             <div class="media">
                 <div class="media-left">
                     <a href="{{ url_for('group.group_view', gid=group.id) }}">

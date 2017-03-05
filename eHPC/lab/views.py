@@ -12,7 +12,7 @@ from eHPC.util.code_process import ehpc_client
 from . import lab
 from .. import db
 from ..models import Challenge, Knowledge, Progress
-
+from .lab_util import get_cur_progress
 
 
 @lab.route('/')
@@ -32,6 +32,19 @@ def index():
                            knowledges=knowledges)
 
 
+@lab.route('/detail/<int:kid>/')
+@login_required
+def detail(kid):
+    cur_knowledge = Knowledge.query.filter_by(id=kid).first_or_404()
+    cur_level = get_cur_progress(kid)
+
+    if request.method == 'GET':
+        return render_template("lab/detail.html",
+                               title=cur_knowledge.title,
+                               knowledge=cur_knowledge,
+                               cur_level=cur_level)
+
+
 @lab.route('/knowledge/<int:kid>/', methods=['POST', 'GET'])
 @login_required
 def knowledge(kid):
@@ -43,27 +56,24 @@ def knowledge(kid):
     challenges_count = cur_knowledge.challenges.count()
 
     if request.method == 'GET':
-        pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
-        if pro is None:     # 如果用户在此knowledge上无progress记录，则添加一条新纪录
-            pro = Progress(user_id=current_user.id, knowledge_id=kid, update_time=datetime.now())
-            db.session.add(pro)
-        pro.update_time = datetime.now()
-        db.session.commit()
+        cur_progress = get_cur_progress(kid)
 
-        cur_progress = pro.cur_progress + 1
-
-        request_progress = request.args.get('progress', None)
-        if not request_progress:
-            pass
-        elif 0 < int(request_progress) <= cur_progress:
-            cur_progress = int(request_progress)
-        elif int(request_progress) <= 0 or int(request_progress) > challenges_count:
+        try:
+            request_progress = int(request.args.get('progress', None))
+        except ValueError:
             return abort(404)
+        except TypeError:
+            request_progress = cur_progress
+
+        if request_progress < 0:
+            return abort(404)
+        if 0 < request_progress <= cur_progress+1:
+            cur_progress = request_progress
         else:
             # 前面还有任务没有完成, 不能直接到请求的任务页面, 这里返回一个简单的提示页面
             return render_template("lab/out_progress.html",
-                                   title="Expired Progress",
-                                   next_progress=cur_progress,
+                                   title=u"前面任务还没完成",
+                                   next_progress=cur_progress+1,
                                    kid=kid)
 
         # 获取当前技能中顺序为 cur_progress 的 challenge, 然后获取相应的详细内容
@@ -112,7 +122,8 @@ def knowledge(kid):
             result = dict()
             result['compile_success'] = 'true'
             if is_success[0]:
-                run_out = client.ehpc_run(output_filename, job_filename, myPath, task_number, cpu_number_per_task, node_number)
+                run_out = client.ehpc_run(output_filename, job_filename, myPath,
+                                          task_number, cpu_number_per_task, node_number)
             else:
                 result['compile_success'] = 'false'
                 run_out = "编译失败，无法运行！"
@@ -120,7 +131,7 @@ def knowledge(kid):
             result['compile_out'] = compile_out
             result['run_out'] = run_out
 
-            # 提交过代码则认为已完成该知识点学习
+            # 代码成功通过编译, 则认为已完成该知识点学习
             pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
             if k_num == pro.cur_progress + 1:
                 if pro.cur_progress + 1 <= challenges_count:
@@ -140,16 +151,11 @@ def knowledge(kid):
 @login_required
 def my_progress(kid):
     cur_knowledge = Knowledge.query.filter_by(id=kid).first_or_404()
-    pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
-    if pro is None:  # 如果用户在此knowledge上无progress记录，则添加一条新纪录
-        pro = Progress(user_id=current_user.id, knowledge_id=kid, cur_progress=0)
-        db.session.add(pro)
-        db.session.commit()
-
+    cur_level = get_cur_progress(kid)
     all_challenges = cur_knowledge.challenges.all()
     all_challenges.sort(key=lambda k: k.knowledgeNum)
-    return render_template('lab/show_progress.html',
+    return render_template('lab/widget_show_progress.html',
                            kid=kid,
                            title=cur_knowledge.title,
                            challenges=all_challenges,
-                           cur_level=pro.cur_progress)
+                           cur_level=cur_level)

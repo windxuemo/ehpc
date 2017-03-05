@@ -27,10 +27,12 @@
     <nav class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
             <li>
-                <a href="{{ url_for('lab.index') }}">{{ _('Virutal Lab') }}</a>
+                <a class="lab-back btn btn-primary" href="{{ url_for('lab.detail', kid=kid) }}">
+                    <span class="glyphicon glyphicon-chevron-left"></span>返回虚拟实验室
+                </a>
             </li>
         </ul>
-        
+
         <div class="navbar-user left">
             <ul class="nav navbar-nav">
                 <li>
@@ -74,7 +76,7 @@
 <script type="text/javascript">
     var csrf_token = "{{ csrf_token() }}";
     $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
+        beforeSend: function (xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrf_token);
             }

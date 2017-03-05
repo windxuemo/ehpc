@@ -10,12 +10,9 @@
             <p>
                 前面还有任务没有完成, 请先完成前面的任务。
             </p>
-
             <p> 你可以从第
                 <a href="{{ url_for('lab.knowledge', kid=kid, progress=next_progress) }}">{{ next_progress }}小节</a>开始。
             </p>
         </div>
     </div>
-
 {% endblock %}
-

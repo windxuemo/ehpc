@@ -11,15 +11,6 @@
         <img src="{{ url_for('static', filename='images/loading.gif') }}">
     </div>
 
-    <div id="pass" class="modal" style="display: none">
-        <p class="es-icon es-icon-iccheckcircleblack24px text-primary text-center" style="font-size: 150px;"></p>
-        <p class="text-center text-xlarge"> 恭喜! 你又过关了! </p>
-    </div>
-    <div id="fail" class="modal" style="display: none">
-        <p class="es-icon es-icon-icon_close_circle text-danger text-center" style="font-size: 150px;"></p>
-        <p class="text-center text-xlarge"> 抱歉! 你没能通过! </p>
-    </div>
-
     <div id="challenge-left">
         <!--Challenge的内容展示-->
         <div class="markdown-body">
@@ -93,22 +84,26 @@
     <script>
         var address = "{{ url_for('lab.knowledge', kid=kid) }}";
         var next_challenge_uri = "{{ url_for('lab.knowledge', kid=kid, progress=next_progress) }}";
+        var terminal = $("#terminal").find(".terminal");
+        var $run = $("#run");
         $(function () {
             $("#continue").click(function () {
                 location.href = next_challenge_uri;
             });
-            $("#run").click(function () {
+            $run.click(function () {
+                $run.prop('disabled', true);
                 var code = editor.getValue();
+                terminal.eq(0).text('代码正在提交中...');
                 $.ajax({
                     url: address,
                     type: "post",
+                    timeout: 10000, // sets timeout to 10 seconds
                     data: {
                         op: "run",
                         code: code,
                         k_num: {{ next_progress - 1 }}
                     },
                     success: function (data) {
-                        var terminal = $(".terminal");
                         if(data["status"] == "success"){
                             if(data['result']['compile_success'] == 'true'){
                                 terminal.eq(0).text(data['result']['run_out']);
@@ -120,6 +115,11 @@
                         else if(data['status'] == 'fail'){
                             terminal.eq(0).text(data['msg']);
                         }
+                        $run.prop('disabled', false);
+                    },
+                    error: function(){
+                        terminal.eq(0).text('天河服务器长时间没有反应, 请稍后重试...');
+                        $run.prop('disabled', false);
                     }
                 });
             });

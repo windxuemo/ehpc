@@ -1,43 +1,46 @@
 {% extends "base.html" %}
 
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
-    <div class="container" xmlns="http://www.w3.org/1999/html">
-        <div id="timeline">
+    <div id="content-container" class="container">
+        <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
+            <li><a href="/">{{ _('Index') }}</a></li>
+            <li class="active"><a href="{{ url_for('lab.index') }}">所有实验</a></li>
+        </ol>
 
+        <div class="row">
             {% for knowledge in knowledges %}
-                <div class="timeline-item">
-                    <div class="timeline-icon"><img src="{{ url_for('static', filename='images/star.svg') }}"></div>
-                    {% if loop.index % 2 != 0 %}
-                        <div class="timeline-content">
-                    {% else %}
-                        <div class="timeline-content right">
-                    {% endif %}
-                    <h2>{{ knowledge.title }}</h2>
-                    <p> {{ knowledge.content }} </p>
+                <div class="col-lg-3 col-md-4 col-xs-6">
+                    <div id="labs">
+                        <div class="lab-item">
+                            <div class="lab-content">
+                                <h2>{{ knowledge.title }}</h2>
+                                <!-- 对简洁内容进行截断, 防止内容过长 -->
+                                <p> {{ knowledge.content | truncate(120) }} </p>
 
-                    {% if current_user.is_authenticated %}
-                        <div class="progress">
-                            <div class="progress-bar" style="width: {{ knowledge.percentage }}; background: #92c26a;">
-                                <span class="progress-icon fa fa-check"
-                                      style="border-color:#92c26a; color:#92c26a;"></span>
-                                <div class="progress-value">{{ knowledge.cur_level }} / {{ knowledge.all_levels }}</div>
-                                <br>
+                                <div class="progress">
+                                    <div class="progress-bar"
+                                         style="width: {{ knowledge.percentage }}; background: #92c26a;">
+                                        <span class="progress-icon fa fa-check"
+                                              style="border-color:#92c26a; color:#92c26a;"></span>
+                                        <div class="progress-value">{{ knowledge.cur_level }}
+                                            / {{ knowledge.all_levels }}</div>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{{ url_for('lab.detail', kid=knowledge.id) }}" class="btn">开始实验</a>
+                                </div>
                             </div>
                         </div>
-
-                        <a href="{{ url_for('lab.knowledge', kid=knowledge.id) }}" class="btn">继续学习</a></div>
-                        </div>
-                    {% else %}
-                        <a href="{{ url_for('admin.auth') }}" class="btn">请先登录</a></div>
-                    {% endif %}
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </div>
 {% endblock %}
-
-{% block footer_ext %}
-    <link href="{{ url_for('static', filename='css/timeline.css') }}" rel="stylesheet">
-{% endblock %}
-
 
 {# knowledges #}

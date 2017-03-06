@@ -62,6 +62,12 @@ def reg():
         password = _form['password']
         password2 = _form['password2']
 
+        name = _form['name']
+        gender = _form['gender']
+        phone = _form['phone']
+        university = _form['university']
+        student_id = _form['student_id']
+
         message_e, message_u, message_p = "", "", ""
         # Check username is valid or not.
         if User.query.filter_by(username=username).first():
@@ -80,7 +86,16 @@ def reg():
 
         # A valid register info, save the info into db.
         else:
-            reg_user = User(username=username, email=email, password=password)
+            reg_user = User()
+            reg_user.username = username
+            reg_user.email = email
+            reg_user.password = password
+            reg_user.name = name
+            reg_user.gender = gender
+            reg_user.phone = phone
+            reg_user.university = university
+            reg_user.student_id = student_id
+
             db.session.add(reg_user)
             db.session.commit()
             login_user(reg_user)
@@ -217,6 +232,12 @@ def setting_info():
         else:
             current_user.website = web_addr
             current_user.email = email_addr
+            current_user.name = _form['name']
+            current_user.gender = _form['gender']
+            current_user.phone = _form['phone']
+            current_user.university = _form['university']
+            current_user.student_id = _form['student_id']
+
             db.session.commit()
             message_success = gettext('Update info done!')
             return jsonify(content=render_template('user/ajax_setting_info.html',

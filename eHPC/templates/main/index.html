@@ -33,6 +33,7 @@
                 </div>
             </div>
         </div>
+        {% if current_user.is_anonymous %}
         <div class="userLoginPart">
 		 	<div class="innerPart">
 			 	<div class="loginContent" id="indexLoginContent" style="">
@@ -70,6 +71,7 @@
 				</div>
 			 </div>
 		</div>
+        {% endif %}
     </section>
 
     <section class="course-list-section open-course-list-section ">

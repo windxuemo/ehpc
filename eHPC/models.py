@@ -20,6 +20,12 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, index=True, nullable=False)
 
+    name = db.Column(db.String(128), nullable=False)
+    gender = db.Column(db.Boolean, default=True)
+    phone = db.Column(db.String(128), nullable=False)
+    university = db.Column(db.String(128), nullable=False)
+    student_id = db.Column(db.String(64))
+
     is_password_reset_link_valid = db.Column(db.Boolean, default=True)
     last_login = db.Column(db.DateTime(), default=datetime.now)
     date_joined = db.Column(db.DateTime(), default=datetime.now)
@@ -52,7 +58,6 @@ class User(UserMixin, db.Model):
     teacher_questions = db.relationship('Question', backref='teacher', lazy='dynamic')
     teacher_knowledge = db.relationship('Knowledge', backref='teacher', lazy='dynamic')
     teacher_program = db.relationship('Program', backref='teacher', lazy='dynamic')
-
 
     @property
     def password(self):

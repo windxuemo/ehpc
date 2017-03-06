@@ -18,9 +18,8 @@
             <div class="form-group">
                 <label class="col-md-offset-1 col-md-2 control-label" for="email">{{ _('Email') }}</label>
                 <div class="col-md-7">
-                    <input type="email" id="email" name="email" class="form-control"
-                           value="{{ current_user.email }}" data-parsley-type="email" data-parsley-maxlength="128"
-                           data-parsley-required-message="请输入邮箱地址" required="required">
+                    <input type="email" id="email" name="email" class="form-control" readonly
+                           value="{{ current_user.email }}">
                 </div>
                 {% if message_email %}
                     <div class="col-md-offset-3 col-md-12 text-danger">{{ message_email }}</div>
@@ -32,6 +31,63 @@
                 <div class="col-md-7">
                     <input type="url" id="website" name="website" class="form-control"
                            value="{{ current_user.website }}" data-parsley-maxlength="128">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-offset-1 col-md-2 control-label" for="name"> 姓名 </label>
+                <div class="col-md-7">
+                    <input type="text" id="name" name="name" class="form-control"
+                           required="required" data-parsley-required-message="请输入您的真实姓名"
+                           data-parsley-maxlength="32" value="{{ current_user.name }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-offset-1 col-md-2 control-label" for="gender"> 性别 </label>
+                <div class="col-md-7">
+                    <div class="controls">
+                        <label class="checkbox-inline">
+                            <input type="radio" name="gender" value="0" data-parsley-multiple="gender"
+                                    {% if current_user.gender == 0 %} checked {% endif %}
+                                   data-parsley-errors-container="#checkbox-errors"
+                                   data-parsley-required-message="请选择您的性别" >男
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" name="gender" value="1" data-parsley-multiple="gender"
+                                    {% if current_user.gender == 1 %} checked {% endif %}
+                                   required>女
+                        </label>
+                        <div id="checkbox-errors"></div>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-offset-1 col-md-2 control-label" for="phone"> 手机号码 </label>
+                <div class="col-md-7">
+                    <input type="text" id="phone" name="phone" class="form-control"
+                           required="required" data-parsley-required-message="请输入您的手机号码"
+                           data-parsley-maxlength="32" data-parsley-type="number" value="{{ current_user.phone }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-offset-1 col-md-2 control-label" for="university"> 学校 </label>
+                <div class="col-md-7">
+                    <input type="text" id="university" name="university" class="form-control"
+                           required="required" data-parsley-required-message="请输入您的学校"
+                           data-parsley-maxlength="32" value="{{ current_user.university }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-offset-1 col-md-2 control-label" for="student_id"> 学号 </label>
+                <div class="col-md-7">
+                    <input type="text" id="student_id" name="student_id" class="form-control"
+                           required="required" data-parsley-required-message="请输入您的学号"
+                           data-parsley-maxlength="32" data-parsley-type="number" value="{{ current_user.student_id }}">
                 </div>
             </div>
 

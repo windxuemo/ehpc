@@ -248,8 +248,9 @@ class ehpc_client:
         返回值为字符串
         """
         compile_command = {
+            "openmp": "icc -openmp -o %s %s"%(output_filename, input_filename),
             "c++": "g++ -o %s %s" % (output_filename, input_filename),
-            "mpicc": "mpicc -o %s %s" % (output_filename, input_filename)
+            "mpi": "mpicc -o %s %s" % (output_filename, input_filename)
         }
 
         commands = 'cd %s;%s' % (myPath, compile_command[language])
@@ -299,7 +300,7 @@ class ehpc_client:
         return run_out
 
 
-def submit_code(pid, uid, source_code, task_number, cpu_number_per_task, node_number):
+def submit_code(pid, uid, source_code, task_number, cpu_number_per_task, node_number, language):
     """ 后台提交从前端获取的代码到天河系统，编译运行并返回结果
     
     @pid: 编程题ID（对于非编程题的代码，可自行赋予ID）,
@@ -308,6 +309,7 @@ def submit_code(pid, uid, source_code, task_number, cpu_number_per_task, node_nu
     @task_number: 任务数,
     @cpu_number_per_task: CPU/任务比,
     @node_number: 使用节点数,
+    @language: 语言;
 
     返回一个字典, 保存此次运行结果。
     """
@@ -326,7 +328,7 @@ def submit_code(pid, uid, source_code, task_number, cpu_number_per_task, node_nu
     if not is_success[0]:
         return jsonify(status="fail", msg="上传程序到超算主机失败!")
 
-    compile_out = client.ehpc_compile(is_success, TH2_MY_PATH, input_filename, output_filename, "mpicc")
+    compile_out = client.ehpc_compile(is_success, TH2_MY_PATH, input_filename, output_filename, language)
 
     if is_success[0]:
         run_out = client.ehpc_run(output_filename, job_filename, TH2_MY_PATH, task_number, cpu_number_per_task, node_number)

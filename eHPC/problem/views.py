@@ -139,4 +139,4 @@ def submit(pid):
     node_number = request.form['node_number']
 
     return submit_code(pid=pid, uid=uid, source_code=source_code,
-                       task_number=task_number, cpu_number_per_task=cpu_number_per_task, node_number=node_number)
+                       task_number=task_number, cpu_number_per_task=cpu_number_per_task, node_number=node_number, language=language)

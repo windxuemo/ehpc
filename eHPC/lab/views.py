@@ -91,7 +91,8 @@ def knowledge(kid):
                                c_content=cur_challenge.content,
                                cur_material=cur_challenge.material,
                                kid=kid,
-                               next_progress=cur_progress+1)
+                               next_progress=cur_progress+1,
+                               challenges_count=challenges_count)
 
     elif request.method == 'POST':
         if request.form['op'] == 'run':
@@ -159,3 +160,8 @@ def my_progress(kid):
                            title=cur_knowledge.title,
                            challenges=all_challenges,
                            cur_level=cur_level)
+
+
+@lab.route('/vnc/')
+def vnc():
+    return render_template('lab/vnc.html', title=gettext('vnc'))

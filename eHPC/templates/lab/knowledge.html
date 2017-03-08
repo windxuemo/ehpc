@@ -3,6 +3,8 @@
 {% block header_ext %}
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
+    <script src="{{ url_for("static", filename="js/ystep.js") }}"></script>
+    <link href="{{ url_for('static', filename='css/ystep.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -175,10 +177,35 @@
                 });
             }
         });
-
     </script>
 
     <script src="//cdn.bootcss.com/clappr/0.2.64/clappr.min.js"></script>
+    <script>
+        var total_steps = {{ challenges_count }};
+        var cur_step = {{ next_progress }} - 1;
+        var all_steps = [];
+        for(var i=0;i<total_steps;i++){
+            all_steps.push({title: (i+1).toString()});
+        }
+
+        $("#challenge-head").find("> nav > ul").append('<div id="step-progress-bar" class="nav navbar-nav" style="margin-left:30px;margin-top:15px"></div>');
+        $("#step-progress-bar").loadStep({
+             size: "small",
+            color: "green",
+            steps: all_steps
+        });
+        $("#step-progress-bar").setStep(cur_step);
+
+        $("li[data-title][data-placement]").click(function () {
+            if(location.href.split("=").length == 2){
+                location.href=location.href.split("=")[0] + "=" + $(this).data("title");
+            }
+            else if(location.href.split("=").length == 1){
+                location.href=location.href.split("=")[0] + "?progress=" + $(this).data("title");
+            }
+        });
+
+    </script>
 {% endblock %}
 
 {#title#}

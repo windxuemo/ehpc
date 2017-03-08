@@ -34,11 +34,8 @@ class User(UserMixin, db.Model):
     permissions = db.Column(db.Integer, default=1, nullable=False)
     website = db.Column(db.String(128), nullable=True)
     avatar_url = db.Column(db.String(128),
-                           default="http://www.gravatar.com/avatar/")
-
-    # 个人信息, 包括电话号码, 身份证号码, 个人座右铭等。
-    telephone = db.Column(db.String(64))
-    personal_id = db.Column(db.String(64))
+                           default="none.jpg")
+    # 个人座右铭, 用于在个人主页显示
     personal_profile = db.Column(db.Text(), nullable=True)
 
     # 用户创建话题, 回复等, 一对多的关系
@@ -142,11 +139,11 @@ class Lesson(db.Model):
     """ 一个课程包括多个课时, 每个课时只能属于一个课程。 课程和课时是一对多的关系。
     """
     __tablename__ = 'lessons'
-    id = db.Column(db.Integer, primary_key=True)  # 课时 ID
-    number = db.Column(db.Integer, nullable=False)                # 课时所在课程的编号
-    title = db.Column(db.String(128), nullable=False)              # 课时标题
-    content = db.Column(db.Text(), default="")                # 课时正文
-    courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))  # 所属课程ID
+    id = db.Column(db.Integer, primary_key=True)                    # 课时 ID
+    number = db.Column(db.Integer, nullable=False)                  # 课时所在课程的编号
+    title = db.Column(db.String(128), nullable=False)               # 课时标题
+    content = db.Column(db.Text(), default="")                      # 课时正文
+    courseId = db.Column(db.Integer, db.ForeignKey('courses.id'))   # 所属课程ID
 
     materials = db.relationship('Material', backref='lesson', lazy='dynamic')
 
@@ -158,7 +155,7 @@ class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)          # 资料 ID
     name = db.Column(db.String(1024), nullable=False)     # 资料名称
     uri = db.Column(db.String(2048), default="")          # 资料路径
-    m_type = db.Column(db.String(128), nullable=False)     # 资料类型
+    m_type = db.Column(db.String(128), nullable=False)    # 资料类型
 
     lessonId = db.Column(db.Integer, db.ForeignKey('lessons.id'))  # 所属课时ID
 
@@ -193,7 +190,7 @@ class Group(db.Model):
 
     __tablename__ = 'groups'
     id = db.Column(db.Integer, primary_key=True)        # 讨论组 ID
-    title = db.Column(db.String(128), nullable=False)    # 讨论组名字
+    title = db.Column(db.String(128), nullable=False)   # 讨论组名字
     about = db.Column(db.Text(), nullable=False)        # 讨论组介绍
     logo = db.Column(db.String(128))                    # 讨论组 Logo 的 URL
 
@@ -262,7 +259,7 @@ class Post(db.Model):
 class Program(db.Model):
     __tablename__ = "programs"
     id = db.Column(db.Integer, primary_key=True)        # 题目 ID
-    title = db.Column(db.String(128), nullable=False)    # 题目标题
+    title = db.Column(db.String(128), nullable=False)   # 题目标题
     detail = db.Column(db.Text(), nullable=False)       # 题目详情
     difficulty = db.Column(db.Integer, default=0)       # 题目难度
     acceptedNum = db.Column(db.Integer, default=0)      # 通过次数
@@ -287,13 +284,13 @@ class SubmitProblem(db.Model):
         self.submit_time = datetime.now()
 
     __tablename__ = "submit_problem"
-    id = db.Column(db.Integer, primary_key=True)            # 提交记录id
-    pid = db.Column(db.Integer, db.ForeignKey('programs.id'))             # 本次提交的题目ID
-    uid = db.Column(db.Integer, nullable=False)             # 本次提交的用户ID
-    code = db.Column(db.Text(), nullable=False)             # 本次提交的提交代码
-    language = db.Column(db.String(128), nullable=False)     # 本次提交的代码语言
-    submit_time = db.Column(db.DateTime(), default=datetime.now)   # 本次提交的提交时间
-    status = db.Column(db.String(128))                       # 本次提交的运行结果
+    id = db.Column(db.Integer, primary_key=True)                    # 提交记录id
+    pid = db.Column(db.Integer, db.ForeignKey('programs.id'))       # 本次提交的题目ID
+    uid = db.Column(db.Integer, nullable=False)                     # 本次提交的用户ID
+    code = db.Column(db.Text(), nullable=False)                     # 本次提交的提交代码
+    language = db.Column(db.String(128), nullable=False)            # 本次提交的代码语言
+    submit_time = db.Column(db.DateTime(), default=datetime.now)    # 本次提交的提交时间
+    status = db.Column(db.String(128))                              # 本次提交的运行结果
 
 
 question_classifies = db.Table('question_classifies',
@@ -341,7 +338,7 @@ class Paper(db.Model):
 class Classify(db.Model):
     __tablename__ = "classifies"
     id = db.Column(db.Integer, primary_key=True)        # 分类 ID
-    name = db.Column(db.String(128), nullable=False)     # 分类名字
+    name = db.Column(db.String(128), nullable=False)    # 分类名字
 
     user_questions = db.relationship('UserQuestion', backref='classify', lazy='dynamic')
 
@@ -354,7 +351,7 @@ class Classify(db.Model):
 class Article(db.Model):
     __tablename__ = "articles"
     id = db.Column(db.Integer, primary_key=True)        # 资讯 ID
-    title = db.Column(db.String(128), nullable=False)    # 资讯标题
+    title = db.Column(db.String(128), nullable=False)   # 资讯标题
     content = db.Column(db.Text(), nullable=False)      # 资讯正文
     visitNum = db.Column(db.Integer, default=0)         # 浏览次数
 
@@ -383,8 +380,8 @@ class Knowledge(db.Model):
 class Challenge(db.Model):
     __tablename__ = "challenges"
     id = db.Column(db.Integer, primary_key=True)        # 任务 ID
-    title = db.Column(db.String(1024), nullable=False)    # 技能标题
-    content = db.Column(db.Text(), nullable=False)        # 知识点图文内容
+    title = db.Column(db.String(1024), nullable=False)  # 技能标题
+    content = db.Column(db.Text(), nullable=False)      # 知识点图文内容
 
     # 所属技能ID以及对应技能下任务的次序, 可以用来唯一确定一个任务
     knowledgeId = db.Column(db.Integer, db.ForeignKey('knowledges.id'))
@@ -416,11 +413,11 @@ class Progress(db.Model):
 class Case(db.Model):
     __tablename__ = "cases"
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False)
-    description = db.Column(db.Text(), nullable=False)
-    icon = db.Column(db.String(64), nullable=False)
-    tag = db.Column(db.String(256))         #案例标签，两个标签之间用分号隔开
+    id = db.Column(db.Integer, primary_key=True)        # 案例 ID
+    name = db.Column(db.String(256), nullable=False)    # 案例名字
+    description = db.Column(db.Text(), nullable=False)  # 案例描述
+    icon = db.Column(db.String(64), nullable=False)     # 案例 Logo
+    tag = db.Column(db.String(256))                     # 案例标签，两个标签之间用分号隔开
 
     versions = db.relationship('CaseVersion', backref='case', lazy='dynamic', cascade='delete, delete-orphan')
 
@@ -479,6 +476,8 @@ class HomeworkUpload(db.Model):
 
 
 class Apply(db.Model):
+    """ 老师对学生加入课程的审批
+    """
     __tablename__ = "apply"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -497,8 +496,13 @@ class QRcode(db.Model):
 
 
 class UserQuestion(db.Model):
+    """ 记录用户最近浏览的题目类型
+
+    定制化首页中需要知道用户最近浏览的题目
+    """
     __tablename__ = "user_questions"
     user_id = db.Column(db.Integer, nullable=False, primary_key=True)
     classify_id = db.Column(db.Integer, db.ForeignKey('classifies.id'), primary_key=True)
-    question_type = db.Column(db.String(128), nullable=False, primary_key=True) # choice fill judge essay
+    # 浏览的题目类型, 可以是 choice fill judge essay
+    question_type = db.Column(db.String(128), nullable=False, primary_key=True)
     last_time = db.Column(db.DateTime, nullable=False)

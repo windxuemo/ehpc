@@ -77,6 +77,9 @@ def reg():
         if User.query.filter_by(email=email).first():
             message_e = gettext('Email already exists.')
 
+        if password != password2:
+            message_e = u'两次输入密码不一致'
+
         if message_u or message_p or message_e:
             return render_template("user/reg.html", form=_form,
                                    title=gettext('Register Account'),

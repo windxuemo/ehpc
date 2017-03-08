@@ -21,7 +21,8 @@ def index():
         for p in user_posts:
             user_topics.append(p.topic)
         user_courses = current_user.courses.limit(8).all()
-        user_question = UserQuestion.query.order_by(UserQuestion.last_time.desc()).limit(5).all()
+        user_question = UserQuestion.query.order_by(
+            UserQuestion.last_time.desc()).filter_by(user_id=current_user.id).limit(5).all()
         user_submits = SubmitProblem.query.order_by(SubmitProblem.submit_time.desc()).filter_by(
             uid=current_user.id).limit(5).all()
         user_program = []

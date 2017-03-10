@@ -4,7 +4,7 @@
 
 from flask import render_template
 from . import main
-from ..models import Course, Group, Article, Post, UserQuestion, SubmitProblem, Progress
+from ..models import Course, Group, Article, Post, UserQuestion, SubmitProblem, Progress, Program
 from flask_babel import gettext
 from flask_wtf.csrf import CSRFError
 from flask_login import current_user
@@ -23,19 +23,20 @@ def index():
         user_courses = current_user.courses.limit(8).all()
         user_question = UserQuestion.query.order_by(
             UserQuestion.last_time.desc()).filter_by(user_id=current_user.id).limit(5).all()
-        user_submits = SubmitProblem.query.order_by(SubmitProblem.submit_time.desc())\
-            .filter_by(uid=current_user.id).all()
+
+        # 获取当前登录用户最近提交过的编程题目(最近5个)
+        user_submits = SubmitProblem.query.order_by(
+            SubmitProblem.submit_time.desc()).filter_by(uid=current_user.id).all()
         user_program = []
         aux = set()
-        if user_submits:
-            user_program.append(user_submits[0])
-            aux.add(user_submits[0].pid)
-            for s in user_submits:
-                if s.pid not in aux:
-                    user_program.append(s.program)
-                    aux.add(s.pid)
+        for s in user_submits:
+            if s.pid not in aux:
+                aux.add(s.pid)
+                sub_problem = Program.query.filter_by(id=s.pid).first()
+                user_program.append(sub_problem)
         user_program = user_program[:5]
 
+        # 获取当前登录用户最近正在进行, 仍然没有完成的实验任务(最近5个)
         all_challenges = Progress.query.order_by(Progress.update_time.desc()).filter_by(user_id=current_user.id).all()
         user_challenges = []
         count = 0
@@ -46,6 +47,7 @@ def index():
             if ac.cur_progress < challenges_count:
                 user_challenges.append(ac)
                 count += 1
+
         if user_courses or user_topics or user_question or user_program or user_challenges:
             return render_template('main/personal_index.html',
                                    title=gettext('Education Practice Platform'),

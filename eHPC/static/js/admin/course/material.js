@@ -80,7 +80,7 @@ $(document).ready(function () {
     $("#dropz").dropzone({
         url: location.href,
         maxFiles: 10,
-        maxFilesize: 512,
+        maxFilesize: 50,
         acceptedFiles: ".mp3,.mp4,.mkv,.pdf",
         autoProcessQueue: true,
         previewTemplate: template,

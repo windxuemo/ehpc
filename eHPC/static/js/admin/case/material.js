@@ -26,11 +26,11 @@ $(document).ready(function () {
                 material_id: array
             },
             success: function (data) {
-                if(data.status=="success"){
+                if (data.status == "success") {
                     $("#file-manage-panel").find("input").prop("checked", false);
                     $("#del-warning").modal("hide");
                 }
-                else{
+                else {
                     alert("删除失败");
                 }
             }
@@ -43,7 +43,7 @@ $(document).ready(function () {
     $("#dropz").dropzone({
         url: location.href,
         maxFiles: 10,
-        maxFilesize: 512,
+        maxFilesize: 50,
         acceptedFiles: ".c,.cpp,.py,.f",
         autoProcessQueue: true,
         previewTemplate: template,
@@ -52,19 +52,22 @@ $(document).ready(function () {
         dictInvalidFileType: "不支持的文件类型",
         dictMaxFilesExceeded: "文件数量不能超过10个",
         dictFileTooBig: "文件大小不能超过512",
-        init: function() {
-            this.on("addedfile", function(file) {
+        init: function () {
+            this.on("addedfile", function (file) {
                 $("#upload-status").show();
             });
             this.on("error", function (file) {
                 error = true;
                 alert("上传失败");
             });
-            this.on("queuecomplete", function(file) {
+            this.on("queuecomplete", function (file) {
                 if (!error) {
                     location.reload();
                 }
             });
+        },
+        headers: {
+            'X-CSRFToken': csrf_token
         }
     });
 

@@ -184,7 +184,7 @@ def case_create():
         db.session.add(new_case)
         db.session.commit()
         path = os.path.join(current_app.config['CASE_FOLDER'], "%d" % new_case.id)
-        os.mkdir(path)
+        os.makedirs(path)
         return redirect(url_for('admin.case'))
 
 
@@ -293,7 +293,7 @@ def case_version(case_id):
             cur_case.versions.append(cur_version)
             db.session.commit()
             path = os.path.join(current_app.config['CASE_FOLDER'], cur_version.dir_path)
-            os.mkdir(path)
+            os.makedirs(path)
             return jsonify(status='success', id=cur_version.version_id)
         elif request.form['op'] == 'edit':
             cur_case = Case.query.filter_by(id=case_id).first_or_404()

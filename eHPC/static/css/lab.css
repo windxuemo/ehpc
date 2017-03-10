@@ -329,25 +329,20 @@
 }
 
 /* 试验进度部分 */
-.subject-progress {
+.challenge-progress {
     margin-bottom: 20px;
 }
 
-.progress {
+.challenge-progress .progress {
+    margin: 0;
+    width: 95%;
+    margin-right: 10px;
+    display: inline-block;
     overflow: hidden;
     background: #ebedef;
     border-radius: 32px;
     height: 14px;
 }
-
-.subject-progress .progress {
-    margin: 0;
-    width: 95%;
-    margin-right: 10px;
-    display: inline-block;
-}
-
-
 
 .progress-nums {
     color: #000;

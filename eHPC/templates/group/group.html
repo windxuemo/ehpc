@@ -57,10 +57,11 @@
                             <i class="es-icon es-icon-morehoriz"></i></a>
                     </div>
 
-                    {% with latest_topics = hot_topics %}
-                        {% include 'group/widget_topic_list.html' %}
-                    {% endwith %}
-
+                    <div class="panel-body">
+                        {% with latest_topics = hot_topics %}
+                            {% include 'group/widget_topic_list.html' %}
+                        {% endwith %}
+                    </div>
                 </div>
             </div>
             <!-- End of topics -->
@@ -84,7 +85,7 @@
                     <div class="panel-heading"><h3 class="panel-title">新加组员</h3></div>
                     <div class="panel-body">
                         <ul class="user-avatar-list clearfix" id="new-members">
-                        {% include 'group/widget_group_member.html' %}
+                            {% include 'group/widget_group_member.html' %}
                         </ul>
                     </div>
                 </div>

@@ -14,13 +14,12 @@
 
     <div id="challenge-left">
 
-        <div class="subject-progress">
+        <div class="challenge-progress">
             <div class="progress">
                 <div style="width:{{ (next_progress - 1) / challenges_count * 100 }}%" class="progress-bar progress-bar-success"></div>
             </div>
             <span class="progress-nums">{{ (next_progress - 1) | string + '/'+ challenges_count | string }}</span>
         </div>
-
 
         <!--Challenge的内容展示-->
         <div class="markdown-body">

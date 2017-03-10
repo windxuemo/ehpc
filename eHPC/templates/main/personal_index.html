@@ -7,75 +7,85 @@
 
 {% block content %}
     <section class="course-list-section">
-                <div class="container">
-                    <div class="text-line">
-                        <h5><span>最近浏览</span>
-                            <div class="line"></div>
-                        </h5>
-                        <div class="subtitle">记录您的足迹</div>
-                    </div>
-                    {% if user_courses %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading" style="margin-bottom: 10px"><h3 class="panel-title">已加入的课程</h3></div>
+        <div class="container">
+            <div class="text-line">
+                <h5><span>最近活动</span>
+                    <div class="line"></div>
+                </h5>
+                <div class="subtitle">记录您的足迹</div>
+            </div>
+            {% if user_courses %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">已加入的课程</h3></div>
+                    <div class="panel-body">
+                        <div class="row">
                             <div class="course-list">
-                                <div class="row">
-                                    {% with courses=user_courses %}
-                                        {% include 'course/widget_course_list.html' %}
-                                    {% endwith %}
-                                </div>
+                                {% with courses=user_courses %}
+                                    {% include 'course/widget_course_list.html' %}
+                                {% endwith %}
                             </div>
                         </div>
-                    {% endif %}
-                    {% if user_topics %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">最近评论过的话题</h3></div>
-                            {% with latest_topics=user_topics %}
-                                {% include 'group/widget_topic_list.html' %}
-                            {% endwith %}
-                        </div>
-                    {% endif %}
-                    {% if user_question %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">最近浏览过的知识点题目</h3></div>
-                            <div style="padding: 5px">
-                                {% for uq in user_question %}
-                                    <a class="media choice-options btn-block color-primary" href="{{ url_for('problem.question_view', question_type=uq.question_type,
-                            cid=uq.classify_id) }}" style="margin: 10px 0">
-                                        {{ uq.classify.name }}
-                                        ({% if uq.question_type == 'choice' %}
-                                        选择题
-                                    {% elif uq.question_type == 'fill' %}
-                                        填空题
-                                    {% elif uq.question_type == 'judge' %}
-                                        判断题
-                                    {% elif uq.question_type == 'essay' %}
-                                        问答题
-                                    {% endif %})</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if user_program %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">最近提交过的编程题</h3></div>
-                            <div style="padding: 5px">
-                                {% for up in user_program %}
-                                    <a class="media choice-options btn-block color-primary" href="{{ url_for('problem.program_view', pid=up.id) }}">{{ up.title }}</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if user_challenges %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><h3 class="panel-title">正在进行的实验小任务</h3></div>
-                            <div style="padding: 5px">
-                                {% for uc in user_challenges %}
-                                    <a class="media choice-options btn-block color-primary"
-                                        href="{{ url_for('lab.knowledge', kid=uc.knowledge_id, progress=uc.cur_progress+1) }}">{{ uc.knowledge.title }}(已通过 {{ uc.cur_progress }} 个)</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
+                    </div>
                 </div>
-            </section>
+            {% endif %}
+
+            {% if user_topics %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">最近评论过的话题</h3></div>
+                    <div class="panel-body">
+                        {% with latest_topics=user_topics %}
+                            {% include 'group/widget_topic_list.html' %}
+                        {% endwith %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if user_question %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">最近浏览过的知识点题目</h3></div>
+                    <div class="panel-body">
+                        {% for uq in user_question %}
+                            <a class="media choice-options btn-block color-primary" href="{{ url_for('problem.question_view', question_type=uq.question_type,
+                            cid=uq.classify_id) }}">
+                                {{ uq.classify.name }}
+                                ({% if uq.question_type == 'choice' %}
+                                选择题
+                            {% elif uq.question_type == 'fill' %}
+                                填空题
+                            {% elif uq.question_type == 'judge' %}
+                                判断题
+                            {% elif uq.question_type == 'essay' %}
+                                问答题
+                            {% endif %})</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if user_program %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">最近提交过的编程题</h3></div>
+                    <div class="panel-body">
+                        {% for problem in user_program %}
+                            <a class="media choice-options btn-block color-primary"
+                               href="{{ url_for('problem.program_view', pid=problem.id) }}">{{ problem.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if user_challenges %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">正在进行的实验小任务</h3></div>
+                    <div class="panel-body">
+                        {% for challenge in user_challenges %}
+                            <a class="media choice-options btn-block color-primary"
+                               href="{{ url_for('lab.knowledge', kid=challenge.knowledge_id, progress=challenge.cur_progress+1)}}">
+                                {{ challenge.knowledge.title }}(已通过 {{ challenge.cur_progress }}个)</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}

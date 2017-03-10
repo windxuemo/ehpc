@@ -81,7 +81,7 @@ def upload_file(file_src, des_path, allowed_type=None):
 
     if file_src and '.' in file_src.filename and file_type in allowed_type:
         if not os.path.exists(folder):
-            os.mkdir(folder)
+            os.makedirs(folder)
         file_src.save(des_path)
         unique_uri = os.stat(des_path).st_mtime
         return True, unique_uri

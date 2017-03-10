@@ -17,10 +17,11 @@
                     {% include 'group/widget_group_list.html' %}
                 </div>
 
-
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3 class="panel-title">{{ _('Latest Topics') }}</h3></div>
-                    {% include 'group/widget_topic_list.html' %}
+                    <div class="panel-body">
+                        {% include 'group/widget_topic_list.html' %}
+                    </div>
                 </div>
             </div>
             <div class="col-md-3">

@@ -102,6 +102,9 @@ $(document).ready(function () {
                     location.reload();
                 }
             });
+        },
+        headers: {
+            'X-CSRFToken': csrf_token
         }
     });
 

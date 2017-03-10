@@ -735,6 +735,8 @@ def lab():
             return jsonify(status='success')
         elif request.form['op'] == 'del':
             curr_knowledge = Knowledge.query.filter_by(id=request.form['knowledge_id']).first_or_404()
+            for challenge in curr_knowledge.challenges:
+                db.session.delete(challenge)
             db.session.delete(curr_knowledge)
             db.session.commit()
             return jsonify(status='success')

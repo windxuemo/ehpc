@@ -98,6 +98,7 @@ def reg():
             reg_user.phone = phone
             reg_user.university = university
             reg_user.student_id = student_id
+            reg_user.avatar_url = 'none.jpg'
 
             db.session.add(reg_user)
             db.session.commit()

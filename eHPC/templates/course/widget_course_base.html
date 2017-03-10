@@ -68,6 +68,22 @@
         </div>
     </div>
 
+    <!-- 加入课程时的提示信息框 -->
+    <div class="modal fade" id="join-warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div id="join-msessage" class="modal-body" style="height: 100px;font-size: medium"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -103,21 +119,26 @@
                         }
                         else if (data["status"] == "pending") {
                             $(".join").children("a").text("加入审批中").attr("href", "#");
-                            alert("已经提交申请，请耐心等待老师同意");
+                            $("#join-warning").find("#join-msessage").html("已经提交申请，请耐心等待老师同意")
+                            $("#join-warning").modal("show");
                         }
                         else if (data["status"] == "duplicated") {
-                            alert("请勿重复提交申请");
+                            $("#join-warning").find("#join-msessage").html("请勿重复提交申请")
+                            $("#join-warning").modal("show");
                         }
                         else if (data["status"] == "time error") {
-                            alert("当前时间段不能申请该课程");
+                            $("#join-warning").find("#join-msessage").html("当前时间段不能申请该课程")
+                            $("#join-warning").modal("show");
                         }
                     },
                     error: function () {
                         if ($('#course-in').hasClass('btn-primary')) {
-                            alert('加入课程失败, 请重试');
+                            $("#join-warning").find("#join-msessage").html("加入课程失败, 请重试")
+                            $("#join-warning").modal("show");
                         }
                         else {
-                            alert('退出课程失败, 请重试');
+                            $("#join-warning").find("#join-msessage").html("退出课程失败, 请重试")
+                            $("#join-warning").modal("show");
                         }
                     }
                 });

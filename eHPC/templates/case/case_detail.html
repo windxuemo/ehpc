@@ -6,7 +6,11 @@
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/highlight.min.css') }}">
     <script src="//cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script> hljs.initHighlightingOnLoad();</script>
+
+
+
 {% endblock %}
 
 {% block content %}
@@ -72,7 +76,24 @@
         </div>
     </div>
 
+     <!-- 提示信息框 -->
+    <div class="modal fade" id="code-warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div id="message" class="modal-body" style="height: 100px;font-size: medium"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
+
 
 {% block footer_ext %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>

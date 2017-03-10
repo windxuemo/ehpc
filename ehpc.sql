@@ -422,6 +422,26 @@ INSERT INTO `homework` VALUES (3,'作业1','# Cost Function\r\n\r\nLet\'s first 
 /*!40000 ALTER TABLE `homework` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+-- ----------------------------
+-- Table structure for homework_appendix
+-- ----------------------------
+DROP TABLE IF EXISTS `homework_appendix`;
+CREATE TABLE `homework_appendix` (
+  `id` int(64) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `homework_id` int(64) DEFAULT NULL,
+  `user_id` int(64) NOT NULL,
+  `uri` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `upload_time` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `homework_id` (`homework_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `homework_appendix_ibfk_1` FOREIGN KEY (`homework_id`) REFERENCES `homework` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `homework_appendix_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 --
 -- Table structure for table `homework_upload`
 --

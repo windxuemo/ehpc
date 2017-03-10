@@ -38,8 +38,10 @@
                             <tr>
                                 <th width="5%">
                                     <input id="all-homework-select" type="checkbox"></th>
-                                <th width="65%">文件名</th>
-                                <th width="30%">提交时间</th>
+                                <th width="25%">文件名</th>
+                                <th width="25%">学号</th>
+                                <th width="25%">姓名</th>
+                                <th width="25%">提交时间</th>
                             </tr>
                             </thead>
                             <tbody id="homework-table-body">
@@ -47,10 +49,12 @@
                             {% for u in uploads | sort_materials() %}
                                 <tr data-upload_id="{{ u.id }}">
                                     <td><input type="checkbox"></td>
-                                    <td><a href="{{ url_for('static',filename='homework/'+u.uri) }}" download="{{ u.name }}">{{ u.name }}</a></td>
+                                    <td><a href="{{ url_for('static',filename='homework/upload/'+u.uri) }}" download="{{ u.name }}">{{ u.name }}</a></td>
+                                    <td>{{ u.user.student_id }}</td>
+                                    <td>{{ u.user.name }}</td>
                                     <td>{{ u.submit_time }}</td>
                                 </tr>
-                                <input type="hidden" name="zip-path" value="{{ url_for('static',filename='homework/course_%d/homework_%d/homework_%d.zip' % (course.id,homework.id,homework.id)) }}">
+                                <input type="hidden" name="zip-path" value="{{ url_for('static',filename='homework/upload/course_%d/homework_%d/homework_%d.zip' % (course.id,homework.id,homework.id)) }}">
                             {% endfor %}
 
                             </tbody>

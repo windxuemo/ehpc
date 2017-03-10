@@ -139,7 +139,12 @@ def homework_list(cid):
 def homework_detail():
     hid = request.form['hid']
     homework = Homework.query.filter_by(id=hid).first_or_404()
-    html_content = render_template('course/widget_detail_homework.html', curr_time=datetime.now(), current_user=current_user, homework=homework)
+    curr_user_upload = current_user.homeworks.filter_by(homework_id=homework.id)
+    html_content = render_template('course/widget_detail_homework.html',
+                                   curr_time=datetime.now(),
+                                   current_user=current_user,
+                                   my_upload=curr_user_upload,
+                                   homework=homework)
     return jsonify(data=html_content)
 
 
@@ -147,19 +152,34 @@ def homework_detail():
 def homework_upload(hid):
     cur_homework = Homework.query.filter_by(id=hid).first_or_404()
     cur_course = cur_homework.course
+    if request.form['op'] == "del":
+        curr_upload = cur_homework.uploads.filter_by(id=request.form['upload_id']).first_or_404()
+        current_user.homeworks.remove(curr_upload)
+        cur_homework.uploads.remove(curr_upload)
+        db.session.delete(curr_upload)
+        db.session.commit()
+        try:
+            os.remove(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], curr_upload.uri))
+        except OSError:
+            pass
+        return jsonify(status="success")
+
     homework_file = request.files['file']
     if not homework_file:
         return jsonify(status="empty")
     homework_file_name = custom_secure_filename(homework_file.filename)
     homework_uri = os.path.join("course_%d" % cur_course.id, "homework_%d" % hid, homework_file_name)
-    upload_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], homework_uri)
+    upload_path = unicode(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], homework_uri), 'utf8')       #处理中文文件名
     status = upload_file(homework_file, upload_path, ['wrap', 'pdf'])
     if status[0]:
         homework_upload = HomeworkUpload(name=homework_file_name, homework_id=hid, user_id=current_user.id, uri=homework_uri)
         db.session.add(homework_upload)
         cur_homework.uploads.append(homework_upload)
         db.session.commit()
-        return jsonify(status="success")
+        return jsonify(status="success",
+                       new_upload_id=homework_upload.id,
+                       new_upload_name=homework_upload.name,
+                       new_upload_submit_time=datetime.strftime(homework_upload.submit_time, '%Y-%m-%d %H:%M'))
     else:
         return jsonify(status="fail")
 

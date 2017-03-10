@@ -19,6 +19,31 @@
                         <div id="homework-description" data-to-render="{{ homework.description }}"></div>
                     </div>
                     <div class="homework-content">
+                        <div style="margin-bottom: 10px;"><b>作业附件（点击可下载）：</b></div>
+                        <div id="homework-appendix-list">
+                            {% for a in homework.appendix %}
+                                <div id="appendix{{ a.id }}" class="alert alert-success alert-dismissable uploaded" role="alert"
+                                     data-appendix-name="{{ a.name }}" data-appendix-id="{{ a.id }}">
+                                    <i class="es-icon es-icon-description status-icon"></i>
+                                    <a href="{{ url_for('static', filename='homework/appendix/' + a.uri) }}" download="{{ a.name }}">{{ a.name }}</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div id="my-uploads" class="homework-content">
+                        <div style="margin-bottom: 10px;"><b>我的提交：</b></div>
+                        {% for a in my_upload %}
+                            <div id="my-submit{{ a.id }}" class="alert alert-info alert-dismissable" role="alert"
+                                 data-upload-name="{{ a.name }}" data-upload-id="{{ a.id }}">
+                                <button type="button" class="close" aria-label="Close">
+                                    <span class="delete-upload" aria-hidden="true">&times;</span></button>
+                                <i class="es-icon es-icon-description status-icon pull-left"></i>
+                                <span class="col-md-8 col-sm-8">{{ a.name }}</span>
+                                <span>提交于：{{ a.submit_time | unite_time_format }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="homework-content">
                         <b>作业提交：</b>
                         {% if curr_time < homework.deadline %}
                             <form id="homework-file-form">
@@ -29,11 +54,11 @@
                                         <input id="filenameCover" class="form-control" type="text" readonly="readonly">
                                     </div>
                                 </div>
+                                <input type="hidden" name="op" value="upload">
                                 <div class="form-group">
                                     <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
-                                    <span id="homework-upload-status" class="col-md-4 col-sm-4 text-center homework-file-item hide" style="padding-top: 5px;"></span>
+                                    <span id="homework-upload-status" class="col-md-8 col-sm-8 homework-file-item hide" style="padding-top: 5px;"></span>
                                 </div>
-                                <!--input type="hidden" name="" value=""-->
                             </form>
                         {% else %}
                             <div>作业已过截止日期，无法提交！</div>
@@ -50,6 +75,31 @@
 
 {% block footer_ext %}
     <script>
+    function delete_upload(e) {
+        var event = e || window.event;
+        var curr_ele = event || event.srcElement;
+        var curr_div = curr_ele.parentNode.parentNode;
+        var upload_id = curr_div.getAttribute("data-upload-id");
+        alert(upload_id);
+        $.ajax({
+            type: "post",
+            url: "{{ url_for('course.homework_upload', hid=homework.id) }}",
+            data: {
+                op: "del",
+                upload_id: upload_id
+            },
+            success: function (data) {
+                if(data.status == "success"){
+                    curr_div.remove();
+                }
+                else{
+                    var str = curr_div.data("upload-name") + "删除失败，请稍后重试！";
+                    show_invalid_info("#homework-upload-status","#homework-upload-status",str);
+                    //alert(str);
+                }
+            }
+        });
+    }
     $(document).ready(function() {
         var description = $("#homework-description");
         description.html(latex_support(description.data('to-render')));
@@ -89,8 +139,20 @@
                 processData: false,
                 success: function(data) {
                     if(data.status == "success") {
-                        show_invalid_info("#homework-upload-status","#homework-upload-status","上传成功！");
+                        str = "文件 " + $("#homework-file")[0].files[0].name + " 上传成功！";
+                        show_invalid_info("#homework-upload-status","#homework-upload-status",str);
                         $('#filenameCover').val("");
+                        var file_list = $("#homework-file")[0].files;
+                        var uploadFilehtml = ''
+                        + '<div id="my-submit' + data["new_upload_id"] + '" class="alert alert-info alert-dismissable" role="alert" data-upload-name="'
+                        + data["new_upload_name"] + '" data-upload-id="' + data["new_upload_id"] + '">'
+                        + '<button type="button" class="close" aria-label="Close">'
+                        + '<span class="delete-upload" aria-hidden="true" onclick="delete_upload(this);">&times;</span></button>'
+                        + '<i class="es-icon es-icon-description status-icon pull-left"></i>'
+                        + '<span class="col-md-8 col-sm-8">' + data["new_upload_name"] + '</span>'
+                        + '<span>提交于：' + data["new_upload_submit_time"]  + '</span>'
+                        + '</div>';
+                        $("#my-uploads").append(uploadFilehtml);
                     }
                     else if (data.status == "empty") {
                         show_invalid_info("#homework-upload-status","#homework-upload-status","未选择文件！");
@@ -104,6 +166,29 @@
                 error: function() {
                     show_invalid_info("#homework-upload-status","#homework-upload-status","上传失败！");
                     $('#filenameCover').val("");
+                }
+            });
+        });
+
+        $(".delete-upload").click(function () {
+            var curr_div = $(this).parent().parent();
+            var upload_id = curr_div.data("upload-id");
+            $.ajax({
+                type: "post",
+                url: "{{ url_for('course.homework_upload', hid=homework.id) }}",
+                data: {
+                    op: "del",
+                    upload_id: upload_id
+                },
+                success: function (data) {
+                    if(data.status == "success"){
+                        curr_div.remove();
+                    }
+                    else{
+                        var str = curr_div.data("upload-name") + "删除失败，请稍后重试！";
+                        show_invalid_info("#homework-upload-status","#homework-upload-status",str);
+                        //alert(str);
+                    }
                 }
             });
         });

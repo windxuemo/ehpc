@@ -13,7 +13,7 @@ from sqlalchemy import or_
 
 from . import admin
 from .. import db
-from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload
+from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload, HomeworkAppendix
 from ..models import Course, Lesson, Material, User, Apply
 from ..models import Knowledge, Challenge
 from ..user.authorize import teacher_login
@@ -38,9 +38,10 @@ def course():
             db.session.delete(l)
 
         resource_path = os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id)
-        homework_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id)
+        homework_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], 'course_%d' % curr_course.id)
+        homework_appendix_path = os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], 'course_%d' % curr_course.id)
         cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id)
-        remove_dirs(resource_path, homework_path, cover_path)
+        remove_dirs(resource_path, homework_path, homework_appendix_path, cover_path)
 
         db.session.delete(curr_course)
         db.session.commit()
@@ -61,7 +62,7 @@ def course_create():
         db.session.add(curr_course)
         db.session.commit()
         os.makedirs(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id))
-        os.makedirs(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id))
+        os.makedirs(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], 'course_%d' % curr_course.id))
         return redirect(url_for('admin.course_edit', course_id=curr_course.id))
 
 
@@ -286,42 +287,177 @@ def course_homework(course_id):
                                homeworks=curr_course.homeworks,
                                title=gettext('Course Homework'))
     elif request.method == "POST":
-        # 作业的增加查改
-        if request.form['op'] == 'create':
-            curr_homework = Homework(title=request.form['title'], description=request.form['description'],
-                                     deadline=request.form['deadline'])
-            curr_course = Course.query.filter_by(id=course_id).first_or_404()
-            curr_course.homeworks.append(curr_homework)
-            db.session.add(curr_homework)
-            db.session.commit()
-            os.makedirs(os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id, 'homework_%d' % curr_homework.id))
-            return jsonify(status="success", homework_id=curr_homework.id)
-        elif request.form['op'] == "del":
+        # 作业的删除
+        if request.form['op'] == "del":
             curr_course = Course.query.filter_by(id=course_id).first_or_404()
             curr_homework = curr_course.homeworks.filter_by(id=request.form['homework_id']).first_or_404()
+            for a in curr_homework.appendix:
+                curr_homework.appendix.remove(a)
+                db.session.delete(a)
+
+            for u in curr_homework.uploads:
+                curr_homework.uploads.remove(u)
+                db.session.delete(u)
+
+            homework_path = os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], "course_%d/homework_%d" %
+                                         (curr_homework.course.id, curr_homework.id))
+            homework_upload_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], "course_%d/homework_%d" %
+                                         (curr_homework.course.id, curr_homework.id))
+            remove_dirs(homework_path, homework_upload_path)
+
             curr_course.homeworks.remove(curr_homework)
             db.session.delete(curr_homework)
             db.session.commit()
 
-            homework_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], 'course_%d' % curr_course.id, 'homework_%d' % curr_homework.id)
-
-            remove_dirs(homework_path)
             return jsonify(status="success", homework_id=curr_homework.id)
-        elif request.form['op'] == "edit":
-            curr_course = Course.query.filter_by(id=course_id).first_or_404()
-            curr_homework = curr_course.homeworks.filter_by(id=request.form['homework_id']).first_or_404()
-            curr_homework.title = request.form['title']
-            curr_homework.description = request.form['description']
-            curr_homework.deadline = request.form['deadline']
-            db.session.commit()
-            return jsonify(status="success", homework_id=curr_homework.id)
-        elif request.form['op'] == 'data':
-            curr_homework = Homework.query.filter_by(id=request.form['homework_id']).first_or_404()
-            deadline = curr_homework.deadline.strftime('%Y-%m-%d %H:%M')
-            return jsonify(status="success", title=curr_homework.title, description=curr_homework.description,
-                           deadline=deadline)
         else:
             return abort(404)
+
+
+@admin.route('/course/<int:course_id>/homework/create', methods=['GET', 'POST'])
+@teacher_login
+def course_homework_create(course_id):
+    """ 课程的作业新创建入口页面 """
+    if request.method == 'GET':
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        return render_template('admin/course/homework_edit.html',
+                               course=curr_course,
+                               option="create",
+                               title=gettext('Course Homework Create'))
+    elif request.method == 'POST':
+        curr_homework = Homework(title=request.form['title'], description=request.form['description'],
+                                     deadline=request.form['deadline'])
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        curr_course.homeworks.append(curr_homework)
+        db.session.add(curr_homework)
+        db.session.commit()
+        os.makedirs(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], 'course_%d' % curr_course.id,
+                                 'homework_%d' % curr_homework.id))
+        os.makedirs(os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], 'course_%d' % curr_course.id,
+                                 'homework_%d' % curr_homework.id))
+        appendix_files = request.files.getlist('appendix')
+        for appendix in appendix_files:
+            file_name = custom_secure_filename(appendix.filename)
+            extension = file_name[file_name.rfind('.') + 1:]
+            file_type = extension_to_file_type(extension)
+            cur_appendix = HomeworkAppendix(name=file_name, homework_id=curr_homework.id, user_id=current_user.id, uri="")
+            current_user.homework_appendix.append(cur_appendix)
+            curr_homework.appendix.append(cur_appendix)
+            db.session.commit()  # get appendix id
+            cur_appendix.uri = os.path.join("course_%d" % course_id,
+                                            "homework_%d/appendix_%d.%s" % (curr_homework.id, cur_appendix.id, extension))
+            upload_path = unicode(os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], cur_appendix.uri), 'utf-8')
+            status = upload_file(appendix, upload_path, ['video', 'pdf',  'wrap'])
+            if status[0]:
+                db.session.commit()
+            else:
+                current_user.homework_appendix.remove(cur_appendix)
+                curr_homework.appendix.remove(cur_appendix)
+                db.session.delete(cur_appendix)
+                db.session.commit()
+                for m in curr_homework.appendix:
+                    current_user.homework_appendix.remove(m)
+                    curr_homework.appendix.remove(m)
+                    db.session.delete(m)
+                    db.session.commit()
+                    try:
+                        os.remove(os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], m.uri))
+                    except OSError:
+                        pass
+                return render_template('admin/course/homework_edit.html',
+                                       course=curr_course,
+                                       option="edit",
+                                       homework=curr_homework,
+                                       msg=gettext("homework appendix upload failed"),
+                                       title=gettext('Course Homework edit'))
+
+        return redirect(url_for('admin.course_homework', course_id=curr_course.id))
+
+
+@admin.route('/course/<int:course_id>/homework/<int:homework_id>/edit', methods=['GET', 'POST'])
+@teacher_login
+def course_homework_edit(course_id, homework_id):
+    """ 课程的作业编辑入口页面 """
+    if request.method == 'GET':
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
+        return render_template('admin/course/homework_edit.html',
+                               course=curr_course,
+                               option="edit",
+                               homework=curr_homework,
+                               title=gettext('Course Homework Edit'))
+
+    elif request.method == 'POST':
+        if request.form['op'] == "del":
+            curr_appendix = HomeworkAppendix.query.filter_by(id=request.form['appendix_id']).first_or_404()
+            curr_homework = curr_appendix.homework
+            curr_homework.appendix.remove(curr_appendix)
+            db.session.delete(curr_appendix)
+            db.session.commit()
+            try:
+                os.remove(os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], curr_appendix.uri))
+            except OSError:
+                pass
+            return jsonify(status="success")
+
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
+        curr_homework.title = request.form['title']
+        curr_homework.description = request.form['description']
+        curr_homework.deadline = request.form['deadline']
+        db.session.commit()
+        appendix_files = request.files.getlist('appendix')
+        for appendix in appendix_files:
+            if appendix.filename == "":
+                return render_template('admin/course/homework_edit.html',
+                                       course=curr_course,
+                                       option="edit",
+                                       homework=curr_homework,
+                                       msg=gettext("save homework successfully"),
+                                       title=gettext('Course Homework Edit'))
+            file_name = custom_secure_filename(appendix.filename)
+            extension = file_name[file_name.rfind('.') + 1:]
+            cur_appendix = HomeworkAppendix(name=file_name, homework_id=curr_homework.id, user_id=current_user.id,
+                                            uri="")
+            current_user.homework_appendix.append(cur_appendix)
+            curr_homework.appendix.append(cur_appendix)
+            db.session.commit()  # get appendix id
+            cur_appendix.uri = os.path.join("course_%d" % course_id,
+                                            "homework_%d/appendix_%d.%s" % (curr_homework.id, cur_appendix.id, extension))
+            upload_path = unicode(os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], cur_appendix.uri),
+                                  'utf-8')
+            status = upload_file(appendix, upload_path, ['video', 'pdf', 'wrap'])
+            if status[0]:
+                db.session.commit()
+            else:
+                current_user.homework_appendix.remove(cur_appendix)
+                curr_homework.appendix.remove(cur_appendix)
+                db.session.delete(cur_appendix)
+                db.session.commit()
+                for m in appendix_files:
+                    for app in curr_homework.appendix:
+                        if app.name == custom_secure_filename(m):
+                            current_user.homework_appendix.remove(m)
+                            curr_homework.appendix.remove(m)
+                            db.session.delete(m)
+                            db.session.commit()
+                            try:
+                                os.remove(os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], m.uri))
+                            except OSError:
+                                pass
+                return render_template('admin/course/homework_edit.html',
+                                       course=curr_course,
+                                       option="edit",
+                                       homework=curr_homework,
+                                       msg=gettext("homework info saved,homework appendix upload failed"),
+                                       title=gettext('Course Homework edit'))
+
+        return render_template('admin/course/homework_edit.html',
+                               course=curr_course,
+                               option="edit",
+                               homework=curr_homework,
+                               msg=gettext("save homework successfully"),
+                               title=gettext('Course Homework Edit'))
 
 
 @admin.route('/course/<int:course_id>/homework/<int:homework_id>', methods=['GET', 'POST'])
@@ -344,7 +480,7 @@ def course_homework_upload_list(course_id, homework_id):
                 db.session.delete(curr_upload)
                 db.session.commit()
                 try:
-                    os.remove(os.path.join(current_app.config['HOMEWORK_FOLDER'], curr_upload.uri))
+                    os.remove(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], curr_upload.uri))
                 except OSError:
                     pass
             return jsonify(status="success")
@@ -353,13 +489,13 @@ def course_homework_upload_list(course_id, homework_id):
             f = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
             for idx in upload_id:
                 curr_upload = curr_homework.uploads.filter_by(id=idx).first()
-                file_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], curr_upload.uri)
+                file_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], curr_upload.uri)
                 try:
                     f.write(file_path, curr_upload.name)
                 except OSError:
                     pass
             f.close()
-            dest_path = os.path.join(current_app.config['HOMEWORK_FOLDER'], "course_%d" % curr_course.id, "homework_%d" % curr_homework.id)
+            dest_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], "course_%d" % curr_course.id, "homework_%d" % curr_homework.id)
             if os.path.exists(os.path.join(dest_path, "homework_%d.zip" % curr_homework.id)):
                 os.remove(os.path.join(dest_path, "homework_%d.zip" % curr_homework.id))
             shutil.move(zip_name, dest_path)

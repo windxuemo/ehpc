@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-01-09 10:46+0800\n"
+"POT-Creation-Date: 2017-03-10 14:53+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,96 +61,120 @@ msgstr ""
 msgid "Case Icon"
 msgstr ""
 
-#: admin/system_views.py:278
+#: admin/system_views.py:276
 msgid "Case Version"
 msgstr ""
 
-#: admin/system_views.py:342
+#: admin/system_views.py:340
 msgid "Case Code Material"
 msgstr ""
 
-#: admin/teacher_views.py:29
+#: admin/teacher_views.py:30
 msgid "Course Admin"
 msgstr ""
 
-#: admin/teacher_views.py:55
+#: admin/teacher_views.py:56
 msgid "Create Course"
 msgstr ""
 
-#: admin/teacher_views.py:73
+#: admin/teacher_views.py:75
 msgid "Edit Course"
 msgstr ""
 
-#: admin/teacher_views.py:90
+#: admin/teacher_views.py:92
 msgid "Course Picture"
 msgstr ""
 
-#: admin/teacher_views.py:115
+#: admin/teacher_views.py:113
 msgid "Course Lesson"
 msgstr ""
 
-#: admin/teacher_views.py:160
+#: admin/teacher_views.py:158
 msgid "Lesson Material"
 msgstr ""
 
-#: admin/teacher_views.py:290
+#: admin/teacher_views.py:288
 msgid "Course Homework"
 msgstr ""
 
-#: admin/teacher_views.py:381
+#: admin/teacher_views.py:326
+msgid "Course Homework Create"
+msgstr ""
+
+#: admin/teacher_views.py:371
+msgid "homework appendix upload failed"
+msgstr ""
+
+#: admin/teacher_views.py:372 admin/teacher_views.py:447
+msgid "Course Homework edit"
+msgstr ""
+
+#: admin/teacher_views.py:388 admin/teacher_views.py:454
+msgid "Course Homework Edit"
+msgstr ""
+
+#: admin/teacher_views.py:446
+msgid "homework info saved,homework appendix upload failed"
+msgstr ""
+
+#: admin/teacher_views.py:453
+msgid "save homework successfully"
+msgstr ""
+
+#: admin/teacher_views.py:508
 msgid "Course Paper"
 msgstr ""
 
-#: admin/teacher_views.py:489
+#: admin/teacher_views.py:619 admin/teacher_views.py:645
 msgid "Question Manage"
 msgstr ""
 
-#: admin/teacher_views.py:505 admin/teacher_views.py:533
-#: admin/teacher_views.py:597 admin/teacher_views.py:662
-msgid "Edit question"
-msgstr ""
-
-#: admin/teacher_views.py:562 admin/teacher_views.py:645
-msgid "Create question"
-msgstr ""
-
-#: admin/teacher_views.py:630
+#: admin/teacher_views.py:661 admin/teacher_views.py:802
 msgid "Program question"
 msgstr ""
 
-#: admin/teacher_views.py:680
+#: admin/teacher_views.py:675 admin/teacher_views.py:704
+#: admin/teacher_views.py:769 admin/teacher_views.py:835
+msgid "Edit question"
+msgstr ""
+
+#: admin/teacher_views.py:733 admin/teacher_views.py:817
+msgid "Create question"
+msgstr ""
+
+#: admin/teacher_views.py:852
 msgid "Lab Manage"
 msgstr ""
 
-#: admin/teacher_views.py:708
+#: admin/teacher_views.py:881
 msgid "Lab tasks"
 msgstr ""
 
-#: admin/teacher_views.py:742
+#: admin/teacher_views.py:916
 msgid "Lab Create"
 msgstr ""
 
-#: admin/teacher_views.py:782
+#: admin/teacher_views.py:949
 msgid "Lab Edit"
 msgstr ""
 
-#: admin/teacher_views.py:830
+#: admin/teacher_views.py:991
 msgid "Classify Admin"
 msgstr ""
 
-#: admin/views.py:17 admin/views.py:32
+#: admin/views.py:17 admin/views.py:29
 msgid "Admin Auth"
 msgstr ""
 
-#: admin/views.py:31 user/views.py:40
+#: admin/views.py:28 user/views.py:40
 msgid "Invalid username or password."
 msgstr ""
 
-#: admin/views.py:47
+#: admin/views.py:44
 msgid "Teacher Setting"
 msgstr ""
 
-#: admin/views.py:62
+#: admin/views.py:59
 msgid "System Setting"
 msgstr ""
 
@@ -162,15 +186,16 @@ msgstr ""
 msgid "Case List"
 msgstr ""
 
-#: case/views.py:23 templates/navbar.html:23
+#: case/views.py:23 templates/navbar.html:11 templates/navbar.html:68
+#: templates/navbar.html:81
 msgid "Case Display"
 msgstr ""
 
-#: course/views.py:21
+#: course/views.py:19
 msgid "Courses"
 msgstr ""
 
-#: course/views.py:106
+#: course/views.py:104
 msgid "Course Materials"
 msgstr ""
 
@@ -187,23 +212,27 @@ msgstr ""
 msgid "Create Topic"
 msgstr ""
 
-#: lab/views.py:26
+#: lab/views.py:31
 msgid "Labs"
 msgstr ""
 
-#: main/views.py:14
+#: lab/views.py:167
+msgid "vnc"
+msgstr ""
+
+#: main/views.py:53 main/views.py:61 main/views.py:67
 msgid "Education Practice Platform"
 msgstr ""
 
-#: problem/views.py:17
+#: problem/views.py:20
 msgid "Practice Platform"
 msgstr ""
 
-#: problem/views.py:31 problem/views.py:55
+#: problem/views.py:34 problem/views.py:58
 msgid "Program Practice"
 msgstr ""
 
-#: problem/views.py:43
+#: problem/views.py:46
 msgid "My Submit"
 msgstr ""
 
@@ -216,53 +245,48 @@ msgstr ""
 msgid "eHPC"
 msgstr ""
 
-#: templates/main/index.html:46 templates/navbar.html:11
+#: templates/main/index.html:80 templates/navbar.html:7
+#: templates/navbar.html:64 templates/navbar.html:73
 msgid "Online Courses"
 msgstr ""
 
-#: templates/main/index.html:67 templates/navbar.html:14
+#: templates/main/index.html:101 templates/navbar.html:8
+#: templates/navbar.html:65 templates/navbar.html:74
 msgid "Examination Center"
 msgstr ""
 
-#: templates/main/index.html:93 templates/navbar.html:17
+#: templates/main/index.html:127 templates/navbar.html:9
+#: templates/navbar.html:66 templates/navbar.html:79
 msgid "Community"
 msgstr ""
 
-#: templates/lab/lab_base.html:30 templates/navbar.html:20
+#: templates/navbar.html:10 templates/navbar.html:67 templates/navbar.html:80
 msgid "Virutal Lab"
 msgstr ""
 
-#: templates/lab/lab_base.html:53 templates/navbar.html:37 user/views.py:96
+#: templates/lab/lab_base.html:51 templates/navbar.html:34 user/views.py:115
 msgid "Personal Page"
 msgstr ""
 
-#: templates/lab/lab_base.html:55 templates/navbar.html:39
-msgid "Job's List"
-msgstr ""
-
-#: templates/lab/lab_base.html:59 templates/navbar.html:44
-#: templates/user/setting.html:9 user/views.py:193
+#: templates/lab/lab_base.html:56 templates/navbar.html:40
+#: templates/user/setting.html:9 user/views.py:212
 msgid "Setting"
 msgstr ""
 
-#: templates/lab/lab_base.html:61 templates/navbar.html:46
+#: templates/lab/lab_base.html:58 templates/navbar.html:43
 msgid "Logout"
 msgstr ""
 
-#: templates/admin/auth.html:33 templates/navbar.html:51
+#: templates/admin/auth.html:33 templates/navbar.html:53
 #: templates/user/reg.html:11 templates/user/signin.html:11
-#: templates/user/signin.html:35
+#: templates/user/signin.html:37
 msgid "Sign In"
 msgstr ""
 
-#: templates/navbar.html:53 templates/user/reg.html:12
-#: templates/user/reg.html:62 templates/user/signin.html:12
-#: templates/user/signin.html:43
+#: templates/navbar.html:56 templates/user/reg.html:12
+#: templates/user/reg.html:139 templates/user/signin.html:12
+#: templates/user/signin.html:45
 msgid "Registration"
-msgstr ""
-
-#: templates/navbar.html:58
-msgid "search"
 msgstr ""
 
 #: templates/admin/auth.html:13
@@ -273,15 +297,16 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: templates/admin/auth.html:20 templates/user/reg.html:30
-#: templates/user/reg.html:33 templates/user/signin.html:18
+#: templates/admin/auth.html:20 templates/user/reg.html:31
+#: templates/user/reg.html:34 templates/user/signin.html:18
 #: templates/user/signin.html:20
 msgid "Email Address"
 msgstr ""
 
 #: templates/admin/auth.html:23 templates/admin/auth.html:26
-#: templates/user/ajax_setting_passwd.html:6 templates/user/reg.html:41
-#: templates/user/signin.html:24 templates/user/signin.html:27
+#: templates/main/index.html:56 templates/user/ajax_setting_passwd.html:6
+#: templates/user/reg.html:43 templates/user/signin.html:25
+#: templates/user/signin.html:28
 msgid "Password"
 msgstr ""
 
@@ -297,10 +322,10 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
-#: templates/admin/user/edit.html:42 templates/user/ajax_setting_avatar.html:22
-#: templates/user/ajax_setting_info.html:39
-#: templates/user/ajax_setting_passwd.html:49
-#: templates/user/passwd_reset_confirm.html:22
+#: templates/admin/user/edit.html:42 templates/user/ajax_setting_avatar.html:28
+#: templates/user/ajax_setting_info.html:96
+#: templates/user/ajax_setting_passwd.html:53
+#: templates/user/passwd_reset_confirm.html:28
 msgid "Save"
 msgstr ""
 
@@ -311,8 +336,9 @@ msgstr ""
 #: templates/course/index.html:5 templates/course/widget_course_base.html:7
 #: templates/group/group.html:5 templates/group/group_all.html:7
 #: templates/group/index.html:6 templates/group/topic_detail.html:5
-#: templates/group/topic_edit.html:11 templates/group/topic_new.html:11
-#: templates/problem/program_detail.html:11
+#: templates/group/topic_edit.html:12 templates/group/topic_new.html:12
+#: templates/lab/detail.html:10 templates/lab/index.html:10
+#: templates/problem/program_detail.html:13
 #: templates/problem/show_my_submits.html:7
 #: templates/problem/show_program.html:15
 #: templates/problem/show_question.html:12 templates/problem/view_code.html:14
@@ -325,11 +351,11 @@ msgstr ""
 
 #: templates/group/group.html:6 templates/group/group_all.html:8
 #: templates/group/index.html:7 templates/group/topic_detail.html:6
-#: templates/group/topic_edit.html:12 templates/group/topic_new.html:12
+#: templates/group/topic_edit.html:13 templates/group/topic_new.html:13
 msgid "Group"
 msgstr ""
 
-#: templates/group/group.html:56
+#: templates/group/group.html:55
 msgid "Hot Topics"
 msgstr ""
 
@@ -337,7 +363,7 @@ msgstr ""
 msgid "Hot Groups"
 msgstr ""
 
-#: templates/group/index.html:22
+#: templates/group/index.html:21
 msgid "Latest Topics"
 msgstr ""
 
@@ -358,25 +384,25 @@ msgid "Created Time"
 msgstr ""
 
 #: templates/group/widget_post_detail.html:20
-#: templates/group/widget_topic_detail.html:26
-#: templates/group/widget_topic_detail.html:53
-#: templates/group/widget_topic_detail.html:120
+#: templates/group/widget_topic_detail.html:30
+#: templates/group/widget_topic_detail.html:57
+#: templates/group/widget_topic_detail.html:139
 msgid "Reply"
 msgstr ""
 
-#: templates/group/widget_topic_detail.html:29
+#: templates/group/widget_topic_detail.html:33
 msgid "No replies yet!"
 msgstr ""
 
-#: templates/group/widget_topic_detail.html:60
+#: templates/group/widget_topic_detail.html:64
 msgid "Content"
 msgstr ""
 
-#: templates/group/widget_topic_detail.html:67
+#: templates/group/widget_topic_detail.html:75
 msgid "Submit"
 msgstr ""
 
-#: templates/group/widget_topic_list.html:8
+#: templates/group/widget_topic_list.html:7
 msgid "replies"
 msgstr ""
 
@@ -384,28 +410,28 @@ msgstr ""
 msgid "Challenges"
 msgstr ""
 
-#: templates/main/index.html:49
+#: templates/main/index.html:83
 msgid "Learn HPC."
 msgstr ""
 
-#: templates/main/index.html:59
+#: templates/main/index.html:93
 msgid "More Courses"
 msgstr ""
 
-#: templates/problem/program_detail.html:12
+#: templates/problem/program_detail.html:14
 #: templates/problem/show_my_submits.html:8
 #: templates/problem/show_program.html:16
 #: templates/problem/show_question.html:13 templates/problem/view_code.html:15
 msgid "Practice Center"
 msgstr ""
 
-#: templates/problem/program_detail.html:13
+#: templates/problem/program_detail.html:15
 #: templates/problem/show_my_submits.html:9
 #: templates/problem/show_program.html:17 templates/problem/view_code.html:16
 msgid "Program Lists"
 msgstr ""
 
-#: templates/problem/program_detail.html:55
+#: templates/problem/program_detail.html:96
 msgid "Submit Solution"
 msgstr ""
 
@@ -429,7 +455,7 @@ msgstr ""
 msgid "Choice Lists"
 msgstr ""
 
-#: templates/user/ajax_setting_avatar.html:2
+#: templates/user/ajax_setting_avatar.html:8
 msgid "Avatar"
 msgstr ""
 
@@ -449,24 +475,27 @@ msgstr ""
 msgid "Current Password"
 msgstr ""
 
-#: templates/user/ajax_setting_passwd.html:29
+#: templates/user/ajax_setting_passwd.html:30
 msgid "New Password"
 msgstr ""
 
-#: templates/user/ajax_setting_passwd.html:32
-#: templates/user/ajax_setting_passwd.html:40
+#: templates/user/ajax_setting_passwd.html:33
+#: templates/user/ajax_setting_passwd.html:42
+#: templates/user/passwd_reset_confirm.html:15
+#: templates/user/passwd_reset_confirm.html:21 templates/user/reg.html:48
+#: templates/user/reg.html:58
 msgid "At least 6 characters"
 msgstr ""
 
-#: templates/user/ajax_setting_passwd.html:37
+#: templates/user/ajax_setting_passwd.html:39
 msgid "Repeat Password"
 msgstr ""
 
-#: templates/user/detail.html:40
+#: templates/user/detail.html:39
 msgid "Joined Courses"
 msgstr ""
 
-#: templates/user/detail.html:60
+#: templates/user/detail.html:61
 msgid "Joined Groups"
 msgstr ""
 
@@ -482,11 +511,11 @@ msgstr ""
 msgid "submit"
 msgstr ""
 
-#: templates/user/passwd_reset_confirm.html:8
+#: templates/user/passwd_reset_confirm.html:13
 msgid "new password"
 msgstr ""
 
-#: templates/user/passwd_reset_confirm.html:14
+#: templates/user/passwd_reset_confirm.html:19
 msgid "repeat password"
 msgstr ""
 
@@ -559,11 +588,11 @@ msgstr ""
 msgid "letters,digits,underscore"
 msgstr ""
 
-#: templates/user/reg.html:48
+#: templates/user/reg.html:52
 msgid "Password Again"
 msgstr ""
 
-#: templates/user/reg.html:61
+#: templates/user/reg.html:138
 msgid "Submiting..."
 msgstr ""
 
@@ -579,11 +608,11 @@ msgstr ""
 msgid "Avatar Setting"
 msgstr ""
 
-#: templates/user/signin.html:40
+#: templates/user/signin.html:42
 msgid "Forget Password"
 msgstr ""
 
-#: templates/user/signin.html:42
+#: templates/user/signin.html:44
 msgid "Have no account?"
 msgstr ""
 
@@ -591,60 +620,60 @@ msgstr ""
 msgid "User Sign In"
 msgstr ""
 
-#: user/views.py:56 user/views.py:76
+#: user/views.py:56 user/views.py:85
 msgid "Register Account"
 msgstr ""
 
-#: user/views.py:68
+#: user/views.py:74
 msgid "Username already exists."
 msgstr ""
 
-#: user/views.py:72
+#: user/views.py:78
 msgid "Email already exists."
 msgstr ""
 
-#: user/views.py:110
+#: user/views.py:129
 msgid "The email can not be empty"
 msgstr ""
 
-#: user/views.py:112 user/views.py:210
+#: user/views.py:131 user/views.py:229
 msgid "Email address is invalid."
 msgstr ""
 
-#: user/views.py:114
+#: user/views.py:133
 msgid "The email has not be registered"
 msgstr ""
 
-#: user/views.py:145
+#: user/views.py:164
 msgid "Passwords don't match."
 msgstr ""
 
-#: user/views.py:147
+#: user/views.py:166
 msgid "Passwords can not be empty."
 msgstr ""
 
-#: user/views.py:182 user/views.py:183
+#: user/views.py:201 user/views.py:202
 msgid "'s Topics"
 msgstr ""
 
-#: user/views.py:221
+#: user/views.py:246
 msgid "Update info done!"
 msgstr ""
 
-#: user/views.py:236 util/file_manage.py:20 util/file_manage.py:71
-msgid "No selected file"
-msgstr ""
-
-#: user/views.py:252
+#: user/views.py:273
 msgid "Update avatar done!"
 msgstr ""
 
-#: user/views.py:256 util/file_manage.py:34 util/file_manage.py:89
+#: user/views.py:277 util/file_manage.py:34 util/file_manage.py:89
 msgid "Invalid file"
 msgstr ""
 
-#: user/views.py:290
+#: user/views.py:305
 msgid "Update password done!"
+msgstr ""
+
+#: util/file_manage.py:20 util/file_manage.py:71
+msgid "No selected file"
 msgstr ""
 
 #: util/time_process.py:24

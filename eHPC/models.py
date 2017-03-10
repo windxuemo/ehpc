@@ -50,6 +50,7 @@ class User(UserMixin, db.Model):
     open_id = db.Column(db.String(64), default=None)
 
     homeworks = db.relationship('HomeworkUpload', backref='user', lazy='dynamic')
+    homework_appendix = db.relationship('HomeworkAppendix', backref='user', lazy='dynamic')
 
     teacher_courses = db.relationship('Course', backref='teacher', lazy='dynamic')
     teacher_questions = db.relationship('Question', backref='teacher', lazy='dynamic')
@@ -462,6 +463,7 @@ class Homework(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
 
     uploads = db.relationship('HomeworkUpload', backref='homework', lazy='dynamic', cascade='delete, delete-orphan')
+    appendix = db.relationship('HomeworkAppendix', backref='homework', lazy='dynamic', cascade='delete, delete-orphan')
 
 
 class HomeworkUpload(db.Model):
@@ -473,6 +475,17 @@ class HomeworkUpload(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     uri = db.Column(db.String(256), nullable=False)
     submit_time = db.Column(db.DateTime, default=datetime.now, nullable=False)
+
+
+class HomeworkAppendix(db.Model):
+    __tablename__ = "homework_appendix"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
+    homework_id = db.Column(db.Integer, db.ForeignKey('homework.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    uri = db.Column(db.String(256), nullable=False)
+    upload_time = db.Column(db.DateTime, default=datetime.now, nullable=False)
 
 
 class Apply(db.Model):

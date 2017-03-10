@@ -59,7 +59,8 @@ class Config:
     PER_PAGE = 10
     UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/upload')
 
-    HOMEWORK_FOLDER = os.path.join(basedir, 'eHPC/static/homework')
+    HOMEWORK_UPLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/homework/upload')
+    HOMEWORK_APPENDIX_FOLDER = os.path.join(basedir, 'eHPC/static/homework/appendix')       #用于暂存上传的作业附件
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/course')
     CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/case')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')

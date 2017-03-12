@@ -168,7 +168,8 @@ def homework_upload(hid):
     if not homework_file:
         return jsonify(status="empty")
     homework_file_name = custom_secure_filename(homework_file.filename)
-    homework_uri = os.path.join("course_%d" % cur_course.id, "homework_%d" % hid, homework_file_name)
+    #上传的作业文件以学生学号+姓名+文件名来命名
+    homework_uri = os.path.join("course_%d" % cur_course.id, "homework_%d" % hid, "%s_%s_%s" % (current_user.student_id.encode("utf-8"), current_user.name.encode("utf-8"), homework_file_name))
     upload_path = unicode(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], homework_uri), 'utf8')       #处理中文文件名
     status = upload_file(homework_file, upload_path, ['wrap', 'pdf'])
     if status[0]:

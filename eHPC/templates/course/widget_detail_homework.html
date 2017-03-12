@@ -36,7 +36,7 @@
                             <div id="my-submit{{ a.id }}" class="alert alert-info alert-dismissable" role="alert"
                                  data-upload-name="{{ a.name }}" data-upload-id="{{ a.id }}">
                                 <button type="button" class="close" aria-label="Close">
-                                    <span class="delete-upload" aria-hidden="true">&times;</span></button>
+                                    <span class="delete-upload" aria-hidden="true" onclick="delete_upload(this);">&times;</span></button>
                                 <i class="es-icon es-icon-description status-icon pull-left"></i>
                                 <span class="col-md-8 col-sm-8">{{ a.name }}</span>
                                 <span>提交于：{{ a.submit_time | unite_time_format }}</span>
@@ -80,7 +80,6 @@
         var curr_ele = event || event.srcElement;
         var curr_div = curr_ele.parentNode.parentNode;
         var upload_id = curr_div.getAttribute("data-upload-id");
-        alert(upload_id);
         $.ajax({
             type: "post",
             url: "{{ url_for('course.homework_upload', hid=homework.id) }}",
@@ -95,7 +94,6 @@
                 else{
                     var str = curr_div.data("upload-name") + "删除失败，请稍后重试！";
                     show_invalid_info("#homework-upload-status","#homework-upload-status",str);
-                    //alert(str);
                 }
             }
         });
@@ -166,29 +164,6 @@
                 error: function() {
                     show_invalid_info("#homework-upload-status","#homework-upload-status","上传失败！");
                     $('#filenameCover').val("");
-                }
-            });
-        });
-
-        $(".delete-upload").click(function () {
-            var curr_div = $(this).parent().parent();
-            var upload_id = curr_div.data("upload-id");
-            $.ajax({
-                type: "post",
-                url: "{{ url_for('course.homework_upload', hid=homework.id) }}",
-                data: {
-                    op: "del",
-                    upload_id: upload_id
-                },
-                success: function (data) {
-                    if(data.status == "success"){
-                        curr_div.remove();
-                    }
-                    else{
-                        var str = curr_div.data("upload-name") + "删除失败，请稍后重试！";
-                        show_invalid_info("#homework-upload-status","#homework-upload-status",str);
-                        //alert(str);
-                    }
                 }
             });
         });

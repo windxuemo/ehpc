@@ -466,7 +466,11 @@ def course_homework_upload_list(course_id, homework_id):
     if request.method == "GET":
         curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
-        return render_template('admin/course/homework_upload.html', course=curr_course, homework=curr_homework, uploads=curr_homework.uploads)
+        return render_template('admin/course/homework_upload.html',
+                               course=curr_course,
+                               homework=curr_homework,
+                               uploads=curr_homework.uploads,
+                               title=gettext("Course Homework"))
     elif request.method == "POST":
         curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
@@ -491,7 +495,8 @@ def course_homework_upload_list(course_id, homework_id):
                 curr_upload = curr_homework.uploads.filter_by(id=idx).first()
                 file_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], curr_upload.uri)
                 try:
-                    f.write(file_path, curr_upload.name)
+                    file_dowload_name = "%s_%s_%s" % (curr_upload.user.student_id, curr_upload.user.name, curr_upload.name)
+                    f.write(file_path, file_dowload_name)
                 except OSError:
                     pass
             f.close()
@@ -500,7 +505,9 @@ def course_homework_upload_list(course_id, homework_id):
                 os.remove(os.path.join(dest_path, "homework_%d.zip" % curr_homework.id))
             shutil.move(zip_name, dest_path)
             file_name = os.path.join("course_%d" % curr_course.id, "homework_%d.zip" % curr_homework.id)
-            return jsonify(status="success", homework_id=curr_homework.id)
+            return jsonify(status="success",
+                           homework_title=curr_homework.title,
+                           course_title=curr_course.title)
 
 
 @admin.route('/course/<int:course_id>/paper/', methods=['GET', 'POST'])

@@ -13,6 +13,8 @@ from . import lab
 from .. import db
 from ..models import Challenge, Knowledge, Progress
 from .lab_util import get_cur_progress
+import random, string
+import requests
 
 
 @lab.route('/')
@@ -163,5 +165,19 @@ def my_progress(kid):
 
 
 @lab.route('/vnc/')
+@login_required
 def vnc():
-    return render_template('lab/vnc.html', title=gettext('vnc'))
+    status = 'repeated token'
+    token = ''
+    while status == 'repeated token':
+        token = ''.join(random.sample(string.ascii_letters + string.digits, 32))
+        req = requests.post("http://a002.nscc-gz.cn:10231/server/controller", params={"This_is_a_very_secret_token": token,
+                                                                                      "user_id": current_user.id})
+        status = req.json()['status']
+    print status
+    if status == 'success':
+        return render_template('lab/vnc.html', title=gettext('vnc'), status='success', token=token)
+    elif status == 'no machine available':
+        return render_template('lab/vnc.html', title=gettext('vnc'), status='no machine available')
+    else:
+        return render_template('lab/vnc.html', title=gettext('vnc'), status='error')

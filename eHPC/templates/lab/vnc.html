@@ -1,54 +1,145 @@
 {% extends "base.html" %}
 
 {% block header_ext %}
-    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
     <script type="text/javascript" src="{{ url_for("static", filename="js/vnc/guacamole.min.js") }}"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
+
+    <script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link href="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+
 {% endblock %}
 
 {% block content %}
-    <div id="challenge-left">
-        1111
+    <div id="challenge-left" style="width: 30%;font-size: 400px">
+    EHPC
     </div>
 
-    <div id="challenge-right">
-        <div id="display"></div>
+    <div id="challenge-right" style="padding-top: 0;left: 35%;margin-left: 20px;width: 60%">
+        <div id="display" class="pull-left"></div>
+    </div>
+
+    <div id="btn-div" class="pull-right">
+        <a id="clipboard-btn" data-toggle="modal" data-target="#clipboard">
+            <i class="fa fa-clipboard circle-icon" aria-hidden="true" style="font-size: 30px;color: #000000;"></i>
+        </a>
+    </div>
+
+    <div class="modal fade in" id="clipboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">剪切板</h4>
+                </div>
+                <div class="modal-body" style="height: 300px;font-size: medium">
+                    <textarea id="clipboard-content" class="form-control" style="height: 100%"></textarea>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block footer_ext %}
-    <script type="text/javascript">
-        // Get display div from document
-        var display = document.getElementById("display");
-        // Instantiate client, using an HTTP tunnel for communications.
-        var guac = new Guacamole.Client(
-            new Guacamole.HTTPTunnel("http://127.0.0.1:8080/tunnel")
-        );
-        // Add client to display div
-        display.appendChild(guac.getDisplay().getElement());
-        // Error handler
-        guac.onerror = function (error) {
-            alert(error);
-        };
-        // Connect
-        guac.connect();
-        // Disconnect on close
-        window.onunload = function () {
-            guac.disconnect();
-        };
-        // Mouse
-        var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
-        mouse.onmousedown =
-            mouse.onmouseup =
-                mouse.onmousemove = function (mouseState) {
-                    guac.sendMouseState(mouseState);
+    <script>
+        {% if status == 'success' %}
+            var guac, local_keyboard = false;
+            $(function () {
+                $("#btn-div").draggable({ containment: "#content-wrap", scroll: false });
+
+                var display = document.getElementById("display");
+                guac = new Guacamole.Client(
+                    new Guacamole.HTTPTunnel("http://a002.nscc-gz.cn:10231/server/tunnel")
+                );
+                display.appendChild(guac.getDisplay().getElement());
+                guac.onerror = function (error) {
+                    console.log(error);
                 };
-        // Keyboard
-        var keyboard = new Guacamole.Keyboard(document);
-        keyboard.onkeydown = function (keysym) {
-            guac.sendKeyEvent(1, keysym);
-        };
-        keyboard.onkeyup = function (keysym) {
-            guac.sendKeyEvent(0, keysym);
-        };
+                guac.connect("token={{ token }}");
+                window.onunload = function () {
+                    guac.disconnect();
+                };
+                var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
+                mouse.onmousedown =
+                    mouse.onmouseup =
+                        mouse.onmousemove = function (mouseState) {
+                            if (!guac || !guac.getDisplay())
+                                return;
+                            guac.getDisplay().showCursor(true);
+                            sendScaledMouseState(mouseState);
+                        };
+                var keyboard = new Guacamole.Keyboard(document);
+                keyboard.onkeydown = function (keysym) {
+                    guac.sendKeyEvent(1, keysym);
+                };
+                keyboard.onkeyup = function (keysym) {
+                    guac.sendKeyEvent(0, keysym);
+                };
+
+                var sendScaledMouseState = function sendScaledMouseState(mouseState) {
+                    var scaledState = new Guacamole.Mouse.State(
+                        mouseState.x / guac.getDisplay().getScale(),
+                        mouseState.y / guac.getDisplay().getScale(),
+                        mouseState.left,
+                        mouseState.middle,
+                        mouseState.right,
+                        mouseState.up,
+                        mouseState.down);
+                    guac.sendMouseState(scaledState);
+                };
+
+                guac.getDisplay().onresize = function (width, height) {
+                    var height_to_set = $(".content-wrap").eq(0).height();
+                    var width_to_set = $("#challenge-right").width();
+                    var cur_height = height;
+                    var cur_width = width;
+
+                    var scale_height = height_to_set/cur_height;
+                    var scale_width = width_to_set/cur_width;
+                    guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
+                };
+
+                guac.onclipboard = function (stream, mimetype) {
+                    var reader = new Guacamole.StringReader(stream);
+                    reader.ontext = function (text) {
+                        $("#clipboard-content").val(text);
+                    }
+                };
+                $(window).resize(function () {
+                    if(!guac || !guac.getDisplay()) return;
+                    var height_to_set = $(".content-wrap").eq(0).height();
+                    var width_to_set = $("#challenge-right").width();
+                    var cur_height = guac.getDisplay().getHeight();
+                    var cur_width = guac.getDisplay().getWidth();
+
+                    var scale_height = height_to_set/cur_height;
+                    var scale_width = width_to_set/cur_width;
+                    guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
+                });
+
+                $("#clipboard-content").change(function () {
+                    if(!guac || !guac.getDisplay()) return;
+                    console.log($(this).val());
+                    guac.setClipboard($(this).val());
+                });
+
+                $('#clipboard').on('shown.bs.modal', function () {
+                    keyboard.onkeydown = null;
+                    keyboard.onkeyup = null;
+                });
+
+                $('#clipboard').on('hidden.bs.modal', function () {
+                    keyboard.onkeydown = function (keysym) {
+                        guac.sendKeyEvent(1, keysym);
+                    };
+                    keyboard.onkeyup = function (keysym) {
+                        guac.sendKeyEvent(0, keysym);
+                    };
+                });
+            });
+        {% elif status == 'no machine available' %}
+            $("#display").text("设备已满，请稍后重试");
+        {% elif status == 'error' %}
+            $("#display").text("无法连接vnc服务器");
+        {% endif %}
     </script>
 {% endblock %}

@@ -30,7 +30,7 @@ $(document).ready(function () {
                     $("#del-warning").modal("hide");
                 }
                 else{
-                    alert("删除失败,文件不存在！");
+                    alert_modal("删除失败,文件不存在！");
                 }
             }
         });
@@ -75,7 +75,7 @@ $(document).ready(function () {
                 }
             },
             error: function() {
-                alert("文件下载失败");
+                alert_modal("文件下载失败");
             }
         });
     });

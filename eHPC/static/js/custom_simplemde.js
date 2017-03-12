@@ -32,18 +32,18 @@ function custom_simplemde() {
 
     simplemde.codemirror.on('drop', function (editor, e) {
         if(is_loading){
-            alert("请等待当前上传的完成！");
+            alert_modal("请等待当前上传的完成！");
             return;
         }
         is_loading = true;
         var fileList = e.dataTransfer.files;
         if (fileList.length > 1){
-            alert('一次只能上传一张图片');
+            alert_modal('一次只能上传一张图片');
             is_loading = false;
             return false;
         }
         if(fileList[0].type.indexOf('image') === -1){
-            alert("不是图片！");
+            alert_modal("不是图片！");
             is_loading = false;
             return false;
         }
@@ -78,7 +78,7 @@ function custom_simplemde() {
                     editor.replaceRange("![](" + data['uri'] + ")", pos);
                 }
                 else {
-                    alert("上传图片失败");
+                    alert_modal("上传图片失败");
                 }
                 $("#progress-percent").hide();
                 $("#progress-text").hide();

@@ -122,8 +122,7 @@ $(function () {
                         $(this).text("查看代码");
                     }
                     else if (data['status'] == 'fail'){
-                        $("#code-warning").find("#message").html('获取文件代码失败，请重试!')
-                        $("#code-warning").modal("show");
+                        alert_modal("获取文件代码失败，请重试!");
                     }
                 }
             });

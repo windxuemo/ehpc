@@ -51,7 +51,7 @@ $(document).ready(function () {
     });
 
     $(".delete-appendix").click(function () {
-        var curr_div = $(this).parent().parent()
+        var curr_div = $(this).parent().parent();
         if (curr_div.hasClass("uploaded")) {
             var appendix_id = curr_div.data("appendix-id");
             $.ajax({
@@ -67,7 +67,7 @@ $(document).ready(function () {
                     }
                     else{
                         var str = curr_div.data("appendix-name") + "删除失败，请稍后重试！";
-                        alert(str);
+                        alert_modal(str);
                     }
                 }
             });

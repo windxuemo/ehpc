@@ -13,3 +13,13 @@ $("#language").on('change', function () {
     editor.getSession().setMode(code_mode);
 });
 
+function alert_modal(content, isHtml) {
+    var obj = $("#modal-alert");
+    if (isHtml) {
+        obj.find(".modal-body").html(content);
+    }
+    else {
+        obj.find(".modal-body").text(content);
+    }
+    obj.modal('show');
+}

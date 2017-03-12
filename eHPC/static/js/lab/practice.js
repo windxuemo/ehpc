@@ -85,7 +85,7 @@ $(function () {
                 }
             });
             if (user_sol.length == 0) {
-                alert('请至少选择一项');
+                alert_modal('请至少选择一项');
                 return;
             }
             user_sol = user_sol.join(';');
@@ -109,7 +109,7 @@ $(function () {
                 }
             });
             if (user_sol == null) {
-                alert('请至少选择一项');
+                alert_modal('请至少选择一项');
                 return;
             }
         }

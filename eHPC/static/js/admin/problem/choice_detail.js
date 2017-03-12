@@ -34,7 +34,7 @@ $(document).ready(function () {
         $(this).click(function () {
             var len = $("#options").find(".btn.btn-default").length;
             if(len==2){
-                alert("至少需要两个选项");
+                alert_modal("至少需要两个选项");
                 return;
             }
 

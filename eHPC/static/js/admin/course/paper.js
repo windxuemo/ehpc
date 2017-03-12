@@ -25,7 +25,7 @@ $(document).ready(function () {
                         location.reload();
                     }
                     else {
-                        alert("保存失败");
+                        alert_modal("保存失败");
                     }
                 }
             });
@@ -53,7 +53,7 @@ $(document).ready(function () {
                     $("#del-warning").modal("hide");
                 }
                 else {
-                    alert("删除失败");
+                    alert_modal("删除失败");
                 }
             }
         });
@@ -76,7 +76,7 @@ $(document).ready(function () {
                     $("#paper-id-field").val($(obj).parent().parent().data('paper_id'));
                 }
                 else {
-                    alert("获取信息失败");
+                    alert_modal("获取信息失败");
                 }
             }
         });

@@ -19,7 +19,7 @@ $(document).ready(function () {
                     $("#del-warning").modal("hide");
                 }
                 else {
-                    alert("删除失败");
+                    alert_modal("删除失败");
                 }
             }
         });

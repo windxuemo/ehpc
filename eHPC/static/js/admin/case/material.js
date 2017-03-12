@@ -31,7 +31,7 @@ $(document).ready(function () {
                     $("#del-warning").modal("hide");
                 }
                 else {
-                    alert("删除失败");
+                    alert_modal("删除失败");
                 }
             }
         });
@@ -58,7 +58,7 @@ $(document).ready(function () {
             });
             this.on("error", function (file) {
                 error = true;
-                alert("上传失败");
+                alert_modal("上传失败");
             });
             this.on("queuecomplete", function (file) {
                 if (!error) {

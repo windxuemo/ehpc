@@ -43,7 +43,7 @@ $(document).ready(function () {
             }
         });
         if(your_solution.length==0){
-            alert("请至少选择一项");
+            alert_modal("请至少选择一项");
             return false;
         }
         your_solution = your_solution.join(';');

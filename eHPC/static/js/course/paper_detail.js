@@ -349,7 +349,7 @@ $(document).ready(function () {
                     $("html,body").animate({scrollTop:0}, 300);//回到试卷顶部查看结果
                 }
                 else {
-                    alert("失败");
+                    alert_modal("失败");
                 }
             }
         })

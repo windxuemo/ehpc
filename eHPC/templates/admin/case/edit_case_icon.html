@@ -76,14 +76,13 @@
                         processData: false,
                         success: function (data) {
                             if (data["status"] == "success") {
-                                alert("上传成功");
                                 location.reload();
                             }
                             else if(data.status == "fail"){
-                                alert("上传失败");
+                                alert_modal("上传失败");
                             }
                             else {
-                                alert("文件错误")
+                                alert_modal("文件错误")
                             }
                         }
                     });

@@ -133,10 +133,10 @@
                     },
                     error: function () {
                         if ($('#join-or-exit-group').hasClass('label-success')) {
-                            alert('加入群组失败, 请重试');
+                            alert_modal('加入群组失败, 请重试');
                         }
                         else {
-                            alert('退出群组失败, 请重试');
+                            alert_modal('退出群组失败, 请重试');
                         }
                     }
                 });

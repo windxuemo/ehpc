@@ -56,7 +56,7 @@ $(function () {
         var tag = $(".case-tags")[0].value;
         var reg = /\S/;
         if (!reg.test(tag)) {
-            alert("标签名为空，请重新输入！");
+            alert_modal("标签名为空，请重新输入！");
         }
         else {
             var tag_value = $("input[name='tags']")[0].value;

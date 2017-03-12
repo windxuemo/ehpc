@@ -34,7 +34,7 @@ $(document).ready(function () {
         });
 
         if(flag){
-            alert("请填写所有空");
+            alert_modal("请填写所有空");
             return;
         }
 

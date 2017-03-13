@@ -4784,18 +4784,20 @@ div.no-margin {
 }
 
 /* 模态框自定义样式 */
-.modal.fade.in {
-    top: 50%; transform: translateY(-50%);
+.modal.center {
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-.modal-dialog {
+.modal-dialog.modal-alert {
     position: relative;
     display: table;
     overflow-y: auto;
     overflow-x: auto;
     width: auto;
     min-width: 300px;
-    max-width: 600px;
+    max-width: 500px;
+    margin: auto;
 }
 
 .modal-content.modal-alert {
@@ -4803,17 +4805,19 @@ div.no-margin {
     vertical-align: middle;
     position: relative;
     z-index: 2;
-    max-width: 500px;
     box-sizing: border-box;
     width: 100%;
     padding: 15px 30px;
     box-shadow: 0 0 10px #000;
     text-align: left;
     font-size: medium;
+    overflow: auto;
+    max-height: 500px;
 }
 
 .close.modal-alert {
     position: absolute;
+    z-index: 999;
     top: 5px;
     right: 10px;
 }

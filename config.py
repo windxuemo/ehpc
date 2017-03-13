@@ -78,6 +78,8 @@ class Config:
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
     ALLOWED_RESOURCE_TYPE = {'pdf', 'video', 'audio'}
 
+    VNC_SERVER_URL = 'http://10.133.100.145:8080/server/controller'
+
     @staticmethod
     def init_app(app):
         pass

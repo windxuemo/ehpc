@@ -4,7 +4,7 @@
 import os
 from datetime import datetime
 
-from flask import render_template, request, jsonify, abort
+from flask import render_template, request, jsonify, abort, current_app
 from flask_babel import gettext
 from flask_login import login_required, current_user
 
@@ -169,14 +169,17 @@ def my_progress(kid):
 def vnc():
     status = 'repeated token'
     token = ''
+    req = None
     while status == 'repeated token':
         token = ''.join(random.sample(string.ascii_letters + string.digits, 32))
-        req = requests.post("http://a002.nscc-gz.cn:10231/server/controller", params={"This_is_a_very_secret_token": token,
-                                                                                      "user_id": current_user.id})
+        req = requests.post(current_app.config['VNC_SERVER_URL'], params={"This_is_a_very_secret_token": token,
+                                                                          "user_id": current_user.id})
         status = req.json()['status']
     print status
     if status == 'success':
         return render_template('lab/vnc.html', title=gettext('vnc'), status='success', token=token)
+    elif status == 'reconnect success':
+        return render_template('lab/vnc.html', title=gettext('vnc'), status='success', token=req.json()['token'])
     elif status == 'no machine available':
         return render_template('lab/vnc.html', title=gettext('vnc'), status='no machine available')
     else:

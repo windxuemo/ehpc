@@ -12,10 +12,10 @@
             <li><a href="/">{{ _('Index') }}</a></li>
             <li><a href="{{ url_for('group.index') }}">{{ _('Group') }}</a></li>
             <li>
-                <a href="{{ url_for('group.group_view', gid=topic.groupID) }}">{{ topic.group.title | truncate(20) }}</a>
+                <a href="{{ url_for('group.group_view', gid=topic.groupID) }}">{{ topic.group.title | truncate(20, True) }}</a>
             </li>
             <li class="active">
-                <a href="{{ url_for('group.topic_view', tid=topic.id) }}">{{ topic.title | truncate(20) }}</a>
+                <a href="{{ url_for('group.topic_view', tid=topic.id) }}">{{ topic.title | truncate(20, True) }}</a>
             </li>
         </ol>
 

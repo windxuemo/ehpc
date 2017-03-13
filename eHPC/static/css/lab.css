@@ -16,7 +16,6 @@
 }
 
 .lab-item h1, h2, h3, h4 {
-    font-weight: 600;
     margin-top: 0;
 }
 
@@ -51,13 +50,13 @@
 }
 
 #labs .lab-item .lab-content h2 {
+    font-size: 150%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 15px;
-    background: #46c37b;
-    color: #fff;
-    font-weight: 500;
+    background: #cccccc;
+    color: black;
     -webkit-border-radius: 3px 3px 0 0;
     -moz-border-radius: 3px 3px 0 0;
     -ms-border-radius: 3px 3px 0 0;
@@ -116,7 +115,7 @@
     height: 5px;
     overflow: visible;
     background: #f0f0f0;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .progress-bar {
@@ -145,10 +144,8 @@
 
 .progress-value {
     font-size: 13px;
-    color: #D5D6E2;
-    position: absolute;
-    top: 16px;
-    right: 0;
+    padding-left: 10px;
+    color: black;
 }
 
 @-webkit-keyframes animate-positive {

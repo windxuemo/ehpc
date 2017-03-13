@@ -11,7 +11,7 @@
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">{{ _('Index') }}</a></li>
             <li><a href="{{ url_for('group.index') }}">{{ _('Group') }}</a></li>
-            <li><a href="{{ url_for('group.group_view', gid=group.id) }}">{{ group.title | truncate(20) }}</a>
+            <li><a href="{{ url_for('group.group_view', gid=group.id) }}">{{ group.title | truncate(20, True) }}</a>
             </li>
             <li class="active">
                 <a href="{{ url_for('group.topic_new', gid=group.id) }}">新建话题</a></li>

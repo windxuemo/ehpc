@@ -5,7 +5,7 @@
             <li><a href="/">{{ _('Index') }}</a></li>
             <li><a href="{{ url_for('group.index') }}">{{ _('Group') }}</a></li>
             <li class="active">
-                <a href="{{ url_for('group.group_view', gid=group.id) }}">{{ group.title | truncate(20) }}</a></li>
+                <a href="{{ url_for('group.group_view', gid=group.id) }}">{{ group.title | truncate(20, True) }}</a></li>
         </ol>
 
         <div class="group-header">

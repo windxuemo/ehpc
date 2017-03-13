@@ -5,7 +5,7 @@
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">首页</a></li>
             <li><a href="{{ url_for('article.index') }}">资讯列表</a></li>
-            <li class="active">{{ article.title | truncate(30) }}</li>
+            <li class="active">{{ article.title | truncate(30, True) }}</li>
         </ol>
 
         <section class="es-section article-content">

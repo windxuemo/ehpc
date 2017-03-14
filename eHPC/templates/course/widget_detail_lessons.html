@@ -11,7 +11,15 @@
                                 <a href="{{ url_for('course.material', mid=m.id) }}" title="{{ m.name }}">
                                     <i class="es-icon es-icon-undone status-icon"></i>
                                     <span class="title"> {{ m.name }}</span>
+                                </a>
 
+                                <a href="{{ url_for('static', filename='resource/' + m.uri) }}" target="_blank">
+                                    <span class="course-type" style="right: 6%;height: 22px">
+                                        <i class="es-icon es-icon-download" style="font-size: 22px"></i>
+                                    </span>
+                                </a>
+
+                                <a href="{{ url_for('course.material', mid=m.id) }}" title="{{ m.name }}">
                                     <span class="course-type">
                                         <i class="{{ m.m_type | get_icon_class }}"></i>
                                     </span>

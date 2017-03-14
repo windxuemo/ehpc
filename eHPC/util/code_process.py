@@ -236,7 +236,7 @@ class ehpc_client:
         if not self.upload(myPath, job_filename, jobscript):
             return "ERROR"
         jobPath = myPath + "/" + job_filename
-        tmpdata = self.open("/job/" + TH2_MACHINE_NAME + "/", data={"jobfile": jobPath})
+        tmpdata = self.open("/job/" + TH2_MACHINE_NAME + "/", data={"jobscript" : jobscript, "jobfilepath" : jobPath})
         return tmpdata["output"]["jobid"]
 
     def ehpc_compile(self, is_success, myPath, input_filename, output_filename, language):
@@ -285,7 +285,7 @@ class ehpc_client:
         tmpdata = self.open("/job/" + TH2_MACHINE_NAME + "/" + str(jobid) + "/")
         # print tmpdata
         while True:
-            if tmpdata["output"][str(jobid)]["State"] == "COMPLETED" or tmpdata["output"][str(jobid)]["State"] == "FAILED":
+            if tmpdata["output"]["status"][jobid] == "Success" or tmpdata["output"]["status"][jobid] == "Failed":
                 break
 
             time.sleep(5)
@@ -360,9 +360,9 @@ if __name__ == '__main__':
         exit(-1)
 
     is_success = [False]
-    compile_out = mc.ehpc_compile(is_success, TH2_MY_PATH, input_filename, output_filename, "mpicc")
+    compile_out = mc.ehpc_compile(is_success, TH2_MY_PATH, input_filename, output_filename, "mpi")
     print compile_out, type(compile_out)
     if not is_success[0]:
         exit(-1)
-    run_out = mc.ehpc_run(output_filename, job_filename, TH2_MY_PATH, "24", "1", "2")
+    run_out = mc.ehpc_run(output_filename, job_filename, TH2_MY_PATH, "4", "1", "2")
     print run_out, type(run_out)

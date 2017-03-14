@@ -4,6 +4,7 @@
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -88,6 +89,16 @@
                 showIcons: ["code", "table"],
                 tabSize: 4,
                 spellChecker: false
+            });
+
+            edt.codemirror.on("update", function() {
+                $("#course_about")[0].innerHTML = edt.value();
+                if (edt.value()) {
+                    hide_validate_info(".textarea-errors");
+                }
+                else {
+                    $(".textarea-errors")[0].innerHTML = '<ul class="parsley-errors-list filled" style="color: red;" id="parsley-id-9"><li class="parsley-required">请输入课程描述</li></ul>';
+                }
             });
 
             $('#course-edit-btn').click(function () {

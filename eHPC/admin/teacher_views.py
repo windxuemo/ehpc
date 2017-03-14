@@ -335,8 +335,13 @@ def course_homework_create(course_id):
                                  'homework_%d' % curr_homework.id))
         os.makedirs(os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], 'course_%d' % curr_course.id,
                                  'homework_%d' % curr_homework.id))
-        appendix_files = request.files.getlist('appendix')
-        for appendix in appendix_files:
+        appendix_files = request.files
+
+        cnt = 0
+        while (cnt < len(appendix_files)):
+            index = 'file[%d]' % cnt
+            appendix = appendix_files[index]
+
             file_name = custom_secure_filename(appendix.filename)
             extension = file_name[file_name.rfind('.') + 1:]
             file_type = extension_to_file_type(extension)
@@ -370,6 +375,7 @@ def course_homework_create(course_id):
                                        homework=curr_homework,
                                        msg=gettext("homework appendix upload failed"),
                                        title=gettext('Course Homework edit'))
+            cnt = cnt + 1
 
         return redirect(url_for('admin.course_homework', course_id=curr_course.id))
 
@@ -406,15 +412,12 @@ def course_homework_edit(course_id, homework_id):
         curr_homework.description = request.form['description']
         curr_homework.deadline = request.form['deadline']
         db.session.commit()
-        appendix_files = request.files.getlist('appendix')
-        for appendix in appendix_files:
-            if appendix.filename == "":
-                return render_template('admin/course/homework_edit.html',
-                                       course=curr_course,
-                                       option="edit",
-                                       homework=curr_homework,
-                                       msg=gettext("save homework successfully"),
-                                       title=gettext('Course Homework Edit'))
+        appendix_files = request.files
+
+        cnt = 0
+        while (cnt < len(appendix_files)):
+            index = 'file[%d]' % cnt
+            appendix = appendix_files[index]
             file_name = custom_secure_filename(appendix.filename)
             extension = file_name[file_name.rfind('.') + 1:]
             cur_appendix = HomeworkAppendix(name=file_name, homework_id=curr_homework.id, user_id=current_user.id,
@@ -451,6 +454,7 @@ def course_homework_edit(course_id, homework_id):
                                        homework=curr_homework,
                                        msg=gettext("homework info saved,homework appendix upload failed"),
                                        title=gettext('Course Homework edit'))
+            cnt = cnt + 1
 
         return render_template('admin/course/homework_edit.html',
                                course=curr_course,

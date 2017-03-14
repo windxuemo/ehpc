@@ -7,6 +7,7 @@
     <link href="//cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
     <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+    <script src="//cdn.bootcss.com/dropzone/4.3.0/min/dropzone.min.js"></script>
 
 {% endblock %}
 
@@ -42,10 +43,10 @@
 
                     <div class="panel-body">
                         {% if msg %}
-                            <div class="text-center alert alert-success alert-dismissible" role="alert">
+                            <!--div class="text-center alert alert-success alert-dismissible" role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span></button>
-                                {{ msg }}</div>
+                                {{ msg }}</div-->
                         {% endif %}
                         <form id="course-homework-form" method="post" class="form-horizontal" enctype="multipart/form-data"
                               action="{% if option == "edit"  %}
@@ -71,14 +72,13 @@
                                         <input class="form-control" size="16" readonly=""
                                                required data-parsley-required-message="请设置作业截止日期"
                                                data-parsley-errors-container="#deadline-errors"
-                                               value="{% if option == "edit"  %}{{ homework.deadline | unite_time_format }}{% endif %}" type="text">
+                                               value="{% if option == "edit"  %}{{ homework.deadline | unite_time_format }}{% endif %}" type="text" onchange="hide_validate_info('#deadline-errors');">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                                     </div>
                                     <div id="deadline-errors"></div>
                                 </div>
                                 <input name="deadline" id="homework-deadline"
-                                       required data-parsley-required-message="请设置作业截止日期"
                                        value="{% if option == "edit"  %}{{ homework.deadline }}{% endif %}" type="hidden"><br>
                             </div>
 
@@ -90,7 +90,7 @@
                                     <textarea class="form-control" id="homework-description" name="description" data-provide="markdown"
                                                 rows="10" data-img-upload-url="{{ url_for("markdown_files.images") }}"
                                                 data-parsley-required-message="请输入作业内容"
-                                                data-parsley-errors-container="#content-errors" required onchange="hide_validate_info('#content-errors');">{% if option == "edit"  %}{{ homework.description }}{% endif %}</textarea>
+                                                data-parsley-errors-container="#content-errors" required>{% if option == "edit"  %}{{ homework.description }}{% endif %}</textarea>
                                     <div id="content-errors" class="textarea-errors"></div>
                                 </div>
                             </div>
@@ -114,9 +114,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="input-group">
-                                        <input id="homework-appendix" type="file" name="appendix" style="display: none;" multiple>
-                                        <span class="input-group-addon" onclick="$('input[id=homework-appendix]').click();" style="cursor: pointer; background-color: #e7e7e7"><i class="fa fa-folder-open"></i></span>
-                                        <input id="filenameCover" class="form-control" type="text" readonly="readonly">
+                                        <span id="select-homework-appendix" class="btn btn-default">上传附件</span>
                                     </div>
                                 </div>
                             </div>
@@ -135,10 +133,53 @@
         </div>
     </div>
 
+    <div id="upload-status" class="upload-status">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" id="dialog-close-btn">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"><i class="glyphicon glyphicon-upload"></i>上传文件状态</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table table-striped files" id="previews">
+                        <div class="table table-striped files" id="previews">
+                            <div id="template" class="file-row">
+                                <div>
+                                    <span class="name" data-dz-name></span>
+                                    <span class="size" data-dz-size style="margin-left: 10px"></span>
+                                    <strong class="error text-danger" data-dz-errormessage></strong>
+                                </div>
+                                <div>
+                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block footer_ext %}
     <script src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
     <script src='{{ url_for("static", filename="js/admin/course/homework.js") }}'></script>
+    <script type="text/javascript" language="JavaScript">
+        var back_to_list = "{{ url_for('admin.course_homework', course_id=course.id) }}";
+        var options = $("#homework-op").val();
+        var edt = custom_simplemde({
+            element: $("#homework-description")[0],
+            autosave: true,
+            showIcons: ["code", "table"],
+            tabSize: 4,
+            spellChecker: false
+        });
+        {% if msg %}
+            alert_modal("保存成功！");
+        {% endif %}
+    </script>
 
 {% endblock %}

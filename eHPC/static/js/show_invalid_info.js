@@ -17,3 +17,7 @@ function preview_picture(event) {
     };
     reader.readAsDataURL(this.files[0]);
 }
+
+function hide_validate_info(ele) {
+    $(ele)[0].innerHTML = "";
+}

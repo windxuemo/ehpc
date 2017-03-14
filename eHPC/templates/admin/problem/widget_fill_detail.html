@@ -1,5 +1,6 @@
 {% block header_ext %}
     <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
 {% endblock %}
 
 <form   {% if mode == 'practice' and op == 'create' %} action="{{ url_for('admin.question_create', question_type='fill') }}" {% endif %}
@@ -10,7 +11,7 @@
     <div class="form-group" id="classify">
         <label>知识点&nbsp&nbsp</label>
         <select class="selectpicker" name="classify" multiple data-live-search="true"
-                data-parsley-required-message="请至少选择一个知识点" data-parsley-errors-container="#classify-errors" required>
+                data-parsley-required-message="请至少选择一个知识点" data-parsley-errors-container="#classify-errors" required onchange="hide_validate_info('#classify-errors');">
             {% for classify in classifies %}
                 <option value="{{ classify.id }}">{{ classify.name }}</option>
             {% endfor %}
@@ -77,5 +78,16 @@
         tabSize: 4,
         spellChecker: false,
         previewRender: latex_support
+    });
+    $(document).ready(function () {
+        edt1.codemirror.on("update", function () {
+            $("#content-editor")[0].innerHTML = edt1.value();
+            if (edt1.value()) {
+                hide_validate_info(".textarea-errors");
+            }
+            else {
+                $(".textarea-errors")[0].innerHTML = '<ul class="parsley-errors-list filled" style="color: red;" id="parsley-id-9"><li class="parsley-required">请输入题干</li></ul>';
+            }
+        });
     });
 </script>

@@ -52,6 +52,16 @@ $(function () {
         $("#case-edit-status").addClass("hide");
     });
 
+    simplemde.codemirror.on("update", function () {
+        $("#target-editor")[0].innerHTML = simplemde.value();
+        if (simplemde.value()) {
+            hide_validate_info(".textarea-errors");
+        }
+        else {
+            $(".textarea-errors")[0].innerHTML = '<ul class="parsley-errors-list filled" style="color: red;" id="parsley-id-9"><li class="parsley-required">请输入案例描述</li></ul>';
+        }
+    });
+
     $("#add-tag-btn").click(function () {
         var tag = $(".case-tags")[0].value;
         var reg = /\S/;

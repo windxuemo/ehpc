@@ -1,0 +1,162 @@
+html, body {
+    margin:0;
+    height:100%;
+}
+
+.content-total {
+    min-height:100%;
+    position: relative;
+}
+
+.vnc-nav{
+    font-size: 17px;
+    color: #c1c1c1;
+}
+
+.vnc-nav:hover{
+    cursor: pointer;
+}
+
+.vnc-navbar {
+    background: #212121;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    z-index: 1;
+}
+
+.fullscreen-vnc-navbar {
+    background: #212121;
+    position: relative;
+    top: -45px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    z-index: 1;
+    transition: all 0.5s ease-in-out 0s;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    -moz-transition: all 0.5s ease-in-out 0s;
+}
+
+.fullscreen-vnc-navbar:hover {
+    position: relative;
+    top: 0;
+    transition: all 0.5s ease-in-out 0s;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    -moz-transition: all 0.5s ease-in-out 0s;
+}
+
+
+.navbar-brand{
+    font-size: 25px;
+    color: #c1c1c1;
+}
+
+.content-holder {
+    background: #e1e1e1;
+    padding-top: 50px;
+    padding-bottom:71px;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.content-holder-full{
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.content-footer {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.content-footer .copyright {
+    background: #212121;
+    border-top: 1px solid #444;
+    text-align: center;
+    padding: 20px 0;
+    line-height: 30px;
+    color: #c1c1c1;
+}
+
+.content-footer .copyright a {
+    color: #c1c1c1;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.content-footer .copyright a:hover {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    color: #fff;
+}
+
+.vnc-left,
+.vnc-right{
+    overflow: auto;
+    position: absolute;
+    top: 50px;
+    bottom: 71px;
+    width: 35%;
+    left: 2%;
+}
+
+.vnc-right{
+    width: 61%;
+    left: 37%;
+    overflow: hidden;
+}
+
+.vnc-left{
+    background: #FFFFFF;
+    border-left: solid 1px #FFFFFF;
+}
+
+.vnc-whole{
+    overflow: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.circle-icon {
+    background: rgba(161, 171, 255, 0.86);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 45px;
+    vertical-align: middle;
+    padding: 0;
+}
+
+.circle-icon:hover {
+    background: rgba(119, 147, 255, 0.86);
+    cursor: pointer;
+}
+
+.modal.center {
+    top: 50%;
+    transform: translateY(-50%);
+}

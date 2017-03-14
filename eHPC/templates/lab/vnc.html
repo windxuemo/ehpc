@@ -1,28 +1,15 @@
-{% extends "base.html" %}
+{% extends "lab/vnc_base.html" %}
 
 {% block header_ext %}
-    <script type="text/javascript" src="{{ url_for("static", filename="js/vnc/guacamole.min.js") }}"></script>
-    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
-
-    <script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <link href="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
 
 {% endblock %}
 
 {% block content %}
-    <div id="challenge-left" style="width: 30%;font-size: 400px">
-    EHPC
+    <div class="vnc-left" style="text-align: center">
+        <img src="{{ url_for("static", filename="images/ehpc.png") }}">
     </div>
-
-    <div id="challenge-right" style="padding-top: 0;left: 35%;margin-left: 20px;width: 60%">
-        <div id="display" class="pull-left"></div>
-    </div>
-
-    <div id="btn-div" class="pull-right">
-        <a id="clipboard-btn" data-toggle="modal" data-target="#clipboard">
-            <i class="fa fa-clipboard circle-icon" aria-hidden="true" style="font-size: 30px;color: #000000;"></i>
-        </a>
+    <div class="vnc-right">
+        <div id="display"></div>
     </div>
 
     <div class="modal fade center" id="clipboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -42,10 +29,45 @@
 {% block footer_ext %}
     <script>
         {% if status == 'success' %}
-            var guac, local_keyboard = false;
+            var header = $(".vnc-navbar").eq(0), footer = $(".content-footer").eq(0), content = $(".content-holder"),
+                content_left = $(".vnc-left"), content_right = $(".vnc-right");
+            var guac, clipboard = $("#clipboard");
+            var is_full = false;
             $(function () {
-                $("#btn-div").draggable({ containment: "#content-wrap", scroll: false });
+                $("#btn-fullscreen").click(function () {
+                    if(!is_full){
+                        is_full = true;
+                        $("#btn-fullscreen").text("返回");
+                        header.removeClass("vnc-navbar");
+                        header.addClass("fullscreen-vnc-navbar");
+                        footer.hide("blind", {direction: "down"}, "normal");
+                        content_left.hide("blind", {direction: "left"}, "normal", function () {
+                            content_right.removeClass("vnc-right");
+                            content_right.addClass("vnc-whole");
+                            content.removeClass("content-holder");
+                            content.addClass("content-holder-full");
+                            $("#display").css("position", "absolute");
+                            $(window).trigger("resize");
+                        });
+                    }
+                    else{
+                        is_full = false;
+                        $("#btn-fullscreen").text("全屏");
+                        header.removeClass("fullscreen-vnc-navbar");
+                        header.addClass("vnc-navbar");
+                        footer.show("blind", {direction: "down"}, "normal");
+                        content_left.show("blind", {direction: "left"}, "normal");
+                        content_right.removeClass("vnc-whole");
+                        content_right.addClass("vnc-right");
+                        content.removeClass("content-holder-full");
+                        content.addClass("content-holder");
+                        $("#display").css("position", "absolute");
+                        $(window).trigger("resize");
+                    }
+                });
+            });
 
+            $(function () {
                 var display = document.getElementById("display");
                 guac = new Guacamole.Client(
                     new Guacamole.HTTPTunnel("http://a002.nscc-gz.cn:10231/server/tunnel")
@@ -57,6 +79,17 @@
                 guac.connect("token={{ token }}");
                 window.onunload = function () {
                     guac.disconnect();
+                };
+                var sendScaledMouseState = function sendScaledMouseState(mouseState) {
+                    var scaledState = new Guacamole.Mouse.State(
+                        mouseState.x / guac.getDisplay().getScale(),
+                        mouseState.y / guac.getDisplay().getScale(),
+                        mouseState.left,
+                        mouseState.middle,
+                        mouseState.right,
+                        mouseState.up,
+                        mouseState.down);
+                    guac.sendMouseState(scaledState);
                 };
                 var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
                 mouse.onmousedown =
@@ -75,27 +108,18 @@
                     guac.sendKeyEvent(0, keysym);
                 };
 
-                var sendScaledMouseState = function sendScaledMouseState(mouseState) {
-                    var scaledState = new Guacamole.Mouse.State(
-                        mouseState.x / guac.getDisplay().getScale(),
-                        mouseState.y / guac.getDisplay().getScale(),
-                        mouseState.left,
-                        mouseState.middle,
-                        mouseState.right,
-                        mouseState.up,
-                        mouseState.down);
-                    guac.sendMouseState(scaledState);
-                };
-
                 guac.getDisplay().onresize = function (width, height) {
-                    var height_to_set = $(".content-wrap").eq(0).height();
-                    var width_to_set = $("#challenge-right").width();
+                    if(!guac || !guac.getDisplay()) return;
+                    var height_to_set = content_right.eq(0).height();
+                    var width_to_set = content_right.eq(0).width();
                     var cur_height = height;
                     var cur_width = width;
 
                     var scale_height = height_to_set/cur_height;
                     var scale_width = width_to_set/cur_width;
                     guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
+                    $("#display").css("position", "absolute");
+                    $(window).trigger("resize");
                 };
 
                 guac.onclipboard = function (stream, mimetype) {
@@ -106,14 +130,17 @@
                 };
                 $(window).resize(function () {
                     if(!guac || !guac.getDisplay()) return;
-                    var height_to_set = $(".content-wrap").eq(0).height();
-                    var width_to_set = $("#challenge-right").width();
+                    var height_to_set = content_right.eq(0).height();
+                    var width_to_set = content_right.eq(0).width();
                     var cur_height = guac.getDisplay().getHeight();
                     var cur_width = guac.getDisplay().getWidth();
 
                     var scale_height = height_to_set/cur_height;
                     var scale_width = width_to_set/cur_width;
                     guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
+
+                    guac.getDisplay().getDefaultLayer().resize(guac.getDisplay().getDefaultLayer().height * 4 / 3, guac.getDisplay().getDefaultLayer().height);
+                    $("#display").css("left", 0.5 * (content_right.width() - $("#display").width()));
                 });
 
                 $("#clipboard-content").change(function () {
@@ -122,12 +149,12 @@
                     guac.setClipboard($(this).val());
                 });
 
-                $('#clipboard').on('shown.bs.modal', function () {
+                clipboard.on('shown.bs.modal', function () {
                     keyboard.onkeydown = null;
                     keyboard.onkeyup = null;
                 });
 
-                $('#clipboard').on('hidden.bs.modal', function () {
+                clipboard.on('hidden.bs.modal', function () {
                     keyboard.onkeydown = function (keysym) {
                         guac.sendKeyEvent(1, keysym);
                     };
@@ -137,9 +164,9 @@
                 });
             });
         {% elif status == 'no machine available' %}
-            $("#display").text("设备已满，请稍后重试");
+            display.text("设备已满，请稍后重试");
         {% elif status == 'error' %}
-            $("#display").text("无法连接vnc服务器");
+            display.text("无法连接vnc服务器");
         {% endif %}
     </script>
 {% endblock %}

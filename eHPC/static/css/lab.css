@@ -345,21 +345,3 @@
     color: #000;
     font-size: 18px;
 }
-
-/*图标*/
-.circle-icon {
-    background: rgba(161, 171, 255, 0.86);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 45px;
-    vertical-align: middle;
-    padding: 0;
-}
-
-.circle-icon:hover {
-    background: rgba(119, 147, 255, 0.86);
-    cursor: pointer;
-}
-

@@ -4603,14 +4603,32 @@ hr {
 .upload-status {
     display: none;
     width: 600px;
-    top: auto;
-    bottom: 0px;
-    left: auto;
-    right: 30px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
     visibility: visible;
     z-index: 42;
-    position: absolute;
     overflow: hidden;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 6px;
+    background-color: #fff;
+}
+.upload-status .modal-dialog {
+    margin: 0;
+    width: inherit;
+}
+.upload-status .modal-content {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+}
+.upload-status .modal-body {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.upload-status button:active {
+    outline: none;
 }
 
 /* 创建案例 */

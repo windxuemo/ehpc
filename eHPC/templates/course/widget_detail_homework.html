@@ -33,7 +33,7 @@
                     <div id="my-uploads" class="homework-content">
                         <div style="margin-bottom: 10px;"><b>我的提交：</b></div>
                         {% for a in my_upload %}
-                            <div id="my-submit{{ a.id }}" class="alert alert-info alert-dismissable" role="alert"
+                            <div id="my-submit{{ a.id }}" class="alert alert-success alert-dismissable" role="alert"
                                  data-upload-name="{{ a.name }}" data-upload-id="{{ a.id }}">
                                 <button type="button" class="close" aria-label="Close">
                                     <span class="delete-upload" aria-hidden="true" onclick="delete_upload(this);">&times;</span></button>
@@ -48,16 +48,13 @@
                         {% if curr_time < homework.deadline %}
                             <form id="homework-file-form">
                                 <div class="form-group">
-                                    <div class="input-group col-md-8 col-sm-8 homework-file-item">
-                                        <input id="homework-file" type="file" name="file" style="display: none;">
-                                        <span class="input-group-addon" onclick="$('input[id=homework-file]').click();" style="cursor: pointer; background-color: #e7e7e7"><i class="fa fa-folder-open"></i></span>
-                                        <input id="filenameCover" class="form-control" type="text" readonly="readonly">
-                                    </div>
+                                    <span id="select-homework-files" class="btn btn-info" style="margin-top: 10px;"><i class="fa fa-folder-open"></i>选择文件</span>
+                                    <p class="help-block">你可以上传pdf,zip,rar格式的文件，一次最多选择10个文件，不超过50M</p>
                                 </div>
+                                <div id="file-selected-preview"></div>
                                 <input type="hidden" name="op" value="upload">
                                 <div class="form-group">
-                                    <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">上传</span>
-                                    <span id="homework-upload-status" class="col-md-8 col-sm-8 homework-file-item hide" style="padding-top: 5px;"></span>
+                                    <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">开始上传</span>
                                 </div>
                             </form>
                         {% else %}
@@ -70,104 +67,13 @@
             {% endif %}
         </div>
     </div>
-
 </div>
 
 {% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/course/homework_upload.js') }}"></script>
     <script>
-    function delete_upload(e) {
-        var event = e || window.event;
-        var curr_ele = event || event.srcElement;
-        var curr_div = curr_ele.parentNode.parentNode;
-        var upload_id = curr_div.getAttribute("data-upload-id");
-        $.ajax({
-            type: "post",
-            url: "{{ url_for('course.homework_upload', hid=homework.id) }}",
-            data: {
-                op: "del",
-                upload_id: upload_id
-            },
-            success: function (data) {
-                if(data.status == "success"){
-                    curr_div.remove();
-                }
-                else{
-                    var str = curr_div.data("upload-name") + "删除失败，请稍后重试！";
-                    show_invalid_info("#homework-upload-status","#homework-upload-status",str);
-                }
-            }
-        });
-    }
-    $(document).ready(function() {
-        var description = $("#homework-description");
-        description.html(latex_support(description.data('to-render')));
-        description.attr('data-to-render', null);
-
-        $('input[id=homework-file]').change(function() {
-            $('#filenameCover').val($(this).val());
-        });
-
-        $("#return-homework-list").click(function() {
-            $("#course-lists").removeClass('active');
-            $("#course-about").removeClass('active');
-            $('#course-test').removeClass('active');
-            $('#course-comment').removeClass('active');
-            $('#course-homework').addClass('active');
-            /* 加载作业列表内容 */
-            $.ajax({
-                url: "{{ url_for('course.homework_list', cid=homework.course_id) }}",
-                dataType: "json",
-                contentType: 'application/json;charset=UTF-8',
-                success: function (html) {
-                    $("#course-homework").empty().html(html.data);
-                },
-                error: function () {
-                    $("#course-homework").empty().html("<h2 style='text-align: center'> 作业内容为空或者出现其他错误 </h2>");
-                }
-            });
-        });
-
-        $("#homework-upload-btn").click(function() {
-            $.ajax({
-                url: "{{ url_for('course.homework_upload', hid=homework.id) }}",
-                type: 'post',
-                data: new FormData($('#homework-file-form')[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    if(data.status == "success") {
-                        str = "文件 " + $("#homework-file")[0].files[0].name + " 上传成功！";
-                        show_invalid_info("#homework-upload-status","#homework-upload-status",str);
-                        $('#filenameCover').val("");
-                        var file_list = $("#homework-file")[0].files;
-                        var uploadFilehtml = ''
-                        + '<div id="my-submit' + data["new_upload_id"] + '" class="alert alert-info alert-dismissable" role="alert" data-upload-name="'
-                        + data["new_upload_name"] + '" data-upload-id="' + data["new_upload_id"] + '">'
-                        + '<button type="button" class="close" aria-label="Close">'
-                        + '<span class="delete-upload" aria-hidden="true" onclick="delete_upload(this);">&times;</span></button>'
-                        + '<i class="es-icon es-icon-description status-icon pull-left"></i>'
-                        + '<span class="col-md-8 col-sm-8">' + data["new_upload_name"] + '</span>'
-                        + '<span>提交于：' + data["new_upload_submit_time"]  + '</span>'
-                        + '</div>';
-                        $("#my-uploads").append(uploadFilehtml);
-                    }
-                    else if (data.status == "empty") {
-                        show_invalid_info("#homework-upload-status","#homework-upload-status","未选择文件！");
-                        $('#filenameCover').val("");
-                    }
-                    else {
-                        show_invalid_info("#homework-upload-status","#homework-upload-status","文件格式不支持！");
-                        $('#filenameCover').val("");
-                    }
-                },
-                error: function() {
-                    show_invalid_info("#homework-upload-status","#homework-upload-status","上传失败！");
-                    $('#filenameCover').val("");
-                }
-            });
-        });
-    });
+    var post_to = "{{ url_for('course.homework_upload', hid=homework.id) }}";
+    var back_to_list = "{{ url_for('course.homework_list', cid=homework.course_id) }}";
     </script>
 {% endblock %}
 {# lessons #}

@@ -4,19 +4,23 @@ $(document).ready(function () {
         $("#homework-table-body").find("input[type=checkbox]").prop("checked", $(obj).prop("checked"));
     });
 
+    var array = [];
     $("#del-homework-btn").click(function () {
-        $("#del-warning").modal("show");
-    });
-
-    $("#del-confirm").click(function () {
-        var array = [];
         $("#homework-table-body").find("input").each(function () {
             if (this.checked) {
                 $(this).parent().parent().remove();
                 array.push($(this).parent().parent().data("upload_id"));
             }
         });
+        if (array.length == 0) {
+            alert_modal("请勾选要删除的文件");
+        }
+        else {
+            $("#del-warning").modal("show");
+        }
+    });
 
+    $("#del-confirm").click(function () {
         $.ajax({
             type: "post",
             url: location.href,
@@ -37,7 +41,7 @@ $(document).ready(function () {
     });
 
     $("#download-homework-btn").click(function () {
-        var array = [];
+        array = [];
         $("#homework-table-body").find("input[type='checkbox']").each(function () {
             if (this.checked) {
                 array.push($(this).parent().parent().data("upload_id"));

@@ -101,6 +101,9 @@ $(document).ready(function () {
                     location.reload();
                 }
             });
+            $("#upload-status #dialog-mini-btn").click(function () {
+                $("#upload-status .modal-body").toggle();
+            });
         },
         headers: {
             'X-CSRFToken': csrf_token

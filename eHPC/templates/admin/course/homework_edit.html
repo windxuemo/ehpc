@@ -97,7 +97,7 @@
 
                             <div class="form-group" style="margin-top: -20px;">
                                 <div class="col-md-2 col-sm-2 control-label">
-                                    <label for="appendix">作业附件</label>
+                                    <label for="appendix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作业附件(点击可下载)</label>
                                 </div>
                                 <div class="col-md-9 col-sm-9 controls">
                                     <div id="homework-appendix-list">
@@ -108,22 +108,23 @@
                                                     <button type="button" class="close" aria-label="Close">
                                                     <span class="delete-appendix" aria-hidden="true">&times;</span></button>
                                                     <i class="es-icon es-icon-description status-icon"></i>
-                                                    <span>{{ a.name }}</span>
+                                                    <a href="{{ url_for('static', filename='homework/appendix/' + a.uri) }}" download="{{ a.name }}" style="color: rgb(101,159,19);">{{ a.name }}</a>
                                                 </div>
                                             {% endfor %}
                                         {% endif %}
                                     </div>
                                     <div class="input-group">
-                                        <span id="select-homework-appendix" class="btn btn-default">上传附件</span>
+                                        <span id="select-homework-appendix" class="btn btn-default">选择附件</span>
                                     </div>
+                                    <p class="help-block">你可以上传MP4,mkv,pdf,zip,rar格式的文件，一次最多选择10个文件，不超过50M</p>
                                 </div>
                             </div>
 
                             <input id="homework-op" type="hidden" name="op" value="{{ option }}">
                             <input id="homework-id" type="hidden" name="homework_id" value="{% if option == "edit"  %}{{ homework.id }}{% endif %}">
                             <div class="form-group">
-                                <div class="col-md-offset-2 col-sm-offset-2 col-md-9 col-sm-9 controls">
-                                    <input id="save_homework_info" class="btn btn-info pull-right" type="submit" style="cursor: pointer;" value="保存">
+                                <div class="col-md-offset-2 col-sm-offset-2 controls" style="padding-left: 15px">
+                                    <input id="save_homework_info" class="btn btn-info" type="submit" style="cursor: pointer;" value="保存">
                                 </div>
                             </div>
                         </form>
@@ -132,35 +133,7 @@
             </div>
         </div>
     </div>
-
-    <div id="upload-status" class="upload-status">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" id="dialog-close-btn">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel"><i class="glyphicon glyphicon-upload"></i>上传文件状态</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="table table-striped files" id="previews">
-                        <div class="table table-striped files" id="previews">
-                            <div id="template" class="file-row">
-                                <div>
-                                    <span class="name" data-dz-name></span>
-                                    <span class="size" data-dz-size style="margin-left: 10px"></span>
-                                    <strong class="error text-danger" data-dz-errormessage></strong>
-                                </div>
-                                <div>
-                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "widget/upload_status_modal.html" %}
 
 {% endblock %}
 
@@ -178,7 +151,7 @@
             spellChecker: false
         });
         {% if msg %}
-            alert_modal("保存成功！");
+            alert_modal("{{ msg }}");
         {% endif %}
     </script>
 

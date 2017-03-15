@@ -77,34 +77,7 @@
         <input type="hidden" name="op" value="local-upload" />
     </form>
 
-    <div id="upload-status" class="upload-status">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" id="dialog-close-btn">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel"><i class="glyphicon glyphicon-upload"></i>上传文件状态</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="table table-striped files" id="previews">
-                        <div class="table table-striped files" id="previews">
-                            <div id="template" class="file-row">
-                                <div>
-                                    <span class="name" data-dz-name></span>
-                                    <span class="size" data-dz-size style="margin-left: 10px"></span>
-                                    <strong class="error text-danger" data-dz-errormessage></strong>
-                                </div>
-                                <div>
-                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "widget/upload_status_modal.html" %}
 
     <!-- 添加外链接文件-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog">

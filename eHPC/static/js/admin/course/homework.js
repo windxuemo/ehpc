@@ -81,7 +81,7 @@ $(document).ready(function () {
         url: location.href,
         maxFiles: 10,
         maxFilesize: 50,
-        acceptedFiles: ".mp3,.mp4,.mkv,.pdf",
+        acceptedFiles: ".mp4,.mkv,.pdf,.zip,.rar",
         autoProcessQueue: false,
         previewTemplate: template,
         uploadMultiple: true,
@@ -92,6 +92,7 @@ $(document).ready(function () {
         dictMaxFilesExceeded: "文件数量不能超过10个",
         dictFileTooBig: "文件大小不能超过50M",
         init: function() {
+            var myDropzone = this;
             this.on("addedfile", function(file) {
                 $("#upload-status").show();
             });
@@ -105,7 +106,7 @@ $(document).ready(function () {
                         setTimeout(function() {location.href = back_to_list;}, 800);
                     }
                     else {
-                        alert_modal("保存成功！");
+                        alert_modal("附件上传成功！");
                         $(".close").click(function () {
                            location.reload();
                         });
@@ -124,6 +125,9 @@ $(document).ready(function () {
                         myDropzone.processQueue();
                     }
                 }
+            });
+            $("#upload-status #dialog-mini-btn").click(function () {
+                $("#upload-status .modal-body").toggle();
             });
         },
         headers: {

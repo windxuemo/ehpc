@@ -17,7 +17,7 @@
                     </a>
                 </div>
                 <div style="margin: 10px;height: 80px;overflow: hidden">
-                    {{ c.about | get_brief_introduction | truncate(100, True) }}
+                    {{ c.subtitle | truncate(100, True) }}
                 </div>
                 <div class="metas clearfix">
                     <span class="num"><i class="es-icon es-icon-people"></i>{{ c.studentNum }}</span>

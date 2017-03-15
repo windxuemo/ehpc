@@ -98,3 +98,8 @@ def sort_materials(materials):
 @filter_blueprint.app_template_filter('unite_time_format')
 def unite_time_format(course_time):
     return course_time.strftime('%Y-%m-%d %H:%M') if course_time else ""
+
+
+@filter_blueprint.app_template_filter('get_brief_introduction')
+def get_brief_introduction(about):
+    return about[2:-1]

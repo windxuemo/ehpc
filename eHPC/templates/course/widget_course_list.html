@@ -1,5 +1,5 @@
 {% for c in courses %}
-    <div class="col-lg-3 col-md-4 col-xs-6">
+    <div class="col-lg-4 col-md-4 col-xs-6">
         <div class="course-item">
             <div class="course-img">
                 <a href="{{ url_for('course.view', cid=c.id) }}" target="_blank">
@@ -13,8 +13,11 @@
                 <div class="title">
                     <a class="link-dark" href="{{ url_for('course.view', cid=c.id) }}" target="_blank"
                        title=c.title>
-                        {{ c.title }}
+                        <strong>{{ c.title }}</strong>
                     </a>
+                </div>
+                <div style="margin: 10px;height: 80px;overflow: hidden">
+                    {{ c.about | get_brief_introduction | truncate(100, True) }}
                 </div>
                 <div class="metas clearfix">
                     <span class="num"><i class="es-icon es-icon-people"></i>{{ c.studentNum }}</span>

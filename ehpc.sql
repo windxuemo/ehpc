@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.53, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
 --
 -- Host: localhost    Database: ehpc
 -- ------------------------------------------------------
--- Server version	5.5.53-0ubuntu0.14.04.1
+-- Server version	5.7.17-0ubuntu0.16.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -238,6 +238,31 @@ INSERT INTO `classifies` VALUES (4,'并行编程入门'),(5,'并行默认题库'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `code_chache`
+--
+
+DROP TABLE IF EXISTS `code_cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `code_cache` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `program_id` int(11) NOT NULL,
+  `code` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `code_chache`
+--
+
+LOCK TABLES `code_cache` WRITE;
+/*!40000 ALTER TABLE `code_cache` DISABLE KEYS */;
+/*!40000 ALTER TABLE `code_cache` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `comments`
 --
 
@@ -422,10 +447,13 @@ INSERT INTO `homework` VALUES (3,'作业1','# Cost Function\r\n\r\nLet\'s first 
 /*!40000 ALTER TABLE `homework` ENABLE KEYS */;
 UNLOCK TABLES;
 
--- ----------------------------
--- Table structure for homework_appendix
--- ----------------------------
+--
+-- Table structure for table `homework_appendix`
+--
+
 DROP TABLE IF EXISTS `homework_appendix`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `homework_appendix` (
   `id` int(64) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
@@ -439,7 +467,16 @@ CREATE TABLE `homework_appendix` (
   CONSTRAINT `homework_appendix_ibfk_1` FOREIGN KEY (`homework_id`) REFERENCES `homework` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `homework_appendix_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `homework_appendix`
+--
+
+LOCK TABLES `homework_appendix` WRITE;
+/*!40000 ALTER TABLE `homework_appendix` DISABLE KEYS */;
+/*!40000 ALTER TABLE `homework_appendix` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `homework_upload`
@@ -995,6 +1032,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-
-
--- Dump completed on 2017-03-10 20:35:58
+-- Dump completed on 2017-03-14 20:21:21

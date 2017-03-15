@@ -13,11 +13,16 @@
 
         <div class="row">
             {% for knowledge in knowledges %}
-                <div class="col-lg-3 col-md-4 col-xs-6">
+                <div class="col-lg-4 col-md-4 col-xs-6">
                     <div id="labs">
                         <div class="lab-item">
                             <div class="lab-content">
-                                <h2>{{ knowledge.title }}</h2>
+                                <div class="lab-img">
+                                    <img src="/static/images/icon_lock.png" alt="{{ knowledge.title }}" class="img-responsive">
+                                </div>
+                                <div class="lab-title">
+                                    <strong>{{ knowledge.title }}</strong>
+                                </div>
                                 <!-- 对简洁内容进行截断, 防止内容过长 -->
                                 <p> {{ knowledge.content | truncate(140, True) }} </p>
                                 <div class="progress">

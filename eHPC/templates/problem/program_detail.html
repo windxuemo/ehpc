@@ -13,8 +13,7 @@
             <li><a href="/">{{ _('Index') }}</a></li>
             <li><a href="{{ url_for('problem.index') }}">{{ _('Practice Center') }}</a></li>
             <li class="active"><a href="{{ url_for('problem.show_program') }}">{{ _('Program Lists') }}</a></li>
-            <li class="active"><a
-                    href="{{ url_for('problem.program_view',pid=problem.id) }}">{{ problem.title }}</a>
+            <li class="active"><a href="{{ url_for('problem.program_view',pid=problem.id) }}">{{ problem.title }}</a>
             </li>
         </ol>
 
@@ -30,6 +29,28 @@
                     </div>
                 </div>
                 <div class="panel-body markdown-body" id="program-content" data-to-render="{{ problem.detail }}"></div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px">
+            <div class="col-md-4">
+                <button id="code-download" class="btn btn-block btn-primary">下载代码</button>
+                <form method="post" target="_blank">
+                    <input type="hidden" name="op" value="download">
+                    <input type="hidden" name="program_id" value="{{ problem.id }}">
+                    <input type="hidden" name="code" value="">
+                </form>
+            </div>
+            <div class="col-md-4">
+                <button id="code-upload" class="btn btn-block btn-primary">上传代码</button>
+                <form method="post">
+                    <input type="hidden" name="op" value="upload">
+                    <input type="hidden" name="program_id" value="{{ problem.id }}">
+                    <input id="code-field" name="code" type="file" style="display: none;">
+                </form>
+            </div>
+            <div class="col-md-4">
+                <button id="code-save" class="btn btn-block btn-primary">暂存代码</button>
             </div>
         </div>
 
@@ -125,6 +146,10 @@
 
     </div>
 
+    {% if cache %}
+        <div id="hidden-code" style="display: none;">{{ cache.code }}</div>
+    {% endif %}
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -181,6 +206,52 @@
                 }
             });
         }
+    </script>
+
+    <script type="text/javascript">
+    $(function () {
+        {% if cache %}
+            editor.setValue($("#hidden-code").text());
+            $("#hidden-code").remove();
+        {% endif %}
+        $("#code-save").click(function () {
+            $.ajax({
+                url: location.href,
+                type: "post",
+                data: {
+                    op: "save",
+                    program_id: {{ problem.id }},
+                    code: editor.getValue()
+                },
+                success: function (data) {
+                    if (data['status'] == "success")
+                        alert_modal("保存成功");
+                }
+            });
+        });
+        $("#code-upload").click(function () {
+            $("#code-field").click();
+        });
+        $("#code-field").change(function () {
+            var form = $(this).parent();
+            $.ajax({
+                url: location.href,
+                type: "post",
+                data: new FormData(form[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    editor.setValue(data);
+                }
+            });
+        });
+        $("#code-download").click(function () {
+            var form = $("#code-download").next();
+            form.children("input[name=code]").attr("value", editor.getValue());
+            form.submit();
+        });
+    });
     </script>
 
 {% endblock %}

@@ -80,12 +80,17 @@ def reg():
         if password != password2:
             message_e = u'两次输入密码不一致'
 
+        data = None
+        if message_u or message_e or message_e:
+            data = _form
+
         if message_u or message_p or message_e:
             return render_template("user/reg.html", form=_form,
                                    title=gettext('Register Account'),
                                    message_u=message_u,
                                    message_p=message_p,
-                                   message_e=message_e)
+                                   message_e=message_e,
+                                   data=data)
 
         # A valid register info, save the info into db.
         else:

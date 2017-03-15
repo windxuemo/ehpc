@@ -9,10 +9,10 @@
 
         <div class="course-list">
             {% for case in cases %}
-                <div class="col-lg-3 col-md-4 col-xs-6">
+                <div class="col-lg-4 col-md-4 col-xs-6">
                     <div class="course-item" style="padding-bottom: 10px">
                         <div class="course-img">
-                            <a href="{{ url_for('case.show_case', case_id=case.id) }}" target="_blank" title="{{ case.description }}">
+                            <a href="{{ url_for('case.show_case', case_id=case.id) }}" target="_blank">
                                 <img src="{{ case.icon }}" alt="{{ case.name }}" class="img-responsive">
                             </a>
                         </div>
@@ -21,6 +21,9 @@
                                 <a class="link-dark" href="{{ url_for('case.show_case', case_id=case.id) }}" target="_blank" title="{{ case.name }}">
                                     <strong>{{ case.name }}</strong>
                                 </a>
+                            </div>
+                            <div style="margin: 10px;height: 80px;overflow: hidden">
+                                {{ case.description | truncate(100, True) }}
                             </div>
                         </div>
                     </div>

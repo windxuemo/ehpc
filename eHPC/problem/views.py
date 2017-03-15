@@ -1,9 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
+from StringIO import StringIO
+
 from datetime import datetime
 
-from flask import render_template, request, abort
+from flask import render_template, request, abort, jsonify, send_file
 from flask_babel import gettext
 from flask_login import current_user, login_required
 from sqlalchemy import or_
@@ -11,7 +13,7 @@ from sqlalchemy import or_
 from eHPC.util.code_process import submit_code
 from . import problem
 from .. import db
-from ..models import Program, Classify, SubmitProblem, Question, UserQuestion
+from ..models import Program, Classify, SubmitProblem, Question, UserQuestion, CodeCache
 
 
 @problem.route('/')
@@ -77,13 +79,32 @@ def show_question():
                            rows=rows)
 
 
-@problem.route('/program/<int:pid>/')
+@problem.route('/program/<int:pid>/', methods=['GET', 'POST'])
 @login_required
 def program_view(pid):
-    pro = Program.query.filter_by(id=pid).first_or_404()
-    return render_template('problem/program_detail.html',
-                           title=pro.title,
-                           problem=pro)
+    if request.method == 'GET':
+        cache = CodeCache.query.filter_by(user_id=current_user.id).filter_by(program_id=pid).first()
+        pro = Program.query.filter_by(id=pid).first_or_404()
+        return render_template('problem/program_detail.html', title=pro.title, problem=pro, cache=cache)
+    elif request.method == 'POST':
+        if request.form['op'] == 'save':
+            program_id = request.form['program_id']
+            code = request.form['code']
+            cache = CodeCache.query.filter_by(user_id=current_user.id).filter_by(program_id=pid).first()
+            if cache:
+                cache.code = code
+            else:
+                cache = CodeCache(current_user.id, program_id, code)
+                db.session.add(cache)
+            db.session.commit()
+            return jsonify(status='success')
+        elif request.form['op'] == 'upload':
+            return request.files['code'].read()
+        elif request.form['op'] == 'download':
+            code = StringIO(request.form['code'].encode('utf8'))
+            return send_file(code, as_attachment=True, attachment_filename='code.txt')
+        else:
+            abort(403)
 
 
 @problem.route('/question/<question_type>/<int:cid>/')

@@ -14,13 +14,14 @@
             <div class="login-main">
                 <form id="register-form" method="post" action="" data-widget-cid="widget-1" data-parsley-validate="">
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_nickname">{{ _('Username') }}</label>
+                        <label class="control-label required" for="register_nickname">{{ _('Username') }}*</label>
                         <input type="text" id="register_nickname" name="username" required="required"
                                class="form-control input-lg" data-url="/register/nickname/check"
                                placeholder="{{ _('letters,digits,underscore') }}"
                                data-com.agilebits.onepassword.user-edited="yes"
-                               data-parsley-required-message="用户名不能为空"
-                               data-widget-cid="widget-3" data-explain="" data-parsley-type="alphanum" data-parsley-maxlength="128">
+                               data-parsley-required-message="用户名不能为空" data-widget-cid="widget-3" data-explain=""
+                               data-parsley-type="alphanum" data-parsley-maxlength="128"
+                                {% if data %}value="{{ data.username }}"{% endif %}>
                         <p class="help-block"></p>
                         {% if message_u %}
                             <p class="help-block"><span class="text-danger"> {{ message_u }}</span></p>
@@ -28,11 +29,12 @@
                     </div>
 
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_mobile">{{ _('Email Address') }}</label>
-                        <input type="text" id="login_email" name="email" required="required"
+                        <label class="control-label required" for="register_mobile">{{ _('Email Address') }}*</label>
+                        <input type="text" id="register_email" name="email" required="required"
                                class="form-control input-lg"
                                placeholder="{{ _('Email Address') }}" data-widget-cid="widget-2" data-explain=""
-                               data-parsley-required-message="邮箱地址不能为空" data-parsley-type="email" data-parsley-maxlength="128">
+                               data-parsley-required-message="邮箱地址不能为空" data-parsley-type="email" data-parsley-maxlength="128"
+                               {% if data %}value="{{ data.email }}"{% endif %}>
                         <p class="help-block"></p>
                         {% if message_e %}
                             <p class="help-block"><span class="text-danger"> {{ message_e }}</span></p>
@@ -40,7 +42,7 @@
                     </div>
 
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_password">{{ _('Password') }}</label>
+                        <label class="control-label required" for="register_password">{{ _('Password') }}*</label>
                         <input type="password" id="register_password1" name="password" required="required"
                                class="form-control input-lg" data-widget-cid="widget-4" data-explain=""
                                data-com.agilebits.onepassword.user-edited="yes"
@@ -49,7 +51,7 @@
                         <p class="help-block"></p>
                     </div>
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_password">{{ _('Password Again') }}</label>
+                        <label class="control-label required" for="register_password">{{ _('Password Again') }}*</label>
                         <div class="controls">
                             <input type="password" id="register_password2" name="password2" required="required"
                                    class="form-control input-lg" data-widget-cid="widget-4" data-explain=""
@@ -64,11 +66,12 @@
                     </div>
 
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_name"> 姓名 </label>
+                        <label class="control-label required" for="register_name"> 姓名* </label>
                         <div class="controls">
                             <input type="text" id="register_name" name="name" required="required"
                                    class="form-control input-lg" data-parsley-required-message="请输入您的真实姓名"
-                                   placeholder="真实姓名" data-parsley-maxlength="32">
+                                   placeholder="真实姓名" data-parsley-maxlength="32"
+                                   {% if data %}value="{{ data.name }}"{% endif %}>
                             <p class="help-block"></p>
                         </div>
                         {% if message_name %}
@@ -77,15 +80,17 @@
                     </div>
 
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_gender"> 性别 </label>
+                        <label class="control-label required" for="register_gender"> 性别* </label>
                         <div class="controls">
                             <label class="checkbox-inline">
                                 <input type="radio" name="gender" value="0" data-parsley-multiple="gender"
                                        data-parsley-errors-container="#checkbox-errors"
-                                       data-parsley-required-message="请选择您的性别" >男
+                                       data-parsley-required-message="请选择您的性别"
+                                       {% if data and data.gender == '0' %}checked{% endif %}>男
                             </label>
                             <label class="checkbox-inline">
-                                <input type="radio" name="gender" value="1" data-parsley-multiple="gender" required>女
+                                <input type="radio" name="gender" value="1" data-parsley-multiple="gender" required
+                                       {% if data and data.gender.gender == '1' %}checked{% endif %}>女
                             </label>
                             <div id="checkbox-errors"></div>
                             <p class="help-block"></p>
@@ -96,11 +101,12 @@
                     </div>
 
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_phone"> 手机号码 </label>
+                        <label class="control-label required" for="register_phone"> 手机号码* </label>
                         <div class="controls">
                             <input type="text" id="register_phone" name="phone" required="required"
                                    class="form-control input-lg"  data-parsley-required-message="请输入您的手机号码"
-                                   data-parsley-type="number" placeholder="手机号码" data-parsley-maxlength="32">
+                                   data-parsley-type="number" placeholder="手机号码" data-parsley-maxlength="32"
+                                   {% if data %}value="{{ data.phone }}"{% endif %}>
                             <p class="help-block"></p>
                         </div>
                         {% if message_phone %}
@@ -109,11 +115,12 @@
                     </div>
 
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_university"> 学校 </label>
+                        <label class="control-label required" for="register_university"> 学校* </label>
                         <div class="controls">
                             <input type="text" id="register_university" name="university" required="required"
                                    class="form-control input-lg"  data-parsley-required-message="请输入您的学校"
-                                   placeholder="学校" data-parsley-maxlength="32">
+                                   placeholder="学校" data-parsley-maxlength="32"
+                                   {% if data %}value="{{ data.university }}"{% endif %}>
                             <p class="help-block"></p>
                         </div>
                         {% if message_university %}
@@ -122,11 +129,12 @@
                     </div>
 
                     <div class="form-group mbl">
-                        <label class="control-label required" for="register_student_id"> 学号 </label>
+                        <label class="control-label required" for="register_student_id"> 学号* </label>
                         <div class="controls">
                             <input type="text" id="register_student_id" name="student_id" required="required"
                                    class="form-control input-lg"  data-parsley-required-message="请输入您的学号"
-                                   data-parsley-type="number" placeholder="学号" data-parsley-maxlength="32">
+                                   data-parsley-type="number" placeholder="学号" data-parsley-maxlength="32"
+                                   {% if data %}value="{{ data.student_id }}"{% endif %}>
                             <p class="help-block"></p>
                         </div>
                         {% if message_student_id %}
@@ -143,4 +151,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}

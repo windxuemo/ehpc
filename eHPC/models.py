@@ -519,3 +519,16 @@ class UserQuestion(db.Model):
     # 浏览的题目类型, 可以是 choice fill judge essay
     question_type = db.Column(db.String(128), nullable=False, primary_key=True)
     last_time = db.Column(db.DateTime, nullable=False)
+
+
+class CodeCache(db.Model):
+    def __init__(self, uid, pid, code):
+        self.user_id = uid
+        self.program_id = pid
+        self.code = code
+
+    __tablename__ = "code_cache"
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    program_id = db.Column(db.Integer, nullable=False)
+    code = db.Column(db.Text(), default=None)

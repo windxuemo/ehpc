@@ -45,14 +45,16 @@
                             </tr>
                             </thead>
                             <tbody id="material-table-body">
-
-                            {% for m in materials %}
-                                <tr data-material_id="{{ m.id }}">
-                                    <td><input type="checkbox"></td>
-                                    <td><a href="{{ url_for('case.show_case',case_id=m.version.case.id) }}">{{ m.name }}</a></td>
-                                </tr>
-                            {% endfor %}
-
+                                {% if materials.count() > 0 %}
+                                    {% for m in materials %}
+                                    <tr data-material_id="{{ m.id }}">
+                                        <td><input type="checkbox"></td>
+                                        <td><a href="{{ url_for('case.show_case',case_id=m.version.case.id) }}">{{ m.name }}</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center"><td colspan='2'>暂无上传文件</td></tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>

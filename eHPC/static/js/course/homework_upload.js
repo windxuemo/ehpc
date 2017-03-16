@@ -23,10 +23,6 @@ function delete_upload(e) {
 }
 
 $(document).ready(function() {
-    var description = $("#homework-description");
-    description.html(latex_support(description.data('to-render')));
-    description.attr('data-to-render', null);
-
     $('input[id=homework-file]').change(function() {
         $('#filenameCover').val($(this).val());
     });
@@ -60,7 +56,7 @@ $(document).ready(function() {
         maxFiles: 10,
         maxFilesize: 50,
         acceptedFiles: ".pdf,.zip,.rar",
-        autoProcessQueue: false,
+        autoProcessQueue: true,
         previewTemplate: template,
         uploadMultiple: true,
         parallelUploads: 10,
@@ -73,12 +69,18 @@ $(document).ready(function() {
             var myDropzone = this;
             this.on("addedfile", function(file) {
                 $("#upload-status").show();
+                $(".file-remove").hide();
             });
             this.on("error", function (file) {
                error = true;
             });
             this.on("successmultiple", function(file,response) {
                 alert_modal("上传成功！");
+                $(".modal-alert .close").click(function () {
+                    $("#upload-status").hide();
+                    myDropzone.removeAllFiles();
+                    $("#upload-status .dz-complete").remove();
+                });
                 for (var i=0;i<response.new_upload_id.length;++i) {
                     var uploadFilehtml = ''
                         + '<div id="my-submit' + response.new_upload_id[i] + '" class="alert alert-success alert-dismissable" role="alert" data-upload-name="'
@@ -90,22 +92,6 @@ $(document).ready(function() {
                         + '<span>提交于：' + response.new_upload_submit_time[i]  + '</span>'
                         + '</div>';
                     $("#my-uploads").append(uploadFilehtml);
-                }
-
-                $("#upload-status #dialog-close-btn").click(function () {
-                    myDropzone.removeAllFiles();
-                    $("#upload-status .dz-complete").remove();
-                });
-            });
-            this.element.querySelector("span[id='homework-upload-btn']").addEventListener("click", function(e) {
-                if (myDropzone.getQueuedFiles().length > 0) {
-                    //$("#upload-status").show();
-                    e.preventDefault();
-                    e.stopPropagation();
-                    myDropzone.processQueue();
-                }
-                else {
-                    alert_modal("请选择要上传的文件！");
                 }
             });
             $("#upload-status #dialog-mini-btn").click(function () {

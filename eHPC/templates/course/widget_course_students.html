@@ -8,13 +8,19 @@
         </div>
         <div class="panel-body">
             <ul class="user-avatar-list clearfix">
-                {% for u in course.users %}
+                {% if course.users %}
+                    {% for u in course.users %}
                     <li>
                         <a class="js-user-card" href="{{ url_for('user.view', uid=u.id) }}">
                             <img class="avatar-sm" src="{{ u.avatar_url | get_avatar_path}}">
                         </a>
                     </li>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <br>
+                    <p class="text-center">该课程还没有任何学生加入!</p>
+                    <br>
+                {% endif %}
             </ul>
         </div>
     </div>

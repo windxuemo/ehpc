@@ -35,7 +35,8 @@
                         <div class="es-piece">
                             <div class="piece-body">
                                 <ul class="period-list" id="course-item-list">
-                                    {% for p in papers %}
+                                    {% if papers %}
+                                        {% for p in papers %}
                                         <li class="period" data-paper_id="{{ p.id }}">
                                             <a href="{{ url_for('course.paper_detail', pid=p.id) }}"
                                                title="{{ p.title }}">
@@ -47,7 +48,10 @@
                                                 </span>
                                             </a>
                                         </li>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="text-center">本课程暂时未布置测验</div>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>

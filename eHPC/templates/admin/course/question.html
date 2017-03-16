@@ -50,7 +50,8 @@
                             </tr>
                             </thead>
                             <tbody id="question-table-body">
-                            {% for q in paper.questions %}
+                            {% if paper.questions.count() > 0 %}
+                                {% for q in paper.questions %}
                                 <tr data-question_id="{{ q.questions.id }}">
                                     <td><input type="checkbox"></td>
                                     <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ q.questions | get_question_content}}">{{ q.questions | get_question_content}}</td>
@@ -61,7 +62,10 @@
                                             <span class="glyphicon glyphicon-edit"></span>编辑</a>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                                {% endfor %}
+                            {% else %}
+                                <tr class="text-center"><td colspan="5">本试卷还未添加题目</td></tr>
+                            {% endif %}
                             </tbody>
                         </table>
                         <div>

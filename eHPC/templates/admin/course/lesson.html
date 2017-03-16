@@ -40,7 +40,8 @@
 
                     <div class="panel-body">
                         <ul class="lesson-list sortable-list" id="course-item-list">
-                            {% for l in lessons %}
+                            {% if lessons.count() > 0 %}
+                                {% for l in lessons %}
                                 <li class="item-lesson clearfix" data-lesson_id="{{ l.id }}" style="word-break: break-all;">
                                     <div class="item-content col-md-6 overflow-ellipsis" data-toggle="tooltip" title="{{ l.title }}">
                                         <i class="es-icon es-icon-undone"></i>
@@ -58,7 +59,10 @@
                                             <i class="es-icon es-icon-delete"></i>删除</a>
                                     </div>
                                 </li>
-                            {% endfor %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center">本课程暂未添加课时</div>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>

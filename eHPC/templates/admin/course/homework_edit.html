@@ -102,15 +102,19 @@
                                 <div class="col-md-9 col-sm-9 controls">
                                     <div id="homework-appendix-list">
                                         {% if homework %}
-                                            {% for a in homework.appendix %}
-                                                <div id="appendix{{ a.id }}" class="alert alert-success alert-dismissable uploaded" role="alert"
+                                            {% if homework.appendix.count() >0 %}
+                                                {% for a in homework.appendix %}
+                                                    <div id="appendix{{ a.id }}" class="alert alert-success alert-dismissable uploaded" role="alert"
                                                      data-appendix-name="{{ a.name }}" data-appendix-id="{{ a.id }}">
-                                                    <button type="button" class="close" aria-label="Close">
-                                                    <span class="delete-appendix" aria-hidden="true">&times;</span></button>
-                                                    <i class="es-icon es-icon-description status-icon"></i>
-                                                    <a href="{{ url_for('static', filename='homework/appendix/' + a.uri) }}" download="{{ a.name }}" style="color: rgb(101,159,19);">{{ a.name }}</a>
-                                                </div>
-                                            {% endfor %}
+                                                        <button type="button" class="close" aria-label="Close">
+                                                        <span class="delete-appendix" aria-hidden="true">&times;</span></button>
+                                                        <i class="es-icon es-icon-description status-icon"></i>
+                                                        <a href="{{ url_for('static', filename='homework/appendix/' + a.uri) }}" download="{{ a.name }}" style="color: rgb(101,159,19);">{{ a.name }}</a>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="text-center">暂未上传附件</div>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                     <div class="input-group">

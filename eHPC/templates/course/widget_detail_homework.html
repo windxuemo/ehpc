@@ -21,13 +21,17 @@
                     <div class="homework-content">
                         <div style="margin-bottom: 10px;"><b>作业附件（点击可下载）：</b></div>
                         <div id="homework-appendix-list">
-                            {% for a in homework.appendix %}
-                                <div id="appendix{{ a.id }}" class="alert alert-success alert-dismissable uploaded" role="alert"
+                            {% if homework.appendix.count() > 0 %}
+                                {% for a in homework.appendix %}
+                                    <div id="appendix{{ a.id }}" class="alert alert-success alert-dismissable uploaded" role="alert"
                                      data-appendix-name="{{ a.name }}" data-appendix-id="{{ a.id }}">
-                                    <i class="es-icon es-icon-description status-icon"></i>
-                                    <a href="{{ url_for('static', filename='homework/appendix/' + a.uri) }}" download="{{ a.name }}">{{ a.name }}</a>
-                                </div>
-                            {% endfor %}
+                                        <i class="es-icon es-icon-description status-icon"></i>
+                                        <a href="{{ url_for('static', filename='homework/appendix/' + a.uri) }}" download="{{ a.name }}">{{ a.name }}</a>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center">本次作业未提供附件</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div id="my-uploads" class="homework-content">
@@ -48,14 +52,11 @@
                         {% if curr_time < homework.deadline %}
                             <form id="homework-file-form">
                                 <div class="form-group">
-                                    <span id="select-homework-files" class="btn btn-info" style="margin-top: 10px;"><i class="fa fa-folder-open"></i>选择文件</span>
+                                    <span id="select-homework-files" class="btn btn-info" style="margin-top: 10px;"><i class="fa fa-folder-open"></i>上传作业</span>
                                     <p class="help-block">你可以上传pdf,zip,rar格式的文件，一次最多选择10个文件，不超过50M</p>
                                 </div>
                                 <div id="file-selected-preview"></div>
                                 <input type="hidden" name="op" value="upload">
-                                <div class="form-group">
-                                    <span id="homework-upload-btn" class="btn btn-default homework-file-item pull-left" style="font-size: 14px;">开始上传</span>
-                                </div>
                             </form>
                         {% else %}
                             <div>作业已过截止日期，无法提交！</div>
@@ -74,6 +75,11 @@
     <script>
     var post_to = "{{ url_for('course.homework_upload', hid=homework.id) }}";
     var back_to_list = "{{ url_for('course.homework_list', cid=homework.course_id) }}";
+    $(document).ready(function() {
+        var description = $("#homework-description");
+        description.html(latex_support(description.data('to-render')));
+        description.attr('data-to-render', null);
+    });
     </script>
 {% endblock %}
 {# lessons #}

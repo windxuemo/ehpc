@@ -29,22 +29,25 @@
                             </tr>
                             </thead>
                             <tbody><!--表格主体-->
-                            {% for k in current_user.teacher_knowledge %}
-                                <tr data-id="{{ k.id }}">
-                                    <td>{{ loop.index }}</td>
-                                    <td>{{ k.title }}</td>
-                                    <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ k.content }}">{{ k.content }}</td>
-                                    <td>
-                                        <a class="btn btn-link" href="javascript:void(0);" name="knowledge-edit-btn">
-                                            <i class="es-icon es-icon-edit"></i>编辑信息</a>
-                                        <a class="btn btn-link"
-                                           href="{{ url_for('admin.lab_view', knowledge_id=k.id) }}">
-                                            <i class="es-icon es-icon-edit"></i>编辑任务</a>
-                                        <a class="btn btn-link" href="javascript:void(0);" name="knowledge-del-btn">
-                                            <i class="es-icon es-icon-delete"></i>删除</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                                {% if current_user.teacher_knowledge.count() %}
+                                    {% for k in current_user.teacher_knowledge %}
+                                        <tr data-id="{{ k.id }}">
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ k.title }}</td>
+                                            <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ k.content }}">{{ k.content }}</td>
+                                            <td>
+                                                <a class="btn btn-link" href="javascript:void(0);" name="knowledge-edit-btn">
+                                                    <i class="es-icon es-icon-edit"></i>编辑信息</a>
+                                                <a class="btn btn-link" href="{{ url_for('admin.lab_view', knowledge_id=k.id) }}">
+                                                    <i class="es-icon es-icon-edit"></i>编辑任务</a>
+                                                <a class="btn btn-link" href="javascript:void(0);" name="knowledge-del-btn">
+                                                <i class="es-icon es-icon-delete"></i>删除</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center"><td colspan="4">暂未发布实验</td></tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>

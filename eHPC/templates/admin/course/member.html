@@ -45,7 +45,8 @@
                                 </tr>
                                 </thead><!--表格头-->
                                 <tbody>
-                                {% for a in applies %}
+                                {% if applies.count() > 0 %}
+                                    {% for a in applies %}
                                     <tr data-id="{{ a.id }}">
                                         <td>{{ a.user.name }}</td>
                                         <td>{{ a.user.student_id }}</td>
@@ -64,7 +65,10 @@
                                         {% endif %}
                                         </td>
                                     </tr>
-                                {% endfor %}
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center"><td colspan="6">本课程暂未有人加入</td></tr>
+                                {% endif %}
                                 </tbody><!--表格主体-->
                             </table>
                         </div>

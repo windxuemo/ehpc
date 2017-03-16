@@ -12,7 +12,8 @@
         </ol>
 
         <div class="row">
-            {% for knowledge in knowledges %}
+            {% if knowledges %}
+                {% for knowledge in knowledges %}
                 <div class="col-lg-4 col-md-4 col-xs-6">
                     <div id="labs">
                         <div class="lab-item">
@@ -42,7 +43,10 @@
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="text-center">暂未发布实验</div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

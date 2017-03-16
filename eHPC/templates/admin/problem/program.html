@@ -34,7 +34,8 @@
                             </tr>
                             </thead><!--表格头-->
                             <tbody id="tb">
-                            {% for program in current_user.teacher_program %}
+                            {% if current_user.teacher_program.count() > 0 %}
+                                {% for program in current_user.teacher_program %}
                                 <tr data-id="{{ program.id }}">
                                     <td style="text-align: center">{{ loop.index }}</td>
                                     <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ program.title }}">{{ program.title }}</td>
@@ -46,7 +47,10 @@
                                         <a href="javascript:void(0)" name="del-btn">删除</a>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                                {% endfor %}
+                            {% else %}
+                                <tr class="text-center"><td colspan="5">暂无编程题</td></tr>
+                            {% endif %}
                             </tbody><!--表格主体-->
                         </table>
 

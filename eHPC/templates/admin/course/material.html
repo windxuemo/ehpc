@@ -51,15 +51,17 @@
                             </tr>
                             </thead>
                             <tbody id="material-table-body">
-
-                            {% for m in materials %}
-                                <tr data-material_id="{{ m.id }}">
-                                    <td><input type="checkbox"></td>
-                                    <td><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></td>
-                                    <td>{{ m.m_type }}</td>
-                                </tr>
-                            {% endfor %}
-
+                                {% if materials.count() > 0 %}
+                                    {% for m in materials %}
+                                        <tr data-material_id="{{ m.id }}">
+                                            <td><input type="checkbox"></td>
+                                            <td><a href="{{ url_for('course.material', mid=m.id) }}">{{ m.name }}</a></td>
+                                            <td>{{ m.m_type }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr class="text-center"><td colspan="3">本课时暂未上传任何材料</td></tr>
+                                {% endif %}
                             </tbody>
                         </table>
 

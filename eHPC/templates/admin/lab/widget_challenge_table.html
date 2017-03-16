@@ -8,7 +8,8 @@
     </tr>
     </thead>
     <tbody><!--表格主体-->
-    {% for c in knowledge.challenges.order_by('knowledgeNum') %}
+    {% if knowledge.challenges.count() > 0 %}
+        {% for c in knowledge.challenges.order_by('knowledgeNum') %}
         <tr data-id="{{ c.id }}">
             <td>{{ c.knowledgeNum }}</td>
             <td>{{ c.title }}</td>
@@ -21,7 +22,10 @@
                     <i class="es-icon es-icon-delete"></i>删除</a>
             </td>
         </tr>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <tr class="text-center"><td colspan="4">暂未发布任务</td></tr>
+    {% endif %}
     </tbody>
 </table>
 

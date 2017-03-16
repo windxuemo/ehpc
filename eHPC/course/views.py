@@ -169,10 +169,17 @@ def homework_upload(hid):
     upload_names = []
     upload_ids = []
     upload_times = []
+    upload_uris = []
     while (cnt < len(homework_uploads)):
         index = 'file[%d]' % cnt
         curr_upload = homework_uploads[index]
-        homework_file_name = custom_secure_filename(curr_upload.filename)
+        upload_file_name = custom_secure_filename(curr_upload.filename)
+        if request.form['upload_time'] == "delay":
+            name_without_type = upload_file_name[0:upload_file_name.rfind('.')]
+            extension = upload_file_name[upload_file_name.rfind('.') + 1:]
+            homework_file_name = "%s【迟交】.%s" % (name_without_type,extension)
+        else:
+            homework_file_name = upload_file_name
         #上传的作业文件以学生学号+姓名+文件名来命名
         homework_uri = os.path.join("course_%d" % cur_course.id, "homework_%d" % hid, "%s_%s_%s" % (current_user.student_id.encode("utf-8"), current_user.name.encode("utf-8"), homework_file_name))
         upload_path = unicode(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], homework_uri), 'utf8')       #处理中文文件名
@@ -184,13 +191,23 @@ def homework_upload(hid):
             db.session.commit()
             upload_ids.append(homework_upload.id)
             upload_names.append(homework_upload.name)
+            upload_uris.append(homework_upload.uri)
             upload_times.append(datetime.strftime(homework_upload.submit_time, '%Y-%m-%d %H:%M'))
 
         cnt = cnt +1
 
-    return jsonify(new_upload_id=upload_ids,
-                   new_upload_name=upload_names,
-                   new_upload_submit_time=upload_times)
+    if request.form['upload_time'] == "ontime":
+        return jsonify(new_upload_id=upload_ids,
+                       new_upload_name=upload_names,
+                       new_upload_submit_time=upload_times,
+                       new_upload_uri=upload_uris,
+                       is_on_time="YES")
+    else:
+        return jsonify(new_upload_id=upload_ids,
+                       new_upload_name=upload_names,
+                       new_upload_submit_time=upload_times,
+                       new_upload_uri=upload_uris,
+                       is_on_time="NO")
 
 
 @course.route('/paper/<int:pid>/show/')

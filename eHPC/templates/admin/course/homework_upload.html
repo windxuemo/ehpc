@@ -47,7 +47,7 @@
                             <tbody id="homework-table-body">
                                 {% if uploads.count() > 0 %}
                                     {% for u in uploads | sort_materials() %}
-                                        <tr data-upload_id="{{ u.id }}">
+                                        <tr data-upload_id="{{ u.id }}" style="{% if u.submit_time > homework.deadline %}background-color:rgb(255,241,240);{% endif %}">
                                             <td><input type="checkbox"></td>
                                             <td><a href="{{ url_for('static',filename='homework/upload/'+u.uri) }}"
                                            download="{{ u.user.student_id }}_{{ u.user.name }}_{{ u.name }}">{{ u.name }}</a></td>

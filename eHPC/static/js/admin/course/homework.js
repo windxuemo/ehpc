@@ -28,27 +28,6 @@ $(document).ready(function () {
         }
     });
 
-    $('input[id=homework-appendix]').change(function() {
-        $(".unsolved").remove();
-        var file_list = $("#homework-appendix")[0].files
-        var file_count = file_list.length;
-        if (file_count > 1) {
-            str = "已选择" + file_count + "个文件";
-            $('#filenameCover').val(str);
-        }
-        else {
-            $('#filenameCover').val($(this).val());
-        }
-        for (var i=0; i<file_count; ++i) {
-            var uploadFilehtml = ''
-            + '<div id="" class="alert alert-info alert-dismissable unsolved" role="alert">'
-            + '<i class="es-icon es-icon-description status-icon"></i>'
-            + '<span>' + file_list[i].name + '</span>'
-            + '</div>';
-            $("#homework-appendix-list").append(uploadFilehtml);
-        }
-    });
-
     $(".delete-appendix").click(function () {
         var curr_div = $(this).parent().parent();
         if (curr_div.hasClass("uploaded")) {
@@ -95,6 +74,9 @@ $(document).ready(function () {
             var myDropzone = this;
             this.on("addedfile", function(file) {
                 $("#upload-status").show();
+                $("#upload-status .modal-title span")[0].innerHTML = "待上传文件";
+                $("#upload-status .col-md-5").addClass("set-invisible");
+                $("#select-homework-appendix")[0].innerHTML = "继续添加";
             });
             this.on("error", function (file) {
                error = true;
@@ -116,6 +98,7 @@ $(document).ready(function () {
             var myDropzone = this;
             this.element.querySelector("input[type=submit]").addEventListener("click", function(e) {
                 if (myDropzone.getQueuedFiles().length > 0) {
+                    $("#upload-status .col-md-5").removeClass("set-invisible");
                     // Make sure that the form isn't actually being sent.
                     var p_instance = $('#course-homework-form').parsley();
                     p_instance.validate();

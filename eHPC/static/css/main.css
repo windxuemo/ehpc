@@ -4631,6 +4631,10 @@ hr {
     outline: none;
 }
 
+.upload-status .set-invisible {
+    visibility: hidden;
+}
+
 /* 创建案例 */
 .case-tags {
     outline: none;

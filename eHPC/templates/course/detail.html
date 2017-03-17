@@ -119,6 +119,7 @@
                 $('#course-homework').removeClass('active');
                 $('#course-comment').removeClass('active');
                 $("#course-lists").addClass('active');
+                history.replaceState({}, 'lists', location.href.split("?")[0]+"?tab=lists");
             }
             else if (tab == "about") {
                 $("#course-content").removeClass('active');
@@ -128,6 +129,7 @@
                 $('#course-homework').removeClass('active');
                 $('#course-comment').removeClass('active');
                 $("#course-about").addClass('active');
+                history.replaceState({}, 'about', location.href.split("?")[0]+"?tab=about");
             }
             else if (tab == "test") {
                 $("#course-content").removeClass('active');
@@ -137,6 +139,7 @@
                 $('#course-homework').removeClass('active');
                 $('#course-comment').removeClass('active');
                 $('#course-test').addClass('active');
+                history.replaceState({}, 'test', location.href.split("?")[0]+"?tab=test");
             }
             else if (tab == "homework") {
                 $("#course-content").removeClass('active');
@@ -146,6 +149,7 @@
                 $("#course-test").removeClass('active');
                 $('#course-comment').removeClass('active');
                 $('#course-homework').addClass('active');
+                history.replaceState({}, 'homework', location.href.split("?")[0]+"?tab=homework");
             }
             else if (tab == "comment") {
                 $("#course-content").removeClass('active');
@@ -155,7 +159,12 @@
                 $("#course-test").removeClass('active');
                 $('#course-homework').removeClass('active');
                 $('#course-comment').addClass('active');
+                history.replaceState({}, 'comment', location.href.split("?")[0]+"?tab=comment");
             }
+
+            $("[href='#about'],[href='#lists'],[href='#test'],[href='#homework'],[href='#comment']").click(function () {
+                history.replaceState({}, $(this).attr("href").substr(1) , location.href.split("?")[0]+"?tab="+$(this).attr("href").substr(1));
+            });
 
             var op = "", btn_text = "";
             var status = {{ status }};

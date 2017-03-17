@@ -19,7 +19,7 @@ def index():
     return render_template('course/index.html', title=gettext('Courses'), courses=all_courses)
 
 
-@course.route('/<int:cid>')
+@course.route('/<int:cid>/')
 def view(cid):
     c = Course.query.filter_by(id=cid).first()
     # 指定显示的 Tab 选项卡

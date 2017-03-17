@@ -29,13 +29,16 @@ def signin():
                                title=gettext('User Sign In'),
                                form=None)
     elif request.method == 'POST':
+        next_url = request.args.get('next')
+        if next_url:
+            next_url = None if request.args.get('next')[:6] == '/user/' else request.args.get('next')
         _form = request.form
         u = User.query.filter_by(email=_form['email']).first()
         if u and u.verify_password(_form['password']):
             login_user(u)
             u.last_login = datetime.now()
             db.session.commit()
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(next_url or url_for('main.index'))
         else:
             message = gettext('Invalid username or password.')
             return render_template('user/signin.html', title=gettext('User Sign In'),

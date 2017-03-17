@@ -110,23 +110,22 @@ html, body {
     color: #fff;
 }
 
-.vnc-left,
 .vnc-right{
-    overflow: auto;
     position: absolute;
     top: 50px;
     bottom: 71px;
-    width: 35%;
-    left: 2%;
-}
-
-.vnc-right{
     width: 61%;
     left: 37%;
     overflow: hidden;
 }
 
 .vnc-left{
+    overflow: auto;
+    position: absolute;
+    top: 50px;
+    bottom: 71px;
+    width: 35%;
+    left: 2%;
     background: #FFFFFF;
     border-left: solid 1px #FFFFFF;
 }

@@ -24,7 +24,7 @@
 <div class="material">   
     <div class="row col-md-9" style="height: 100%">
         <!-- 返回课程按钮:通过 tab='lists'返回课程时直接定位到课时列表中 -->
-        <a class="btn btn-primary" href="{{ url_for('course.view', cid=cur_course.id) }}">
+        <a class="btn btn-primary" href="{{ url_for('course.view', cid=cur_course.id, tab='lists') }}">
             <span class="glyphicon glyphicon-chevron-left"></span>返回课程
         </a>
         <div class="space"></div>

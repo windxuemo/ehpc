@@ -371,7 +371,7 @@ class Knowledge(db.Model):
     id = db.Column(db.Integer, primary_key=True)        # 技能 ID
     title = db.Column(db.String(1024), nullable=False)  # 技能标题
     content = db.Column(db.Text(), default=None)        # 技能简介
-
+    cover_url = db.Column(db.String(512), default='upload/lab/default.png')
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # 一个技能对应了很多任务, 一对多的关系。

@@ -63,6 +63,7 @@ class Config:
     HOMEWORK_APPENDIX_FOLDER = os.path.join(basedir, 'eHPC/static/homework/appendix')       #用于暂存上传的作业附件
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/course')
     CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/case')
+    LAB_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/lab')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     CASE_FOLDER = os.path.join(basedir, 'eHPC/static/case')
     DOWNLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/download')

@@ -19,7 +19,7 @@
                         <div class="lab-item">
                             <div class="lab-content">
                                 <div class="lab-img">
-                                    <img src="/static/images/icon_lock.png" alt="{{ knowledge.title }}" class="img-responsive">
+                                    <img src="{{ url_for('static', filename=knowledge.cover_url) }}" alt="{{ knowledge.title }}" class="img-responsive">
                                 </div>
                                 <div class="lab-title">
                                     <strong>{{ knowledge.title }}</strong>

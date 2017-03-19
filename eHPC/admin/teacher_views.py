@@ -871,6 +871,11 @@ def lab():
         if request.form['op'] == 'create':
             curr_knowledge = Knowledge(title=request.form['title'], content=request.form['content'])
             curr_knowledge.teacher = current_user
+            if request.files['cover']:
+                curr_knowledge.cover_url = os.path.join('upload/lab', "cover_%d.png" % curr_knowledge.id)
+                filename = "cover_%d.png" % curr_knowledge.id
+                cover_path = os.path.join(current_app.config['LAB_COVER_FOLDER'], filename)
+                status = upload_img(request.files['cover'], 171, 304, cover_path)
             db.session.add(curr_knowledge)
             db.session.commit()
             return jsonify(status='success')
@@ -878,6 +883,11 @@ def lab():
             curr_knowledge = Knowledge.query.filter_by(id=request.form['knowledge_id']).first_or_404()
             curr_knowledge.title = request.form['title']
             curr_knowledge.content = request.form['content']
+            if request.files['cover']:
+                curr_knowledge.cover_url = os.path.join('upload/lab', "cover_%d.png" % curr_knowledge.id)
+                filename = "cover_%d.png" % curr_knowledge.id
+                cover_path = os.path.join(current_app.config['LAB_COVER_FOLDER'], filename)
+                status = upload_img(request.files['cover'], 171, 304, cover_path)
             db.session.commit()
             return jsonify(status='success')
         elif request.form['op'] == 'del':

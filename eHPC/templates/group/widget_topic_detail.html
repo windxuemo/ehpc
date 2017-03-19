@@ -117,7 +117,7 @@
                 show_invalid_info("#comment-submit-info","#comment-submit-info span","请输入评论内容");
                 return;
             }
-            if ($("#content").val() > 1024) {
+            if ($("#content").val().length > 1024) {
                 show_invalid_info("#comment-submit-info","#comment-submit-info span","评论过长，不能超过1024个字");
                 return;
             }

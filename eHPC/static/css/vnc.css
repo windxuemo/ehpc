@@ -114,8 +114,8 @@ html, body {
     position: absolute;
     top: 50px;
     bottom: 71px;
-    width: 61%;
-    left: 37%;
+    width: 65%;
+    left: 35%;
     overflow: hidden;
 }
 
@@ -125,7 +125,7 @@ html, body {
     top: 50px;
     bottom: 71px;
     width: 35%;
-    left: 2%;
+    left: 0;
     background: #FFFFFF;
     border-left: solid 1px #FFFFFF;
 }

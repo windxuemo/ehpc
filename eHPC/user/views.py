@@ -135,8 +135,6 @@ def password_reset_request():
         message_email = ""
         if not email_addr:
             message_email = gettext("The email can not be empty")
-        elif not email_address.match(email_addr):
-            message_email = gettext('Email address is invalid.')
         elif not u:
             message_email = gettext("The email has not be registered")
 

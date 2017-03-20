@@ -45,13 +45,17 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # If use QQ email, please see http://service.mail.qq.com/cgi-bin/help?id=28 firstly.
-    MAIL_SERVER = 'smtp.sina.com'
+    # MAIL_SERVER = 'smtp.sina.com'
+    MAIL_SERVER = 'smtp.mail.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'milanlanlanlan@sina.com'
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or '1970025901a'
+    # MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'milanlanlanlan@sina.com'
+    # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or '1970025901a'
+    MAIL_USERNAME = 'ehpc@mail.com'
+    MAIL_PASSWORD = 'ehpc1234'
     FORUM_MAIL_SUBJECT_PREFIX = 'eHPC'
-    FORUM_MAIL_SENDER = '<milanlanlanlan@sina.com>'
+    # FORUM_MAIL_SENDER = '<milanlanlanlan@sina.com>'
+    FORUM_MAIL_SENDER = '<ehpc@mail.com>'
 
     BABEL_DEFAULT_LOCALE = 'zh'
     BABEL_DEFAULT_TIMEZONE = 'CST'

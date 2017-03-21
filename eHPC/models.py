@@ -104,9 +104,9 @@ course_users = db.Table('course_users',
 class Course(db.Model):
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(128), unique=True, index=True)   # 课程标题
-    subtitle = db.Column(db.String(128), default="")             # 课程副标题
-    about = db.Column(db.Text(), nullable=True)                  # 课程简介
+    title = db.Column(db.String(128), nullable=False)           # 课程标题
+    subtitle = db.Column(db.String(128), default="")            # 课程副标题
+    about = db.Column(db.Text(), nullable=True)                 # 课程简介
     createdTime = db.Column(db.DateTime(), default=datetime.now)
     public = db.Column(db.Boolean, default=True)
     beginTime = db.Column(db.DateTime(), nullable=True)
@@ -116,11 +116,11 @@ class Course(db.Model):
     studentNum = db.Column(db.Integer, default=0)               # 学生数目
 
     # smallPicture, middlePicture, largePicture
-    smallPicture = db.Column(db.String(128))                     # 课程小图
-    middlePicture = db.Column(db.String(128))                    # 课程中图
-    largePicture = db.Column(db.String(128))                     # 课程大图
+    smallPicture = db.Column(db.String(128))                    # 课程小图
+    middlePicture = db.Column(db.String(128))                   # 课程中图
+    largePicture = db.Column(db.String(128))                    # 课程大图
 
-    rank = db.Column(db.Float, default=0)                        # 课程评分
+    rank = db.Column(db.Float, default=0)                       # 课程评分
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 

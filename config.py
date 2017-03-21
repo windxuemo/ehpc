@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
-# @Last Modified time: 2016-10-08 14:38:25
+# @Last Modified time: 2017-03-21 20:49:16
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -45,17 +45,15 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # If use QQ email, please see http://service.mail.qq.com/cgi-bin/help?id=28 firstly.
-    # MAIL_SERVER = 'smtp.sina.com'
-    MAIL_SERVER = 'smtp.mail.com'
+    MAIL_SERVER = 'smtp.exmail.qq.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
-    # MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'milanlanlanlan@sina.com'
-    # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or '1970025901a'
-    MAIL_USERNAME = 'ehpc@mail.com'
-    MAIL_PASSWORD = 'ehpc1234'
-    FORUM_MAIL_SUBJECT_PREFIX = 'eHPC'
-    # FORUM_MAIL_SENDER = '<milanlanlanlan@sina.com>'
-    FORUM_MAIL_SENDER = '<ehpc@mail.com>'
+
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'easyhpc@nscc-gz.cn'
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+
+    FORUM_MAIL_SUBJECT_PREFIX = 'easyHPC'
+    FORUM_MAIL_SENDER = '<easyhpc@nscc-gz.cn>'
 
     BABEL_DEFAULT_LOCALE = 'zh'
     BABEL_DEFAULT_TIMEZONE = 'CST'
@@ -83,7 +81,7 @@ class Config:
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
     ALLOWED_RESOURCE_TYPE = {'pdf', 'video', 'audio'}
 
-    VNC_SERVER_URL = 'http://10.133.100.145:8080/server/controller'
+    VNC_SERVER_URL = 'http://10.174.5.19:8080/server/controller'
     # VNC_SERVER_URL = 'http://a002.nscc-gz.cn:10231/server/controller'
 
     @staticmethod

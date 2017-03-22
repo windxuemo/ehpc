@@ -661,7 +661,8 @@ def question_filter_by_classify(question_type, question_classify):
         return render_template('admin/problem/question.html',
                                title=gettext('Question Manage'),
                                questions=questions,
-                               type=question_type)
+                               type=question_type,
+                               question_classify=question_classify)
     elif request.method == 'POST':
         # 删除练习题目
         curr_question = Question.query.filter_by(id=request.form['id']).first_or_404()
@@ -688,12 +689,14 @@ def program_filter_by_classify(question_classify):
 @teacher_login
 def question_create(question_type):
     if request.method == 'GET':
+        question_classify = request.args.get("question_classify", None)
         return render_template('admin/problem/question_detail.html',
                                title=gettext('Edit question'),
                                op='create',
                                classifies=Classify.query.all(),
                                mode='practice',
-                               type=question_type)
+                               type=question_type,
+                               question_classify=question_classify)
     elif request.method == 'POST':
         # 添加练习题目
         curr_question = Question(type=request.form['type'], content=request.form['content'],
@@ -711,6 +714,7 @@ def question_create(question_type):
 @teacher_login
 def question_edit(question_type, question_id):
     if request.method == 'GET':
+        question_classify = request.args.get("question_classify", None)
         curr_question = Question.query.filter_by(id=question_id).first_or_404()
         curr_classifies = {}
         index = 0
@@ -724,7 +728,8 @@ def question_edit(question_type, question_id):
                                classifies=Classify.query.all(),
                                mode='practice',
                                type=question_type,
-                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False))
+                               curr_classifies=json.dumps(curr_classifies, ensure_ascii=False),
+                               question_classify=question_classify)
     elif request.method == 'POST':
         # 编辑练习题
         curr_question = Question.query.filter_by(id=request.form['id']).first_or_404()

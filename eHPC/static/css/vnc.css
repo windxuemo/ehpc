@@ -57,7 +57,7 @@ html, body {
 }
 
 .content-holder {
-    background: #e1e1e1;
+    background: #ffffff;
     padding-top: 50px;
     padding-bottom:71px;
     position: absolute;
@@ -131,7 +131,7 @@ html, body {
 }
 
 .vnc-whole{
-    overflow: auto;
+    overflow: hidden;
     position: absolute;
     left: 0;
     right: 0;

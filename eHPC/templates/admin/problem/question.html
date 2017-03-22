@@ -10,7 +10,7 @@
             </div>
             <div class="col-md-9">
                 <div class="panel panel-default panel-col">
-                    {% with create=url_for('admin.question_create', question_type=type), questions=questions, question_type=type %}
+                    {% with questions=questions, question_type=type %}
                         {% include 'admin/problem/widget_question_table.html' %}
                     {% endwith %}
                 </div>

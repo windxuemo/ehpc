@@ -37,7 +37,7 @@
                 $("#btn-fullscreen").click(function () {
                     if(!is_full){
                         is_full = true;
-                        $("#btn-fullscreen").text("返回");
+                        $("#btn-fullscreen").text("退出桌面全屏");
                         header.removeClass("vnc-navbar");
                         header.addClass("fullscreen-vnc-navbar");
                         footer.hide("blind", {direction: "down"}, "normal");
@@ -52,7 +52,7 @@
                     }
                     else{
                         is_full = false;
-                        $("#btn-fullscreen").text("全屏");
+                        $("#btn-fullscreen").text("桌面全屏");
                         header.removeClass("fullscreen-vnc-navbar");
                         header.addClass("vnc-navbar");
                         footer.show("blind", {direction: "down"}, "normal");
@@ -64,6 +64,44 @@
                         $("#display").css("position", "absolute");
                         $(window).trigger("resize");
 
+                    }
+                });
+
+                var browser_fullscreen = false;
+                $("#btn-browser-fullscreen").click(function () {
+                    if(!browser_fullscreen){
+                        var element = document.documentElement;
+                        if(element.requestFullscreen) {
+                            element.requestFullscreen();
+                            browser_fullscreen = true;
+                            $(this).text("退出浏览器全屏")
+                        } else if(element.mozRequestFullScreen) {
+                            element.mozRequestFullScreen();
+                            browser_fullscreen = true;
+                            $(this).text("退出浏览器全屏")
+                        } else if(element.webkitRequestFullscreen) {
+                            element.webkitRequestFullscreen();
+                            browser_fullscreen = true;
+                            $(this).text("退出浏览器全屏")
+                        } else if(element.msRequestFullscreen) {
+                            element.msRequestFullscreen();
+                            browser_fullscreen = true;
+                            $(this).text("退出浏览器全屏")
+                        }
+                    }else{
+                        if(document.exitFullscreen) {
+                            document.exitFullscreen();
+                            browser_fullscreen = false;
+                            $(this).text("浏览器全屏")
+                        } else if(document.mozCancelFullScreen) {
+                            document.mozCancelFullScreen();
+                            browser_fullscreen = false;
+                            $(this).text("浏览器全屏")
+                        } else if(document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                            browser_fullscreen = false;
+                            $(this).text("浏览器全屏")
+                        }
                     }
                 });
             });
@@ -120,6 +158,7 @@
                     var scale_width = width_to_set/cur_width;
                     guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
                     $("#display").css("position", "absolute");
+                    $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
                 };
 
                 guac.onclipboard = function (stream, mimetype) {
@@ -139,9 +178,15 @@
                     var scale_width = width_to_set/cur_width;
                     guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
 
-                    guac.getDisplay().getDefaultLayer().resize(guac.getDisplay().getDefaultLayer().height * 4 / 3, guac.getDisplay().getDefaultLayer().height);
-                    if(is_full) $("#display").css("left", 0.5 * (content_right.width() - $("#display").width()));
-                    else $("#display").css("left", 0);
+                    guac.getDisplay().getDefaultLayer().resize(guac.getDisplay().getDefaultLayer().height * cur_width / cur_height, guac.getDisplay().getDefaultLayer().height);
+                    if(is_full) {
+                        $("#display").css("left", 0.5 * (content_right.width() - $("#display").width()));
+                        $("#display").css("top", 0);
+                    }
+                    else {
+                        $("#display").css("left", 0);
+                        $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
+                    }
                 });
 
                 $("#clipboard-content").change(function () {

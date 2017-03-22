@@ -13,6 +13,7 @@ from . import lab
 from .. import db
 from ..models import Challenge, Knowledge, Progress
 from .lab_util import get_cur_progress
+from config import TH2_MY_PATH
 import random, string
 import requests
 
@@ -101,7 +102,7 @@ def knowledge(kid):
             source_code = request.form['code']
             k_num = request.form['k_num']
 
-            myPath = os.environ.get("EHPC_PATH")
+            myPath = TH2_MY_PATH
 
             job_filename = "%s_%s_%s.sh" % (str(kid), str(k_num), str(current_user.id))
             input_filename = "%s_%s_%s.c" % (str(kid), str(k_num), str(current_user.id))
@@ -120,7 +121,7 @@ def knowledge(kid):
             if not is_success[0]:
                 return jsonify(status="fail", msg="上传程序到超算主机失败!")
 
-            compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpicc")
+            compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpi")
 
             result = dict()
             result['compile_success'] = 'true'

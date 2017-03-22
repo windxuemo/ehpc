@@ -229,9 +229,8 @@ class ehpc_client:
         jobscript = """#!/bin/bash
 #SBATCH -p %s
 #SBATCH -N %s
-    date
-    time srun -n %s -c %s ./%s
-    date""" % (partition, node_number, task_number, cpu_number_per_task, output_filename)
+    yhrun -n %s -c %s ./%s
+""" % (partition, node_number, task_number, cpu_number_per_task, output_filename)
 
         if not self.upload(myPath, job_filename, jobscript):
             return "ERROR"

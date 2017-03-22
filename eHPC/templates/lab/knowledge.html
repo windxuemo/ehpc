@@ -48,7 +48,7 @@
             <div id="editor" class="editor"></div>
         </div>
         <div id="terminal">
-            <div class="terminal" tabindex="0" style="color: rgb(240, 240, 240);"></div>
+            <pre class="terminal" tabindex="0" style="color: rgb(240, 240, 240);"></pre>
         </div>
 
     </div>
@@ -106,7 +106,7 @@
                 $.ajax({
                     url: address,
                     type: "post",
-                    timeout: 10000, // sets timeout to 10 seconds
+                    timeout: 20000, // sets timeout to 20 seconds
                     data: {
                         op: "run",
                         code: code,

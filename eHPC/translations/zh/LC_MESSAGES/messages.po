@@ -559,7 +559,7 @@ msgstr "点击这里"
 msgid ""
 "Alternatively, you can paste the following link in your browser's address"
 " bar:"
-msgstr "相应的，您也可以赋值下面的链接到浏览器打开"
+msgstr "相应的，您也可以复制下面的链接到浏览器打开"
 
 #: templates/user/passwd_reset_email.html:5
 msgid "If you have not requested a password reset simply ignore this message."
@@ -568,8 +568,8 @@ msgstr "如果您没有申请重置密码，请忽略此信息"
 #: templates/user/passwd_reset_email.html:6
 msgid ""
 "Sincerely, \n"
-" The eHPC Team"
-msgstr "eHPC团队祝您使用愉快"
+" The EasyHPC Team"
+msgstr "EasyHPC团队祝您使用愉快"
 
 #: templates/user/passwd_reset_email.html:7
 msgid "Note: replies to this email address are not monitored."

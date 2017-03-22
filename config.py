@@ -52,7 +52,7 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'easyhpc@nscc-gz.cn'
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
-    FORUM_MAIL_SUBJECT_PREFIX = 'easyHPC'
+    FORUM_MAIL_SUBJECT_PREFIX = 'EasyHPC'
     FORUM_MAIL_SENDER = '<easyhpc@nscc-gz.cn>'
 
     BABEL_DEFAULT_LOCALE = 'zh'

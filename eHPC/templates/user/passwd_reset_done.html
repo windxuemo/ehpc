@@ -1,26 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}{{ _("Password reset email sent") }}{% endblock %}
+
+{% block header_ext %}
+    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    {% if 'Successful' == message %}
-    <h2 class="text-center text-success" style="margin-bottom:1em"> {{ _('Successful!') }} </h2>
-    <p class="text-center">
-        {{ _("Password reset successfully. ") }} 
-        </br>
-        </br>
-        </br>
-    </p>
-    {% else %}
-    <h2 class="text-center text-fail" style="margin-bottom:1em"> {{ _('Failed!') }} </h2>
-    <p class="text-center">
-        {{ _('Password reset failed somehow.  Please make sure your reset link is legal and not used already!') }}
-        </br>
-        </br>
-        </br>
-    </p>
-    {% endif %}
+    <div class="page-message-panel container" style="margin-top: 15px">
 
-</div>
+        {% if 'Successful' == message %}
+            <div class="page-message-heading">
+                <h2 class="page-message-title text-center" > {{ _('Successful!') }} </h2>
+            </div>
+
+            <div class="page-message-body">
+                <p class="text-center">
+                    {{ _("Password reset successfully. ") }}
+                </p>
+            </div>
+
+        {% else %}
+            <div class="page-message-heading">
+                <h2 class="page-message-title text-center" > {{ _('Failed!') }} </h2>
+            </div>
+
+            <div class="page-message-body">
+                <p class="text-center">
+                    {{ _('Password reset failed somehow.  Please make sure your reset link is legal and not used already!') }}
+                </p>
+            </div>
+
+        {% endif %}
+
+    </div>
 {% endblock %}
 

@@ -1,15 +1,27 @@
+<head>
+    <title>
+        {% block title %}{{ _("Password reset email sent") }}{% endblock %}
+    </title>
+
+    <link href="{{ url_for('static', filename='css/lab.css') }}" rel="stylesheet">
+</head>
+
 {% extends 'base.html' %}
-{% block title %}{{ _("Password reset email sent") }}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="text-center text-success" style="margin-bottom:1em"> {{ _('Email Sent') }} </h2>
-    <p class="text-center">
-        {{ _('We have sent you an email with a link to reset your password. Please check your email and click the link to continue.') }}
-        </br>
-        </br>
-        </br>
-    </p>
+
+<div class="page-message-panel container" style="margin-top: 15px">
+
+    <div class="page-message-heading">
+        <h2 class="page-message-title text-center" > {{ _('Email Sent') }} </h2>
+    </div>>
+
+    <div class="page-message-body">
+        <p class="text-center">
+            {{ _('We have sent you an email with a link to reset your password. Please check your email and click the link to continue.') }}
+        </p>
+    </div>
+
 </div>
 {% endblock %}
 

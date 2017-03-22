@@ -132,7 +132,7 @@ class Course(db.Model):
     # 加入该课程的用户, 多对多的关系
     users = db.relationship('User', secondary=course_users,
                             backref=db.backref('courses', lazy='dynamic'))
-
+    # 二维码，一对一的关系
     qrcode = db.relationship('QRcode', uselist=False, backref='course')
 
 

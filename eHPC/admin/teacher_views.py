@@ -33,9 +33,20 @@ def course():
         curr_course = Course.query.filter_by(id=request.form['course_id']).first_or_404()
         for l in curr_course.lessons:
             for m in l.materials:
-                os.remove(os.path.join(current_app.config['RESOURCE_FOLDER'], m.uri))
                 db.session.delete(m)
             db.session.delete(l)
+        for h in curr_course.homeworks:
+            for x in h.uploads:
+                db.session.delete(x)
+            for x in h.appendix:
+                db.session.delete(x)
+            db.session.delete(h)
+        for p in curr_course.papers:
+            db.session.delete(p)
+        for c in curr_course.comments:
+            db.session.delete(c)
+        if curr_course.qrcode:
+            db.session.delete(curr_course.qrcode)
 
         resource_path = os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id)
         homework_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], 'course_%d' % curr_course.id)

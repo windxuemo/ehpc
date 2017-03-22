@@ -997,34 +997,6 @@ VALUES
 UNLOCK TABLES;
 
 
-# Dump of table paper_course
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `paper_course`;
-
-CREATE TABLE `paper_course` (
-  `course_id` int(11) NOT NULL DEFAULT '0',
-  `paper_id` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`course_id`,`paper_id`),
-  KEY `course_id` (`course_id`),
-  KEY `paper_id` (`paper_id`),
-  CONSTRAINT `paper_course_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
-  CONSTRAINT `paper_course_ibfk_2` FOREIGN KEY (`paper_id`) REFERENCES `papers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `paper_course` WRITE;
-/*!40000 ALTER TABLE `paper_course` DISABLE KEYS */;
-
-INSERT INTO `paper_course` (`course_id`, `paper_id`)
-VALUES
-	(1,1),
-	(1,2),
-	(1,3);
-
-/*!40000 ALTER TABLE `paper_course` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
 # Dump of table paper_question
 # ------------------------------------------------------------
 

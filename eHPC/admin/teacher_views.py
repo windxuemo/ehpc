@@ -250,9 +250,9 @@ def course_member(course_id):
         return render_template('admin/course/member.html', course=curr_course, applies=curr_course.applies, title=u'成员管理')
     elif request.method == 'POST':
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
-        data = [[x.name, x.student_id, u'男' if x.gender else u'女', x.phone] for x in curr_course.users]
+        data = [[x.email, x.name, x.student_id, u'男' if x.gender else u'女', x.phone] for x in curr_course.users]
         uri = get_member_xlsx(data, curr_course.id)
-        return send_file(uri, as_attachment=True, attachment_filename='学生名单.xlxs')
+        return send_file(uri, as_attachment=True, attachment_filename='学生名单.xlsx')
 
 
 @admin.route('/course/<int:apply_id>/approved/')

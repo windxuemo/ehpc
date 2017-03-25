@@ -6,7 +6,7 @@ import zipfile
 import shutil
 from datetime import datetime
 
-from flask import render_template, request, redirect, url_for, abort, jsonify, current_app, make_response, send_file
+from flask import render_template, request, redirect, url_for, abort, jsonify, current_app, make_response, send_file, send_from_directory
 from flask_login import current_user
 from flask_babel import gettext
 from sqlalchemy import or_
@@ -20,6 +20,7 @@ from ..user.authorize import teacher_login
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
 from ..util.pdf import get_paper_pdf
 from ..util.file_manage import remove_dirs
+from ..util.xlsx import get_member_xlsx
 
 
 @admin.route('/course/', methods=['GET', 'POST'])
@@ -248,8 +249,10 @@ def course_member(course_id):
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
         return render_template('admin/course/member.html', course=curr_course, applies=curr_course.applies, title=u'成员管理')
     elif request.method == 'POST':
-        print request.form
-        return redirect(url_for('admin.course_member', course_id=course_id))
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
+        data = [[x.name, x.student_id, u'男' if x.gender else u'女', x.phone] for x in curr_course.users]
+        uri = get_member_xlsx(data, curr_course.id)
+        return send_file(uri, as_attachment=True, attachment_filename='学生名单.xlxs')
 
 
 @admin.route('/course/<int:apply_id>/approved/')

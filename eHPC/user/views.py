@@ -231,8 +231,6 @@ def setting_info():
         web_addr = _form["website"]
 
         message_email = ""
-        if not email_address.match(email_addr):
-            message_email = gettext('Email address is invalid.')
 
         # TODO
         # Change the user's email need to verify the old_email addr's ownership

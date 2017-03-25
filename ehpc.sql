@@ -616,7 +616,7 @@ CREATE TABLE `knowledges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(1024) NOT NULL,
   `content` text,
-  `cover_url` varchar(512) DEFAULT NULL,
+  `cover_url` varchar(512) DEFAULT '',
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),

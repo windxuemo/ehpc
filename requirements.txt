@@ -17,6 +17,7 @@ PyYAML==3.12
 SQLAlchemy==1.0.15
 WTForms==2.1
 Werkzeug==0.11.11
+XlsxWriter==0.9.6
 alembic==0.8.8
 blinker==1.4
 cffi==1.8.3

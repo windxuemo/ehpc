@@ -449,8 +449,8 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `group_members`;
 
 CREATE TABLE `group_members` (
-  `group_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `group_id` int(11),
+  `user_id` int(11),
   PRIMARY KEY (`group_id`, `user_id`),
   KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`),

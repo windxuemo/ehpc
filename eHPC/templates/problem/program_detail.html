@@ -181,10 +181,10 @@
 
             var data = $("form").serialize();
             $('#result-show').css("display", 'block');
-            var loading = "<img src='{{ url_for('static', filename='images/loading.gif') }}' alt='Loading'></div>";
+            var loading = "<img src='{{ url_for('static', filename='images/submit.gif') }}' alt='Loading'></div>";
+            $("#run-content").empty();
 
             $("#compiler-content").empty().append(loading);
-            //$('#program-run-tab a:first').tab('show');
             $.ajax({
                 method: "post",
                 cache: false,

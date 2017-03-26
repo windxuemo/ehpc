@@ -102,7 +102,9 @@
             $run.click(function () {
                 $run.prop('disabled', true);
                 var code = editor.getValue();
-                terminal.eq(0).text('代码正在提交中...');
+                var loading = "<img src='{{ url_for('static', filename='images/submit.gif') }}' alt='Loading'></div>";
+                terminal.eq(0).empty().append(loading);
+{#                terminal.eq(0).text('代码正在提交中...');#}
                 $.ajax({
                     url: address,
                     type: "post",
@@ -126,8 +128,8 @@
                         }
                         $run.prop('disabled', false);
                     },
-                    error: function(){
-                        terminal.eq(0).text('天河服务器长时间没有反应, 请稍后重试...');
+                    error: function(msg){
+                        terminal.eq(0).text('天河服务器出错或者长时间没有反应, 请稍后重试...');
                         $run.prop('disabled', false);
                     }
                 });

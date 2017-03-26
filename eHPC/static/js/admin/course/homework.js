@@ -60,7 +60,7 @@ $(document).ready(function () {
         url: location.href,
         maxFiles: 10,
         maxFilesize: 50,
-        acceptedFiles: ".mp4,.mkv,.pdf,.zip,.rar",
+        acceptedFiles: "video/mp4,video/mkv,application/pdf,.zip,.rar",
         autoProcessQueue: false,
         previewTemplate: template,
         uploadMultiple: true,
@@ -88,16 +88,18 @@ $(document).ready(function () {
                         setTimeout(function() {location.href = back_to_list;}, 800);
                     }
                     else {
-                        alert_modal("附件上传成功！");
+                        /*alert_modal("附件上传成功！");
                         $(".close").click(function () {
                            location.reload();
-                        });
+                        });*/
+                        location.reload();
                     }
                 }
             });
             var myDropzone = this;
             this.element.querySelector("input[type=submit]").addEventListener("click", function(e) {
                 if (myDropzone.getQueuedFiles().length > 0) {
+                    $("#upload-status .modal-title span")[0].innerHTML = "文件正在上传";
                     $("#upload-status .col-md-5").removeClass("set-invisible");
                     // Make sure that the form isn't actually being sent.
                     var p_instance = $('#course-homework-form').parsley();

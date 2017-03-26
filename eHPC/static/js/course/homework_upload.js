@@ -55,7 +55,7 @@ $(document).ready(function() {
         url: post_to,
         maxFiles: 10,
         maxFilesize: 50,
-        acceptedFiles: ".pdf,.zip,.rar",
+        acceptedFiles: "application/pdf,.zip,.rar",
         autoProcessQueue: true,
         previewTemplate: template,
         uploadMultiple: true,
@@ -68,19 +68,18 @@ $(document).ready(function() {
         init: function() {
             var myDropzone = this;
             this.on("addedfile", function(file) {
-                $("#upload-status").show();
+                //$("#upload-status").show();
+                $("#upload-status").modal('show');
                 $(".file-remove").hide();
+                $("#upload-status").css("top","30%");
+                $("#upload-status").css("left","30%");
+                $("#upload-status").css("bottom","auto");
             });
             this.on("error", function (file) {
                error = true;
+               alert_modal("文件上传失败，请稍后重试！");
             });
             this.on("successmultiple", function(file,response) {
-                alert_modal("上传成功！");
-                $(".modal-alert .close").click(function () {
-                    $("#upload-status").hide();
-                    myDropzone.removeAllFiles();
-                    $("#upload-status .dz-complete").remove();
-                });
                 for (var i=0;i<response.new_upload_id.length;++i) {
                     var uploadFilehtml;
                     if(response.is_on_time == "NO") {
@@ -109,6 +108,10 @@ $(document).ready(function() {
                     }
                     $("#my-uploads").append(uploadFilehtml);
                 }
+                //$("#upload-status").hide();
+                myDropzone.removeAllFiles();
+                $("#upload-status .dz-complete").remove();
+                $("#upload-status").modal('hide');
             });
             $("#upload-status #dialog-mini-btn").click(function () {
                 $("#upload-status .modal-body").toggle();
@@ -120,7 +123,7 @@ $(document).ready(function() {
     });
 
     $("#dialog-close-btn").click(function () {
-
-        $("#upload-status").hide();
+        $("#upload-status").modal('hide');
+        //$("#upload-status").hide();
     });
 });

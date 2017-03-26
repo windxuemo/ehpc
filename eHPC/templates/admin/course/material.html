@@ -101,7 +101,7 @@
                         </div>
                         <div class="form-group clearfix">
                             <div class="controls">
-                                <label for="course-name-field">自定义文件名：</label>
+                                <label for="course-name-field">自定义文件名(保留文件后缀名)：</label>
                                 <input class="form-control" id="file-name-field" name="file-name" type="text" placeholder="请指定文件名" style="width: 70%;"
                                        data-parsley-maxlength="1024" data-parsley-required-message="请输入自定义文件名" required>
                             </div>
@@ -112,8 +112,9 @@
                                 <div>
                                     <input id="course-type-field1" name="file-type" type="radio" value="video"
                                            data-parsley-required-message="请选择文件类型"
-                                           data-parsley-errors-container="#textarea-errors" required><label for="course-type-field2">Video</label>&nbsp;&nbsp;&nbsp;
-                                    <input id="course-type-field2" name="file-type" type="radio" value="radio"><label for="course-type-field3">Radio</label>
+                                           data-parsley-errors-container="#textarea-errors" required><label for="course-type-field1">Video</label>&nbsp;&nbsp;&nbsp;
+                                    <input id="course-type-field2" name="file-type" type="radio" value="radio"><label for="course-type-field2">Radio</label>
+                                    <input id="course-type-field3" name="file-type" type="radio" value="pdf"><label for="course-type-field3">PDF</label>
                                 </div>
                                 <div id="radio-errors"></div>
                             </div>

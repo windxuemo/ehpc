@@ -68,7 +68,8 @@ $(document).ready(function () {
                         a.target = '_parent';
                         // Use a.download if available, it prevents plugins from opening.
                         if ('download' in a) {
-                            a.download = '' + data['course_title'] + '_' + data['homework_title'] + '.zip';
+                            var timestamps = new Date().getTime();
+                            a.download = '' + data['course_title'] + '_' + data['homework_title'] + '_' + timestamps + '.zip';
                         }
                         // Add a to the doc for click to work.
                         (document.body || document.documentElement).appendChild(a);
@@ -80,6 +81,8 @@ $(document).ready(function () {
                         }
                         // Delete the temporary link.
                         a.parentNode.removeChild(a);
+                        $("#all-homework-select").prop("checked", "");
+                        $("#homework-table-body").find("input[type=checkbox]").prop("checked", "");
                     }
                 },
                 error: function() {

@@ -1,7 +1,8 @@
 {% extends "lab/vnc_base.html" %}
 
 {% block header_ext %}
-
+    <link href="//cdn.bootcss.com/bootstrap-select/1.12.1/css/bootstrap-select.min.css" rel="stylesheet">
+    <script src="//cdn.bootcss.com/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -12,26 +13,109 @@
         <div id="display"></div>
     </div>
 
-    <div class="modal fade center" id="clipboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="clipboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel">剪切板</h4>
                 </div>
-                <div class="modal-body" style="height: 300px;font-size: medium">
+                <div class="modal-body" style="height: 250px;font-size: medium">
                     <textarea id="clipboard-content" class="form-control" style="height: 100%"></textarea>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="select-resolution" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">更改分辨率</h4>
+                </div>
+                <div class="modal-body" style="height: 250px;font-size: medium;text-align:center">
+                    <div class="resolution-input-center">
+                        <div class="selector-center" id="select">
+                            <label for="resolution-selector">选择分辨率</label>
+                            <select class="selectpicker" data-live-search="true" name="resolution" id="resolution-selector">
+                                <option value="2880x1620">2880x1620 (16:9)</option>
+                                <option value="2560x1600">2560x1600 (8:5)</option>
+                                <option value="2560x1440">2560x1440 (16:9) (2K)</option>
+                                <option value="2048x1536">2048x1536 (4:3)</option>
+                                <option value="2048x1152">2048x1152 (16:9)</option>
+                                <option value="1920x1440">1920x1440 (4:3)</option>
+                                <option value="1920x1200">1920x1200 (8:5)</option>
+                                <option value="1920x1080">1920x1080 (16:9) (1K)</option>
+                                <option value="1680x1050">1680x1050 (8:5)</option>
+                                <option value="1600x1200">1600x1200 (4:3)</option>
+                                <option value="1600x1024">1600x1024 (25:16)</option>
+                                <option value="1600x900">1600x900 (16:9)</option>
+                                <option value="1280x1024">1280x1024 (5:4)</option>
+                                <option value="1280x960">1280x960 (4:3)</option>
+                                <option value="1280x800">1280x800 (8:5)</option>
+                                <option value="1280x768">1280x768 (5:3)</option>
+                                <option value="1280x720">1280x720 (16:9)</option>
+                                <option value="1152x864">1152x864 (4:3)</option>
+                                <option value="1024x768">1024x768 (4:3)</option>
+                                <option value="800x600">800x600 (4:3)</option>
+                            </select>
+                        </div>
+
+                        <div class="selector-center" style="display: none" id="input">
+                            <label for="input-resolution">输入分辨率</label>
+                            <input class="form-control resolution-input" placeholder="最大为3840" id="input-resolution-width" name="resolution">
+                            <label> x </label>
+                            <input class="form-control resolution-input" placeholder="最大为2160" id="input-resolution-height" name="resolution">
+                            <label style="position: absolute;right: 2%;line-height: 34px" id="scale">0:0</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="pull-right btn btn-primary" style="margin-left: 10px" id="cancel-change">取消</button>
+                    <button class="pull-right btn btn-primary" style="margin-left: 10px" id="confirm-change">确定</button>
+                    <button class="pull-right btn btn-primary" id="custom-resolution">自定义</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" style="height: 250px;">
+                    <img src="{{ url_for('static', filename='images/loading.gif') }}" class="loading-center">
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block footer_ext %}
     <script>
+        function hcf(n, m) {
+            var min = n;
+            (m < n) && (min = m);
+            var max = 0;
+            for (var i = 0, arr = []; i <= min; i++) {
+                if (n % i === 0 && m % i === 0) {
+                    arr.push(i);
+                }
+            }
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i] > arr[i + 1]) {
+                    arr[i] = [arr[i + 1], arr[i + 1] = arr[i]][0];
+                }
+
+            }
+            max = arr[arr.length - 1];
+            return max;
+        }
+    </script>
+    <script>
         {% if status == 'success' %}
             var header = $(".vnc-navbar").eq(0), footer = $(".content-footer").eq(0), content = $(".content-holder"),
                 content_left = $(".vnc-left"), content_right = $(".vnc-right");
-            var guac, clipboard = $("#clipboard");
+            var guac, clipboard = $("#clipboard"), pick_resolution = $("#select-resolution");
             var is_full = false;
             $(function () {
                 $("#btn-fullscreen").click(function () {
@@ -63,7 +147,6 @@
                         content.addClass("content-holder");
                         $("#display").css("position", "absolute");
                         $(window).trigger("resize");
-
                     }
                 });
 
@@ -103,6 +186,124 @@
                             $(this).text("浏览器全屏")
                         }
                     }
+                });
+
+                $("#change-resolution").click(function () {
+                    $("#select-resolution").modal({backdrop: 'static', keyboard: false});
+                });
+
+                var if_select_resolution = true;
+                $("#custom-resolution").click(function () {
+                    $("#select").toggle();
+                    $("#input").toggle();
+                    if(!if_select_resolution){
+                        if_select_resolution = true;
+                        $(this).text("自定义");
+                    }else{
+                        if_select_resolution = false;
+                        $(this).text("选择预设");
+                    }
+                });
+
+                $("#cancel-change").click(function () {
+                    $("#select-resolution").modal("hide");
+                });
+
+                $("#confirm-change").click(function () {
+                    var resolution_height, resolution_width;
+                    var resolution_selector = $("#resolution-selector");
+                    if(if_select_resolution){
+                        if(resolution_selector.val().length !== 0){
+                            resolution_width = resolution_selector.val().split("x")[0];
+                            resolution_height = resolution_selector.val().split("x")[1];
+                        }
+                        else{
+                            alert("请选择分辨率");
+                            return;
+                        }
+                    }
+                    else{
+                        resolution_width = $("#input-resolution-width").val();
+                        resolution_height = $("#input-resolution-height").val();
+                        if (!(Number(resolution_width).toString() === resolution_width && Number(resolution_height).toString() === resolution_height)){
+                            alert("请输入分辨率");
+                            return;
+                        }
+                    }
+                    if(resolution_width<640){
+                        alert("最小宽度不能小于640");
+                        return;
+                    }
+                    if(resolution_height<360){
+                        alert("最小高度不能小于360");
+                        return;
+                    }
+                    $("#select-resolution").modal("hide");
+                    $("#loading").modal({backdrop: 'static', keyboard: false});
+                    $.ajax({
+                        url: "http://a002.nscc-gz.cn:10231/server/vncsetter",
+                        type: "post",
+                        data: {
+                            "width": resolution_width,
+                            "height": resolution_height,
+                            "token": "{{ token }}"
+                        },
+                        success: function (data) {
+                            data = JSON.parse(data);
+                            $("#loading").modal("hide");
+                            if(data["status"] === "success"){
+                                location.reload();
+                            }
+                            else if(data["status"] === "fail"){
+                                alert("修改分辨率失败，请重试");
+                            }
+                        }
+                    });
+                });
+
+                $("#input-resolution-width").keyup(function () {
+                    var input_height = $("#input-resolution-height");
+                    var input_width = $("#input-resolution-width");
+                    if(!(Number($(this).val()).toString() === $(this).val())){
+                        $(this).val("");
+                        return;
+                    }
+
+                    if(Number($(this).val())<=0){
+                        $(this).val("");
+                        return;
+                    }
+                    if(Number($(this).val())>3840){
+                        $(this).val(3840);
+                    }
+
+                    var height = input_height.val();
+                    var width = input_width.val();
+                    if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
+                    var common_factor = hcf(width, height);
+                    $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
+                });
+
+                $("#input-resolution-height").keyup(function () {
+                    var input_height = $("#input-resolution-height");
+                    var input_width = $("#input-resolution-width");
+                    if(!(Number($(this).val()).toString() === $(this).val())){
+                        $(this).val("");
+                        return;
+                    }
+                    if(Number($(this).val())<=0){
+                        $(this).val("");
+                        return;
+                    }
+                    if(Number($(this).val())>2160){
+                        $(this).val(2160);
+                    }
+
+                    var height = input_height.val();
+                    var width = input_width.val();
+                    if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
+                    var common_factor = hcf(width, height);
+                    $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
                 });
             });
 
@@ -167,6 +368,8 @@
                         $("#clipboard-content").val(text);
                     }
                 };
+
+
                 $(window).resize(function () {
                     if(!guac || !guac.getDisplay()) return;
                     var height_to_set = content_right.eq(0).height();
@@ -195,6 +398,7 @@
                     guac.setClipboard($(this).val());
                 });
 
+
                 clipboard.on('shown.bs.modal', function () {
                     keyboard.onkeydown = null;
                     keyboard.onkeyup = null;
@@ -208,11 +412,27 @@
                         guac.sendKeyEvent(0, keysym);
                     };
                 });
+
+
+                pick_resolution.on('shown.bs.modal', function () {
+                    keyboard.onkeydown = null;
+                    keyboard.onkeyup = null;
+                });
+
+                pick_resolution.on('hidden.bs.modal', function () {
+                    keyboard.onkeydown = function (keysym) {
+                        guac.sendKeyEvent(1, keysym);
+                    };
+                    keyboard.onkeyup = function (keysym) {
+                        guac.sendKeyEvent(0, keysym);
+                    };
+                });
             });
+
         {% elif status == 'no machine available' %}
-            display.text("设备已满，请稍后重试");
+            $("#display").text("设备已满，请稍后重试");
         {% elif status == 'error' %}
-            display.text("无法连接vnc服务器");
+            $("#display").text("无法连接vnc服务器");
         {% endif %}
     </script>
 {% endblock %}

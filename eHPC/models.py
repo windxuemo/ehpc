@@ -123,6 +123,7 @@ class Course(db.Model):
     rank = db.Column(db.Float, default=0)                       # 课程评分
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
 
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')
@@ -179,8 +180,8 @@ class Comment(db.Model):
 
 """ 互动社区功能 """
 group_members = db.Table('group_members',
-                         db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                         db.Column('group_id', db.Integer, db.ForeignKey('groups.id')))
+                         db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+                         db.Column('group_id', db.Integer, db.ForeignKey('groups.id'), primary_key=True))
 
 
 class Group(db.Model):
@@ -204,6 +205,8 @@ class Group(db.Model):
     # 小组内的成员, 多对多的关系
     members = db.relationship('User', secondary=group_members,
                               backref=db.backref('groups', lazy='dynamic'))
+
+    course = db.relationship('Course', uselist=False, backref='group')
 
 
 class Topic(db.Model):
@@ -392,6 +395,11 @@ class Challenge(db.Model):
     materialId = db.Column(db.Integer, db.ForeignKey('materials.id'))
     source_code = db.Column(db.Text(), nullable=False)
     default_code = db.Column(db.Text(), default=None)
+
+    task_number = db.Column(db.Integer, default=1)
+    cpu_number_per_task = db.Column(db.Integer, default=1)
+    node_number = db.Column(db.Integer, default=1)
+    language = db.Column(db.String(64), nullable=False)
 
 
 class Progress(db.Model):

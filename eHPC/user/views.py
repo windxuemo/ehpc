@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
 # @Last Modified time: 2016-09-19 14:27:41
-from flask import render_template, redirect, request, url_for, current_app, abort, jsonify
+from flask import render_template, redirect, request, url_for, current_app, abort, jsonify, session
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_babel import gettext
 from flask_paginate import Pagination
 import re
 import os
 from PIL import Image
-from datetime import datetime
+from datetime import datetime, timedelta
 from . import user
 from ..models import User
 from ..util.email import send_email
@@ -29,6 +29,8 @@ def signin():
                                title=gettext('User Sign In'),
                                form=None)
     elif request.method == 'POST':
+        session.permanent = True
+        current_app.permanent_session_lifetime = timedelta(days=1)
         next_url = request.args.get('next')
         if next_url:
             next_url = None if request.args.get('next')[:6] == '/user/' else request.args.get('next')

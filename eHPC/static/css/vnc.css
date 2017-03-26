@@ -155,7 +155,26 @@ html, body {
     cursor: pointer;
 }
 
-.modal.center {
+.selector-center{
+    margin: 0 auto 20px auto;
+}
+
+.resolution-input-center{
+    position: absolute;
     top: 50%;
+    left: 0;
+    right: 0;
     transform: translateY(-50%);
+}
+
+.resolution-input{
+    display: inline-block;
+    width: 150px;
+}
+
+.loading-center{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }

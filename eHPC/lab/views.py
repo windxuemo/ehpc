@@ -107,9 +107,12 @@ def knowledge(kid):
             job_filename = "%s_%s_%s.sh" % (str(kid), str(k_num), str(current_user.id))
             input_filename = "%s_%s_%s.c" % (str(kid), str(k_num), str(current_user.id))
             output_filename = "%s_%s_%s.o" % (str(kid), str(k_num), str(current_user.id))
-            task_number = 1
-            cpu_number_per_task = 1
-            node_number = 1
+
+            cur_challenge = Challenge.query.filter_by(knowledgeId=kid).filter_by(knowledgeNum=k_num).first()
+
+            task_number = cur_challenge.task_number
+            cpu_number_per_task = cur_challenge.cpu_number_per_task
+            node_number = cur_challenge.node_number
 
             client = ehpc_client()
             is_success = [False]
@@ -121,7 +124,7 @@ def knowledge(kid):
             if not is_success[0]:
                 return jsonify(status="fail", msg="上传程序到超算主机失败!")
 
-            compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, "mpi")
+            compile_out = client.ehpc_compile(is_success, myPath, input_filename, output_filename, cur_challenge.language)
 
             result = dict()
             result['compile_success'] = 'true'
@@ -136,11 +139,12 @@ def knowledge(kid):
             result['run_out'] = run_out
 
             # 代码成功通过编译, 则认为已完成该知识点学习
-            pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
-            if k_num == pro.cur_progress + 1:
-                if pro.cur_progress + 1 <= challenges_count:
-                    pro.cur_progress += 1
-                    db.session.commit()
+            if is_success[0]:
+                pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
+                if k_num == pro.cur_progress + 1:
+                    if pro.cur_progress + 1 <= challenges_count:
+                        pro.cur_progress += 1
+                        db.session.commit()
 
             return jsonify(result=result, status='success')
         elif request.form['op'] == 'get_source_code':
@@ -172,11 +176,18 @@ def vnc():
     token = ''
     req = None
     while status == 'repeated token':
-        token = ''.join(random.sample(string.ascii_letters + string.digits, 32))
-        req = requests.post(current_app.config['VNC_SERVER_URL'], params={"This_is_a_very_secret_token": token,
-                                                                          "user_id": current_user.id})
-        status = req.json()['status']
-    print status
+        try:
+            token = ''.join(random.sample(string.ascii_letters + string.digits, 32))
+            req = requests.post(current_app.config['VNC_SERVER_URL'], params={"This_is_a_very_secret_token": token,
+                                                                              "user_id": current_user.id}, timeout=30)
+            req.raise_for_status()
+        except requests.RequestException as e:
+            print e
+            return render_template('lab/vnc.html', title=gettext('vnc'), status='error')
+        else:
+            status = req.json()['status']
+            print status
+
     if status == 'success':
         return render_template('lab/vnc.html', title=gettext('vnc'), status='success', token=token)
     elif status == 'reconnect success':

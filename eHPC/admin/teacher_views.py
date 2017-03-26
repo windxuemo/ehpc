@@ -15,7 +15,7 @@ from . import admin
 from .. import db
 from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload, HomeworkAppendix
 from ..models import Course, Lesson, Material, User, Apply
-from ..models import Knowledge, Challenge
+from ..models import Knowledge, Challenge, Group
 from ..user.authorize import teacher_login
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
 from ..util.pdf import get_paper_pdf
@@ -68,10 +68,15 @@ def course_create():
                                title=gettext('Create Course'))
     elif request.method == 'POST':
         # 创建课程
+        course_group = Group(title=request.form['title'], about=request.form['title'] + u' 的课程讨论')
+        db.session.add(course_group)
+        db.session.commit()
+
         curr_course = Course(title=request.form['title'], subtitle='', about='',
-                             lessonNum=0, smallPicture='upload/course/noImg.jpg')
+                             lessonNum=0, smallPicture='upload/course/noImg.jpg', group_id=course_group.id)
         curr_course.teacher = current_user
         db.session.add(curr_course)
+
         db.session.commit()
         os.makedirs(os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id))
         os.makedirs(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], 'course_%d' % curr_course.id))
@@ -264,6 +269,11 @@ def course_approved(apply_id):
     curr_student = curr_apply.user
     curr_course.users.append(curr_student)
     curr_course.studentNum += 1
+
+    if curr_student not in curr_course.group.members:
+        curr_course.group.members.append(curr_student)
+        curr_course.group.memberNum += 1
+
     db.session.commit()
     return redirect(url_for('admin.course_member', course_id=curr_course.id))
 
@@ -967,7 +977,11 @@ def lab_create(knowledge_id):
         # 创建任务
         curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
         curr_challenge = Challenge(title=request.form['title'], content=request.form['content'],
-                                   source_code=request.form['source_code'], default_code=request.form['default_code'])
+                                   source_code=request.form['source_code'], default_code=request.form['default_code'],
+                                   language=request.form['language'], task_number=request.form['task_number'],
+                                   cpu_number_per_task=request.form['cpu_number_per_task'],
+                                   node_number=request.form['node_number'])
+
         curr_challenge.knowledgeNum = curr_knowledge.challenges.count() + 1
         db.session.add(curr_challenge)
         curr_knowledge.challenges.append(curr_challenge)
@@ -991,6 +1005,7 @@ def lab_edit(knowledge_id, challenge_id):
             for l in c.lessons:
                 for m in l.materials:
                     materials.append(m)
+        print curr_challenge.language, curr_challenge.task_number, curr_challenge.cpu_number_per_task, curr_challenge.node_number
         return render_template('admin/lab/knowledge_detail.html',
                                title=gettext('Lab Edit'),
                                op='edit', knowledge=curr_knowledge,
@@ -1009,6 +1024,10 @@ def lab_edit(knowledge_id, challenge_id):
             curr_challenge.content = request.form['content']
             curr_challenge.source_code = request.form['source_code']
             curr_challenge.default_code = request.form['default_code']
+            curr_challenge.language = request.form['language']
+            curr_challenge.task_number = request.form['task_number']
+            curr_challenge.cpu_number_per_task = request.form['cpu_number_per_task']
+            curr_challenge.node_number = request.form['node_number']
 
             if int(request.form['material_id']) != -1:
                 curr_challenge.material.challenges.remove(curr_challenge)

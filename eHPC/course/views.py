@@ -51,6 +51,11 @@ def view(cid):
 def join(cid, u=current_user):
     course_joined = Course.query.filter_by(id=cid).first_or_404()
     if course_joined.public:
+
+        if u not in course_joined.group.members:
+            course_joined.group.members.append(u)
+            course_joined.group.memberNum += 1
+
         course_joined.users.append(u)
         course_joined.studentNum += 1
         db.session.commit()
@@ -80,8 +85,14 @@ def join(cid, u=current_user):
 @student_in_course
 def exit_out(cid, u=current_user):
     course_joined = Course.query.filter_by(id=cid).first_or_404()
+
     course_joined.users.remove(u)
     course_joined.studentNum -= 1
+
+    if u in course_joined.group.members:
+        course_joined.group.members.remove(u)
+        course_joined.group.memberNum -= 1
+
     db.session.commit()
     if not course_joined.public:
         curr_apply = Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).first()

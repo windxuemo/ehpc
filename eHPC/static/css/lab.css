@@ -384,38 +384,3 @@
     width: 100%;
     padding: 10px;
 }
-
-.tutorial{
-    position: absolute;
-    width: 7%;
-    height: 4%;
-    left: -6.3%;
-    top: 15%;
-    background: rgb(255, 185, 222);
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
-}
-
-.tutorial:hover{
-    left: 0;
-    box-shadow: 5px 5px 2px #888888;
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
-}
-
-.tutorial-text{
-    font-weight: 700;
-    font-size: 120%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    margin: 0;
-}
-
-.tutorial-text:hover {
-    cursor: pointer;
-    text-decoration: none;
-}

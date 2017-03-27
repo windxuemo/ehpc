@@ -69,11 +69,15 @@ $(document).ready(function () {
                         // Use a.download if available, it prevents plugins from opening.
                         if ('download' in a) {
                             var cur_time = new Date();
-                            cur_year = cur_time.getFullYear();
-                            cur_month = cur_time.getMonth()+1;
-                            cur_day = cur_time.getDate()+1;
+                            var cur_year = cur_time.getFullYear();
+                            // 得到两位数的时间， 比如 20170302-11_01.zip
+                            var cur_month = ("0" + (cur_time.getMonth() + 1)).slice(-2);
+                            var cur_day = ("0" + cur_time.getDate()).slice(-2);
+                            var cur_hour = ("0" + cur_time.getHours()).slice(-2);
+                            var cur_min = ("0" + cur_time.getMinutes()).slice(-2);
+
                             a.download = '' + data['course_title'] + '_' + data['homework_title'] + '_' + cur_year
-                                + cur_month + cur_day + '.zip';
+                                + cur_month + cur_day + '-' + cur_hour + '_' + cur_min + '.zip';
                         }
                         // Add a to the doc for click to work.
                         (document.body || document.documentElement).appendChild(a);

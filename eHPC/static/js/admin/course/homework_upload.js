@@ -68,8 +68,12 @@ $(document).ready(function () {
                         a.target = '_parent';
                         // Use a.download if available, it prevents plugins from opening.
                         if ('download' in a) {
-                            var timestamps = new Date().getTime();
-                            a.download = '' + data['course_title'] + '_' + data['homework_title'] + '_' + timestamps + '.zip';
+                            var cur_time = new Date();
+                            cur_year = cur_time.getFullYear();
+                            cur_month = cur_time.getMonth()+1;
+                            cur_day = cur_time.getDate()+1;
+                            a.download = '' + data['course_title'] + '_' + data['homework_title'] + '_' + cur_year
+                                + cur_month + cur_day + '.zip';
                         }
                         // Add a to the doc for click to work.
                         (document.body || document.documentElement).appendChild(a);

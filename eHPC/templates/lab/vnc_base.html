@@ -13,14 +13,7 @@
     <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/ehpc-icon.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
-
-    <script type="text/javascript" src="{{ url_for("static", filename="js/vnc/guacamole.min.js") }}"></script>
-    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="{{ url_for('static', filename='css/vnc.css') }}" rel="stylesheet">
-
-    <script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <link href="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
 
     {% block header_ext %}
@@ -42,6 +35,7 @@
                     <li><a id="btn-browser-fullscreen" class="vnc-nav">浏览器全屏</a></li>
                     <li><a class="vnc-nav" href="{{ url_for("lab.index") }}">返回虚拟实验室</a></li>
                     <li><a class="vnc-nav" id="change-resolution">更改分辨率</a></li>
+                    <li><a class="vnc-nav" id="auto-resolution">最佳分辨率</a></li>
                 </ul>
             </div>
         </div>
@@ -58,6 +52,12 @@
         </div>
     </footer>
 </div>
+
+<script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+<script type="text/javascript" src="{{ url_for("static", filename="js/vnc/guacamole.min.js") }}"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="http://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
 <!-- 防止 CSRF 攻击: https://github.com/xuelangZF/ehpc/issues/249 -->
 <script type="text/javascript">

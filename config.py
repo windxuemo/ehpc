@@ -66,6 +66,7 @@ class Config:
     COURSE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/course')
     CASE_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/case')
     LAB_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/lab')
+    VNC_LAB_COVER_FOLDER = os.path.join(basedir, 'eHPC/static/upload/vnc_lab')
     RESOURCE_FOLDER = os.path.join(basedir, 'eHPC/static/resource')
     CASE_FOLDER = os.path.join(basedir, 'eHPC/static/case')
     DOWNLOAD_FOLDER = os.path.join(basedir, 'eHPC/static/download')

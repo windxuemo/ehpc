@@ -56,6 +56,7 @@ class User(UserMixin, db.Model):
     teacher_questions = db.relationship('Question', backref='teacher', lazy='dynamic')
     teacher_knowledge = db.relationship('Knowledge', backref='teacher', lazy='dynamic')
     teacher_program = db.relationship('Program', backref='teacher', lazy='dynamic')
+    teacher_vnc_knowledge = db.relationship('VNCKnowledge', backref='teacher', lazy='dynamic')
 
     @property
     def password(self):
@@ -412,9 +413,18 @@ class Progress(db.Model):
 
     knowledge = db.relationship('Knowledge', backref=db.backref('users',
                                                                 lazy='dynamic', cascade="delete, delete-orphan"))
-    user = db.relationship('User', backref=db.backref('knowledges',
+    user = db.relationship('User', backref=db.backref('progresses',
                                                       lazy='dynamic', cascade="delete, delete-orphan"))
 
+
+class VNCKnowledge(db.Model):
+    __tablename__ = 'vnc_knowledge'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(1024), nullable=False)
+    about = db.Column(db.Text(), nullable=False)
+    content = db.Column(db.Text(), nullable=False)
+    cover_url = db.Column(db.String(512), default='upload/vnc_lab/default.png')
+    teacher_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 """ 案例展示 """
 

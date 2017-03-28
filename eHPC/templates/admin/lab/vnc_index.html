@@ -1,0 +1,93 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <script src="{{ url_for('static', filename='js/show_invalid_info.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container" id="content-container">
+        <div class="row">
+            <div class="col-md-3">
+                <div style="margin-bottom: 10px;font-size: 15px">试题类型</div>
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item {{ 'active' if type == 'code_lab' }}" href="{{ url_for('admin.lab') }}">编程虚拟实验室</a>
+                        <a class="list-group-item {{ 'active' if type == 'vnc_lab' }}" href="{{ url_for('admin.vnc_lab') }}">VNC虚拟实验室</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <div class="panel-heading">
+                        实验列表
+                        <span class="pull-right">
+                            <a class="btn btn-primary btn-sm" href="{{ url_for('admin.vnc_lab_create') }}">
+                                <span class="glyphicon glyphicon-plus"></span>新建VNC实验室
+                            </a>
+                        </span>
+                    </div>
+                    <div id="content" class="panel-body">
+                        <table id="knowledge" class="table table-striped fixed-table">
+                            <thead><!--表格头-->
+                            <tr>
+                                <th width="15%">序号</th>
+                                <th width="20%">标题</th>
+                                <th width="40%">简介</th>
+                                <th width="25%">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody><!--表格主体-->
+                            {% if current_user.teacher_vnc_knowledge.count() %}
+                                {% for k in current_user.teacher_vnc_knowledge %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ k.title }}</td>
+                                        <td>{{ k.about | truncate(40, True) }}</td>
+                                        <td>
+                                            <a class="btn btn-link" href="{{ url_for('admin.vnc_lab_edit', vnc_knowledge_id=k.id) }}">
+                                                <i class="es-icon es-icon-edit"></i>编辑信息</a>
+                                            <a class="btn btn-link" href="javascript:void(0);" data-id="{{ k.id }}" name="vnc-knowledge-del-btn">
+                                                <i class="es-icon es-icon-delete"></i>删除</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr class="text-center"><td colspan="4">暂未发布实验</td></tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'widget/alert_modal.html' %}
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script>
+        $("a[name=vnc-knowledge-del-btn]").click(function () {
+            var kid = $(this).data("id");
+            var obj = $(this);
+            $.ajax({
+                url: location.href,
+                type: "post",
+                data: {
+                    op: "del",
+                    vnc_knowledge_id: kid
+                },
+                success: function (data) {
+                    if(data['status'] === 'success'){
+                        obj.parent().parent().remove();
+                    }
+                    else if(data['status'] === 'fail'){
+                        alert_modal("删除失败，请重试！");
+                    }
+                }
+            })
+        });
+    </script>
+{% endblock %}

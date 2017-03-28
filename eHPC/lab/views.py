@@ -11,8 +11,8 @@ from flask_login import login_required, current_user
 from eHPC.util.code_process import ehpc_client
 from . import lab
 from .. import db
-from ..models import Challenge, Knowledge, Progress
-from .lab_util import get_cur_progress
+from ..models import Challenge, Knowledge, Progress, VNCKnowledge
+from .lab_util import get_cur_progress, increase_progress
 from config import TH2_MY_PATH
 import random, string
 import requests
@@ -22,17 +22,18 @@ import requests
 @login_required
 def index():
     knowledges = Knowledge.query.all()
-
+    vnc_knowledges = VNCKnowledge.query.all()
     # 记录当前用户在每个knowledge上的进度百分比
     if current_user.is_authenticated:
         for k in knowledges:
-            pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=k.id).first()
+            pro = current_user.progresses.filter_by(knowledge_id=k.id).first()
             k.cur_level = pro.cur_progress if pro else 0
             k.all_levels = k.challenges.count()
             k.percentage = "{0:.0f}%".format(100.0 * k.cur_level / k.all_levels) if k.all_levels >= 1 else "100%"
     return render_template('lab/index.html',
                            title=gettext('Labs'),
-                           knowledges=knowledges)
+                           knowledges=knowledges,
+                           vnc_knowledges=vnc_knowledges)
 
 
 @lab.route('/detail/<int:kid>/')
@@ -140,11 +141,7 @@ def knowledge(kid):
 
             # 代码成功通过编译, 则认为已完成该知识点学习
             if is_success[0]:
-                pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
-                if k_num == pro.cur_progress + 1:
-                    if pro.cur_progress + 1 <= challenges_count:
-                        pro.cur_progress += 1
-                        db.session.commit()
+                increase_progress(kid=kid, k_num=k_num, challenges_count=challenges_count)
 
             return jsonify(result=result, status='success')
         elif request.form['op'] == 'get_source_code':
@@ -169,30 +166,37 @@ def my_progress(kid):
                            cur_level=cur_level)
 
 
-@lab.route('/vnc/')
+@lab.route('/vnc/<int:vnc_knowledge_id>', methods=['GET', 'POST'])
 @login_required
-def vnc():
-    status = 'repeated token'
-    token = ''
-    req = None
-    while status == 'repeated token':
-        try:
-            token = ''.join(random.sample(string.ascii_letters + string.digits, 32))
-            req = requests.post(current_app.config['VNC_SERVER_URL'], params={"This_is_a_very_secret_token": token,
-                                                                              "user_id": current_user.id}, timeout=30)
-            req.raise_for_status()
-        except requests.RequestException as e:
-            print e
-            return render_template('lab/vnc.html', title=gettext('vnc'), status='error')
-        else:
-            status = req.json()['status']
-            print status
+def vnc(vnc_knowledge_id):
+    if request.method == 'GET':
+        vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first_or_404()
+        return render_template('lab/vnc.html', title=gettext('vnc'), vnc_knowledge=vnc_knowledge)
+    elif request.method == 'POST':
+        op = request.form.get('op', None)
+        if op is not None:
+            if op == 'connect':
+                status = 'repeated token'
+                token = ''
+                req = None
+                while status == 'repeated token':
+                    try:
+                        token = ''.join(random.sample(string.ascii_letters + string.digits, 32))
+                        req = requests.post(current_app.config['VNC_SERVER_URL'], params={"This_is_a_very_secret_token": token,
+                                                                                          "user_id": current_user.id}, timeout=30)
+                        req.raise_for_status()
+                    except requests.RequestException as e:
+                        print e
+                        return jsonify(status='fail', msg=u'连接远程虚拟机失败，请重试')
+                    else:
+                        status = req.json()['status']
+                        print status
 
-    if status == 'success':
-        return render_template('lab/vnc.html', title=gettext('vnc'), status='success', token=token)
-    elif status == 'reconnect success':
-        return render_template('lab/vnc.html', title=gettext('vnc'), status='success', token=req.json()['token'])
-    elif status == 'no machine available':
-        return render_template('lab/vnc.html', title=gettext('vnc'), status='no machine available')
-    else:
-        return render_template('lab/vnc.html', title=gettext('vnc'), status='error')
+                if status == 'success':
+                    return jsonify(status='success', token=token)
+                elif status == 'reconnect success':
+                    return jsonify(status='success', token=req.json()['token'])
+                elif status == 'no machine available':
+                    return jsonify(status='fail', msg=u"设备已满，请稍后再试")
+                else:
+                    return jsonify(status='fail', msg=u'服务器内部错误，请联系管理员')

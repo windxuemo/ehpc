@@ -7,7 +7,17 @@
 {% block content %}
     <div class="container" id="content-container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-3">
+                <div style="margin-bottom: 10px;font-size: 15px">试题类型</div>
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item {{ 'active' if type == 'code_lab' }}" href="{{ url_for('admin.lab') }}">编程虚拟实验室</a>
+                        <a class="list-group-item {{ 'active' if type == 'vnc_lab' }}" href="{{ url_for('admin.vnc_lab') }}">VNC虚拟实验室</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
                         实验列表
@@ -22,10 +32,10 @@
                         <table id="knowledge" class="table table-striped fixed-table">
                             <thead><!--表格头-->
                             <tr>
-                                <th width="10%">序号</th>
-                                <th width="25%">标题</th>
+                                <th width="8%">序号</th>
+                                <th width="17%">标题</th>
                                 <th width="35%">简介</th>
-                                <th width="30%">操作</th>
+                                <th width="40%">操作</th>
                             </tr>
                             </thead>
                             <tbody><!--表格主体-->
@@ -64,31 +74,31 @@
                 </div>
                 <div class="modal-body">
                     <form id="lab-info">
-                    <div class="form-group">
-                        <div class="col-md-2 control-label" style="margin-top: 10px;">
-                            <label class="pull-right" for="knowledge-title-field">标题</label>
+                        <div class="form-group">
+                            <div class="col-md-2 control-label" style="margin-top: 10px;">
+                                <label class="pull-right" for="knowledge-title-field">标题</label>
+                            </div>
+                            <div class="col-md-9 controls" style="margin-top: 10px;">
+                                <input id="knowledge-title-field" class="form-control" name="title" type="text" placeholder="请输入实验标题（必填项）">
+                            </div>
                         </div>
-                        <div class="col-md-9 controls" style="margin-top: 10px;">
-                            <input id="knowledge-title-field" class="form-control" name="title" type="text" placeholder="请输入实验标题（必填项）">
+                        <div class="form-group">
+                            <div class="col-md-2 control-label" style="margin-top: 10px;">
+                                <label class="pull-right" for="knowledge-content-field">简介</label>
+                            </div>
+                            <div class="col-md-9 controls" style="margin-top: 10px;">
+                                    <textarea class="form-control" id="knowledge-content-field" name="content"
+                                              style="height: 200px" placeholder="请输入实验简介（非必填项）"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-2 control-label" style="margin-top: 10px;">
-                            <label class="pull-right" for="knowledge-content-field">简介</label>
-                        </div>
-                        <div class="col-md-9 controls" style="margin-top: 10px;">
-                                <textarea class="form-control" id="knowledge-content-field" name="content"
-                                          style="height: 200px" placeholder="请输入实验简介（非必填项）"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-2 control-label" style="margin-top: 10px;">
-                            <label class="pull-right" for="knowledge-content-field">封面</label>
-                        </div>
-                        <div class="col-md-9 controls" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <div class="col-md-2 control-label" style="margin-top: 10px;">
+                                <label class="pull-right" for="knowledge-content-field">封面</label>
+                            </div>
+                            <div class="col-md-9 controls" style="margin-top: 10px;">
                                 <input type="file" name="cover" accept="image/bmp,image/jpeg,image/png">
+                            </div>
                         </div>
-                    </div>
                         <input type="hidden" name="op" value="">
                         <input type="hidden" name="knowledge_id" value="">
                     </form>
@@ -143,21 +153,6 @@
                         }
                     }
                 });
-{#                $.ajax({#}
-{#                    type: "post",#}
-{#                    url: location.href,#}
-{#                    data: {#}
-{#                        op: op,#}
-{#                        knowledge_id: id,#}
-{#                        title: $("#knowledge-title-field").val(),#}
-{#                        content: $("#knowledge-content-field").val()#}
-{#                    },#}
-{#                    success: function (data) {#}
-{#                        if (data["status"] == "success") {#}
-{#                            location.reload();#}
-{#                        }#}
-{#                    }#}
-{#                });#}
             });
 
             var obj = null;

@@ -2,18 +2,22 @@
 
 {% block header_ext %}
     <link href="//cdn.bootcss.com/bootstrap-select/1.12.1/css/bootstrap-select.min.css" rel="stylesheet">
-    <script src="//cdn.bootcss.com/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
     <div class="vnc-left" style="text-align: center">
-        <img src="{{ url_for("static", filename="images/ehpc.png") }}">
+        <div class="markdown-body">
+            <p class="text-center text-xlarge"> {{ vnc_knowledge.title }}</p>
+            <div id="c_content" data-to-render="{{ vnc_knowledge.content }}"></div>
+        </div>
     </div>
-    <div class="vnc-right">
-        <div id="display"></div>
+    <div class="vnc-right" style="background: #000000">
+        <div id="display" style="display: none"></div>
+        <img id="loading-svg" src="{{ url_for('static', filename='images/radio.svg') }}" style="position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);width: 10%;height: 10%">
     </div>
 
-    <div class="modal fade" id="clipboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="clipboard" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -88,10 +92,125 @@
         </div>
     </div>
 
+    {% include "widget/alert_modal.html" %}
+
+    <textarea id="clipboard-data" style="display: none"></textarea>
 {% endblock %}
 
 {% block footer_ext %}
+    <script src="//cdn.bootcss.com/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script>
+        $(function () {
+            var c_content = $("#c_content");
+            c_content.html(latex_support(c_content.data('to-render')));
+            c_content.attr('data-to-render', null);
+        });
+
+        var header = $(".vnc-navbar").eq(0),
+            footer = $(".content-footer").eq(0),
+            content = $(".content-holder").eq(0),
+            content_left = $(".vnc-left").eq(0),
+            content_right = $(".vnc-right").eq(0),
+            clipboard = $("#clipboard"),
+            pick_resolution = $("#select-resolution"),
+            guac,
+            is_full = false;
+
+        $(function () {
+            $("#btn-fullscreen").click(function () {
+                if(!is_full){
+                    is_full = true;
+                    $("#btn-fullscreen").text("退出桌面全屏");
+                    header.removeClass("vnc-navbar");
+                    header.addClass("fullscreen-vnc-navbar");
+                    footer.hide("blind", {direction: "down"}, "normal");
+                    content_left.hide("blind", {direction: "left"}, "normal", function () {
+                        content_right.removeClass("vnc-right");
+                        content_right.addClass("vnc-whole");
+                        content.removeClass("content-holder");
+                        content.addClass("content-holder-full");
+                        $("#display").css("position", "absolute");
+                        $(window).trigger("resize");
+                    });
+                }
+                else{
+                    is_full = false;
+                    $("#btn-fullscreen").text("桌面全屏");
+                    header.removeClass("fullscreen-vnc-navbar");
+                    header.addClass("vnc-navbar");
+                    footer.show("blind", {direction: "down"}, "normal");
+                    content_left.show("blind", {direction: "left"}, "normal");
+                    content_right.removeClass("vnc-whole");
+                    content_right.addClass("vnc-right");
+                    content.removeClass("content-holder-full");
+                    content.addClass("content-holder");
+                    $("#display").css("position", "absolute");
+                    $(window).trigger("resize");
+                }
+            });
+            var browser_fullscreen = false;
+            $("#btn-browser-fullscreen").click(function () {
+                if(!browser_fullscreen){
+                    var element = document.documentElement;
+                    if(element.requestFullscreen) {
+                        element.requestFullscreen();
+                        browser_fullscreen = true;
+                        $(this).text("退出浏览器全屏")
+                    } else if(element.mozRequestFullScreen) {
+                        element.mozRequestFullScreen();
+                        browser_fullscreen = true;
+                        $(this).text("退出浏览器全屏")
+                    } else if(element.webkitRequestFullscreen) {
+                        element.webkitRequestFullscreen();
+                        browser_fullscreen = true;
+                        $(this).text("退出浏览器全屏")
+                    } else if(element.msRequestFullscreen) {
+                        element.msRequestFullscreen();
+                        browser_fullscreen = true;
+                        $(this).text("退出浏览器全屏")
+                    }
+                }else{
+                    if(document.exitFullscreen) {
+                        document.exitFullscreen();
+                        browser_fullscreen = false;
+                        $(this).text("浏览器全屏")
+                    } else if(document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                        browser_fullscreen = false;
+                        $(this).text("浏览器全屏")
+                    } else if(document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                        browser_fullscreen = false;
+                        $(this).text("浏览器全屏")
+                    }
+                }
+            });
+        });
+
+        $(function () {
+            $.ajax({
+                url: location.href,
+                type: "post",
+                data: {
+                    op: "connect"
+                },
+                success: function (data) {
+                    if(data['status'] === 'success'){
+                        $(".vnc-right").eq(0).css("background", "#FFFFFF");
+                        $("#loading-svg").hide("drop", {direction: "right"}, 1000, function () {
+                            $("#display").show();
+                            do_connect_vnc_server(data['token']);
+                        });
+                    }
+                    else if(data['status'] === 'fail'){
+                        alert_modal(data['msg']);
+                    }
+                }
+            })
+        });
+
         function hcf(n, m) {
             var min = n;
             (m < n) && (min = m);
@@ -105,334 +224,268 @@
                 if (arr[i] > arr[i + 1]) {
                     arr[i] = [arr[i + 1], arr[i + 1] = arr[i]][0];
                 }
-
             }
             max = arr[arr.length - 1];
             return max;
         }
-    </script>
-    <script>
-        {% if status == 'success' %}
-            var header = $(".vnc-navbar").eq(0), footer = $(".content-footer").eq(0), content = $(".content-holder"),
-                content_left = $(".vnc-left"), content_right = $(".vnc-right");
-            var guac, clipboard = $("#clipboard"), pick_resolution = $("#select-resolution");
-            var is_full = false;
-            $(function () {
-                $("#btn-fullscreen").click(function () {
-                    if(!is_full){
-                        is_full = true;
-                        $("#btn-fullscreen").text("退出桌面全屏");
-                        header.removeClass("vnc-navbar");
-                        header.addClass("fullscreen-vnc-navbar");
-                        footer.hide("blind", {direction: "down"}, "normal");
-                        content_left.hide("blind", {direction: "left"}, "normal", function () {
-                            content_right.removeClass("vnc-right");
-                            content_right.addClass("vnc-whole");
-                            content.removeClass("content-holder");
-                            content.addClass("content-holder-full");
-                            $("#display").css("position", "absolute");
-                            $(window).trigger("resize");
-                        });
+        function do_connect_vnc_server(token){
+            $("#change-resolution").click(function () {
+                $("#select-resolution").modal({backdrop: 'static', keyboard: false});
+            });
+
+            var if_select_resolution = true;
+            $("#custom-resolution").click(function () {
+                $("#select").toggle();
+                $("#input").toggle();
+                if(!if_select_resolution){
+                    if_select_resolution = true;
+                    $(this).text("自定义");
+                }else{
+                    if_select_resolution = false;
+                    $(this).text("选择预设");
+                }
+            });
+
+            $("#cancel-change").click(function () {
+                $("#select-resolution").modal("hide");
+            });
+
+            $("#confirm-change").click(function () {
+                var resolution_height, resolution_width;
+                var resolution_selector = $("#resolution-selector");
+                if(if_select_resolution){
+                    if(resolution_selector.val().length !== 0){
+                        resolution_width = resolution_selector.val().split("x")[0];
+                        resolution_height = resolution_selector.val().split("x")[1];
                     }
                     else{
-                        is_full = false;
-                        $("#btn-fullscreen").text("桌面全屏");
-                        header.removeClass("fullscreen-vnc-navbar");
-                        header.addClass("vnc-navbar");
-                        footer.show("blind", {direction: "down"}, "normal");
-                        content_left.show("blind", {direction: "left"}, "normal");
-                        content_right.removeClass("vnc-whole");
-                        content_right.addClass("vnc-right");
-                        content.removeClass("content-holder-full");
-                        content.addClass("content-holder");
-                        $("#display").css("position", "absolute");
-                        $(window).trigger("resize");
-                    }
-                });
-
-                var browser_fullscreen = false;
-                $("#btn-browser-fullscreen").click(function () {
-                    if(!browser_fullscreen){
-                        var element = document.documentElement;
-                        if(element.requestFullscreen) {
-                            element.requestFullscreen();
-                            browser_fullscreen = true;
-                            $(this).text("退出浏览器全屏")
-                        } else if(element.mozRequestFullScreen) {
-                            element.mozRequestFullScreen();
-                            browser_fullscreen = true;
-                            $(this).text("退出浏览器全屏")
-                        } else if(element.webkitRequestFullscreen) {
-                            element.webkitRequestFullscreen();
-                            browser_fullscreen = true;
-                            $(this).text("退出浏览器全屏")
-                        } else if(element.msRequestFullscreen) {
-                            element.msRequestFullscreen();
-                            browser_fullscreen = true;
-                            $(this).text("退出浏览器全屏")
-                        }
-                    }else{
-                        if(document.exitFullscreen) {
-                            document.exitFullscreen();
-                            browser_fullscreen = false;
-                            $(this).text("浏览器全屏")
-                        } else if(document.mozCancelFullScreen) {
-                            document.mozCancelFullScreen();
-                            browser_fullscreen = false;
-                            $(this).text("浏览器全屏")
-                        } else if(document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                            browser_fullscreen = false;
-                            $(this).text("浏览器全屏")
-                        }
-                    }
-                });
-
-                $("#change-resolution").click(function () {
-                    $("#select-resolution").modal({backdrop: 'static', keyboard: false});
-                });
-
-                var if_select_resolution = true;
-                $("#custom-resolution").click(function () {
-                    $("#select").toggle();
-                    $("#input").toggle();
-                    if(!if_select_resolution){
-                        if_select_resolution = true;
-                        $(this).text("自定义");
-                    }else{
-                        if_select_resolution = false;
-                        $(this).text("选择预设");
-                    }
-                });
-
-                $("#cancel-change").click(function () {
-                    $("#select-resolution").modal("hide");
-                });
-
-                $("#confirm-change").click(function () {
-                    var resolution_height, resolution_width;
-                    var resolution_selector = $("#resolution-selector");
-                    if(if_select_resolution){
-                        if(resolution_selector.val().length !== 0){
-                            resolution_width = resolution_selector.val().split("x")[0];
-                            resolution_height = resolution_selector.val().split("x")[1];
-                        }
-                        else{
-                            alert("请选择分辨率");
-                            return;
-                        }
-                    }
-                    else{
-                        resolution_width = $("#input-resolution-width").val();
-                        resolution_height = $("#input-resolution-height").val();
-                        if (!(Number(resolution_width).toString() === resolution_width && Number(resolution_height).toString() === resolution_height)){
-                            alert("请输入分辨率");
-                            return;
-                        }
-                    }
-                    if(resolution_width<640){
-                        alert("最小宽度不能小于640");
+                        alert("请选择分辨率");
                         return;
                     }
-                    if(resolution_height<360){
-                        alert("最小高度不能小于360");
+                }
+                else{
+                    resolution_width = $("#input-resolution-width").val();
+                    resolution_height = $("#input-resolution-height").val();
+                    if (!(Number(resolution_width).toString() === resolution_width && Number(resolution_height).toString() === resolution_height)){
+                        alert("请输入分辨率");
                         return;
                     }
-                    $("#select-resolution").modal("hide");
-                    $("#loading").modal({backdrop: 'static', keyboard: false});
-                    $.ajax({
-                        url: "http://a002.nscc-gz.cn:10231/server/vncsetter",
-                        type: "post",
-                        data: {
-                            "width": resolution_width,
-                            "height": resolution_height,
-                            "token": "{{ token }}"
-                        },
-                        success: function (data) {
-                            data = JSON.parse(data);
-                            $("#loading").modal("hide");
-                            if(data["status"] === "success"){
-                                location.reload();
-                            }
-                            else if(data["status"] === "fail"){
-                                alert("修改分辨率失败，请重试");
-                            }
+                }
+                if(resolution_width<640){
+                    alert("最小宽度不能小于640");
+                    return;
+                }
+                if(resolution_height<360){
+                    alert("最小高度不能小于360");
+                    return;
+                }
+                $("#select-resolution").modal("hide");
+                $("#loading").modal({backdrop: 'static', keyboard: false});
+                $.ajax({
+                    url: "http://a002.nscc-gz.cn:10231/server/vncsetter",
+                    type: "post",
+                    data: {
+                        "width": Math.floor(resolution_width),
+                        "height": Math.floor(resolution_height),
+                        "token": token
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        $("#loading").modal("hide");
+                        if(data["status"] === "success"){
+                            location.reload();
                         }
-                    });
-                });
-
-                $("#input-resolution-width").keyup(function () {
-                    var input_height = $("#input-resolution-height");
-                    var input_width = $("#input-resolution-width");
-                    if(!(Number($(this).val()).toString() === $(this).val())){
-                        $(this).val("");
-                        return;
+                        else if(data["status"] === "fail"){
+                            alert("修改分辨率失败，请重试");
+                        }
                     }
-
-                    if(Number($(this).val())<=0){
-                        $(this).val("");
-                        return;
-                    }
-                    if(Number($(this).val())>3840){
-                        $(this).val(3840);
-                    }
-
-                    var height = input_height.val();
-                    var width = input_width.val();
-                    if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
-                    var common_factor = hcf(width, height);
-                    $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
-                });
-
-                $("#input-resolution-height").keyup(function () {
-                    var input_height = $("#input-resolution-height");
-                    var input_width = $("#input-resolution-width");
-                    if(!(Number($(this).val()).toString() === $(this).val())){
-                        $(this).val("");
-                        return;
-                    }
-                    if(Number($(this).val())<=0){
-                        $(this).val("");
-                        return;
-                    }
-                    if(Number($(this).val())>2160){
-                        $(this).val(2160);
-                    }
-
-                    var height = input_height.val();
-                    var width = input_width.val();
-                    if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
-                    var common_factor = hcf(width, height);
-                    $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
                 });
             });
 
-            $(function () {
-                var display = document.getElementById("display");
-                guac = new Guacamole.Client(
-                    new Guacamole.HTTPTunnel("http://a002.nscc-gz.cn:10231/server/tunnel")
-                );
-                display.appendChild(guac.getDisplay().getElement());
-                guac.onerror = function (error) {
-                    console.log(error);
-                };
-                guac.connect("token={{ token }}");
-                window.onunload = function () {
-                    guac.disconnect();
-                };
-                var sendScaledMouseState = function sendScaledMouseState(mouseState) {
-                    var scaledState = new Guacamole.Mouse.State(
-                        mouseState.x / guac.getDisplay().getScale(),
-                        mouseState.y / guac.getDisplay().getScale(),
-                        mouseState.left,
-                        mouseState.middle,
-                        mouseState.right,
-                        mouseState.up,
-                        mouseState.down);
-                    guac.sendMouseState(scaledState);
-                };
-                var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
-                mouse.onmousedown =
-                    mouse.onmouseup =
-                        mouse.onmousemove = function (mouseState) {
-                            if (!guac || !guac.getDisplay())
-                                return;
-                            guac.getDisplay().showCursor(true);
-                            sendScaledMouseState(mouseState);
-                        };
-                var keyboard = new Guacamole.Keyboard(document);
+            $("#auto-resolution").click(function () {
+                if_select_resolution = false;
+                $("#input-resolution-width").val(content_right.width());
+                $("#input-resolution-height").val(content_right.height());
+                $("#confirm-change").click();
+            });
+
+            $("#input-resolution-width").keyup(function () {
+                var input_height = $("#input-resolution-height");
+                var input_width = $("#input-resolution-width");
+                if(!(Number($(this).val()).toString() === $(this).val())){
+                    $(this).val("");
+                    return;
+                }
+
+                if(Number($(this).val())<=0){
+                    $(this).val("");
+                    return;
+                }
+                if(Number($(this).val())>3840){
+                    $(this).val(3840);
+                }
+
+                var height = input_height.val();
+                var width = input_width.val();
+                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
+                var common_factor = hcf(width, height);
+                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
+            });
+
+            $("#input-resolution-height").keyup(function () {
+                var input_height = $("#input-resolution-height");
+                var input_width = $("#input-resolution-width");
+                if(!(Number($(this).val()).toString() === $(this).val())){
+                    $(this).val("");
+                    return;
+                }
+                if(Number($(this).val())<=0){
+                    $(this).val("");
+                    return;
+                }
+                if(Number($(this).val())>2160){
+                    $(this).val(2160);
+                }
+
+                var height = input_height.val();
+                var width = input_width.val();
+                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
+                var common_factor = hcf(width, height);
+                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
+            });
+
+            var display = document.getElementById("display");
+            guac = new Guacamole.Client(
+                new Guacamole.HTTPTunnel("http://a002.nscc-gz.cn:10231/server/tunnel")
+            );
+            display.appendChild(guac.getDisplay().getElement());
+            guac.onerror = function (error) {
+                console.log(error);
+            };
+            guac.connect("token="+token);
+            window.onunload = function () {
+                guac.disconnect();
+            };
+            var sendScaledMouseState = function sendScaledMouseState(mouseState) {
+                var scaledState = new Guacamole.Mouse.State(
+                    mouseState.x / guac.getDisplay().getScale(),
+                    mouseState.y / guac.getDisplay().getScale(),
+                    mouseState.left,
+                    mouseState.middle,
+                    mouseState.right,
+                    mouseState.up,
+                    mouseState.down);
+                guac.sendMouseState(scaledState);
+            };
+            var mouse = new Guacamole.Mouse(guac.getDisplay().getElement());
+            mouse.onmousedown =
+                mouse.onmouseup =
+                    mouse.onmousemove = function (mouseState) {
+                        if (!guac || !guac.getDisplay())
+                            return;
+                        guac.getDisplay().showCursor(true);
+                        sendScaledMouseState(mouseState);
+                    };
+            var keyboard = new Guacamole.Keyboard(document);
+            keyboard.onkeydown = function (keysym) {
+                guac.sendKeyEvent(1, keysym);
+            };
+            keyboard.onkeyup = function (keysym) {
+                guac.sendKeyEvent(0, keysym);
+            };
+
+            guac.getDisplay().onresize = function (width, height) {
+                if(!guac || !guac.getDisplay()) return;
+                var height_to_set = content_right.eq(0).height();
+                var width_to_set = content_right.eq(0).width();
+                var cur_height = height;
+                var cur_width = width;
+
+                var scale_height = height_to_set/cur_height;
+                var scale_width = width_to_set/cur_width;
+                guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
+                $("#display").css("position", "absolute");
+                $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
+            };
+
+            guac.onclipboard = function (stream, mimetype) {
+                var reader = new Guacamole.StringReader(stream);
+                reader.ontext = function (text) {
+                    $("#clipboard-content").val(text);
+                }
+            };
+
+            $(window).resize(function () {
+                if(!guac || !guac.getDisplay()) return;
+                var height_to_set = content_right.eq(0).height();
+                var width_to_set = content_right.eq(0).width();
+                var cur_height = guac.getDisplay().getHeight();
+                var cur_width = guac.getDisplay().getWidth();
+
+                var scale_height = height_to_set/cur_height;
+                var scale_width = width_to_set/cur_width;
+                guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
+
+                guac.getDisplay().getDefaultLayer().resize(guac.getDisplay().getDefaultLayer().height * cur_width / cur_height, guac.getDisplay().getDefaultLayer().height);
+                if(is_full) {
+                    $("#display").css("left", 0.5 * (content_right.width() - $("#display").width()));
+                    $("#display").css("top", 0);
+                }
+                else {
+                    $("#display").css("left", 0);
+                    $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
+                }
+            });
+
+            $("#clipboard-content").change(function () {
+                if(!guac || !guac.getDisplay()) return;
+                console.log($(this).val());
+                guac.setClipboard($(this).val());
+            });
+
+
+            clipboard.on('shown.bs.modal', function () {
+                keyboard.onkeydown = null;
+                keyboard.onkeyup = null;
+            });
+
+            clipboard.on('hidden.bs.modal', function () {
                 keyboard.onkeydown = function (keysym) {
                     guac.sendKeyEvent(1, keysym);
                 };
                 keyboard.onkeyup = function (keysym) {
                     guac.sendKeyEvent(0, keysym);
                 };
-
-                guac.getDisplay().onresize = function (width, height) {
-                    if(!guac || !guac.getDisplay()) return;
-                    var height_to_set = content_right.eq(0).height();
-                    var width_to_set = content_right.eq(0).width();
-                    var cur_height = height;
-                    var cur_width = width;
-
-                    var scale_height = height_to_set/cur_height;
-                    var scale_width = width_to_set/cur_width;
-                    guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
-                    $("#display").css("position", "absolute");
-                    $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
-                };
-
-                guac.onclipboard = function (stream, mimetype) {
-                    var reader = new Guacamole.StringReader(stream);
-                    reader.ontext = function (text) {
-                        $("#clipboard-content").val(text);
-                    }
-                };
-
-
-                $(window).resize(function () {
-                    if(!guac || !guac.getDisplay()) return;
-                    var height_to_set = content_right.eq(0).height();
-                    var width_to_set = content_right.eq(0).width();
-                    var cur_height = guac.getDisplay().getHeight();
-                    var cur_width = guac.getDisplay().getWidth();
-
-                    var scale_height = height_to_set/cur_height;
-                    var scale_width = width_to_set/cur_width;
-                    guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
-
-                    guac.getDisplay().getDefaultLayer().resize(guac.getDisplay().getDefaultLayer().height * cur_width / cur_height, guac.getDisplay().getDefaultLayer().height);
-                    if(is_full) {
-                        $("#display").css("left", 0.5 * (content_right.width() - $("#display").width()));
-                        $("#display").css("top", 0);
-                    }
-                    else {
-                        $("#display").css("left", 0);
-                        $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
-                    }
-                });
-
-                $("#clipboard-content").change(function () {
-                    if(!guac || !guac.getDisplay()) return;
-                    console.log($(this).val());
-                    guac.setClipboard($(this).val());
-                });
-
-
-                clipboard.on('shown.bs.modal', function () {
-                    keyboard.onkeydown = null;
-                    keyboard.onkeyup = null;
-                });
-
-                clipboard.on('hidden.bs.modal', function () {
-                    keyboard.onkeydown = function (keysym) {
-                        guac.sendKeyEvent(1, keysym);
-                    };
-                    keyboard.onkeyup = function (keysym) {
-                        guac.sendKeyEvent(0, keysym);
-                    };
-                });
-
-
-                pick_resolution.on('shown.bs.modal', function () {
-                    keyboard.onkeydown = null;
-                    keyboard.onkeyup = null;
-                });
-
-                pick_resolution.on('hidden.bs.modal', function () {
-                    keyboard.onkeydown = function (keysym) {
-                        guac.sendKeyEvent(1, keysym);
-                    };
-                    keyboard.onkeyup = function (keysym) {
-                        guac.sendKeyEvent(0, keysym);
-                    };
-                });
             });
 
-        {% elif status == 'no machine available' %}
-            $("#display").text("设备已满，请稍后重试");
-        {% elif status == 'error' %}
-            $("#display").text("无法连接vnc服务器");
-        {% endif %}
+            $("#read-clipboard").click(function () {
+
+            });
+
+
+            pick_resolution.on('shown.bs.modal', function () {
+                keyboard.onkeydown = null;
+                keyboard.onkeyup = null;
+            });
+
+            pick_resolution.on('hidden.bs.modal', function () {
+                keyboard.onkeydown = function (keysym) {
+                    guac.sendKeyEvent(1, keysym);
+                };
+                keyboard.onkeyup = function (keysym) {
+                    guac.sendKeyEvent(0, keysym);
+                };
+            });
+        }
+        function alert_modal(content, isHtml) {
+            var obj = $("#modal-alert");
+            if (isHtml) {
+                obj.find(".modal-body").html(content);
+            }
+            else {
+                obj.find(".modal-body").text(content);
+            }
+            obj.modal('show');
+        }
     </script>
 {% endblock %}

@@ -14,7 +14,7 @@ from sqlalchemy import or_
 from . import admin
 from .. import db
 from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload, HomeworkAppendix
-from ..models import Course, Lesson, Material, User, Apply
+from ..models import Course, Lesson, Material, User, Apply, VNCKnowledge
 from ..models import Knowledge, Challenge, Group
 from ..user.authorize import teacher_login
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
@@ -895,25 +895,27 @@ def program_edit():
 def lab():
     if request.method == 'GET':
         return render_template('admin/lab/index.html',
-                               title=gettext('Lab Manage'))
+                               title=gettext('Lab Manage'),
+                               type='code_lab')
     elif request.method == 'POST':
         if request.form['op'] == 'create':
             curr_knowledge = Knowledge(title=request.form['title'], content=request.form['content'])
             curr_knowledge.teacher = current_user
-            if request.files['cover']:
-                curr_knowledge.cover_url = os.path.join('upload/lab', "cover_%d.png" % curr_knowledge.id)
-                filename = "cover_%d.png" % curr_knowledge.id
-                cover_path = os.path.join(current_app.config['LAB_COVER_FOLDER'], filename)
-                status = upload_img(request.files['cover'], 171, 304, cover_path)
             db.session.add(curr_knowledge)
             db.session.commit()
+            if request.files['cover']:
+                curr_knowledge.cover_url = os.path.join('upload/lab/', "cover_%d.png" % curr_knowledge.id)
+                filename = "cover_%d.png" % curr_knowledge.id
+                cover_path = os.path.join(current_app.config['LAB_COVER_FOLDER'], filename)
+                upload_img(request.files['cover'], 171, 304, cover_path)
+                db.session.commit()
             return jsonify(status='success')
         elif request.form['op'] == 'edit':
             curr_knowledge = Knowledge.query.filter_by(id=request.form['knowledge_id']).first_or_404()
             curr_knowledge.title = request.form['title']
             curr_knowledge.content = request.form['content']
             if request.files['cover']:
-                curr_knowledge.cover_url = os.path.join('upload/lab', "cover_%d.png" % curr_knowledge.id)
+                curr_knowledge.cover_url = os.path.join('upload/lab/', "cover_%d.png" % curr_knowledge.id)
                 filename = "cover_%d.png" % curr_knowledge.id
                 cover_path = os.path.join(current_app.config['LAB_COVER_FOLDER'], filename)
                 status = upload_img(request.files['cover'], 171, 304, cover_path)
@@ -1036,6 +1038,84 @@ def lab_edit(knowledge_id, challenge_id):
 
             db.session.commit()
             return jsonify(status="success")
+
+
+@admin.route('/vnc_lab/', methods=['GET', 'POST'])
+@teacher_login
+def vnc_lab():
+    if request.method == 'GET':
+        return render_template('admin/lab/vnc_index.html', title=gettext('VNC Lab Manage'), type='vnc_lab')
+    elif request.method == 'POST':
+        op = request.form.get('op', None)
+        if op is not None:
+            vnc_knowledge_id = request.form.get('vnc_knowledge_id', None)
+            if op == 'del' and vnc_knowledge_id is not None:
+                vnc_knowledge_to_del = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
+                if vnc_knowledge_to_del is not None:
+                    db.session.delete(vnc_knowledge_to_del)
+                    db.session.commit()
+                    return jsonify(status='success')
+                else:
+                    return jsonify(status='fail')
+        else:
+            return jsonify(status='fail')
+
+
+@admin.route('/vnc_lab/create/', methods=['GET', 'POST'])
+@teacher_login
+def vnc_lab_create():
+    if request.method == 'GET':
+        return render_template('admin/lab/vnc_knowledge_detail.html', op='create', title=gettext('VNC Lab Create'))
+    elif request.method == 'POST':
+        title = request.form.get('title', None)
+        about = request.form.get('about', None)
+        content = request.form.get('content', None)
+        cover = request.files.get('cover', None)
+        if title is not None and about is not None and content is not None:
+            cur_vnc_knowledge = VNCKnowledge(title=title, about=about, content=content)
+            cur_vnc_knowledge.teacher = current_user
+            db.session.add(cur_vnc_knowledge)
+            db.session.commit()
+
+            if cover is not None:
+                cur_vnc_knowledge.cover_url = os.path.join('upload/vnc_lab/', "cover_%d.png" % cur_vnc_knowledge.id)
+                filename = "cover_%d.png" % cur_vnc_knowledge.id
+                cover_path = os.path.join(current_app.config['VNC_LAB_COVER_FOLDER'], filename)
+                upload_img(cover, 171, 304, cover_path)
+                db.session.commit()
+
+            return jsonify(status='success')
+        else:
+            return jsonify(status='fail')
+
+
+@admin.route('/vnc_lab/edit/<int:vnc_knowledge_id>/', methods=['GET', 'POST'])
+@teacher_login
+def vnc_lab_edit(vnc_knowledge_id):
+    cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first_or_404()
+    if request.method == 'GET':
+        return render_template('admin/lab/vnc_knowledge_detail.html', op='edit', title=gettext('VNC Lab Edit'),
+                               cur_vnc_knowledge=cur_vnc_knowledge)
+    elif request.method == 'POST':
+        title = request.form.get('title', None)
+        about = request.form.get('about', None)
+        content = request.form.get('content', None)
+        cover = request.files.get('cover', None)
+        if title is not None and about is not None and content is not None:
+            cur_vnc_knowledge.title = title
+            cur_vnc_knowledge.about = about
+            cur_vnc_knowledge.content = content
+
+            if cover is not None:
+                cur_vnc_knowledge.cover_url = os.path.join('upload/vnc_lab/', "cover_%d.png" % cur_vnc_knowledge.id)
+                filename = "cover_%d.png" % cur_vnc_knowledge.id
+                cover_path = os.path.join(current_app.config['VNC_LAB_COVER_FOLDER'], filename)
+                upload_img(cover, 171, 304, cover_path)
+
+            db.session.commit()
+            return jsonify(status='success')
+        else:
+            return jsonify(status='fail')
 
 
 @admin.route('/download/paper/<int:paper_id>/')

@@ -9,18 +9,20 @@ from ..models import Progress
 
 
 def get_progress_class(kid):
+    """ 如果用户进度表中没有进度记录， 则添加一条，初始化学习记录为 0
+    """
     pro = Progress.query.filter_by(user_id=current_user.id).filter_by(knowledge_id=kid).first()
     if pro is None:
         pro = Progress(user_id=current_user.id, knowledge_id=kid, update_time=datetime.now())
         db.session.add(pro)
-        db.commit()
+        db.session.commit()
     return pro
 
 
 def get_cur_progress(kid):
-    """ 返回当前登录用户在 knowledge(kid) 上学习的最后一个知识点序号
+    """ 返回当前登录用户在 knowledge(kid) 上学习过的最后一个知识点序号
 
-    如果数据库中没有进度记录, 则在数据库中添加一条记录
+    如果用户刚开始学习，则返回 0
     """
     pro = get_progress_class(kid)
     pro.update_time = datetime.now()
@@ -29,7 +31,13 @@ def get_cur_progress(kid):
 
 
 def increase_progress(kid, k_num, challenges_count):
+    """ 为当前登录用户在 knowledge(kid) 上学习的知识号加1
+
+    :param kid: knowledge 的标识符
+    :param k_num: 当前学习的 challenge 序号， 为 unicode 类型。
+    :param challenges_count: 当前 knowledge 所有的 challenge 数目
+    """
     pro = get_progress_class(kid)
-    if k_num == pro.cur_progress + 1 and pro.cur_progress + 1 <= challenges_count:
+    if int(k_num) == (pro.cur_progress + 1) <= challenges_count:
         pro.cur_progress += 1
         db.session.commit()

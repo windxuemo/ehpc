@@ -514,7 +514,7 @@ def course_homework_upload_list(course_id, homework_id):
                 try:
                     os.remove(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], curr_upload.uri))
                 except OSError:
-                    pass
+                    return jsonify(status="fail")
             return jsonify(status="success")
         elif request.form["op"] == "download":
             zip_name = "homework_%d.zip" % curr_homework.id

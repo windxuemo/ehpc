@@ -6,9 +6,9 @@ $(document).ready(function () {
 
     var array = [];
     $("#del-homework-btn").click(function () {
+        array = [];
         $("#homework-table-body").find("input").each(function () {
             if (this.checked) {
-                $(this).parent().parent().remove();
                 array.push($(this).parent().parent().data("upload_id"));
             }
         });
@@ -21,6 +21,7 @@ $(document).ready(function () {
     });
 
     $("#del-confirm").click(function () {
+        $("#del-warning").modal("hide");
         $.ajax({
             type: "post",
             url: location.href,
@@ -30,11 +31,15 @@ $(document).ready(function () {
             },
             success: function (data) {
                 if(data.status=="success"){
+                    $("#homework-table-body").find("input").each(function () {
+                        if (this.checked) {
+                            $(this).parent().parent().remove();
+                        }
+                    });
                     $("#homework-manage-panel").find("input").prop("checked", false);
-                    $("#del-warning").modal("hide");
                 }
                 else{
-                    alert_modal("删除失败,文件不存在！");
+                    location.reload();
                 }
             }
         });

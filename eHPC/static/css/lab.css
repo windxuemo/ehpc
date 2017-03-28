@@ -191,6 +191,7 @@
 
 #challenge-right {
     left: 48%;
+    overflow: hidden;
 }
 
 /* 虚拟实验室中的提示信息*/
@@ -286,6 +287,7 @@
     background-color: #303030;
     padding: 5px;
     box-shadow: inset 0 0 10px black;
+    overflow: auto;
 }
 
 .terminal {
@@ -293,7 +295,6 @@
     font-size: 14px;
     outline: none;
     max-width: 100%;
-    overflow: hidden;
 }
 
 #terminal .terminal {

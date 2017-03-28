@@ -24,7 +24,7 @@
 
                 <div class="col-sm-6 col-md-4">
                     <div class="admin-item">
-                        <div class="info">共有 {{ current_user.teacher_knowledge.count() }} 实验</div>
+                        <div class="info">共有 {{ current_user.teacher_knowledge.count() + current_user.teacher_vnc_knowledge.count() }} 实验</div>
                         <div class="bottom">
                             <a class="btn btn-primary" href="{{ url_for('admin.lab') }}" data-id="3">实验管理</a>
                         </div>

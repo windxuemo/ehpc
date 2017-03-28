@@ -12,6 +12,7 @@ from eHPC.util.code_process import ehpc_client
 from . import lab
 from .. import db
 from ..models import Challenge, Knowledge, Progress, VNCKnowledge
+
 from .lab_util import get_cur_progress, increase_progress
 from config import TH2_MY_PATH
 import random, string
@@ -166,7 +167,7 @@ def my_progress(kid):
                            cur_level=cur_level)
 
 
-@lab.route('/vnc/<int:vnc_knowledge_id>', methods=['GET', 'POST'])
+@lab.route('/vnc/whole/<int:vnc_knowledge_id>', methods=['GET', 'POST'])
 @login_required
 def vnc(vnc_knowledge_id):
     if request.method == 'GET':
@@ -200,3 +201,11 @@ def vnc(vnc_knowledge_id):
                     return jsonify(status='fail', msg=u"设备已满，请稍后再试")
                 else:
                     return jsonify(status='fail', msg=u'服务器内部错误，请联系管理员')
+
+
+@lab.route('/vnc/document/<int:vnc_knowledge_id>', methods=['GET', 'POST'])
+@login_required
+def vnc_document(vnc_knowledge_id):
+    if request.method == 'GET':
+        vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first_or_404()
+        return render_template('lab/vnc_document.html', title=gettext('vnc'), vnc_knowledge=vnc_knowledge)

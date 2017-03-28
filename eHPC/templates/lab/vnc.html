@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="vnc-left" style="text-align: center">
+    <div class="vnc-left">
         <div class="markdown-body">
             <p class="text-center text-xlarge"> {{ vnc_knowledge.title }}</p>
             <div id="c_content" data-to-render="{{ vnc_knowledge.content }}"></div>
@@ -76,6 +76,7 @@
                 <div class="modal-footer">
                     <button class="pull-right btn btn-primary" style="margin-left: 10px" id="cancel-change">取消</button>
                     <button class="pull-right btn btn-primary" style="margin-left: 10px" id="confirm-change">确定</button>
+                    <button class="pull-right btn btn-primary" style="margin-left: 10px" id="auto-resolution">最佳分辨率</button>
                     <button class="pull-right btn btn-primary" id="custom-resolution">自定义</button>
                 </div>
             </div>

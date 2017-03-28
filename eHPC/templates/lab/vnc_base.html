@@ -26,16 +26,14 @@
     <nav class="vnc-navbar">
         <div class="container-fluid">
             <div class="navbar-header">
-                <span class="navbar-brand">虚拟实验室</span>
+                <a class="navbar-brand" href="{{ url_for("lab.index") }}">虚拟实验室</a>
             </div>
             <div>
                 <ul class="navbar-nav nav">
                     <li><a data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</a></li>
                     <li><a id="btn-fullscreen" class="vnc-nav">桌面全屏</a></li>
                     <li><a id="btn-browser-fullscreen" class="vnc-nav">浏览器全屏</a></li>
-                    <li><a class="vnc-nav" href="{{ url_for("lab.index") }}">返回虚拟实验室</a></li>
                     <li><a class="vnc-nav" id="change-resolution">更改分辨率</a></li>
-                    <li><a class="vnc-nav" id="auto-resolution">最佳分辨率</a></li>
                 </ul>
             </div>
         </div>

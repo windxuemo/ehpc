@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from flask_login import current_user
+from flask_login import current_user, current_app
+from flask import jsonify
 
 from .. import db
 from ..models import Progress

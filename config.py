@@ -82,7 +82,7 @@ class Config:
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
     ALLOWED_RESOURCE_TYPE = {'pdf', 'video', 'audio'}
 
-    VNC_SERVER_URL = 'http://10.174.5.19:8080/server/controller'
+    VNC_SERVER_URL = 'http://10.174.5.23:8080/server/controller'
     # VNC_SERVER_URL = 'http://a002.nscc-gz.cn:10231/server/controller'
 
     @staticmethod

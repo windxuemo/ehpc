@@ -77,7 +77,6 @@ $(document).ready(function() {
             });
             this.on("error", function (file) {
                error = true;
-               alert_modal("文件上传失败，请稍后重试！");
             });
             this.on("successmultiple", function(file,response) {
                 for (var i=0;i<response.new_upload_id.length;++i) {
@@ -108,7 +107,6 @@ $(document).ready(function() {
                     }
                     $("#my-uploads").append(uploadFilehtml);
                 }
-                //$("#upload-status").hide();
                 myDropzone.removeAllFiles();
                 $("#upload-status .dz-complete").remove();
                 $("#upload-status").modal('hide');
@@ -116,14 +114,14 @@ $(document).ready(function() {
             $("#upload-status #dialog-mini-btn").click(function () {
                 $("#upload-status .modal-body").toggle();
             });
+            $("#dialog-close-btn").click(function () {
+                myDropzone.removeAllFiles();
+                $("#upload-status .dz-complete").remove();
+                $("#upload-status").modal('hide');
+            });
         },
         headers: {
             'X-CSRFToken': csrf_token
         }
-    });
-
-    $("#dialog-close-btn").click(function () {
-        $("#upload-status").modal('hide');
-        //$("#upload-status").hide();
     });
 });

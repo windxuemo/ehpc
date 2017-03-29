@@ -14,7 +14,7 @@
                                     <span class="title"> {{ m.name }}</span>
                                 </a>
 
-                                <a href="{{ url_for('static', filename='resource/' + m.uri) }}" download="{{ m.name }}">
+                                <a href="{% if 'http://' in m.uri or 'https://' in m.uri %}{{ m.uri }}{% else %}{{ url_for('static', filename='resource/' + m.uri) }}{% endif %}" download="{{ m.name }}">
                                     <span class="course-type" style="right: 6%;height: 22px">
                                         <i class="es-icon es-icon-download" style="font-size: 22px"></i>
                                     </span>

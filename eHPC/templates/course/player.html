@@ -18,7 +18,8 @@
         /* 外链视频资源直接引用地址 */
         if(material_src.startsWith('http://') || material_src.startsWith('https://')){
             {% if cur_material.m_type == 'pdf' %}
-                location.href = material_src;
+                //location.href = material_src;
+                js_pdf_src = "{{ url_for('static', filename='js/pdfjs/web/viewer.html') }}?file={{  cur_material.uri }}";
             {% else %}
                 js_material_src = material_src;
             {% endif %}

@@ -80,7 +80,6 @@ $(document).ready(function () {
             });
             this.on("error", function (file) {
                error = true;
-               alert_modal("文件上传失败！");
             });
             this.on("queuecomplete", function(file) {
                 if (!error) {
@@ -88,10 +87,6 @@ $(document).ready(function () {
                         setTimeout(function() {location.href = back_to_list;}, 800);
                     }
                     else {
-                        /*alert_modal("附件上传成功！");
-                        $(".close").click(function () {
-                           location.reload();
-                        });*/
                         location.reload();
                     }
                 }

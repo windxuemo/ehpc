@@ -177,6 +177,7 @@
 
 #challenge-left, #challenge-right {
     margin-top: 80px;
+    margin-bottom: 20px;
     padding-top: 20px;
     margin-left: 4%;
     float: left;
@@ -189,9 +190,12 @@
     overflow-y: auto;
 }
 
+/* 布局参考 http://stackoverflow.com/questions/11225912/make-div-height-occupy-parent-remaining-height */
 #challenge-right {
     left: 48%;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* 虚拟实验室中的提示信息*/
@@ -257,37 +261,31 @@
 
 #laboratory {
     overflow: hidden;
-    height: 60%;
+    min-height: 450px;
     padding: 0;
     margin-top: 0;
 }
 
 #editor {
-    border-color: #3D3D3D;
+    border-color: #25282c;
+    min-height: 450px;
 }
 
 .editor {
     position: relative;
-    height: 100%;
     transition: transform .5s;
     transform: translateX(0);
 }
 
 #terminal {
-    position: absolute;
-    height: 40%;
-    bottom: 10px;
-    border: 0;
-    border-top: 1px solid #3D3D3D;
-    border-left: 42px solid #3D3D3D;
-    color: #E6E1DC;
+    border-left: 50px solid #25282c;
     width: 100%;
     font-weight: bolder;
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     background-color: #303030;
     padding: 5px;
     box-shadow: inset 0 0 10px black;
     overflow: auto;
+    flex-grow: 1;
 }
 
 .terminal {

@@ -422,7 +422,7 @@ class VNCKnowledge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(1024), nullable=False)
     about = db.Column(db.Text(), nullable=False)
-    content = db.Column(db.Text(), nullable=False)
+    content = db.Column(db.Text(), default='')
     cover_url = db.Column(db.String(512), default='upload/vnc_lab/default.png')
     teacher_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 

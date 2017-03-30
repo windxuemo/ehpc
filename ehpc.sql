@@ -1059,7 +1059,7 @@ CREATE TABLE `vnc_knowledge` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(1024) NOT NULL,
   `about` text NOT NULL,
-  `content` text NOT NULL,
+  `content` text DEFAULT '',
   `cover_url` varchar(512) DEFAULT 'upload/vnc_lab/default.png',
   `teacher_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),

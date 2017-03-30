@@ -63,31 +63,43 @@
         </div>
     </div>
 
+    {% include "admin/widget-del-warning.html" %}
+
     {% include 'widget/alert_modal.html' %}
 
 {% endblock %}
 
 {% block footer_ext %}
     <script>
-        $("a[name=vnc-knowledge-del-btn]").click(function () {
-            var kid = $(this).data("id");
-            var obj = $(this);
-            $.ajax({
-                url: location.href,
-                type: "post",
-                data: {
-                    op: "del",
-                    vnc_knowledge_id: kid
-                },
-                success: function (data) {
-                    if(data['status'] === 'success'){
-                        obj.parent().parent().remove();
+        $(function () {
+            var kid = -1, obj = null;
+            $("#content").find("a[name=vnc-knowledge-del-btn]").click(function () {
+                kid = $(this).data("id");
+                obj = $(this);
+                $("#del-warning").modal("show");
+            });
+
+            $("#del-confirm").click(function () {
+                $.ajax({
+                    url: location.href,
+                    type: "post",
+                    data: {
+                        op: "del",
+                        vnc_knowledge_id: kid
+                    },
+                    success: function (data) {
+                        if(data['status'] === 'success'){
+                            obj.parent().parent().remove();
+                            $("#del-warning").modal("hide");
+                        }
+                        else if(data['status'] === 'fail'){
+                            $("#del-warning").modal("hide");
+                            alert_modal("删除失败，请重试！");
+                        }
                     }
-                    else if(data['status'] === 'fail'){
-                        alert_modal("删除失败，请重试！");
-                    }
-                }
-            })
+                });
+            });
         });
+
     </script>
 {% endblock %}

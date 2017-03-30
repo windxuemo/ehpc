@@ -53,6 +53,16 @@
 
     </div>
 
+    <div class="modal fade center" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" style="height: 250px;">
+                    <img src='{{ url_for('static', filename='images/submit.gif') }}' alt='Loading'>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block footer_ext %}
@@ -102,8 +112,8 @@
             $run.click(function () {
                 $run.prop('disabled', true);
                 var code = editor.getValue();
-                var loading = "<img src='{{ url_for('static', filename='images/submit.gif') }}' alt='Loading'></div>";
-                terminal.eq(0).empty().append(loading);
+                $("#loading").modal("show");
+
 {#                terminal.eq(0).text('代码正在提交中...');#}
                 $.ajax({
                     url: address,
@@ -127,10 +137,12 @@
                             terminal.eq(0).text(data['msg']);
                         }
                         $run.prop('disabled', false);
+                        $("#loading").modal("hide");
                     },
                     error: function(msg){
                         terminal.eq(0).text('天河服务器出错或者长时间没有反应, 请稍后重试...');
                         $run.prop('disabled', false);
+                        $("#loading").modal("hide");
                     }
                 });
             });

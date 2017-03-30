@@ -271,12 +271,6 @@
     min-height: 450px;
 }
 
-.editor {
-    position: relative;
-    transition: transform .5s;
-    transform: translateX(0);
-}
-
 #terminal {
     border-left: 50px solid #25282c;
     width: 100%;
@@ -382,4 +376,9 @@
 .img-responsive {
     width: 100%;
     padding: 10px;
+}
+
+/* 后台代码输入框 */
+#editor-default-code, #editor-source-code{
+    height: 100%;
 }

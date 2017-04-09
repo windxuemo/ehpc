@@ -102,7 +102,8 @@ def program_view(pid):
             return request.files['code'].read()
         elif request.form['op'] == 'download':
             code = StringIO(request.form['code'].encode('utf8'))
-            return send_file(code, as_attachment=True, attachment_filename='code.txt')
+            filename = request.form['filename']
+            return send_file(code, as_attachment=True, attachment_filename=filename)
         else:
             abort(403)
 

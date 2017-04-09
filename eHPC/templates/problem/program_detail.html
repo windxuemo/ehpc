@@ -39,6 +39,7 @@
                     <input type="hidden" name="op" value="download">
                     <input type="hidden" name="program_id" value="{{ problem.id }}">
                     <input type="hidden" name="code" value="">
+                    <input type="hidden" name="filename" value="">
                 </form>
             </div>
             <div class="col-md-4">
@@ -146,6 +147,30 @@
 
     </div>
 
+    <!-- 代码文件命名模态框 -->
+    <div class="modal fade" id="download-warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div class="modal-body" style="height: 100px;font-size: medium">
+                    <form>
+                      <div class="form-group">
+                        <label class="control-label">请为下载文件命名：</label>
+                        <input id="filename" type="text" class="form-control" value="code.txt">
+                      </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="download-confirm" type="button" class="btn btn-primary">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% if cache %}
         <div id="hidden-code" style="display: none;">{{ cache.code }}</div>
     {% endif %}
@@ -247,9 +272,15 @@
             });
         });
         $("#code-download").click(function () {
+            $("#download-warning").modal("show");
+        });
+        $("#download-confirm").click(function () {
             var form = $("#code-download").next();
+            var filename = $("input[id=filename]").val();
             form.children("input[name=code]").attr("value", editor.getValue());
+            form.children("input[name=filename]").attr("value", filename);
             form.submit();
+            $("#download-warning").modal("hide");
         });
     });
     </script>

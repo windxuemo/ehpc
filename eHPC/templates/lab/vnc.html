@@ -41,24 +41,12 @@
                         <div class="selector-center" id="select">
                             <label for="resolution-selector">选择分辨率</label>
                             <select class="selectpicker" data-live-search="true" name="resolution" id="resolution-selector">
-                                <option value="2880x1620">2880x1620 (16:9)</option>
-                                <option value="2560x1600">2560x1600 (8:5)</option>
                                 <option value="2560x1440">2560x1440 (16:9) (2K)</option>
-                                <option value="2048x1536">2048x1536 (4:3)</option>
-                                <option value="2048x1152">2048x1152 (16:9)</option>
-                                <option value="1920x1440">1920x1440 (4:3)</option>
-                                <option value="1920x1200">1920x1200 (8:5)</option>
-                                <option value="1920x1080">1920x1080 (16:9) (1K)</option>
-                                <option value="1680x1050">1680x1050 (8:5)</option>
-                                <option value="1600x1200">1600x1200 (4:3)</option>
-                                <option value="1600x1024">1600x1024 (25:16)</option>
+                                <option value="1920x1080">1920x1080 (16:9)</option>
                                 <option value="1600x900">1600x900 (16:9)</option>
-                                <option value="1280x1024">1280x1024 (5:4)</option>
-                                <option value="1280x960">1280x960 (4:3)</option>
                                 <option value="1280x800">1280x800 (8:5)</option>
                                 <option value="1280x768">1280x768 (5:3)</option>
                                 <option value="1280x720">1280x720 (16:9)</option>
-                                <option value="1152x864">1152x864 (4:3)</option>
                                 <option value="1024x768">1024x768 (4:3)</option>
                                 <option value="800x600">800x600 (4:3)</option>
                             </select>
@@ -361,7 +349,7 @@
             );
             display.appendChild(guac.getDisplay().getElement());
             guac.onerror = function (error) {
-                console.log(error);
+                alert_modal("远程桌面连接错误");
             };
             guac.connect("token="+token);
             window.onunload = function () {

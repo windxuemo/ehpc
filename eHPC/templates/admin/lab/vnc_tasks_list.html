@@ -11,9 +11,9 @@
             <div class="col-md-3">
                 <div style="margin-bottom: 10px;font-size: 15px">实验列表</div>
                 <div class="list-group">
-                    {% for k in current_user.teacher_knowledge %}
-                    <a class="list-group-item{% if k.id == knowledge.id %} active{% endif %}"
-                    href="{{ url_for('admin.lab_view', knowledge_id=k.id) }}">{{ k.title }}</a>
+                    {% for k in current_user.teacher_vnc_knowledge %}
+                        <a class="list-group-item{% if k.id == cur_vnc_knowledge.id %} active{% endif %}"
+                           href="{{ url_for('admin.vnc_lab_view', vnc_knowledge_id=k.id) }}">{{ k.title }}</a>
                     {% endfor %}
                 </div>
             </div>
@@ -24,15 +24,44 @@
                         任务列表
                         <span class="pull-right">
                             <button id="edit-seq" class="btn btn-info btn-sm">调整顺序</button>
-                            <a class="btn btn-primary btn-sm" id="challenge-create-btn"
-                                    href="{{ url_for('admin.lab_create', knowledge_id=knowledge.id) }}">
+                            <a class="btn btn-primary btn-sm"
+                               href="{{ url_for("admin.vnc_lab_create", vnc_knowledge_id=cur_vnc_knowledge.id) }}">
                                 <span class="glyphicon glyphicon-plus"></span>创建任务
                             </a>
                         </span>
                     </div>
                     <div id="content" class="panel-body">
                         <div id="hint" style="display: none;">请直接拖动任务列表</div>
-                        {% include 'admin/lab/widget_challenge_table.html' %}
+
+                        <table id="tasks" class="table fixed-table">
+                            <thead><!--表格头-->
+                            <tr>
+                                <th width="15%">序号</th>
+                                <th width="55%">标题</th>
+                                <th width="30%">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody><!--表格主体-->
+                            {% if cur_vnc_knowledge.vnc_tasks.count() > 0 %}
+                                {% for c in cur_vnc_knowledge.vnc_tasks.order_by('vnc_task_num') %}
+                                    <tr data-id="{{ c.id }}">
+                                        <td>{{ c.vnc_task_num }}</td>
+                                        <td>{{ c.title }}</td>
+                                        <td>
+                                            <a class="btn btn-link"
+                                               href="{{ url_for("admin.vnc_lab_edit", vnc_knowledge_id=cur_vnc_knowledge.id, vnc_task_id=c.id) }}">
+                                                <i class="es-icon es-icon-edit"></i>编辑</a>
+                                            <a class="btn btn-link" href="javascript:void(0);" name="vnc-task-del-btn">
+                                                <i class="es-icon es-icon-delete"></i>删除</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr class="text-center"><td colspan="4">暂未发布任务</td></tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </div>
@@ -46,22 +75,22 @@
 {% block footer_ext %}
     <script>
         $(document).ready(function () {
-            var challenge_id = null;
-            $("#challenges").find("a[name=challenge-del-btn]").click(function () {
-                challenge_id = $(this).parent().parent().data("id");
+            var vnc_task_id = null;
+            $("#tasks").find("a[name=vnc-task-del-btn]").click(function () {
+                vnc_task_id = $(this).parent().parent().data("id");
                 $("#del-warning").modal("show");
             });
 
             $("#del-confirm").click(function () {
                 $.ajax({
                     type: "post",
-                    url: "{{ url_for('admin.lab_view', knowledge_id=knowledge.id) }}",
+                    url: "{{ url_for('admin.vnc_lab_view', vnc_knowledge_id=cur_vnc_knowledge.id) }}",
                     data: {
                         op: "del",
-                        challenge_id: challenge_id
+                        vnc_task_id: vnc_task_id
                     },
                     success: function (data) {
-                        if (data["status"] == "success") {
+                        if (data["status"] === "success") {
                             $("#del-warning").modal("hide");
                             location.reload();
                         }
@@ -74,13 +103,13 @@
 
             $("#edit-seq").click(function () {
                 if ($(this).text() == "调整顺序") {
-                    $("#challenges").find("tbody").sortable();
+                    $("#tasks").find("tbody").sortable();
                     $("#hint").show();
                     $(this).text("保存");
                 }
                 else {
                     var seq = {}, idx = 1;
-                    $("#challenges").find("tbody").find("tr").each(function () {
+                    $("#tasks").find("tbody").find("tr").each(function () {
                         seq[$(this).data("id")] = idx++;
                     });
                     $.ajax({
@@ -91,7 +120,7 @@
                             seq: JSON.stringify(seq)
                         },
                         success: function (data) {
-                            if (data["status"] == "success") {
+                            if (data["status"] === "success") {
                                 location.reload();
                             }
                         }

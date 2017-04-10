@@ -626,6 +626,7 @@ html, body {
     margin: 0.3em 0 0.25em -1.6em;
     vertical-align: middle;
 }
+/*********************************************************/
 
 .content-total {
     min-height:100%;
@@ -633,12 +634,17 @@ html, body {
 }
 
 .vnc-nav{
-    font-size: 17px;
+    padding: 10px;
+    width: 100%;
+    writing-mode: vertical-lr;
+    font-size: 20px;
     color: #c1c1c1;
 }
 
 .vnc-nav:hover{
     cursor: pointer;
+    background: #EEEEEE;
+    text-decoration: none;
 }
 
 .vnc-navbar {
@@ -653,26 +659,35 @@ html, body {
     z-index: 1;
 }
 
-.fullscreen-vnc-navbar {
-    background: #212121;
-    position: relative;
-    top: -45px;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-    z-index: 1;
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
+.vnc-lab-progress{
+    font-size: 17px;
+    color: #c1c1c1;
 }
 
-.fullscreen-vnc-navbar:hover {
-    position: relative;
-    top: 0;
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
+.vnc-lab-progress:hover{
+    cursor: pointer;
 }
+
+/*.fullscreen-vnc-navbar {*/
+    /*background: #212121;*/
+    /*position: relative;*/
+    /*top: -45px;*/
+    /*-webkit-border-radius: 0;*/
+    /*-moz-border-radius: 0;*/
+    /*border-radius: 0;*/
+    /*z-index: 1;*/
+    /*transition: all 0.5s ease-in-out 0s;*/
+    /*-webkit-transition: all 0.5s ease-in-out 0s;*/
+    /*-moz-transition: all 0.5s ease-in-out 0s;*/
+/*}*/
+
+/*.fullscreen-vnc-navbar:hover {*/
+    /*position: relative;*/
+    /*top: 0;*/
+    /*transition: all 0.5s ease-in-out 0s;*/
+    /*-webkit-transition: all 0.5s ease-in-out 0s;*/
+    /*-moz-transition: all 0.5s ease-in-out 0s;*/
+/*}*/
 
 
 .navbar-brand{
@@ -742,6 +757,30 @@ html, body {
     color: #fff;
 }
 
+.vnc-sidebar{
+    padding: 20px 0;
+    background: #212121;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    right: -45px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    z-index: 2;
+    transition: all 0.5s ease-in-out 0s;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    -moz-transition: all 0.5s ease-in-out 0s;
+}
+
+.vnc-sidebar:hover{
+    right: 0;
+    transition: all 0.5s ease-in-out 0s;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    -moz-transition: all 0.5s ease-in-out 0s;
+}
+
 .vnc-right{
     position: absolute;
     top: 50px;
@@ -752,7 +791,7 @@ html, body {
 }
 
 .vnc-left{
-    padding-left: 10px;
+    padding: 0 10px;
     overflow: auto;
     position: absolute;
     top: 50px;
@@ -816,3 +855,130 @@ html, body {
     top: 50%;
     transform: translateY(-50%);
 }
+
+/*信息提示*/
+.page-message-panel {
+    margin-top: 50px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 50px 50px;
+}
+
+.page-message-heading {
+    margin-bottom: 25px;
+}
+
+.page-message-title {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-size: 24px;
+}
+
+.page-message-body {
+    font-size: 16px;
+}
+/*****************************/
+/*实验进度*/
+.lab-time-line .period-list > li {
+    margin-bottom: 0;
+}
+
+.lab-time-line .period-list{
+    margin-top: 0;
+}
+
+.period-list {
+    margin-top: 20px;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style-type: none;
+}
+
+.period-list > li {
+    margin-bottom: 10px;
+    padding: 10px 15px;
+}
+
+.period-list .section {
+    background-color: #f5f5f5;
+    color: #919191;
+}
+
+.period-list .section {
+    padding-left: 45px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.period-list .period {
+    position: relative;
+    padding: 10px 100px 10px 45px;
+    font-size: 16px;
+}
+
+.period-list .period:hover,
+.period-list .period.item-active {
+    background-color: #f2fae3;
+}
+
+.period-list .period.disable {
+    background: none;
+}
+
+.period-list .period > a {
+    color: #919191;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.period-list .period .es-icon-undone,
+.period-list .period .es-icon-doing,
+.period-list .period .es-icon-done1 {
+    position: absolute;
+    top: 11px;
+    left: 15px;
+}
+
+.period-list .period .title {
+    color: #616161;
+}
+
+.period-list .period .date {
+    position: absolute;
+    top: 11px;
+    right: 50px;
+}
+
+.period-list .period .course-type {
+    position: absolute;
+    top: 11px;
+    right: 15px;
+    line-height: 20px;
+}
+
+.period-list .period .course-type i {
+    font-size: 20px;
+}
+
+.period-list .period .course-type small {
+    margin-top: -3px;
+}
+
+.period-list .period .period-state {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #919191;
+}
+
+.color-primary {
+    color: #46c37b !important;
+}
+/****************************************/

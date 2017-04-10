@@ -8,7 +8,7 @@
     <div class="container" id="content-container">
         <div class="row">
             <div class="col-md-3">
-                <div style="margin-bottom: 10px;font-size: 15px">试题类型</div>
+                <div style="margin-bottom: 10px;font-size: 15px">实验类型</div>
                 <div class="list-group-panel">
                     <div class="list-group">
                         <a class="list-group-item {{ 'active' if type == 'code_lab' }}" href="{{ url_for('admin.lab') }}">编程虚拟实验室</a>
@@ -22,32 +22,34 @@
                     <div class="panel-heading">
                         实验列表
                         <span class="pull-right">
-                            <a class="btn btn-primary btn-sm" href="{{ url_for('admin.vnc_lab_create') }}">
+                            <button class="btn btn-primary btn-sm" id="vnc-knowledge-create-btn" data-toggle="modal" data-target="#knowledgeModal">
                                 <span class="glyphicon glyphicon-plus"></span>新建VNC实验室
-                            </a>
+                            </button>
                         </span>
                     </div>
                     <div id="content" class="panel-body">
                         <table id="knowledge" class="table table-striped fixed-table">
                             <thead><!--表格头-->
                             <tr>
-                                <th width="15%">序号</th>
-                                <th width="20%">标题</th>
-                                <th width="40%">简介</th>
-                                <th width="25%">操作</th>
+                                <th width="8%">序号</th>
+                                <th width="17%">标题</th>
+                                <th width="35%">简介</th>
+                                <th width="40%">操作</th>
                             </tr>
                             </thead>
                             <tbody><!--表格主体-->
                             {% if current_user.teacher_vnc_knowledge.count() %}
                                 {% for k in current_user.teacher_vnc_knowledge %}
-                                    <tr>
+                                    <tr data-id="{{ k.id }}">
                                         <td>{{ loop.index }}</td>
                                         <td>{{ k.title }}</td>
-                                        <td>{{ k.about | truncate(40, True) }}</td>
+                                        <td class="overflow-ellipsis" data-toggle="tooltip" title="{{ k.about }}">{{ k.about }}</td>
                                         <td>
-                                            <a class="btn btn-link" href="{{ url_for('admin.vnc_lab_edit', vnc_knowledge_id=k.id) }}">
+                                            <a class="btn btn-link" href="javascript:void(0);" name="vnc-knowledge-edit-btn">
                                                 <i class="es-icon es-icon-edit"></i>编辑信息</a>
-                                            <a class="btn btn-link" href="javascript:void(0);" data-id="{{ k.id }}" name="vnc-knowledge-del-btn">
+                                            <a class="btn btn-link" href="{{ url_for("admin.vnc_lab_view", vnc_knowledge_id=k.id) }}">
+                                                <i class="es-icon es-icon-edit"></i>编辑任务</a>
+                                            <a class="btn btn-link" href="javascript:void(0);" name="vnc-knowledge-del-btn">
                                                 <i class="es-icon es-icon-delete"></i>删除</a>
                                         </td>
                                     </tr>
@@ -58,6 +60,54 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="knowledgeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">实验信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="lab-info">
+                        <div class="form-group">
+                            <div class="col-md-2 control-label" style="margin-top: 10px;">
+                                <label class="pull-right" for="knowledge-title-field">标题</label>
+                            </div>
+                            <div class="col-md-9 controls" style="margin-top: 10px;">
+                                <input id="knowledge-title-field" class="form-control" name="title" type="text" placeholder="请输入实验标题（必填项）">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 control-label" style="margin-top: 10px;">
+                                <label class="pull-right" for="knowledge-content-field">简介</label>
+                            </div>
+                            <div class="col-md-9 controls" style="margin-top: 10px;">
+                                    <textarea class="form-control" id="knowledge-content-field" name="about"
+                                              style="height: 200px" placeholder="请输入实验简介（非必填项）"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 control-label" style="margin-top: 10px;">
+                                <label class="pull-right" for="knowledge-content-field">封面</label>
+                            </div>
+                            <div class="col-md-9 controls" style="margin-top: 10px;">
+                                <input type="file" name="cover" accept="image/bmp,image/jpeg,image/png">
+                            </div>
+                        </div>
+                        <input type="hidden" name="op" value="">
+                        <input type="hidden" name="vnc_knowledge_id" value="">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span id="knowledge-save-info" class="hide" style="margin-right:20px;color:red;">
+                        <i class="es-icon es-icon-warning"></i>&nbsp;
+                        <span></span>
+                    </span>
+                    <button id="knowledge-save-btn" type="button" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>
@@ -74,9 +124,53 @@
         $(function () {
             var kid = -1, obj = null;
             $("#content").find("a[name=vnc-knowledge-del-btn]").click(function () {
-                kid = $(this).data("id");
+                kid = $(this).parent().parent().data("id");
                 obj = $(this);
                 $("#del-warning").modal("show");
+            });
+
+            var op = "";
+
+            $("#vnc-knowledge-create-btn").click(function () {
+                $("#knowledge-title-field").val("");
+                $("#knowledge-content-field").val("");
+                kid = -1;
+                op = "create";
+            });
+
+            $("#content").find("a[name=vnc-knowledge-edit-btn]").click(function () {
+                var row = $(this).parent().parent();
+                $("#knowledge-title-field").val(row.find("td").eq(1).text());
+                $("#knowledge-content-field").val(row.find("td").eq(2).text());
+                kid = row.data("id");
+                op = "edit";
+                $("#knowledgeModal").modal();
+            });
+
+            $("#knowledge-save-btn").click(function () {
+                if(!$("#knowledge-title-field").val()){
+                    show_invalid_info("#knowledge-save-info", "#knowledge-save-info span","标题不能为空");
+                    return;
+                }
+                if($("#knowledge-title-field").val().length > 1024) {
+                    show_invalid_info("#knowledge-save-info","#knowledge-save-info span","标题内容过长（最多1024个字符）");
+                    return;
+                }
+                $("#lab-info").find("> input[name=op]").attr("value", op);
+                $("#lab-info").find("> input[name=vnc_knowledge_id]").attr("value", kid);
+                $.ajax({
+                    type: "post",
+                    url: location.href,
+                    data: new FormData($('#lab-info')[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data["status"] === "success") {
+                            location.reload();
+                        }
+                    }
+                });
             });
 
             $("#del-confirm").click(function () {

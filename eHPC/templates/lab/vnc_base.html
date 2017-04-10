@@ -23,21 +23,9 @@
 <body>
 
 <div class="content-total">
-    <nav class="vnc-navbar">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="{{ url_for("lab.index") }}">虚拟实验室</a>
-            </div>
-            <div>
-                <ul class="navbar-nav nav">
-                    <li><a data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</a></li>
-                    <li><a id="btn-fullscreen" class="vnc-nav">桌面全屏</a></li>
-                    <li><a id="btn-browser-fullscreen" class="vnc-nav">浏览器全屏</a></li>
-                    <li><a class="vnc-nav" id="change-resolution">更改分辨率</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+
+    {% block nav %}
+    {% endblock %}
 
     <div class="content-holder">
         {% block content %}
@@ -69,6 +57,38 @@
     });
     $(function () {
         $('form[method=post]').append('<input type="hidden" name="csrf_token" value="' + csrf_token + '"/>');
+    });
+</script>
+
+<script>
+    function alert_modal(content, isHtml) {
+        var obj = $("#modal-alert");
+        if (isHtml) {
+            obj.find(".modal-body").html(content);
+        }
+        else {
+            obj.find(".modal-body").text(content);
+        }
+        obj.modal('show');
+    }
+    $(function () {
+        $("#get-vnc-lab-progress").click(function () {
+            $.ajax({
+                url: "{{ url_for("lab.vnc_task", vnc_knowledge_id=vnc_knowledge_id) }}",
+                type: "post",
+                data: {
+                    op: "get vnc lab progress"
+                },
+                success: function (data) {
+                    if(data["status"] === "success"){
+                        alert_modal(data["html"], true);
+                    }
+                    else{
+                        alert_modal("请重试");
+                    }
+                }
+            })
+        });
     });
 </script>
 

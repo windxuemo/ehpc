@@ -56,7 +56,9 @@ class User(UserMixin, db.Model):
     teacher_questions = db.relationship('Question', backref='teacher', lazy='dynamic')
     teacher_knowledge = db.relationship('Knowledge', backref='teacher', lazy='dynamic')
     teacher_program = db.relationship('Program', backref='teacher', lazy='dynamic')
-    teacher_vnc_knowledge = db.relationship('VNCKnowledge', backref='teacher', lazy='dynamic')
+    teacher_vnc_knowledge = db.relationship('VNCKnowledge', backref='teacher', lazy='dynamic', cascade="delete, delete-orphan")
+
+    vnc_progresses = db.relationship('VNCProgress', backref='user', lazy='dynamic', cascade="delete, delete-orphan")
 
     @property
     def password(self):
@@ -423,9 +425,31 @@ class VNCKnowledge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(1024), nullable=False)
     about = db.Column(db.Text(), nullable=False)
-    content = db.Column(db.Text(), default='')
     cover_url = db.Column(db.String(512), default='upload/vnc_lab/default.png')
     teacher_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    # 一个实验对应多个小任务，一个小任务只属于一个实验
+    vnc_tasks = db.relationship('VNCTask', backref='vnc_knowledge', lazy='dynamic', cascade="delete, delete-orphan")
+    vnc_progresses = db.relationship('VNCProgress', backref='vnc_knowledge', lazy='dynamic', cascade="delete, delete-orphan")
+
+
+class VNCTask(db.Model):
+    __tablename__ = 'vnc_tasks'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(1024), nullable=False)
+    content = db.Column(db.Text(), nullable=False)
+
+    vnc_knowledge_id = db.Column(db.Integer, db.ForeignKey('vnc_knowledge.id'))
+    vnc_task_num = db.Column(db.Integer, default=1)
+
+
+class VNCProgress(db.Model):
+    __tablename__ = 'vnc_progresses'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    vnc_knowledge_id = db.Column(db.Integer, db.ForeignKey('vnc_knowledge.id'), primary_key=True)
+    have_done = db.Column(db.Integer, default=0)
+    update_time = db.Column(db.DateTime, nullable=False)
+
 
 """ 案例展示 """
 

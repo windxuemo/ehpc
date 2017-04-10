@@ -6,7 +6,7 @@ from flask_login import current_user, current_app
 from flask import jsonify
 
 from .. import db
-from ..models import Progress
+from ..models import Progress, VNCProgress
 
 
 def get_progress_class(kid):
@@ -41,4 +41,27 @@ def increase_progress(kid, k_num, challenges_count):
     pro = get_progress_class(kid)
     if int(k_num) == (pro.cur_progress + 1) <= challenges_count:
         pro.cur_progress += 1
+        db.session.commit()
+
+
+def get_vnc_progress_class(kid):
+    pro = VNCProgress.query.filter_by(user_id=current_user.id).filter_by(vnc_knowledge_id=kid).first()
+    if pro is None:
+        pro = VNCProgress(user_id=current_user.id, vnc_knowledge_id=kid, update_time=datetime.now())
+        db.session.add(pro)
+        db.session.commit()
+    return pro
+
+
+def get_cur_vnc_progress(kid):
+    pro = get_vnc_progress_class(kid)
+    pro.update_time = datetime.now()
+    db.session.commit()
+    return pro.have_done
+
+
+def increase_vnc_progress(kid, vnc_task_num, tasks_count):
+    pro = get_vnc_progress_class(kid)
+    if int(vnc_task_num) == (pro.have_done + 1) <= tasks_count:
+        pro.have_done += 1
         db.session.commit()

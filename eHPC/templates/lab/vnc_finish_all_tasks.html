@@ -1,0 +1,36 @@
+{% extends "lab/vnc_base.html" %}
+
+{% block nav %}
+    <nav class="vnc-navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for("lab.index") }}">虚拟实验室</a>
+            </div>
+            <div>
+                <ul class="navbar-nav nav">
+                    <li><a class="vnc-lab-progress" id="get-vnc-lab-progress">实验进度</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="page-message-panel container" id="lab-head-empty">
+        <div class="page-message-heading">
+            <h2 class="page-message-title text-center">提示信息</h2>
+        </div>
+        <div class="page-message-body">
+            <p>
+                恭喜你! 你已经完成了所有的学习任务!
+            </p>
+
+            <p> 你可以在其它知识点中: <a href="{{ url_for('lab.index') }}"> 学习别的知识</a>
+            </p>
+        </div>
+    </div>
+
+    {% include "widget/alert_modal.html" %}
+{% endblock %}
+
+

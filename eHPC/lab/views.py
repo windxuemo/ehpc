@@ -4,16 +4,15 @@
 import os
 from datetime import datetime
 
-from flask import render_template, request, jsonify, abort, current_app
+from flask import render_template, request, jsonify, abort, current_app, url_for
 from flask_babel import gettext
 from flask_login import login_required, current_user
 
 from eHPC.util.code_process import ehpc_client
 from . import lab
-from .. import db
-from ..models import Challenge, Knowledge, Progress, VNCKnowledge
+from ..models import Challenge, Knowledge, VNCKnowledge, VNCTask
 
-from .lab_util import get_cur_progress, increase_progress
+from .lab_util import get_cur_progress, increase_progress, get_cur_vnc_progress, increase_vnc_progress
 from config import TH2_MY_PATH
 import random, string
 import requests
@@ -31,6 +30,11 @@ def index():
             k.cur_level = pro.cur_progress if pro else 0
             k.all_levels = k.challenges.count()
             k.percentage = "{0:.0f}%".format(100.0 * k.cur_level / k.all_levels) if k.all_levels >= 1 else "100%"
+        for k in vnc_knowledges:
+            pro = current_user.vnc_progresses.filter_by(vnc_knowledge_id=k.id).first()
+            k.cur_vnc_level = pro.have_done if pro else 0
+            k.all_vnc_levels = k.vnc_tasks.count()
+            k.percentage = "{0:.0f}%".format(100.0 * k.cur_vnc_level / k.all_vnc_levels) if k.all_vnc_levels >= 1 else "100%"
     return render_template('lab/index.html',
                            title=gettext('Labs'),
                            knowledges=knowledges,
@@ -167,12 +171,58 @@ def my_progress(kid):
                            cur_level=cur_level)
 
 
-@lab.route('/vnc/whole/<int:vnc_knowledge_id>', methods=['GET', 'POST'])
+@lab.route('/vnc/tasks_list/<int:vnc_knowledge_id>/')
 @login_required
-def vnc(vnc_knowledge_id):
+def tasks_list(vnc_knowledge_id):
+    cur_vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first_or_404()
+    cur_vnc_level = get_cur_vnc_progress(vnc_knowledge_id)
+    all_tasks = cur_vnc_knowledge.vnc_tasks.order_by(VNCTask.vnc_task_num).all()
+
     if request.method == 'GET':
-        vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first_or_404()
-        return render_template('lab/vnc.html', title=gettext('vnc'), vnc_knowledge=vnc_knowledge)
+        return render_template('lab/vnc_tasks_lists.html',
+                               cur_vnc_knowledge=cur_vnc_knowledge,
+                               cur_vnc_level=cur_vnc_level,
+                               all_tasks=all_tasks)
+
+
+@lab.route('/vnc/task/<int:vnc_knowledge_id>/', methods=['GET', 'POST'])
+@login_required
+def vnc_task(vnc_knowledge_id):
+    if request.method == 'GET':
+        cur_vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first_or_404()
+        vnc_tasks_count = cur_vnc_knowledge.vnc_tasks.count()
+
+        cur_vnc_progress = get_cur_vnc_progress(vnc_knowledge_id)   # 用户已完成的最大task序号
+        response_vnc_task_num = cur_vnc_progress + 1
+        try:
+            request_vnc_task_number = int(request.args.get('request_vnc_task_number', None))
+        except ValueError:
+            return abort(404)
+        except TypeError:
+            request_vnc_task_number = cur_vnc_progress
+
+        if request_vnc_task_number < 0:
+            return abort(404)
+        if 0 < request_vnc_task_number <= cur_vnc_progress + 1:  # 正确的请求范围，即1至用户已完成的最大task序号加1
+            response_vnc_task_num = request_vnc_task_number
+        elif cur_vnc_progress + 1 < request_vnc_task_number <= vnc_tasks_count + 1:  # 合法但不允许访问的范围，即大于用户已完成的最大task序号加1，至总任务数加1
+            return render_template('lab/vnc_out_of_progress.html',
+                                   title=u'前面任务还没完成',
+                                   next_vnc_task_num=cur_vnc_progress + 1,
+                                   vnc_knowledge_id=vnc_knowledge_id)
+        else:   # 超过总任务数加1，认为是非法参数
+            abort(404)
+
+        if response_vnc_task_num == vnc_tasks_count + 1:
+            return render_template('lab/vnc_finish_all_tasks.html',
+                                   title=u'学习完成',
+                                   vnc_knowledge_id=vnc_knowledge_id)
+
+        response_vnc_task = VNCTask.query.filter_by(vnc_knowledge_id=vnc_knowledge_id).filter_by(vnc_task_num=response_vnc_task_num).first()
+        if response_vnc_task is not None:
+            return render_template('lab/vnc.html', title=gettext('vnc'), response_vnc_task=response_vnc_task, vnc_knowledge_id=cur_vnc_knowledge.id)
+        else:
+            abort(404)
     elif request.method == 'POST':
         op = request.form.get('op', None)
         if op is not None:
@@ -192,7 +242,6 @@ def vnc(vnc_knowledge_id):
                     else:
                         status = req.json()['status']
                         print status
-
                 if status == 'success':
                     return jsonify(status='success', token=token)
                 elif status == 'reconnect success':
@@ -202,10 +251,43 @@ def vnc(vnc_knowledge_id):
                 else:
                     return jsonify(status='fail', msg=u'服务器内部错误，请联系管理员')
 
+            elif op == 'get vnc lab progress':
+                cur_vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first()
+                if cur_vnc_knowledge is not None:
+                    all_tasks = cur_vnc_knowledge.vnc_tasks.order_by(VNCTask.vnc_task_num).all()
+                    if all_tasks is not None:
+                        cur_vnc_level = get_cur_vnc_progress(vnc_knowledge_id)
+                        return jsonify(status='success', html=render_template('lab/vnc_widget_show_progress.html',
+                                                                              cur_vnc_knowledge=cur_vnc_knowledge,
+                                                                              cur_vnc_level=cur_vnc_level,
+                                                                              all_tasks=all_tasks))
 
-@lab.route('/vnc/document/<int:vnc_knowledge_id>', methods=['GET', 'POST'])
-@login_required
-def vnc_document(vnc_knowledge_id):
-    if request.method == 'GET':
-        vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first_or_404()
-        return render_template('lab/vnc_document.html', title=gettext('vnc'), vnc_knowledge=vnc_knowledge)
+            elif op == 'next task':
+                vnc_task_num = request.form.get('vnc_task_num', None)
+                if vnc_task_num is not None:
+                    try:
+                        vnc_task_num = int(vnc_task_num)
+                    except TypeError:
+                        return jsonify(status='fail')
+
+                    cur_vnc_knowledge = VNCKnowledge.query.filter_by(id=vnc_knowledge_id).first()
+                    cur_vnc_progress = current_user.vnc_progresses.filter_by(vnc_knowledge_id=vnc_knowledge_id).first()
+
+                    if cur_vnc_knowledge is not None and cur_vnc_progress is not None:
+                        vnc_tasks_count = cur_vnc_knowledge.vnc_tasks.count()
+                        increase_vnc_progress(vnc_knowledge_id, vnc_task_num, vnc_tasks_count)
+
+                        if 0 < vnc_task_num <= cur_vnc_progress.have_done:
+                            print vnc_task_num, cur_vnc_progress.have_done
+                            return jsonify(status='success', next=url_for('lab.vnc_task',
+                                                                          vnc_knowledge_id=vnc_knowledge_id,
+                                                                          request_vnc_task_number=vnc_task_num + 1,
+                                                                          _external=True))
+                        else:
+                            return jsonify(status='fail')
+                    else:
+                        return jsonify(status='fail')
+                else:
+                    return jsonify(status='fail')
+        else:
+            return jsonify(status='fail')

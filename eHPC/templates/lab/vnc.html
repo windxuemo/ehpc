@@ -5,16 +5,47 @@
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
 {% endblock %}
 
+{% block nav %}
+    <nav class="vnc-navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" style="padding: 10px 0;" href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge_id) }}">
+                    <span class="glyphicon glyphicon-chevron-left"></span>返回任务列表
+                </a>
+{#                <a class="navbar-brand" href="{{ url_for("lab.index") }}">虚拟实验室</a>#}
+            </div>
+{#            <div>#}
+{#                <ul class="navbar-nav nav hidden-xs">#}
+{#                    <li><a data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</a></li>#}
+{#                    <li><a id="btn-fullscreen" class="vnc-nav">隐藏文档</a></li>#}
+{#                    <li><a id="btn-browser-fullscreen" class="vnc-nav">全屏</a></li>#}
+{#                    <li><a class="vnc-nav" id="change-resolution">更改分辨率</a></li>#}
+{#                    <li><a class="vnc-nav" id="get-vnc-lab-progress">实验进度</a></li>#}
+{#                </ul>#}
+{#            </div>#}
+        </div>
+    </nav>
+{% endblock %}
+
 {% block content %}
     <div class="vnc-left">
         <div class="markdown-body">
-            <p class="text-center text-xlarge"> {{ vnc_knowledge.title }}</p>
-            <div id="c_content" data-to-render="{{ vnc_knowledge.content }}"></div>
+            <p class="text-center text-xlarge"> {{ response_vnc_task.title }}</p>
+            <div id="c_content" data-to-render="{{ response_vnc_task.content }}"></div>
         </div>
+        <button id="continue" class="btn btn-primary btn-block next-step">继续学习<span class="glyphicon glyphicon-forward"></span></button>
     </div>
     <div class="vnc-right" style="background: #000000">
         <div id="display" style="display: none"></div>
         <img id="loading-svg" src="{{ url_for('static', filename='images/radio.svg') }}" style="position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);width: 10%;height: 10%">
+    </div>
+
+    <div class="vnc-sidebar">
+        <a data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</a>
+        <a id="btn-fullscreen" class="vnc-nav">隐藏文档</a>
+        <a id="btn-browser-fullscreen" class="vnc-nav">全屏</a>
+        <a class="vnc-nav" id="change-resolution">更改分辨率</a>
+        <a class="vnc-nav" id="get-vnc-lab-progress">实验进度</a>
     </div>
 
     <div class="modal fade" id="clipboard" tabindex="-1" role="dialog" aria-hidden="true">
@@ -75,7 +106,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body" style="height: 250px;">
-                    <img src="{{ url_for('static', filename='images/loading.gif') }}" class="loading-center">
+                    <img src="{{ url_for('static', filename='images/loading.svg') }}" class="loading-center">
                 </div>
             </div>
         </div>
@@ -95,25 +126,47 @@
             var c_content = $("#c_content");
             c_content.html(latex_support(c_content.data('to-render')));
             c_content.attr('data-to-render', null);
-        });
+            $("#continue").click(function () {
+                 $.ajax({
+                     url: location.href,
+                     type: "post",
+                     data: {
+                         op: "next task",
+                         vnc_task_num: "{{ response_vnc_task.vnc_task_num }}"
+                     },
+                     success: function (data) {
+                         if(data['status'] === 'success'){
+                             location.href = data['next'];
+                         }
+                         else if(data['status'] === 'fail'){
+                             alert_modal("失败，请重试");
+                         }
+                     }
+                 })
+            });
 
-        var header = $(".vnc-navbar").eq(0),
-            footer = $(".content-footer").eq(0),
-            content = $(".content-holder").eq(0),
-            content_left = $(".vnc-left").eq(0),
-            content_right = $(".vnc-right").eq(0),
-            clipboard = $("#clipboard"),
-            pick_resolution = $("#select-resolution"),
-            guac,
-            is_full = false;
+        });
+    </script>
+    <script>
+        var header = $(".vnc-navbar").eq(0), //导航栏
+            footer = $(".content-footer").eq(0), //底部栏
+            content = $(".content-holder").eq(0), //中间内容容器
+            content_left = $(".vnc-left").eq(0), //左侧文档内容容器
+            content_right = $(".vnc-right").eq(0), //右侧文档内容容器
+            clipboard = $("#clipboard"), //剪切板模态框
+            pick_resolution = $("#select-resolution"), //分辨率调节模态框
+            guac, //Guacamole类
+            hide_document = false, //左侧文档隐藏标识
+            browser_fullscreen = false; //浏览器全屏标识
 
         $(function () {
             $("#btn-fullscreen").click(function () {
-                if(!is_full){
-                    is_full = true;
-                    $("#btn-fullscreen").text("退出桌面全屏");
-                    header.removeClass("vnc-navbar");
-                    header.addClass("fullscreen-vnc-navbar");
+                if(!hide_document){
+                    hide_document = true;
+                    $("#btn-fullscreen").text("显示文档");
+                    //header.removeClass("vnc-navbar");
+                    //header.addClass("fullscreen-vnc-navbar");
+                    header.hide("blind", {direction: "up"}, "normal");
                     footer.hide("blind", {direction: "down"}, "normal");
                     content_left.hide("blind", {direction: "left"}, "normal", function () {
                         content_right.removeClass("vnc-right");
@@ -125,10 +178,11 @@
                     });
                 }
                 else{
-                    is_full = false;
-                    $("#btn-fullscreen").text("桌面全屏");
-                    header.removeClass("fullscreen-vnc-navbar");
-                    header.addClass("vnc-navbar");
+                    hide_document = false;
+                    $("#btn-fullscreen").text("隐藏文档");
+{#                    header.removeClass("fullscreen-vnc-navbar");#}
+{#                    header.addClass("vnc-navbar");#}
+                    header.show("blind", {direction: "up"}, "normal");
                     footer.show("blind", {direction: "down"}, "normal");
                     content_left.show("blind", {direction: "left"}, "normal");
                     content_right.removeClass("vnc-whole");
@@ -139,40 +193,40 @@
                     $(window).trigger("resize");
                 }
             });
-            var browser_fullscreen = false;
+
             $("#btn-browser-fullscreen").click(function () {
                 if(!browser_fullscreen){
                     var element = document.documentElement;
                     if(element.requestFullscreen) {
                         element.requestFullscreen();
                         browser_fullscreen = true;
-                        $(this).text("退出浏览器全屏")
+                        $(this).text("退出全屏")
                     } else if(element.mozRequestFullScreen) {
                         element.mozRequestFullScreen();
                         browser_fullscreen = true;
-                        $(this).text("退出浏览器全屏")
+                        $(this).text("退出全屏")
                     } else if(element.webkitRequestFullscreen) {
                         element.webkitRequestFullscreen();
                         browser_fullscreen = true;
-                        $(this).text("退出浏览器全屏")
+                        $(this).text("退出全屏")
                     } else if(element.msRequestFullscreen) {
                         element.msRequestFullscreen();
                         browser_fullscreen = true;
-                        $(this).text("退出浏览器全屏")
+                        $(this).text("退出全屏")
                     }
                 }else{
                     if(document.exitFullscreen) {
                         document.exitFullscreen();
                         browser_fullscreen = false;
-                        $(this).text("浏览器全屏")
+                        $(this).text("全屏")
                     } else if(document.mozCancelFullScreen) {
                         document.mozCancelFullScreen();
                         browser_fullscreen = false;
-                        $(this).text("浏览器全屏")
+                        $(this).text("全屏")
                     } else if(document.webkitExitFullscreen) {
                         document.webkitExitFullscreen();
                         browser_fullscreen = false;
-                        $(this).text("浏览器全屏")
+                        $(this).text("全屏")
                     }
                 }
             });
@@ -200,6 +254,7 @@
             })
         });
 
+        //工具函数
         function hcf(n, m) {
             var min = n;
             (m < n) && (min = m);
@@ -217,6 +272,7 @@
             max = arr[arr.length - 1];
             return max;
         }
+
         function do_connect_vnc_server(token){
             $("#change-resolution").click(function () {
                 $("#select-resolution").modal({backdrop: 'static', keyboard: false});
@@ -237,6 +293,51 @@
 
             $("#cancel-change").click(function () {
                 $("#select-resolution").modal("hide");
+            });
+
+            $("#input-resolution-width").keyup(function () {
+                var input_height = $("#input-resolution-height");
+                var input_width = $("#input-resolution-width");
+                if(!(Number($(this).val()).toString() === $(this).val())){
+                    $(this).val("");
+                    return;
+                }
+
+                if(Number($(this).val())<=0){
+                    $(this).val("");
+                    return;
+                }
+                if(Number($(this).val())>3840){
+                    $(this).val(3840);
+                }
+
+                var height = input_height.val();
+                var width = input_width.val();
+                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
+                var common_factor = hcf(width, height);
+                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
+            });
+
+            $("#input-resolution-height").keyup(function () {
+                var input_height = $("#input-resolution-height");
+                var input_width = $("#input-resolution-width");
+                if(!(Number($(this).val()).toString() === $(this).val())){
+                    $(this).val("");
+                    return;
+                }
+                if(Number($(this).val())<=0){
+                    $(this).val("");
+                    return;
+                }
+                if(Number($(this).val())>2160){
+                    $(this).val(2160);
+                }
+
+                var height = input_height.val();
+                var width = input_width.val();
+                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
+                var common_factor = hcf(width, height);
+                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
             });
 
             $("#confirm-change").click(function () {
@@ -298,58 +399,13 @@
                 $("#confirm-change").click();
             });
 
-            $("#input-resolution-width").keyup(function () {
-                var input_height = $("#input-resolution-height");
-                var input_width = $("#input-resolution-width");
-                if(!(Number($(this).val()).toString() === $(this).val())){
-                    $(this).val("");
-                    return;
-                }
-
-                if(Number($(this).val())<=0){
-                    $(this).val("");
-                    return;
-                }
-                if(Number($(this).val())>3840){
-                    $(this).val(3840);
-                }
-
-                var height = input_height.val();
-                var width = input_width.val();
-                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
-                var common_factor = hcf(width, height);
-                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
-            });
-
-            $("#input-resolution-height").keyup(function () {
-                var input_height = $("#input-resolution-height");
-                var input_width = $("#input-resolution-width");
-                if(!(Number($(this).val()).toString() === $(this).val())){
-                    $(this).val("");
-                    return;
-                }
-                if(Number($(this).val())<=0){
-                    $(this).val("");
-                    return;
-                }
-                if(Number($(this).val())>2160){
-                    $(this).val(2160);
-                }
-
-                var height = input_height.val();
-                var width = input_width.val();
-                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
-                var common_factor = hcf(width, height);
-                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
-            });
-
             var display = document.getElementById("display");
             guac = new Guacamole.Client(
                 new Guacamole.HTTPTunnel("http://a002.nscc-gz.cn:10231/server/tunnel")
             );
             display.appendChild(guac.getDisplay().getElement());
             guac.onerror = function (error) {
-                alert_modal("远程桌面连接错误");
+                //alert_modal("远程桌面连接错误");
             };
             guac.connect("token="+token);
             window.onunload = function () {
@@ -382,7 +438,6 @@
             keyboard.onkeyup = function (keysym) {
                 guac.sendKeyEvent(0, keysym);
             };
-
             guac.getDisplay().onresize = function (width, height) {
                 if(!guac || !guac.getDisplay()) return;
                 var height_to_set = content_right.eq(0).height();
@@ -396,7 +451,6 @@
                 $("#display").css("position", "absolute");
                 $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
             };
-
             guac.onclipboard = function (stream, mimetype) {
                 var reader = new Guacamole.StringReader(stream);
                 reader.ontext = function (text) {
@@ -416,7 +470,7 @@
                 guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
 
                 guac.getDisplay().getDefaultLayer().resize(guac.getDisplay().getDefaultLayer().height * cur_width / cur_height, guac.getDisplay().getDefaultLayer().height);
-                if(is_full) {
+                if(hide_document) {
                     $("#display").css("left", 0.5 * (content_right.width() - $("#display").width()));
                     $("#display").css("top", 0);
                 }
@@ -428,10 +482,8 @@
 
             $("#clipboard-content").change(function () {
                 if(!guac || !guac.getDisplay()) return;
-                console.log($(this).val());
                 guac.setClipboard($(this).val());
             });
-
 
             clipboard.on('shown.bs.modal', function () {
                 keyboard.onkeydown = null;
@@ -447,11 +499,6 @@
                 };
             });
 
-            $("#read-clipboard").click(function () {
-
-            });
-
-
             pick_resolution.on('shown.bs.modal', function () {
                 keyboard.onkeydown = null;
                 keyboard.onkeyup = null;
@@ -465,16 +512,6 @@
                     guac.sendKeyEvent(0, keysym);
                 };
             });
-        }
-        function alert_modal(content, isHtml) {
-            var obj = $("#modal-alert");
-            if (isHtml) {
-                obj.find(".modal-body").html(content);
-            }
-            else {
-                obj.find(".modal-body").text(content);
-            }
-            obj.modal('show');
         }
     </script>
 {% endblock %}

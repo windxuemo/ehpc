@@ -1,0 +1,16 @@
+<div class="lab-time-line">
+    <ul class="period-list">
+        {% for task in all_tasks %}
+            <li class="period">
+                <a href="{{ url_for('lab.vnc_task', vnc_knowledge_id=cur_vnc_knowledge.id, request_vnc_task_number=task.vnc_task_num) }}">
+                    {% if loop.index <= cur_vnc_level %}
+                        <i class="es-icon es-icon-studydone color-primary"></i>
+                    {% else %}
+                        <i class="es-icon es-icon-study"></i>
+                    {% endif %}
+                    <span class="title"> {{ task.title }}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

@@ -2209,7 +2209,6 @@ CREATE TABLE `vnc_knowledge` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(1024) NOT NULL,
   `about` text NOT NULL,
-  `content` text,
   `cover_url` varchar(512) DEFAULT 'upload/vnc_lab/default.png',
   `teacher_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -2220,14 +2219,78 @@ CREATE TABLE `vnc_knowledge` (
 LOCK TABLES `vnc_knowledge` WRITE;
 /*!40000 ALTER TABLE `vnc_knowledge` DISABLE KEYS */;
 
-INSERT INTO `vnc_knowledge` (`id`, `title`, `about`, `content`, `cover_url`, `teacher_id`)
+INSERT INTO `vnc_knowledge` (`id`, `title`, `about`, `cover_url`, `teacher_id`)
 VALUES
-	(1,'配置实验1','此乃配置实验1','This is configuration lab 1','upload/vnc_lab/default.png',3);
-
+  (1, '配置实验1', '此乃配置实验1', 'upload/vnc_lab/default.png', 3),
 /*!40000 ALTER TABLE `vnc_knowledge` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `vnc_tasks`
+--
 
+DROP TABLE IF EXISTS `vnc_tasks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vnc_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(1024) NOT NULL,
+  `content` text NOT NULL,
+  `vnc_knowledge_id` int(11) DEFAULT NULL,
+  `vnc_task_num` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `vnc_knowledge_id` (`vnc_knowledge_id`),
+  CONSTRAINT `vnc_tasks_ibfk_1` FOREIGN KEY (`vnc_knowledge_id`) REFERENCES `vnc_knowledge` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vnc_tasks`
+--
+
+LOCK TABLES `vnc_tasks` WRITE;
+/*!40000 ALTER TABLE `vnc_tasks` DISABLE KEYS */;
+
+INSERT INTO `vnc_tasks` (`id`, `title`, `content`, `vnc_knowledge_id`, `vnc_task_num`)
+VALUES
+  (1, '第一个小任务', '# markdown内容1', 1, 1),
+  (2, '第二个小任务', '# markdown内容2', 1, 2),
+  (3, '第三个小任务', '# markdown内容3', 1, 3),
+  (4, '第四个小任务', '# markdown内容4', 1, 4);
+/*!40000 ALTER TABLE `vnc_tasks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vnc_progresses`
+--
+
+DROP TABLE IF EXISTS `vnc_progresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vnc_progresses` (
+  `user_id` int(11) NOT NULL,
+  `vnc_knowledge_id` int(11) NOT NULL,
+  `have_done` int(11) DEFAULT 0,
+  `update_time` datetime NOT NULL,
+  PRIMARY KEY (`user_id`,`vnc_knowledge_id`),
+  KEY `vnc_knowledge_id` (`vnc_knowledge_id`),
+  CONSTRAINT `vnc_progresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `vnc_progresses_ibfk_2` FOREIGN KEY (`vnc_knowledge_id`) REFERENCES `vnc_knowledge` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vnc_progresses`
+--
+
+LOCK TABLES `vnc_progresses` WRITE;
+/*!40000 ALTER TABLE `vnc_progresses` DISABLE KEYS */;
+
+INSERT INTO `vnc_progresses` (`user_id`, `vnc_knowledge_id`, `have_done`, `update_time`)
+VALUES
+  (3, 1, 1, '2017-03-23 09:22:38');
+/*!40000 ALTER TABLE `vnc_progresses` ENABLE KEYS */;
+UNLOCK TABLES;
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

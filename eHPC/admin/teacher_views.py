@@ -14,7 +14,7 @@ from sqlalchemy import or_
 from . import admin
 from .. import db
 from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload, HomeworkAppendix
-from ..models import Course, Lesson, Material, User, Apply, VNCKnowledge
+from ..models import Course, Lesson, Material, User, Apply, VNCKnowledge, VNCTask
 from ..models import Knowledge, Challenge, Group
 from ..user.authorize import teacher_login
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
@@ -1094,11 +1094,105 @@ def vnc_lab():
     elif request.method == 'POST':
         op = request.form.get('op', None)
         if op is not None:
-            vnc_knowledge_id = request.form.get('vnc_knowledge_id', None)
-            if op == 'del' and vnc_knowledge_id is not None:
-                vnc_knowledge_to_del = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
-                if vnc_knowledge_to_del is not None:
-                    db.session.delete(vnc_knowledge_to_del)
+            if op == 'del':
+                vnc_knowledge_id = request.form.get('vnc_knowledge_id', None)
+                if vnc_knowledge_id is not None:
+                    vnc_knowledge_to_del = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
+                    if vnc_knowledge_to_del is not None:
+                        db.session.delete(vnc_knowledge_to_del)
+                        db.session.commit()
+                        return jsonify(status='success')
+                    else:
+                        return jsonify(status='fail')
+                else:
+                    return jsonify(status='fail')
+            if op == 'edit':
+                print request.form
+                title = request.form.get('title', None)
+                about = request.form.get('about', None)
+                vnc_knowledge_id = request.form.get('vnc_knowledge_id', None)
+                cover = request.files.get('cover', None)
+
+                if title is not None and about is not None and vnc_knowledge_id is not None:
+                    vnc_knowledge_to_edit = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
+                    if vnc_knowledge_to_edit is not None:
+                        vnc_knowledge_to_edit.title = title
+                        vnc_knowledge_to_edit.about = about
+                    else:
+                        return jsonify(status='fail')
+                    if cover is not None:
+                        vnc_knowledge_to_edit.cover_url = os.path.join('upload/vnc_lab/', "cover_%d.png" % vnc_knowledge_to_edit.id)
+                        filename = "cover_%d.png" % vnc_knowledge_to_edit.id
+                        cover_path = os.path.join(current_app.config['VNC_LAB_COVER_FOLDER'], filename)
+                        upload_img(cover, 171, 304, cover_path)
+                    db.session.commit()
+                    return jsonify(status='success')
+                else:
+                    return jsonify(status='fail')
+            if op == 'create':
+                title = request.form.get('title', None)
+                about = request.form.get('about', None)
+                vnc_knowledge_id = request.form.get('vnc_knowledge_id', None)
+                cover = request.files.get('cover', None)
+                if title is not None and about is not None and vnc_knowledge_id is not None:
+                    vnc_knowledge_to_create = VNCKnowledge(title=title, about=about)
+                    vnc_knowledge_to_create.teacher = current_user
+                    db.session.add(vnc_knowledge_to_create)
+                    db.session.commit()
+
+                    if cover is not None:
+                        vnc_knowledge_to_create.cover_url = os.path.join('upload/vnc_lab/', "cover_%d.png" % vnc_knowledge_to_create.id)
+                        filename = "cover_%d.png" % vnc_knowledge_to_create.id
+                        cover_path = os.path.join(current_app.config['VNC_LAB_COVER_FOLDER'], filename)
+                        upload_img(cover, 171, 304, cover_path)
+                        db.session.commit()
+
+                    return jsonify(status='success')
+
+                else:
+                    return jsonify(status='fail')
+        else:
+            return jsonify(status='fail')
+
+
+@admin.route('/vnc_lab/<int:vnc_knowledge_id>/', methods=['GET', 'POST'])
+@teacher_login
+def vnc_lab_view(vnc_knowledge_id):
+    if request.method == 'GET':
+        cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first_or_404()
+        return render_template('admin/lab/vnc_tasks_list.html', cur_vnc_knowledge=cur_vnc_knowledge, title=gettext('VNC Lab View'))
+    elif request.method == 'POST':
+        op = request.form.get('op', None)
+        if op is not None:
+            if op == 'del':
+                vnc_task_id = request.form.get('vnc_task_id', None)
+                if vnc_task_id is not None:
+                    cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
+                    if cur_vnc_knowledge is not None:
+                        print cur_vnc_knowledge
+                        vnc_task_to_del = cur_vnc_knowledge.vnc_tasks.filter_by(id=vnc_task_id).first()
+                        if vnc_task_to_del is not None:
+                            for task in cur_vnc_knowledge.vnc_tasks:
+                                if task.vnc_task_num > vnc_task_to_del.vnc_task_num:
+                                    task.vnc_task_num -= 1
+                            for progress in cur_vnc_knowledge.vnc_progresses:
+                                if progress.have_done > vnc_task_to_del.vnc_task_num:
+                                    progress.have_done -= 1
+                            db.session.delete(vnc_task_to_del)
+                            db.session.commit()
+                            return jsonify(status='success')
+                        else:
+                            return jsonify(status='fail')
+                    else:
+                        return jsonify(status='fail')
+                else:
+                    return jsonify(status='fail')
+            elif op == 'seq':
+                cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
+                if cur_vnc_knowledge is not None:
+                    seq = json.loads(request.form['seq'])
+                    for task in cur_vnc_knowledge.vnc_tasks:
+                        task.vnc_task_num = seq[str(task.id)]
                     db.session.commit()
                     return jsonify(status='success')
                 else:
@@ -1107,59 +1201,53 @@ def vnc_lab():
             return jsonify(status='fail')
 
 
-@admin.route('/vnc_lab/create/', methods=['GET', 'POST'])
+@admin.route('/vnc_lab/<int:vnc_knowledge_id>/create/', methods=['GET', 'POST'])
 @teacher_login
-def vnc_lab_create():
+def vnc_lab_create(vnc_knowledge_id):
     if request.method == 'GET':
-        return render_template('admin/lab/vnc_knowledge_detail.html', op='create', title=gettext('VNC Lab Create'))
+        return render_template('admin/lab/vnc_tasks_detail.html', op='create', vnc_knowledge_id=vnc_knowledge_id, title=gettext('VNC Lab Create'))
     elif request.method == 'POST':
         title = request.form.get('title', None)
-        about = request.form.get('about', None)
         content = request.form.get('content', None)
-        cover = request.files.get('cover', None)
-        if title is not None and about is not None and content is not None:
-            cur_vnc_knowledge = VNCKnowledge(title=title, about=about, content=content)
-            cur_vnc_knowledge.teacher = current_user
-            db.session.add(cur_vnc_knowledge)
-            db.session.commit()
-
-            if cover is not None:
-                cur_vnc_knowledge.cover_url = os.path.join('upload/vnc_lab/', "cover_%d.png" % cur_vnc_knowledge.id)
-                filename = "cover_%d.png" % cur_vnc_knowledge.id
-                cover_path = os.path.join(current_app.config['VNC_LAB_COVER_FOLDER'], filename)
-                upload_img(cover, 171, 304, cover_path)
+        if title is not None and content is not None:
+            cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
+            if cur_vnc_knowledge is not None:
+                vnc_task_to_create = VNCTask(title=title, content=content)
+                vnc_task_to_create.vnc_task_num = cur_vnc_knowledge.vnc_tasks.count() + 1
+                vnc_task_to_create.vnc_knowledge = cur_vnc_knowledge
+                db.session.add(vnc_task_to_create)
                 db.session.commit()
-
-            return jsonify(status='success')
+                return jsonify(status='success')
+            else:
+                return jsonify(status='fail')
         else:
             return jsonify(status='fail')
 
 
-@admin.route('/vnc_lab/edit/<int:vnc_knowledge_id>/', methods=['GET', 'POST'])
+@admin.route('/vnc_lab/<int:vnc_knowledge_id>/edit/<int:vnc_task_id>/', methods=['GET', 'POST'])
 @teacher_login
-def vnc_lab_edit(vnc_knowledge_id):
-    cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first_or_404()
+def vnc_lab_edit(vnc_knowledge_id, vnc_task_id):
     if request.method == 'GET':
-        return render_template('admin/lab/vnc_knowledge_detail.html', op='edit', title=gettext('VNC Lab Edit'),
-                               cur_vnc_knowledge=cur_vnc_knowledge)
+        cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first_or_404()
+        cur_vnc_task = cur_vnc_knowledge.vnc_tasks.filter_by(id=vnc_task_id).first_or_404()
+        return render_template('admin/lab/vnc_tasks_detail.html', op='edit', title=gettext('VNC Lab Edit'),
+                               cur_vnc_task=cur_vnc_task, vnc_knowledge_id=vnc_knowledge_id)
     elif request.method == 'POST':
         title = request.form.get('title', None)
-        about = request.form.get('about', None)
         content = request.form.get('content', None)
-        cover = request.files.get('cover', None)
-        if title is not None and about is not None and content is not None:
-            cur_vnc_knowledge.title = title
-            cur_vnc_knowledge.about = about
-            cur_vnc_knowledge.content = content
-
-            if cover is not None:
-                cur_vnc_knowledge.cover_url = os.path.join('upload/vnc_lab/', "cover_%d.png" % cur_vnc_knowledge.id)
-                filename = "cover_%d.png" % cur_vnc_knowledge.id
-                cover_path = os.path.join(current_app.config['VNC_LAB_COVER_FOLDER'], filename)
-                upload_img(cover, 171, 304, cover_path)
-
-            db.session.commit()
-            return jsonify(status='success')
+        if title is not None and content is not None:
+            cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
+            if cur_vnc_knowledge is not None:
+                cur_vnc_task = cur_vnc_knowledge.vnc_tasks.filter_by(id=vnc_task_id).first()
+                if cur_vnc_task is not None:
+                    cur_vnc_task.title = title
+                    cur_vnc_task.content = content
+                    db.session.commit()
+                    return jsonify(status='success')
+                else:
+                    return jsonify(status='fail')
+            else:
+                return jsonify(status='fail')
         else:
             return jsonify(status='fail')
 

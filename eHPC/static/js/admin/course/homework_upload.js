@@ -1,4 +1,11 @@
 $(document).ready(function () {
+    $('#homework-uploaded-table').DataTable({
+        language: {
+            url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Chinese.json"
+        },
+        "order": [[2, 'asc']],
+        "lengthMenu": [ 10, 30, 50, 100 ]
+    });
     $("#all-homework-select").click(function () {
         var obj = this;
         $("#homework-table-body").find("input[type=checkbox]").prop("checked", $(obj).prop("checked"));

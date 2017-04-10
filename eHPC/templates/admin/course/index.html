@@ -25,21 +25,27 @@
                         <th width="40%">名称</th>
                         <th width="10%">课程数</th>
                         <th width="10%">学生数</th>
-                        <th width="20%">创建时间</th>
-                        <th width="20%">操作</th>
+                        <th width="15%">创建时间</th>
+                        <th width="10%">排序</th>
+                        <th width="15%">操作</th>
                     </tr>
                     </thead>
                     <tbody id="tb">
-                    {% if current_user.teacher_courses.count() > 0 %}
-                        {% for c in current_user.teacher_courses %}
+                    {% if all_courses.count() > 0 %}
+                        {% for c in all_courses %}
                         <tr data-id="{{ c.id }}" style="">
                             <td  title="{{ c.title }}">
-                                <img src="/static/{{ c.smallPicture }}" width="160px" height="90px">
+                                <a href="{{ url_for('admin.course_edit', course_id=c.id) }}"><img src="/static/{{ c.smallPicture }}" width="160px" height="90px"></a>
                                 <span class="overflow-ellipsis" data-toggle="tooltip">{{ c.title }}</span>
                             </td>
                             <td>{{ c.lessonNum }}</td>
                             <td>{{ c.studentNum }}</td>
-                            <td>{{ c.createdTime }}</td>
+                            <td>{{ c.createdTime | unite_time_format}}</td>
+                            <td>
+                                <a href="{{ url_for('admin.course_move_up', course_id=c.id) }}">上移</a>
+                                <span class="divider"> | </span>
+                                <a href="{{ url_for('admin.course_move_down', course_id=c.id) }}">下移</a>
+                            </td>
                             <td>
                                 <a href="{{ url_for('admin.course_edit', course_id=c.id) }}">管理</a>
                                 <span class="divider"> | </span>

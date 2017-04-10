@@ -27,7 +27,9 @@ from ..util.xlsx import get_member_xlsx
 @teacher_login
 def course():
     if request.method == 'GET':
+        all_courses = current_user.teacher_courses.order_by(Course.nature_order.desc())
         return render_template('admin/course/index.html',
+                               all_courses=all_courses,
                                title=gettext('Course Admin'))
     elif request.method == 'POST':
         # 删除课程
@@ -60,6 +62,30 @@ def course():
         return jsonify(status="success", course_id=curr_course.id)
 
 
+@admin.route('/course/down/<int:course_id>')
+@teacher_login
+def course_move_down(course_id):
+    cur_course = Course.query.filter_by(id=course_id).first_or_404()
+    des_course_list = Course.query.filter(Course.nature_order < cur_course.nature_order).all()
+    if len(des_course_list) != 0:
+        des_article = des_course_list[-1]
+        cur_course.nature_order, des_article.nature_order = des_article.nature_order, cur_course.nature_order
+        db.session.commit()
+    return redirect(url_for('admin.course'))
+
+
+@admin.route('/course/up/<int:course_id>')
+@teacher_login
+def course_move_up(course_id):
+    cur_course = Course.query.filter_by(id=course_id).first_or_404()
+    des_course_list = Course.query.filter(Course.nature_order > cur_course.nature_order).all()
+    if len(des_course_list) != 0:
+        des_course = des_course_list[0]
+        cur_course.nature_order, des_course.nature_order = des_course.nature_order, cur_course.nature_order
+        db.session.commit()
+    return redirect(url_for('admin.course'))
+
+
 @admin.route('/course/create/', methods=['GET', 'POST'])
 @teacher_login
 def course_create():
@@ -68,7 +94,12 @@ def course_create():
                                title=gettext('Create Course'))
     elif request.method == 'POST':
         # 创建课程
-        course_group = Group(title=request.form['title'], about=request.form['title'] + u' 的课程讨论')
+        all_courses = current_user.teacher_courses
+        idx = 0
+        for c in all_courses:
+            if idx < c.nature_order:
+                idx = c.nature_order
+        course_group = Group(title=request.form['title'], about=request.form['title'] + u' 的课程讨论', nature_order=idx+1)
         db.session.add(course_group)
         db.session.commit()
 
@@ -255,9 +286,24 @@ def course_member(course_id):
         return render_template('admin/course/member.html', course=curr_course, applies=curr_course.applies, title=u'成员管理')
     elif request.method == 'POST':
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
-        data = [[x.email, x.name, x.student_id, u'男' if x.gender else u'女', x.phone] for x in curr_course.users]
-        uri = get_member_xlsx(data, curr_course.id)
-        return send_file(uri, as_attachment=True, attachment_filename='学生名单.xlsx')
+
+        member_field = request.form.getlist('member-field')
+        required_field = []
+        if 'name' in member_field:
+            required_field.append(u'姓名')
+        if 'stu-id' in member_field:
+            required_field.append(u'学号')
+        if 'gender' in member_field:
+            required_field.append(u'性别')
+        if 'telephone' in member_field:
+            required_field.append(u'电话')
+        if 'e-mail' in member_field:
+            required_field.append(u'邮箱')
+
+        #data = [[x.student_id, x.name, u'男' if x.gender else u'女', x.phone, x.email] for x in curr_course.users]
+        uri = get_member_xlsx(curr_course.users, required_field, curr_course.id)
+        download_file_name = "%s_学生名单.xlsx" % curr_course.title.encode('utf-8')
+        return send_file(uri, as_attachment=True, attachment_filename=download_file_name)
 
 
 @admin.route('/course/<int:apply_id>/approved/')

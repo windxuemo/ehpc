@@ -125,6 +125,7 @@ class Course(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
+    nature_order = db.Column(db.Integer, nullable=False)
 
     # 课程包含的课时，评价，资料等， 一对多的关系
     lessons = db.relationship('Lesson', backref='course', lazy='dynamic')

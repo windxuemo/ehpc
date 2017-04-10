@@ -351,6 +351,7 @@ CREATE TABLE `courses` (
   `endTime` datetime DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `group_id` int(11) NOT NULL,
+  `nature_order` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `courses_ibfk_1` (`user_id`),
   KEY `courses_ibfk_2` (`group_id`),

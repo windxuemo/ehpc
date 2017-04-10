@@ -15,7 +15,7 @@ html, body {
 
 body {
     background: #f5f8fa;
-    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif !important;
     word-wrap: break-word;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -4842,4 +4842,13 @@ div.no-margin {
     z-index: 999;
     top: 5px;
     right: 10px;
+}
+
+#course-member-form label, #timeout-choice label {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.ui.grid {
+    margin: 0 !important;
 }

@@ -61,7 +61,8 @@ def join(cid, u=current_user):
         db.session.commit()
         msg = 'success'
     elif course_joined.beginTime < datetime.now() < course_joined.endTime:  # 判断是否在规定时间内
-        if Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).filter_by(status=0).count() == 0:  # 判断是否重复申请
+        curr_apply = Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).first()
+        if curr_apply is None:
             curr_apply = Apply(user_id=current_user.id, course_id=cid, status=0)
             curr_apply.user = current_user
             curr_apply.course = course_joined
@@ -96,7 +97,7 @@ def exit_out(cid, u=current_user):
     db.session.commit()
     if not course_joined.public:
         curr_apply = Apply.query.filter_by(user_id=current_user.id).filter_by(course_id=cid).first()
-        curr_apply.status = 3
+        curr_apply.status = 0
         db.session.commit()
     users_list = render_template('course/widget_course_students.html', course=course_joined)
     student_num = course_joined.studentNum

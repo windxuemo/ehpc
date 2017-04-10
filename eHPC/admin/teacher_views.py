@@ -275,30 +275,77 @@ def course_approved(apply_id):
         curr_course.group.memberNum += 1
 
     db.session.commit()
-    return redirect(url_for('admin.course_member', course_id=curr_course.id))
-
-
-@admin.route('/course/<int:apply_id>/disapproved/')
-@teacher_login
-def course_disapproved(apply_id):
-    curr_apply = Apply.query.filter_by(id=apply_id).first_or_404()
-    curr_apply.status = 2
-    db.session.commit()
-    curr_course = curr_apply.course
-    return redirect(url_for('admin.course_member', course_id=curr_course.id))
+    return jsonify(status='success')
 
 
 @admin.route('/course/<int:apply_id>/kick/')
 @teacher_login
 def course_kick(apply_id):
     curr_apply = Apply.query.filter_by(id=apply_id).first_or_404()
-    curr_apply.status = 2
+    curr_apply.status = 0
     curr_course = curr_apply.course
     curr_student = curr_apply.user
     curr_course.users.remove(curr_student)
     curr_course.studentNum -= 1
+
+    if curr_student in curr_course.group.members:
+        curr_course.group.members.remove(curr_student)
+        curr_course.group.memberNum -= 1
+
     db.session.commit()
-    return redirect(url_for('admin.course_member', course_id=curr_course.id))
+    return jsonify(status='success')
+
+
+@admin.route('/course/<int:apply_id>/del/')
+@teacher_login
+def course_del(apply_id):
+    curr_apply = Apply.query.filter_by(id=apply_id).first_or_404()
+    db.session.delete(curr_apply)
+    db.session.commit()
+    return jsonify(status='success')
+
+
+@admin.route('/course/batch/', methods=['POST'])
+@teacher_login
+def course_batch():
+    op = request.form['op']
+    idx = request.form.getlist('id[]')
+
+    if op == 'approve':
+        for x in idx:
+            curr_apply = Apply.query.filter_by(id=x).first()
+            if curr_apply.status == 0:
+                curr_apply.status = 1
+                curr_course = curr_apply.course
+                curr_student = curr_apply.user
+                curr_course.users.append(curr_student)
+                curr_course.studentNum += 1
+                if curr_student not in curr_course.group.members:
+                    curr_course.group.members.append(curr_student)
+                    curr_course.group.memberNum += 1
+        db.session.commit()
+
+    elif op == 'kick':
+        for x in idx:
+            curr_apply = Apply.query.filter_by(id=x).first()
+            if curr_apply.status == 1:
+                curr_apply.status = 0
+                curr_course = curr_apply.course
+                curr_student = curr_apply.user
+                curr_course.users.remove(curr_student)
+                curr_course.studentNum -= 1
+                if curr_student in curr_course.group.members:
+                    curr_course.group.members.remove(curr_student)
+                    curr_course.group.memberNum -= 1
+        db.session.commit()
+
+    elif op == 'del':
+        for x in idx:
+            curr_apply = Apply.query.filter_by(id=x).first_or_404()
+            db.session.delete(curr_apply)
+        db.session.commit()
+
+    return jsonify(status='success')
 
 
 @admin.route('/course/<int:course_id>/homework/', methods=['GET', 'POST'])

@@ -1,9 +1,11 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
-    <link href="https://cdn.bootcss.com/datatables/1.10.13/css/dataTables.bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.bootcss.com/datatables/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.bootcss.com/datatables/1.10.13/js/dataTables.bootstrap.min.js"></script>
+    <script src="//cdn.bootcss.com/datatables/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.bootcss.com/semantic-ui/2.2.7/semantic.min.js"></script>
+    <script src="//cdn.bootcss.com/datatables/1.10.13/js/dataTables.semanticui.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/semantic.min.css">
+    <link type="text/css" rel="stylesheet" href="//cdn.bootcss.com/datatables/1.10.13/css/dataTables.semanticui.min.css">
 {% endblock %}
 
 {% block content %}
@@ -39,29 +41,21 @@
 
                     <div class="panel-body">
                         <div class="panel-body">
-                        <div class="row" style="margin-bottom: 20px">
-                            <button class="btn btn-primary" id="batch-approve" style="margin-left: 10px">批量同意</button>
-                            <button class="btn btn-primary" id="batch-kick" style="margin-left: 10px">批量踢出</button>
-                            <button class="btn btn-primary" id="batch-del" style="margin-left: 10px">批量删除</button>
-                        </div>
-
                             <table id="user-table" class="table fixed-table">
                                 <thead>
                                 <tr>
-                                    <th width="5%"><input type="checkbox" id="select-all"></th>
                                     <th width="15%">姓名</th>
                                     <th width="15%">学号</th>
                                     <th width="10%">性别</th>
                                     <th width="15%">手机</th>
                                     <th width="10%">状态</th>
-                                    <th width="10%">操作</th>
+                                    <th width="15%">操作</th>
                                 </tr>
                                 </thead><!--表格头-->
                                 <tbody>
                                 {% if applies.count() > 0 %}
                                     {% for a in applies %}
                                     <tr data-id="{{ a.id }}">
-                                        <td><input type="checkbox" name="select"></td>
                                         <td>{{ a.user.name }}</td>
                                         <td>{{ a.user.student_id }}</td>
                                         <td>{{ '女' if a.user.gender else '男' }}</td>
@@ -71,13 +65,11 @@
                                         {% if a.status == 0 %}
                                             <a href="{{ url_for('admin.course_approved', apply_id=a.id) }}">同意</a>
                                             <span class="divider"> | </span>
-                                            <a href="{{ url_for('admin.course_del', apply_id=a.id) }}">删除</a>
-                                            <a href="{{ url_for('admin.course_kick', apply_id=a.id) }}" style="display: none;">踢出</a>
+                                            <a href="{{ url_for('admin.course_disapproved', apply_id=a.id) }}">拒绝</a>
                                         {% elif a.status == 1 %}
-                                            <a href="{{ url_for('admin.course_approved', apply_id=a.id) }}" style="display: none;">同意</a>
-                                            <span class="divider" style="display: none;"> | </span>
-                                            <a href="{{ url_for('admin.course_del', apply_id=a.id) }}" style="display: none;">删除</a>
                                             <a href="{{ url_for('admin.course_kick', apply_id=a.id) }}">踢出</a>
+                                        {% else %}
+                                            已处理
                                         {% endif %}
                                         </td>
                                     </tr>
@@ -98,106 +90,15 @@
 {% endblock %}
 
 {% block footer_ext %}
-    <script>
-        $(function () {
-            $("input[type=checkbox]").prop("checked", false);
-            $('#user-table').DataTable({
-                language: {
-                url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Chinese.json"
-                },
-                "lengthMenu": [ 30, 50, 100 ]
-            });
-            $("#select-all").click(function () {
-                if ($(this).prop("checked")) {
-                    $("input[name=select]").prop("checked", true);
-                }
-                else {
-                    $("input[name=select]").prop("checked", false);
-                }
-            });
-            $("tbody").find("a").click(function (e) {
-                e.preventDefault();
-                var obj = this;
-                $.get($(this).attr("href"), function (data) {
-                    if ($(obj).text() == "删除") {
-                        $(obj).parent().parent().remove();
-                    }
-                    else {
-                        if ($(obj).text() == "同意") {
-                            $(obj).parent().prev().text("已同意");
-                        }
-                        else {
-                            $(obj).parent().prev().text("待定");
-                        }
-                        $(obj).parent().children().each(function () {
-                            $(this).toggle();
-                        });
-                    }
+     <script>
+        $(document).ready(
+                function () {
+                    $('#user-table').DataTable({
+                        language: {
+                            url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Chinese.json"
+                        },
+                        "lengthMenu": [ 30, 50, 100 ]
+                    });
                 });
-            });
-            $("#batch-approve").click(function () {
-                var array = [];
-                $("input[name=select]").each(function () {
-                    if ($(this).prop("checked")) {
-                        array.push($(this).parent().parent().data("id"));
-                    }
-                });
-                $.ajax({
-                    url: "{{ url_for('admin.course_batch') }}",
-                    type: "post",
-                    data: {
-                        op: "approve",
-                        id: array
-                    },
-                    success: function (data) {
-                        if(data["status"] === "success") {
-                            location.reload();
-                        }
-                    }
-                })
-            });
-            $("#batch-kick").click(function () {
-                var array = [];
-                $("input[name=select]").each(function () {
-                    if ($(this).prop("checked")) {
-                        array.push($(this).parent().parent().data("id"));
-                    }
-                });
-                $.ajax({
-                    url: "{{ url_for('admin.course_batch') }}",
-                    type: "post",
-                    data: {
-                        op: "kick",
-                        id: array
-                    },
-                    success: function (data) {
-                        if(data["status"] === "success") {
-                            location.reload();
-                        }
-                    }
-                })
-            });
-            $("#batch-del").click(function () {
-                var array = [];
-                $("input[name=select]").each(function () {
-                    if ($(this).prop("checked")) {
-                        array.push($(this).parent().parent().data("id"));
-                    }
-                });
-                $.ajax({
-                    url: "{{ url_for('admin.course_batch') }}",
-                    type: "post",
-                    data: {
-                        op: "del",
-                        id: array
-                    },
-                    success: function (data) {
-                        if(data["status"] === "success") {
-                            location.reload();
-                        }
-                    }
-                })
-            });
-        });
     </script>
 {% endblock %}

@@ -63,7 +63,7 @@ CREATE TABLE `apply` (
 
 LOCK TABLES `apply` WRITE;
 /*!40000 ALTER TABLE `apply` DISABLE KEYS */;
-INSERT INTO `apply` VALUES (2,3,4,0),(3,2,4,0),(4,3,6,0),(5,2,1,1),(8,3,1,1),(13,1,1,0),(16,15,32,1),(18,6,32,1);
+INSERT INTO `apply` VALUES (1,3,1,3),(2,3,4,0),(3,2,4,0),(4,3,6,0),(5,2,1,1),(8,3,1,1),(13,1,1,0),(16,15,32,1),(18,6,32,1);
 /*!40000 ALTER TABLE `apply` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -379,8 +379,8 @@ DROP TABLE IF EXISTS `group_members`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_members` (
-  `group_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`group_id`, `user_id`),
   KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`),

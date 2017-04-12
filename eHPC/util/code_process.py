@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
 import urllib2, urllib
-from config import TH2_BASE_URL, TH2_ASYNC_WAIT_TIME, TH2_LOGIN_DATA, TH2_MACHINE_NAME, TH2_DEBUG_ASYNC, TH2_MY_PATH, TH2_ASYNC_FIRST_WAIT_TIME, TH2_ASYNC_URL, TH2_LOGIN_URL
+from config import TH2_MAX_NODE_NUMBER, TH2_BASE_URL, TH2_ASYNC_WAIT_TIME, TH2_LOGIN_DATA, TH2_MACHINE_NAME, TH2_DEBUG_ASYNC, TH2_MY_PATH, TH2_ASYNC_FIRST_WAIT_TIME, TH2_ASYNC_URL, TH2_LOGIN_URL
 from flask import jsonify
 import json
 import time
@@ -212,7 +212,7 @@ class ehpc_client:
             return "Request fail."
 
     def submit_job(self, myPath, job_filename, output_filename, node_number=1, task_number=1, cpu_number_per_task=1,
-                   partition="work"):
+                   partition="nsfc1"):
         """ 将需要执行的命令写成脚本文件并上传，最后将任务添加到超算中心的队列中
 
         @myPath: 编程题ID（对于非编程题的代码，可自行赋予ID）,
@@ -226,6 +226,10 @@ class ehpc_client:
         需要特别说明的是，现在这个函数的脚本只是用来运行文件的，并且一定不能修改它的缩进，否则无法正常运行。
         返回的是脚本任务在队列中的id（数字与字母组成的字符串）
         """
+
+        if node_number > TH2_MAX_NODE_NUMBER :
+            partition = "BIGJOB1"
+
         jobscript = """#!/bin/bash
 #SBATCH -p %s
 #SBATCH -N %s
@@ -263,7 +267,7 @@ class ehpc_client:
         return compile_out
 
     def ehpc_run(self, output_filename, job_filename, myPath, task_number, cpu_number_per_task, node_number,
-                 partition="work"):
+                 partition="nsfc1"):
         """ 在天河内部运行程序
 
         根据参数决定运行命令，其中文件必须存在于给出的路径中，调用提交脚本任务的函数submit_job()
@@ -273,6 +277,9 @@ class ehpc_client:
         node_number指天河执行任务的结点数，language指编译器，partition指天河内部执行的分区
         对于参数进一步的解释请参照天河用户手册返回值为运行文件的输出（字符串）
         """
+        if node_number > TH2_MAX_NODE_NUMBER :
+            partition = "BIGJOB1"
+
         jobid = self.submit_job(myPath, job_filename, output_filename, node_number=node_number, task_number=task_number,
                                 cpu_number_per_task=cpu_number_per_task, partition=partition)
 

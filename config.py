@@ -34,7 +34,7 @@ TH2_LOGIN_DATA = {"username": TH2_USERNAME, "password": TH2_PASSWORD}
 TH2_DEBUG_ASYNC = True
 TH2_MACHINE_NAME = os.environ.get("EHPC_MACHINE")
 TH2_MY_PATH = os.environ.get("EHPC_PATH")
-
+TH2_MAX_NODE_NUMBER = os.environ.get("EHPC_MAX_NODE_NUMBER")
 
 class Config:
     def __init__(self):

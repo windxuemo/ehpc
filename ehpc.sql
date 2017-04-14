@@ -59,19 +59,7 @@ CREATE TABLE `apply` (
 
 LOCK TABLES `apply` WRITE;
 /*!40000 ALTER TABLE `apply` DISABLE KEYS */;
-
-INSERT INTO `apply` (`id`, `user_id`, `course_id`, `status`)
-VALUES
-	(1,3,1,3),
-	(2,3,4,0),
-	(3,2,4,0),
-	(4,3,6,0),
-	(5,2,1,1),
-	(8,3,1,1),
-	(13,1,1,0),
-	(16,15,32,1),
-	(18,6,32,1);
-
+INSERT INTO `apply` VALUES (2,3,4,0),(3,2,4,0),(4,3,6,0),(5,2,1,1),(8,3,1,1),(13,1,1,0),(16,15,32,1),(18,6,32,1);
 /*!40000 ALTER TABLE `apply` ENABLE KEYS */;
 UNLOCK TABLES;
 

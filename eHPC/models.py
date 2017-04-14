@@ -538,7 +538,7 @@ class Apply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
-    status = db.Column(db.Integer, nullable=False)  # 0 待定 1 同意加入 2 拒绝加入 3 已退出
+    status = db.Column(db.Integer, nullable=False)  # 0 待定 1 同意
 
     user = db.relationship('User', backref=db.backref('applies', lazy='dynamic', cascade="delete, delete-orphan"))
     course = db.relationship('Course', backref=db.backref('applies', lazy='dynamic', cascade="delete, delete-orphan"))

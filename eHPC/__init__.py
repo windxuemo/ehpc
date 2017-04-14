@@ -26,6 +26,13 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
 
+    import logging
+    file_handler = logging.FileHandler('app_logs/email.log')
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    from logging import Formatter
+    file_handler.setFormatter(Formatter('[%(asctime)s] %(message)s'))
+
     # Register all the filter.
     from .util import filter_blueprint
     app.register_blueprint(filter_blueprint)

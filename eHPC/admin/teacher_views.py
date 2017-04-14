@@ -953,7 +953,9 @@ def program_create():
                                op='create')
     elif request.method == 'POST':
         # 添加编程题
-        curr_program = Program(title=request.form['title'], detail=request.form['content'])
+        curr_program = Program(title=request.form['title'],
+                               detail=request.form['content'],
+                               default_code=request.form['default-code'])
         curr_program.teacher = current_user
         db.session.add(curr_program)
         db.session.commit()
@@ -975,6 +977,7 @@ def program_edit():
         curr_program = Program.query.filter_by(id=request.form['id']).first_or_404()
         curr_program.title = request.form['title']
         curr_program.detail = request.form['content']
+        curr_program.default_code = request.form['default-code']
         db.session.commit()
         return redirect(url_for('admin.program'))
 

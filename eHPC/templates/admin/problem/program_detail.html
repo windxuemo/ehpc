@@ -1,6 +1,8 @@
 {% extends 'admin/base.html' %}
 
 {% block header_ext %}
+    <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/simplemde.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
@@ -23,7 +25,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <form action="{{ url_for('admin.program_create') if op == 'create' else url_for('admin.program_edit')}}"
+                        <form id="form" action="{{ url_for('admin.program_create') if op == 'create' else url_for('admin.program_edit')}}"
                                data-parsley-validate="" method="post">
                             <div class="form-group">
                                 <div style="margin-bottom: 5px">
@@ -40,10 +42,19 @@
                                           data-parsley-required-message="请输入题目题干" data-parsley-errors-container=".textarea-errors" required
                                 >{% if op == 'edit' %}{{ program_problem.detail }}{% endif %}</textarea>
                                 <div class="textarea-errors"></div>
+
+                                <label>参考代码</label>
+                                <div class="row form-group" style="padding: 10px">
+                                    <div id="editor"></div>
+                                </div>
                             </div>
                             <input type="hidden" name="op" value="{{ op }}">
+                            {% if op == 'edit' and program_problem.default_code %}
+                                <input type="hidden" name="default-code" value="{{ program_problem.default_code }}">
+                            {% else %}
+                                <input type="hidden" name="default-code" value="">
+                            {% endif %}
                             {% if op == 'edit' %}<input type="hidden" name="id" value="{{ program_problem.id }}">{% endif %}
-
 
                             <div class="form-submit text-right">
                                 <input type="submit" class="btn btn-primary" value="保存提交">
@@ -58,6 +69,14 @@
 {% endblock %}
 
 {% block footer_ext %}
+    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/tomorrow-night");
+        editor.getSession().setMode("ace/mode/c_cpp");
+        editor.setValue($("input[name=default-code]").val());
+    </script>
+
     <script language=javascript src='{{ url_for("static", filename="js/custom_simplemde.js") }}'></script>
     <script>
         var simplemde = custom_simplemde();
@@ -73,4 +92,11 @@
             });
         });
     </script>
+
+    <script>
+    $("form").submit(function(){
+        $("input[name=default-code]").val(editor.getValue());
+    });
+    </script>
+
 {% endblock %}

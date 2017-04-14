@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: xuezaigds@gmail.com
-# @Last Modified time: 2016-09-19 14:27:41
+# @Last Modified time: 2017-04-14 21:25:59
 from flask import render_template, redirect, request, url_for, current_app, abort, jsonify, session
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_babel import gettext
@@ -147,7 +147,12 @@ def password_reset_request():
             # Clear the token status to "True".
             u.is_password_reset_link_valid = True
             db.session.commit()
-            send_email(request.remote_addr, u.email, 'Reset Your Password',
+            if request.headers.getlist("X-Forwarded-For"):
+                ip = request.headers.getlist("X-Forwarded-For")[0]
+            else:
+                ip = request.remote_addr
+
+            send_email(ip, u.email, 'Reset Your Password',
                        'user/passwd_reset_email',
                        user=u, token=token)
 

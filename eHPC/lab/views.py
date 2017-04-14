@@ -4,7 +4,7 @@
 import os
 from datetime import datetime
 
-from flask import render_template, request, jsonify, abort, current_app, url_for
+from flask import render_template, request, jsonify, abort, current_app, url_for, redirect
 from flask_babel import gettext
 from flask_login import login_required, current_user
 
@@ -220,7 +220,11 @@ def vnc_task(vnc_knowledge_id):
 
         response_vnc_task = VNCTask.query.filter_by(vnc_knowledge_id=vnc_knowledge_id).filter_by(vnc_task_num=response_vnc_task_num).first()
         if response_vnc_task is not None:
-            return render_template('lab/vnc.html', title=gettext('vnc'), response_vnc_task=response_vnc_task, vnc_knowledge_id=cur_vnc_knowledge.id)
+            return render_template('lab/vnc.html',
+                                   title=gettext('vnc'),
+                                   response_vnc_task=response_vnc_task,
+                                   vnc_tasks_count=vnc_tasks_count,
+                                   vnc_knowledge_id=cur_vnc_knowledge.id)
         else:
             abort(404)
     elif request.method == 'POST':
@@ -278,11 +282,14 @@ def vnc_task(vnc_knowledge_id):
                         increase_vnc_progress(vnc_knowledge_id, vnc_task_num, vnc_tasks_count)
 
                         if 0 < vnc_task_num <= cur_vnc_progress.have_done:
-                            print vnc_task_num, cur_vnc_progress.have_done
-                            return jsonify(status='success', next=url_for('lab.vnc_task',
-                                                                          vnc_knowledge_id=vnc_knowledge_id,
-                                                                          request_vnc_task_number=vnc_task_num + 1,
-                                                                          _external=True))
+                            if vnc_task_num + 1 <= vnc_tasks_count:
+                                response_vnc_task = VNCTask.query.filter_by(vnc_knowledge_id=vnc_knowledge_id).filter_by(vnc_task_num=vnc_task_num + 1).first()
+                                return jsonify(status='success', title=response_vnc_task.title, content=response_vnc_task.content)
+                            else:
+                                return jsonify(status='finish', next=url_for('lab.vnc_task',
+                                                                             vnc_knowledge_id=vnc_knowledge_id,
+                                                                             request_vnc_task_number=vnc_task_num + 1,
+                                                                             _external=True))
                         else:
                             return jsonify(status='fail')
                     else:

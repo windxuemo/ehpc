@@ -5,47 +5,33 @@
     <link href="{{ url_for('static', filename='css/simplemde.min.css') }}" rel="stylesheet">
 {% endblock %}
 
-{% block nav %}
-    <nav class="vnc-navbar">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" style="padding: 10px 0;" href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge_id) }}">
-                    <span class="glyphicon glyphicon-chevron-left"></span>返回任务列表
-                </a>
-{#                <a class="navbar-brand" href="{{ url_for("lab.index") }}">虚拟实验室</a>#}
-            </div>
-{#            <div>#}
-{#                <ul class="navbar-nav nav hidden-xs">#}
-{#                    <li><a data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</a></li>#}
-{#                    <li><a id="btn-fullscreen" class="vnc-nav">隐藏文档</a></li>#}
-{#                    <li><a id="btn-browser-fullscreen" class="vnc-nav">全屏</a></li>#}
-{#                    <li><a class="vnc-nav" id="change-resolution">更改分辨率</a></li>#}
-{#                    <li><a class="vnc-nav" id="get-vnc-lab-progress">实验进度</a></li>#}
-{#                </ul>#}
-{#            </div>#}
-        </div>
-    </nav>
-{% endblock %}
-
 {% block content %}
     <div class="vnc-left">
-        <div class="markdown-body">
-            <p class="text-center text-xlarge"> {{ response_vnc_task.title }}</p>
-            <div id="c_content" data-to-render="{{ response_vnc_task.content }}"></div>
+        <a href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge_id) }}" class="btn btn-green btn-block" style="margin: 10px 0;"><span class="glyphicon glyphicon-chevron-left"></span>返回虚拟实验室</a>
+
+        <div class="progress">
+            <div id="progress-bar" style="width:{{ (response_vnc_task.vnc_task_num - 1) / vnc_tasks_count * 100 }}%" class="progress-bar progress-bar-success"></div>
         </div>
-        <button id="continue" class="btn btn-primary btn-block next-step">继续学习<span class="glyphicon glyphicon-forward"></span></button>
+        <span class="progress-nums"><span id="cur-task-number">{{ (response_vnc_task.vnc_task_num - 1) | string }}</span>/{{ vnc_tasks_count | string }}</span>
+
+        <div class="markdown-body" style="border-top: solid 1px #eee">
+            <p id="document-title" class="text-center text-xlarge"> {{ response_vnc_task.title }}</p>
+            <div id="document-content" data-to-render="{{ response_vnc_task.content }}"></div>
+        </div>
+        <button id="continue" class="btn btn-green btn-block" style="margin-bottom: 10px;">继续学习<span class="glyphicon glyphicon-forward"></span></button>
     </div>
-    <div class="vnc-right" style="background: #000000">
+    <div class="vnc-right">
         <div id="display" style="display: none"></div>
         <img id="loading-svg" src="{{ url_for('static', filename='images/radio.svg') }}" style="position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);width: 10%;height: 10%">
     </div>
 
-    <div class="vnc-sidebar">
-        <a data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</a>
-        <a id="btn-fullscreen" class="vnc-nav">隐藏文档</a>
-        <a id="btn-browser-fullscreen" class="vnc-nav">全屏</a>
-        <a class="vnc-nav" id="change-resolution">更改分辨率</a>
-        <a class="vnc-nav" id="get-vnc-lab-progress">实验进度</a>
+    <div class="vnc-sidebar-trigger vnc-sidebar-trigger-hide" id="toolbar-trigger">显示工具栏</div>
+    <div class="vnc-sidebar vnc-sidebar-hide" id="sidebar">
+        <div data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</div>
+        <div id="btn-fullscreen" class="vnc-nav">隐藏文档</div>
+        <div id="btn-browser-fullscreen" class="vnc-nav">全屏</div>
+        <div class="vnc-nav" id="change-resolution">更改分辨率</div>
+        <div class="vnc-nav" id="get-vnc-lab-progress">实验进度</div>
     </div>
 
     <div class="modal fade" id="clipboard" tabindex="-1" role="dialog" aria-hidden="true">
@@ -123,28 +109,37 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
     <script>
         $(function () {
-            var c_content = $("#c_content");
-            c_content.html(latex_support(c_content.data('to-render')));
-            c_content.attr('data-to-render', null);
-            $("#continue").click(function () {
+            var document_content = $("#document-content"), document_title = $("#document-title");
+            document_content.html(latex_support(document_content.data('to-render')));
+            document_content.attr('data-to-render', null);
+            var cur_task_num = {{ response_vnc_task.vnc_task_num }};
+
+            $("#continue").click(function () {//继续学习
                  $.ajax({
                      url: location.href,
                      type: "post",
                      data: {
                          op: "next task",
-                         vnc_task_num: "{{ response_vnc_task.vnc_task_num }}"
+                         vnc_task_num: cur_task_num.toString()
                      },
                      success: function (data) {
-                         if(data['status'] === 'success'){
-                             location.href = data['next'];
+                         if(data["status"] === "success"){
+                             document_title.text(data["title"]);
+                             document_content.html(latex_support(data["content"]));
+                             $("#progress-bar").css("width", (cur_task_num / {{ vnc_tasks_count }} * 100).toString() + "%");
+                             $("#cur-task-number").text(cur_task_num);
+                             cur_task_num++;
+                             history.replaceState({}, 'test', location.href.split("?")[0]+"?request_vnc_task_number=" + cur_task_num.toString());
                          }
-                         else if(data['status'] === 'fail'){
+                         else if(data["status"] === "fail"){
                              alert_modal("失败，请重试");
+                         }
+                         else if(data["status"] === "finish"){
+                             location.href = data["next"];
                          }
                      }
                  })
             });
-
         });
     </script>
     <script>
@@ -157,17 +152,34 @@
             pick_resolution = $("#select-resolution"), //分辨率调节模态框
             guac, //Guacamole类
             hide_document = false, //左侧文档隐藏标识
-            browser_fullscreen = false; //浏览器全屏标识
+            browser_fullscreen = false, //浏览器全屏标识
+            hide_sidebar = true; //隐藏工具栏标识
 
         $(function () {
-            $("#btn-fullscreen").click(function () {
+            $("#toolbar-trigger").click(function () {
+                if(hide_sidebar){
+                    hide_sidebar = false;
+                    $(this).text("隐藏工具栏");
+                    $(this).removeClass("vnc-sidebar-trigger-hide");
+                    $(this).addClass("vnc-sidebar-trigger-show");
+                    $("#sidebar").removeClass("vnc-sidebar-hide");
+                    $("#sidebar").addClass("vnc-sidebar-show");
+                }
+                else{
+                    hide_sidebar = true;
+                    $(this).text("显示工具栏");
+                    $(this).addClass("vnc-sidebar-trigger-hide");
+                    $(this).removeClass("vnc-sidebar-trigger-show");
+                    $("#sidebar").addClass("vnc-sidebar-hide");
+                    $("#sidebar").removeClass("vnc-sidebar-show");
+                }
+
+            });
+
+            $("#btn-fullscreen").click(function () {//文档隐藏选项按钮
                 if(!hide_document){
                     hide_document = true;
                     $("#btn-fullscreen").text("显示文档");
-                    //header.removeClass("vnc-navbar");
-                    //header.addClass("fullscreen-vnc-navbar");
-                    header.hide("blind", {direction: "up"}, "normal");
-                    footer.hide("blind", {direction: "down"}, "normal");
                     content_left.hide("blind", {direction: "left"}, "normal", function () {
                         content_right.removeClass("vnc-right");
                         content_right.addClass("vnc-whole");
@@ -180,10 +192,6 @@
                 else{
                     hide_document = false;
                     $("#btn-fullscreen").text("隐藏文档");
-{#                    header.removeClass("fullscreen-vnc-navbar");#}
-{#                    header.addClass("vnc-navbar");#}
-                    header.show("blind", {direction: "up"}, "normal");
-                    footer.show("blind", {direction: "down"}, "normal");
                     content_left.show("blind", {direction: "left"}, "normal");
                     content_right.removeClass("vnc-whole");
                     content_right.addClass("vnc-right");
@@ -194,7 +202,7 @@
                 }
             });
 
-            $("#btn-browser-fullscreen").click(function () {
+            $("#btn-browser-fullscreen").click(function () {//浏览器全屏按钮
                 if(!browser_fullscreen){
                     var element = document.documentElement;
                     if(element.requestFullscreen) {
@@ -232,7 +240,7 @@
             });
         });
 
-        $(function () {
+        $(function () {//请求连接远程桌面
             $.ajax({
                 url: location.href,
                 type: "post",
@@ -240,18 +248,18 @@
                     op: "connect"
                 },
                 success: function (data) {
-                    if(data['status'] === 'success'){
-                        $(".vnc-right").eq(0).css("background", "#FFFFFF");
+                    if(data['status'] === "success"){
                         $("#loading-svg").hide("drop", {direction: "right"}, 1000, function () {
                             $("#display").show();
-                            do_connect_vnc_server(data['token']);
+                            do_event_bind(data["token"]);
+                            do_connect_vnc_server(data["token"]);
                         });
                     }
                     else if(data['status'] === 'fail'){
                         alert_modal(data['msg']);
                     }
                 }
-            })
+            });
         });
 
         //工具函数
@@ -273,7 +281,7 @@
             return max;
         }
 
-        function do_connect_vnc_server(token){
+        function do_event_bind(token) {
             $("#change-resolution").click(function () {
                 $("#select-resolution").modal({backdrop: 'static', keyboard: false});
             });
@@ -383,7 +391,25 @@
                         data = JSON.parse(data);
                         $("#loading").modal("hide");
                         if(data["status"] === "success"){
-                            location.reload();
+                            guac.disconnect();
+                            $.ajax({
+                                url: location.href,
+                                type: "post",
+                                data: {
+                                    op: "connect"
+                                },
+                                success: function (data) {
+                                    if(data['status'] === "success"){
+                                        $("#display").empty();
+                                        do_event_unbind();
+                                        do_event_bind(data["token"]);
+                                        do_connect_vnc_server(data["token"]);
+                                    }
+                                    else if(data['status'] === 'fail'){
+                                        alert_modal(data['msg']);
+                                    }
+                                }
+                            });
                         }
                         else if(data["status"] === "fail"){
                             alert("修改分辨率失败，请重试");
@@ -398,7 +424,9 @@
                 $("#input-resolution-height").val(content_right.height());
                 $("#confirm-change").click();
             });
+        }
 
+        function do_connect_vnc_server(token){
             var display = document.getElementById("display");
             guac = new Guacamole.Client(
                 new Guacamole.HTTPTunnel("http://a002.nscc-gz.cn:10231/server/tunnel")
@@ -512,6 +540,18 @@
                     guac.sendKeyEvent(0, keysym);
                 };
             });
+        }
+
+        function do_event_unbind() {
+            $("#change-resolution").unbind();
+            $("#custom-resolution").unbind();
+            $("#cancel-change").unbind();
+            $("#input-resolution-width").unbind();
+            $("#input-resolution-height").unbind();
+            $("#confirm-change").unbind();
+            $("#auto-resolution").unbind();
+            $(window).unbind();
+            $("#clipboard-content").unbind();
         }
     </script>
 {% endblock %}

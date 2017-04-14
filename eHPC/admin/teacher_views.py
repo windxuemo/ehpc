@@ -1198,52 +1198,6 @@ def vnc_lab():
             return jsonify(status='fail')
 
 
-@admin.route('/vnc_lab/<int:vnc_knowledge_id>/', methods=['GET', 'POST'])
-@teacher_login
-def vnc_lab_view(vnc_knowledge_id):
-    if request.method == 'GET':
-        cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first_or_404()
-        return render_template('admin/lab/vnc_tasks_list.html', cur_vnc_knowledge=cur_vnc_knowledge, title=gettext('VNC Lab View'))
-    elif request.method == 'POST':
-        op = request.form.get('op', None)
-        if op is not None:
-            if op == 'del':
-                vnc_task_id = request.form.get('vnc_task_id', None)
-                if vnc_task_id is not None:
-                    cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
-                    if cur_vnc_knowledge is not None:
-                        print cur_vnc_knowledge
-                        vnc_task_to_del = cur_vnc_knowledge.vnc_tasks.filter_by(id=vnc_task_id).first()
-                        if vnc_task_to_del is not None:
-                            for task in cur_vnc_knowledge.vnc_tasks:
-                                if task.vnc_task_num > vnc_task_to_del.vnc_task_num:
-                                    task.vnc_task_num -= 1
-                            for progress in cur_vnc_knowledge.vnc_progresses:
-                                if progress.have_done > vnc_task_to_del.vnc_task_num:
-                                    progress.have_done -= 1
-                            db.session.delete(vnc_task_to_del)
-                            db.session.commit()
-                            return jsonify(status='success')
-                        else:
-                            return jsonify(status='fail')
-                    else:
-                        return jsonify(status='fail')
-                else:
-                    return jsonify(status='fail')
-            elif op == 'seq':
-                cur_vnc_knowledge = current_user.teacher_vnc_knowledge.filter_by(id=vnc_knowledge_id).first()
-                if cur_vnc_knowledge is not None:
-                    seq = json.loads(request.form['seq'])
-                    for task in cur_vnc_knowledge.vnc_tasks:
-                        task.vnc_task_num = seq[str(task.id)]
-                    db.session.commit()
-                    return jsonify(status='success')
-                else:
-                    return jsonify(status='fail')
-        else:
-            return jsonify(status='fail')
-
-
 @admin.route('/vnc_lab/<int:vnc_knowledge_id>/create/', methods=['GET', 'POST'])
 @teacher_login
 def vnc_lab_create(vnc_knowledge_id):

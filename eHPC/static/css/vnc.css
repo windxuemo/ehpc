@@ -636,15 +636,22 @@ html, body {
 .vnc-nav{
     padding: 10px;
     width: 100%;
-    writing-mode: vertical-lr;
     font-size: 20px;
     color: #c1c1c1;
+    line-height: 25px;
+    text-align: center;
+    transition: all 0.2s ease-in-out 0s;
+    -webkit-transition: all 0.2s ease-in-out 0s;
+    -moz-transition: all 0.2s ease-in-out 0s;
 }
 
 .vnc-nav:hover{
+    color: #212121;
     cursor: pointer;
     background: #EEEEEE;
-    text-decoration: none;
+    transition: all 0.2s ease-in-out 0s;
+    -webkit-transition: all 0.2s ease-in-out 0s;
+    -moz-transition: all 0.2s ease-in-out 0s;
 }
 
 .vnc-navbar {
@@ -757,6 +764,40 @@ html, body {
     color: #fff;
 }
 
+.vnc-sidebar-trigger{
+    top: 20%;
+    padding: 5px 0;
+    position: absolute;
+    background: #212121;
+    width: 30px;
+    height: 100px;
+    color: #c1c1c1;
+    text-align: center;
+    -webkit-border-radius: 3px 0 0 3px;
+    -moz-border-radius: 3px 0 0 3px;
+    border-radius: 3px 0 0 3px;
+    font-size: 16px;
+    z-index: 2;
+    line-height: 17px;
+    transition: all 0.3s ease-in-out 0s;
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    -moz-transition: all 0.3s ease-in-out 0s;
+}
+
+.vnc-sidebar-trigger:hover{
+    cursor: pointer;
+    color: #212121;
+    background: #EEEEEE;
+}
+
+.vnc-sidebar-trigger-show{
+    right: 50px;
+}
+
+.vnc-sidebar-trigger-hide{
+    right: 0;
+}
+
 .vnc-sidebar{
     padding: 20px 0;
     background: #212121;
@@ -764,42 +805,42 @@ html, body {
     top: 0;
     bottom: 0;
     width: 50px;
-    right: -45px;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
     z-index: 2;
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
+    transition: all 0.3s ease-in-out 0s;
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    -moz-transition: all 0.3s ease-in-out 0s;
 }
 
-.vnc-sidebar:hover{
+.vnc-sidebar-hide{
+    right: -50px;
+}
+
+.vnc-sidebar-show{
     right: 0;
-    transition: all 0.5s ease-in-out 0s;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
 }
 
 .vnc-right{
     position: absolute;
-    top: 50px;
-    bottom: 71px;
+    top: 0;
+    bottom: 0;
     width: 65%;
     left: 35%;
     overflow: hidden;
+    background: #000000;
 }
 
 .vnc-left{
     padding: 0 10px;
     overflow: auto;
     position: absolute;
-    top: 50px;
-    bottom: 71px;
+    top: 0;
+    bottom: 0;
     width: 35%;
     left: 0;
-    background: #FFFFFF;
-    border-left: solid 1px #FFFFFF;
+    background: #f5f8fa;
 }
 
 .vnc-whole{
@@ -809,6 +850,7 @@ html, body {
     right: 0;
     top: 0;
     bottom: 0;
+    background: #000000;
 }
 
 .circle-icon {
@@ -856,6 +898,40 @@ html, body {
     transform: translateY(-50%);
 }
 
+.btn-green {
+    border-color: #34a263;
+    background-color: #46c37b;
+    color: #fff;
+}
+
+.btn-green:hover {
+    color: #fff;
+    background-color: #37a967;
+}
+
+.btn-green:focus,
+.btn-green.focus,
+.btn-green.active {
+    color: #fff;
+    background-color: #2e7138;
+}
+
+/*进度条相关*/
+.progress {
+    -webkit-border-radius: 28px;
+    -moz-border-radius: 28px;
+    border-radius: 28px;
+    height: 14px;
+    background: #f0f0f0;
+    margin-bottom: 20px;
+}
+
+.progress-nums {
+    color: #000;
+    font-size: 18px;
+}
+/********************************/
+
 /*信息提示*/
 .page-message-panel {
     margin-top: 50px;
@@ -879,6 +955,7 @@ html, body {
     font-size: 16px;
 }
 /*****************************/
+
 /*实验进度*/
 .lab-time-line .period-list > li {
     margin-bottom: 0;

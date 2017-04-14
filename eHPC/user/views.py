@@ -147,7 +147,7 @@ def password_reset_request():
             # Clear the token status to "True".
             u.is_password_reset_link_valid = True
             db.session.commit()
-            send_email(u.email, 'Reset Your Password',
+            send_email(request.remote_addr, u.email, 'Reset Your Password',
                        'user/passwd_reset_email',
                        user=u, token=token)
 

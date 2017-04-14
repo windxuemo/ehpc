@@ -346,9 +346,12 @@ def course_kick(apply_id):
 @teacher_login
 def course_del(apply_id):
     curr_apply = Apply.query.filter_by(id=apply_id).first_or_404()
-    db.session.delete(curr_apply)
-    db.session.commit()
-    return jsonify(status='success')
+    if curr_apply.status == 0:
+        db.session.delete(curr_apply)
+        db.session.commit()
+        return jsonify(status='success')
+    else:
+        abort(403)
 
 
 @admin.route('/course/batch/', methods=['POST'])
@@ -385,7 +388,8 @@ def course_batch():
     elif op == 'del':
         for x in idx:
             curr_apply = Apply.query.filter_by(id=x).first_or_404()
-            db.session.delete(curr_apply)
+            if curr_apply.status == 0:
+                db.session.delete(curr_apply)
         db.session.commit()
     return jsonify(status='success')
 

@@ -13,9 +13,9 @@ def send_async_email(_app, msg):
         mail.send(msg)
 
 
-def send_email(to, subject, template, **kwargs):
+def send_email(ip, to, subject, template, **kwargs):
     app = current_app._get_current_object()
-    app.logger.info('to: %s, subject: %s, template: %s' % (to, subject, template))
+    app.logger.info('remote_ip: %s, to: %s' % (ip, to))
     msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + ' ' + subject,
                   sender=app.config['MAIL_SENDER'], recipients=[to])
     msg.html = render_template(template + '.html', **kwargs)

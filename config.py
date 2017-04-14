@@ -52,8 +52,10 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'easyhpc@nscc-gz.cn'
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
-    FORUM_MAIL_SUBJECT_PREFIX = 'EasyHPC'
-    FORUM_MAIL_SENDER = '<easyhpc@nscc-gz.cn>'
+    MAIL_SUBJECT_PREFIX = 'EasyHPC'
+    MAIL_SENDER = '<easyhpc@nscc-gz.cn>'
+    # 发送邮件开关， 为True才真正发送邮件，为False不发送邮件。
+    MAIL_IS_ON = False
 
     BABEL_DEFAULT_LOCALE = 'zh'
     BABEL_DEFAULT_TIMEZONE = 'CST'

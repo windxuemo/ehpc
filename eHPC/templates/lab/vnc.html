@@ -7,26 +7,34 @@
 
 {% block content %}
     <div class="vnc-left">
-        <a href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge_id) }}" class="btn btn-green btn-block" style="margin: 10px 0;"><span class="glyphicon glyphicon-chevron-left"></span>返回虚拟实验室</a>
+        <nav class="navbar vnc-left-nav">
+            <div class="container-fluid">
+                <ul class="navbar-nav nav">
+                    <li><a href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge_id) }}" class="btn btn-green"><span class="glyphicon glyphicon-chevron-left"></span>返回虚拟实验室</a></li>
+                </ul>
+            </div>
+        </nav>
 
-        <div class="progress">
-            <div id="progress-bar" style="width:{{ (response_vnc_task.vnc_task_num - 1) / vnc_tasks_count * 100 }}%" class="progress-bar progress-bar-success"></div>
-        </div>
-        <span class="progress-nums"><span id="cur-task-number">{{ (response_vnc_task.vnc_task_num - 1) | string }}</span>/{{ vnc_tasks_count | string }}</span>
+        <div style="padding: 10px 0">
+            <div class="progress">
+                <div id="progress-bar" style="width:{{ (response_vnc_task.vnc_task_num - 1) / vnc_tasks_count * 100 }}%" class="progress-bar progress-bar-success"></div>
+            </div>
+            <div class="progress-nums"><span id="cur-task-number">{{ (response_vnc_task.vnc_task_num - 1) | string }}</span>/{{ vnc_tasks_count | string }}</div>
 
-        <div class="markdown-body" style="border-top: solid 1px #eee">
-            <p id="document-title" class="text-center text-xlarge"> {{ response_vnc_task.title }}</p>
-            <div id="document-content" data-to-render="{{ response_vnc_task.content }}"></div>
+            <div class="markdown-body" style="border-top: solid 1px #eee">
+                <p id="document-title" class="text-center text-xlarge"> {{ response_vnc_task.title }}</p>
+                <div id="document-content" data-to-render="{{ response_vnc_task.content }}"></div>
+            </div>
+            <button id="continue" class="btn btn-green btn-block" style="margin-bottom: 10px;">继续学习<span class="glyphicon glyphicon-forward"></span></button>
         </div>
-        <button id="continue" class="btn btn-green btn-block" style="margin-bottom: 10px;">继续学习<span class="glyphicon glyphicon-forward"></span></button>
     </div>
     <div class="vnc-right">
         <div id="display" style="display: none"></div>
         <img id="loading-svg" src="{{ url_for('static', filename='images/radio.svg') }}" style="position: absolute;top: 50%;left: 50%;transform: translateX(-50%) translateY(-50%);width: 10%;height: 10%">
     </div>
 
-    <div class="vnc-sidebar-trigger vnc-sidebar-trigger-hide" id="toolbar-trigger">显示工具栏</div>
-    <div class="vnc-sidebar vnc-sidebar-hide" id="sidebar">
+    <div class="vnc-sidebar-trigger vnc-sidebar-trigger-show" id="toolbar-trigger">隐藏工具栏</div>
+    <div class="vnc-sidebar vnc-sidebar-show" id="sidebar">
         <div data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</div>
         <div id="btn-fullscreen" class="vnc-nav">隐藏文档</div>
         <div id="btn-browser-fullscreen" class="vnc-nav">全屏</div>
@@ -68,21 +76,11 @@
                                 <option value="800x600">800x600 (4:3)</option>
                             </select>
                         </div>
-
-                        <div class="selector-center" style="display: none" id="input">
-                            <label for="input-resolution">输入分辨率</label>
-                            <input class="form-control resolution-input" placeholder="最大为3840" id="input-resolution-width" name="resolution">
-                            <label> x </label>
-                            <input class="form-control resolution-input" placeholder="最大为2160" id="input-resolution-height" name="resolution">
-                            <label style="position: absolute;right: 2%;line-height: 34px" id="scale">0:0</label>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="pull-right btn btn-primary" style="margin-left: 10px" id="cancel-change">取消</button>
                     <button class="pull-right btn btn-primary" style="margin-left: 10px" id="confirm-change">确定</button>
-                    <button class="pull-right btn btn-primary" style="margin-left: 10px" id="auto-resolution">最佳分辨率</button>
-                    <button class="pull-right btn btn-primary" id="custom-resolution">自定义</button>
                 </div>
             </div>
         </div>
@@ -153,8 +151,7 @@
             guac, //Guacamole类
             hide_document = false, //左侧文档隐藏标识
             browser_fullscreen = false, //浏览器全屏标识
-            hide_sidebar = true; //隐藏工具栏标识
-
+            hide_sidebar = false; //隐藏工具栏标识
         $(function () {
             $("#toolbar-trigger").click(function () {
                 if(hide_sidebar){
@@ -262,113 +259,27 @@
             });
         });
 
-        //工具函数
-        function hcf(n, m) {
-            var min = n;
-            (m < n) && (min = m);
-            var max = 0;
-            for (var i = 0, arr = []; i <= min; i++) {
-                if (n % i === 0 && m % i === 0) {
-                    arr.push(i);
-                }
-            }
-            for (i = 0; i < arr.length; i++) {
-                if (arr[i] > arr[i + 1]) {
-                    arr[i] = [arr[i + 1], arr[i + 1] = arr[i]][0];
-                }
-            }
-            max = arr[arr.length - 1];
-            return max;
-        }
-
         function do_event_bind(token) {
             $("#change-resolution").click(function () {
                 $("#select-resolution").modal({backdrop: 'static', keyboard: false});
-            });
-
-            var if_select_resolution = true;
-            $("#custom-resolution").click(function () {
-                $("#select").toggle();
-                $("#input").toggle();
-                if(!if_select_resolution){
-                    if_select_resolution = true;
-                    $(this).text("自定义");
-                }else{
-                    if_select_resolution = false;
-                    $(this).text("选择预设");
-                }
             });
 
             $("#cancel-change").click(function () {
                 $("#select-resolution").modal("hide");
             });
 
-            $("#input-resolution-width").keyup(function () {
-                var input_height = $("#input-resolution-height");
-                var input_width = $("#input-resolution-width");
-                if(!(Number($(this).val()).toString() === $(this).val())){
-                    $(this).val("");
-                    return;
-                }
-
-                if(Number($(this).val())<=0){
-                    $(this).val("");
-                    return;
-                }
-                if(Number($(this).val())>3840){
-                    $(this).val(3840);
-                }
-
-                var height = input_height.val();
-                var width = input_width.val();
-                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
-                var common_factor = hcf(width, height);
-                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
-            });
-
-            $("#input-resolution-height").keyup(function () {
-                var input_height = $("#input-resolution-height");
-                var input_width = $("#input-resolution-width");
-                if(!(Number($(this).val()).toString() === $(this).val())){
-                    $(this).val("");
-                    return;
-                }
-                if(Number($(this).val())<=0){
-                    $(this).val("");
-                    return;
-                }
-                if(Number($(this).val())>2160){
-                    $(this).val(2160);
-                }
-
-                var height = input_height.val();
-                var width = input_width.val();
-                if(!(Number(height).toString() === height && Number(width).toString() === width)) return;
-                var common_factor = hcf(width, height);
-                $("#scale").text((width/common_factor).toString() + ":"+ (height/common_factor).toString());
-            });
-
             $("#confirm-change").click(function () {
                 var resolution_height, resolution_width;
                 var resolution_selector = $("#resolution-selector");
-                if(if_select_resolution){
-                    if(resolution_selector.val().length !== 0){
-                        resolution_width = resolution_selector.val().split("x")[0];
-                        resolution_height = resolution_selector.val().split("x")[1];
-                    }
-                    else{
-                        alert("请选择分辨率");
-                        return;
-                    }
+                if(resolution_selector.val().length !== 0){
+                    resolution_width = resolution_selector.val().split("x")[0];
+                    resolution_height = resolution_selector.val().split("x")[1];
                 }
                 else{
-                    resolution_width = $("#input-resolution-width").val();
-                    resolution_height = $("#input-resolution-height").val();
-                    if (!(Number(resolution_width).toString() === resolution_width && Number(resolution_height).toString() === resolution_height)){
-                        alert("请输入分辨率");
-                        return;
-                    }
+                    alert("请选择分辨率");
+                    return;
                 }
+
                 if(resolution_width<640){
                     alert("最小宽度不能小于640");
                     return;
@@ -379,6 +290,7 @@
                 }
                 $("#select-resolution").modal("hide");
                 $("#loading").modal({backdrop: 'static', keyboard: false});
+                console.log(resolution_width, resolution_height);
                 $.ajax({
                     url: "http://a002.nscc-gz.cn:10231/server/vncsetter",
                     type: "post",
@@ -416,13 +328,6 @@
                         }
                     }
                 });
-            });
-
-            $("#auto-resolution").click(function () {
-                if_select_resolution = false;
-                $("#input-resolution-width").val(content_right.width());
-                $("#input-resolution-height").val(content_right.height());
-                $("#confirm-change").click();
             });
         }
 
@@ -468,16 +373,16 @@
             };
             guac.getDisplay().onresize = function (width, height) {
                 if(!guac || !guac.getDisplay()) return;
-                var height_to_set = content_right.eq(0).height();
-                var width_to_set = content_right.eq(0).width();
-                var cur_height = height;
-                var cur_width = width;
+                var height_to_set = Math.floor(content_right.eq(0).height()),
+                    width_to_set = Math.floor(content_right.eq(0).width()),
+                    cur_height = Math.floor(height),
+                    cur_width = Math.floor(width);
 
                 var scale_height = height_to_set/cur_height;
                 var scale_width = width_to_set/cur_width;
                 guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
                 $("#display").css("position", "absolute");
-                $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
+                $("#display").css("top", 0.5 * (Math.floor(content_right.height()) - Math.floor($("#display").height())));
             };
             guac.onclipboard = function (stream, mimetype) {
                 var reader = new Guacamole.StringReader(stream);
@@ -488,23 +393,23 @@
 
             $(window).resize(function () {
                 if(!guac || !guac.getDisplay()) return;
-                var height_to_set = content_right.eq(0).height();
-                var width_to_set = content_right.eq(0).width();
-                var cur_height = guac.getDisplay().getHeight();
-                var cur_width = guac.getDisplay().getWidth();
+                var height_to_set = Math.floor(content_right.eq(0).height());
+                var width_to_set = Math.floor(content_right.eq(0).width());
+                var cur_height = Math.floor(guac.getDisplay().getHeight());
+                var cur_width = Math.floor(guac.getDisplay().getWidth());
 
                 var scale_height = height_to_set/cur_height;
                 var scale_width = width_to_set/cur_width;
                 guac.getDisplay().scale(scale_height > scale_width?scale_width:scale_height);
 
-                guac.getDisplay().getDefaultLayer().resize(guac.getDisplay().getDefaultLayer().height * cur_width / cur_height, guac.getDisplay().getDefaultLayer().height);
+                guac.getDisplay().getDefaultLayer().resize(Math.floor(guac.getDisplay().getDefaultLayer().height * cur_width / cur_height), Math.floor(guac.getDisplay().getDefaultLayer().height));
                 if(hide_document) {
-                    $("#display").css("left", 0.5 * (content_right.width() - $("#display").width()));
+                    $("#display").css("left", 0.5 * (Math.floor(content_right.width() - $("#display").width())));
                     $("#display").css("top", 0);
                 }
                 else {
                     $("#display").css("left", 0);
-                    $("#display").css("top", 0.5 * (content_right.height() - $("#display").height()));
+                    $("#display").css("top", 0.5 * (Math.floor(content_right.height() - $("#display").height())));
                 }
             });
 

@@ -638,7 +638,7 @@ html, body {
     width: 100%;
     font-size: 20px;
     color: #c1c1c1;
-    line-height: 25px;
+    line-height: 40px;
     text-align: center;
     transition: all 0.2s ease-in-out 0s;
     -webkit-transition: all 0.2s ease-in-out 0s;
@@ -655,7 +655,7 @@ html, body {
 }
 
 .vnc-navbar {
-    background: #212121;
+    background: #FFFFFF;
     position: absolute;
     top: 0;
     left: 0;
@@ -768,7 +768,7 @@ html, body {
     top: 20%;
     padding: 5px 0;
     position: absolute;
-    background: #212121;
+    background: rgba(33, 33, 33, 0.8);
     width: 30px;
     height: 100px;
     color: #c1c1c1;
@@ -791,7 +791,7 @@ html, body {
 }
 
 .vnc-sidebar-trigger-show{
-    right: 50px;
+    right: 150px;
 }
 
 .vnc-sidebar-trigger-hide{
@@ -800,11 +800,11 @@ html, body {
 
 .vnc-sidebar{
     padding: 20px 0;
-    background: #212121;
+    background: rgba(33, 33, 33, 0.8);
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 50px;
+    width: 150px;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
@@ -815,11 +815,19 @@ html, body {
 }
 
 .vnc-sidebar-hide{
-    right: -50px;
+    right: -150px;
 }
 
 .vnc-sidebar-show{
     right: 0;
+}
+
+.vnc-left-nav{
+    padding: 5px 0;
+    background: rgba(255, 255, 255, 0.8);
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
 }
 
 .vnc-right{
@@ -833,7 +841,6 @@ html, body {
 }
 
 .vnc-left{
-    padding: 0 10px;
     overflow: auto;
     position: absolute;
     top: 0;
@@ -923,12 +930,14 @@ html, body {
     border-radius: 28px;
     height: 14px;
     background: #f0f0f0;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .progress-nums {
+    text-align: center;
     color: #000;
     font-size: 18px;
+    margin-bottom: 10px;
 }
 /********************************/
 

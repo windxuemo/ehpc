@@ -107,6 +107,8 @@ def extension_to_file_type(extension):
         'mkv': 'video',
         'pdf': 'pdf',
         'doc': 'pdf',
+        'xls': 'excel',
+        'xlsx': 'excel',
         'c': 'code',
         'cpp': 'code',
         'py': 'code',
@@ -161,7 +163,8 @@ def get_file_type(form_file_type):
         'application/x-gzip': 'wrap',
         'application/zip': 'wrap',
         'application/x-tar': 'wrap',
-        'application/x-rar-compressed': 'wrap'
+        'application/x-rar-compressed': 'wrap',
+        'application/vnd.ms-excel': 'excel'
     }
 
     return file_type_dict.get(form_file_type, "Unknown")

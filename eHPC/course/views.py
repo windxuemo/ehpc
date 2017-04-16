@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, jsonify, request, current_app
 from . import course
-from ..models import Course, Material, Paper, Comment, Homework, HomeworkUpload, Apply
+from ..models import Course, Material, Paper, Comment, Homework, HomeworkUpload, Apply, HomeworkScore
 from flask_babel import gettext
 from flask_login import current_user, login_required
 from ..util.file_manage import upload_file, custom_secure_filename
@@ -15,7 +15,7 @@ from datetime import datetime
 
 @course.route('/')
 def index():
-    all_courses = Course.query.all()
+    all_courses = Course.query.order_by(Course.nature_order.asc())
     return render_template('course/index.html', title=gettext('Courses'), courses=all_courses)
 
 
@@ -197,7 +197,12 @@ def homework_upload(hid):
         upload_path = unicode(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], homework_uri), 'utf8')       #处理中文文件名
         status = upload_file(curr_upload, upload_path, ['wrap', 'pdf'])
         if status[0]:
-            homework_upload = HomeworkUpload(name=homework_file_name, homework_id=hid, user_id=current_user.id, uri=homework_uri)
+            homework_score = HomeworkScore.query.filter_by(user_id=current_user.id, homework_id=cur_homework.id).first()
+            if homework_score:
+                homework_upload = HomeworkUpload(name=homework_file_name, homework_id=hid, user_id=current_user.id,
+                                                 uri=homework_uri, score=homework_score.score)
+            else:
+                homework_upload = HomeworkUpload(name=homework_file_name, homework_id=hid, user_id=current_user.id, uri=homework_uri)
             db.session.add(homework_upload)
             cur_homework.uploads.append(homework_upload)
             db.session.commit()

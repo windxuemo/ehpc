@@ -1,0 +1,109 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <script src="//cdn.bootcss.com/datatables/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.bootcss.com/datatables/1.10.13/js/dataTables.semanticui.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.7/semantic.min.css">
+    <link type="text/css" rel="stylesheet" href="//cdn.bootcss.com/datatables/1.10.13/css/dataTables.semanticui.min.css">
+    <script src="{{ url_for('static', filename='js/parsley.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container" id="content-container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group-panel">
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course') }}">课程管理</a>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item" href="{{ url_for('admin.course_edit', course_id=course.id) }}">课程信息</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_picture', course_id=course.id) }}">课程图片</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_lesson', course_id=course.id) }}">课时管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_permission', course_id=course.id) }}">权限管理</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_member', course_id=course.id) }}">成员管理</a>
+                        <a class="list-group-item active" href="{{ url_for('admin.course_homework', course_id=course.id) }}">课程作业</a>
+                        <a class="list-group-item" href="{{ url_for('admin.course_paper', course_id=course.id) }}">试卷管理</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default panel-col">
+                    <a id="back-to-homework-list" href="{{ url_for('admin.course_homework', course_id=course.id) }}">
+                        <i class="glyphicon glyphicon-chevron-left"></i>返回作业列表</a>
+                    <div class="panel-heading text-center">
+                        {{ homework.title }}批改
+                    </div>
+
+                    <div class="panel-body" id="homework-manage-panel">
+                        <table id="homework-correct-table" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" width="15%">学号</th>
+                                    <th class="text-center" width="10%">姓名</th>
+                                    <th class="text-center" width="15%">提交状态</th>
+                                    <th class="text-center" width="10%">打分</th>
+                                    <th class="text-center" width="35%">评语</th>
+                                    <th class="text-center" width="15%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="homework-table-body">
+                                {% for u in course.users %}
+                                     <form id="student-homework-score">
+                                        <tr data-user_id="{{ u.id }}" data-op="{% if u | get_score(homework.id) %}reset{% else %}set{% endif %}">
+                                            <td class="text-center">{{ u.student_id }}</td>
+                                            <td class="text-center">{{ u.name }}</td>
+                                            <td class="text-center">
+                                                {% if u | check_upload(homework.id) == 0 %}
+                                                    <button class="btn btn-xs btn-success">已交</button>
+                                                {% elif u | check_upload(homework.id) == 1 %}
+                                                    <button class="btn btn-xs btn-warning">迟交</button>
+                                                {% else %}
+                                                    <button class="btn btn-xs btn-danger">未交</button>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="text" class="form-control" name="homework-score"
+                                                       value="{{ u | get_score(homework.id) }}" style="height:inherit;padding:0 5px;">
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="text" class="form-control" name="homework-comment"
+                                                       value="{{ u | get_comment(homework.id) }}" style="height:inherit;padding:0 5px;">
+                                            </td>
+                                            <td class="text-center">
+                                                 <button class="btn btn-xs btn-info submit-score">提交批改</button>
+                                            </td>
+                                        </tr>
+                                     </form>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <input type="hidden" name="score-path" value="{{ url_for('static',filename='homework/upload/course_%d/homework_%d/score.xlsx' % (course.id,homework.id)) }}">
+                    </div>
+                    <form id="score-file-form" method="post" enctype="multipart/form-data" data-parsley-validate="">
+                        <input type="hidden" name="op" value="upload-score">
+                        <input id="score-file" type="file" name="score-file" style="display: none"  accept="application/vnd.ms-excel"
+                               data-parsley-max-file-size="1024" data-parsley-required-message="请选择要上传的文件" required>
+                    </form>
+                </div>
+                <div class="op-btn">
+                    <button class="btn btn-info btn-sm pull-right" id="download-score-btn" style="margin-right:10px">
+                        <i class="fa fa-floppy-o"></i>
+                        导出成绩模板
+                    </button>
+                    <button class="btn btn-info btn-sm pull-right" id="upload-score-btn" style="margin-right:10px" onclick="$('input[id=score-file]').click();">
+                        <i class="es-icon es-icon-fileupdate"></i>
+                        导入成绩
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script src='{{ url_for("static", filename="js/admin/course/homework_correct.js") }}'></script>
+{% endblock %}

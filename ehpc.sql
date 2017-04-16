@@ -390,7 +390,6 @@ UNLOCK TABLES;
 # ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `courses`;
-
 CREATE TABLE `courses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(128) DEFAULT '',
@@ -416,23 +415,25 @@ CREATE TABLE `courses` (
   CONSTRAINT `courses_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- ----------------------------
+-- Records of courses
+-- ----------------------------
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
 
-INSERT INTO `courses` (`id`, `title`, `subtitle`, `about`, `createdTime`, `lessonNum`, `studentNum`, `smallPicture`, `middlePicture`, `largePicture`, `rank`, `public`, `beginTime`, `endTime`, `user_id`, `group_id`, `nature_order`)
-VALUES
-	(1,'并行计算－结构•算法•编程','中国科大《并行计算》国家精品课程，陈国良院士主讲。','# 课程主讲：陈国良院士\n![](/static/upload/md_images/20170325225146.png)\n\n','2016-10-20 00:00:00',29,4,'upload/course/cover_1.png',NULL,NULL,3.20,1,NULL,NULL,3,16,7),
-	(2,'并行计算介绍','以下内容仅用于系统测试，知识产权归课件开发者所有','# 1. Overview\nParallel computing has become the dominant technique for','2016-09-20 08:00:00',3,0,'upload/course/cover_2.png',NULL,NULL,4.00,1,NULL,NULL,3,17,9),
-	(3,'并行计算原理与实践','华中科技大学金海教授主讲 （课程内容仅用于系统测试，知识产权归课件开发者所有）','# 1. Course Description\nThe students will','2016-09-21 00:00:00',12,1,'upload/course/cover_3.png',NULL,NULL,3.00,1,NULL,NULL,3,18,8),
-	(4,'并行编程','以下内容仅用于系统测试，知识产权归课件开发者所有','# 1. Background and Description\nThis course is a comprehensive exploration','2016-09-22 00:00:00',24,1,'upload/course/cover_4.png',NULL,NULL,0.00,0,'2017-01-03 13:03:37','2017-02-23 14:50:34',3,19,4),
-	(5,'并行方法在数值分析中的应用','以下内容仅用于系统测试，知识产权归课件开发者所有','# 1. Course Description\nEmphasis is on techniques for obtai','2016-09-23 01:00:00',13,2,'upload/course/cover_5.png',NULL,NULL,1.00,1,NULL,NULL,3,20,2),
-	(6,'CUDA Programming on NVIDIA GPUs','以下内容仅用于系统测试，知识产权归课件开发者所有','# 1. Course Description\nThe course consists of ap','2016-09-29 01:00:00',11,0,'upload/course/cover_6.png',NULL,NULL,0.00,0,'2017-01-03 13:04:21','2017-01-28 15:35:17',3,21,6),
-	(9,'并行编程初步','上海超算中心张丹丹老师主讲（以下内容仅用于系统测试，知识产权归课件开发者所有）','# Abstract\nThe Message Passing I','2016-10-23 08:58:17',2,0,'upload/course/cover_9.png',NULL,NULL,0.00,1,NULL,NULL,3,22,1),
-	(10,'并行计算机体系结构','以下内容仅用于系统测试，知识产权归课件开发者所有','# 并行计算机\n并行计算机就是由多个处理单元组成的计算机系统，这些处理单元相互通','2016-12-12 12:48:28',8,0,'upload/course/cover_10.png',NULL,NULL,0.00,1,NULL,NULL,3,23,5),
-	(11,'并行算法的设计与分析','以下内容仅用于系统测试，知识产权归课件开发者所有','# 课程目标\n* 通过课程讲授、课程论文和课堂讨论的方式使同学们掌握各种并行计算','2016-12-12 13:12:49',13,0,'upload/course/cover_11.png',NULL,NULL,0.00,1,NULL,NULL,3,24,10),
-	(12,'并行计算基础','以下内容仅用于系统测试，知识产权归课件开发者所有','# 1. 集群计算\n集群计算主要研究方向是并行计算所需的各种工具，如并行调试器、容错工具','2016-12-16 15:22:12',12,0,'upload/course/cover_12.png',NULL,NULL,0.00,1,NULL,NULL,3,25,11),
-	(14,'并行程序设计','北京大学信息科学技术学院余华山老师主讲','[课程网页](http://course.pku.edu.cn)','2016-12-31 20:45:39',14,0,'upload/course/cover_14.png',NULL,NULL,0.00,1,NULL,NULL,3,26,3),
-	(32,'云计算概论','中山大学数据科学与计算机学院，2017年春','本课程讲授内容包括云计算基础概念、原理和应用。','2017-03-21 21:20:01',3,23,'upload/course/cover_32.png',NULL,NULL,0.00,0,'2017-02-23 21:35:42','2017-06-30 23:55:42',15,27,12);
+INSERT INTO `courses` VALUES ('1', '并行计算－结构•算法•编程', '中国科大《并行计算》国家精品课程，陈国良院士主讲。', '# 课程主讲：陈国良院士\n![](/static/upload/md_images/20170325225146.png)\n\n# 1. 课程内容体系结构\n\n“并行计算”是“并行算法类教学体系”中的核心内容之一，它是处于并行算法类教学体系中的算法应用基础层次，是面向计算机专业本科高年级学生或从事计算科学的研究生的，是为了适应高性能计算机迅速发展的形势，满足国家培养面向21世纪高科技人才之需求。为此本课程在内容体系上力求有所创新，而在遵循课程自身学科性、系统性和完整性的同时，应充分考虑不同应用领域在并行计算机上求解大型科学工程问题的需求，将并行机体系结构、并行数值计算、并行算法和并行编程等课程的内容有机的整合在一起，在国内形成一门新型的“并行计算”课程。\n \n# 2. 教学内容组织方式与目的\n\n* 教学内容组织方式: 全课程的教学内容组织成为四篇：第一篇为并行计算的硬件基础，包括并行计算机的系统结构模型、当代并行计算机系统介绍和并行计算性能评测；第二篇为并行算法的设计，包括并行算法通用设计策略、基本设计技术和一般设计过程；第三篇为并行数值算法，包括矩阵运算、线性方程组求解和快速傅氏变换；第四篇为并行程序设计，包括并行程序设计基础、共享存储系统并行编程、分布式存储系统并行编程和并行程序设计环境与工具。\n* 教学目的: 本课程以并行计算为主题、要求讲授并行计算的硬件平台（当代并行计算机系统及其结构模型）、软件支撑（并行程序设计）和理论基础（并行算法的设计和并行数值算法）。在内容组织上，强调融并行机结构、并行算法和并行编程为一体，着重讨论并行算法的设计及其实现，并力图反映本学科的最新成就和发展趋势，体现出并行机硬件和软件相结合以及并行算法和并行编程相结合。\n\n# 3.实践性教学的设计与效果\n\n“并行计算”是一门实践性很强的课程，除了系统的课堂理论学习外，还配有足够数量的实践内容，以巩固和加深学生对并行算法理论、设计技术、分析方法和具体实现等各个环节的整体理解。通过课程实践，强化学生“结构—算法—编程”一体化学习方法的意识，充分理解对于求解一个给定问题的任何并行算法，都必须采用某种并行编程语言，最终运行在一台具体的并行计算\n\n根据并行计算课程的要求，其实验教学的要求如下：\n\n- 熟悉三种以上的主流并行计算平台，包括共享存储的多处理机、分布存储的多计算机和目前流行的PC机群，要求学生能够使用上述几种并行计算平台所提供的硬／软件环境及工具来开展自己的实验工作。\n- 掌握至少两种并行程序设计语言标准：即分布存储的MPI和共享存储的OpenMP。对面向大型科学和工程计算的HPF（高性能Fortran）也应尽量了解和熟悉。\n- 选择某些典型的非数值并行算法和数值并行算法，使用上述的并行编程语言标准，至少在PC机群上编程调试、分析和运行它们。\n- 为了入门，选用课程中简单的计算π的样本程序为出发点，通过使用不同的并行程序设计模型和不同的并行编程语言，在不同的硬件编程环境上改造和重现，以便为进一步的实践打下基础。', '2016-10-20 00:00:00', '29', '4', 'upload/course/cover_1.png', null, null, '3.20', '1', null, null, '3', '16', '1');
+INSERT INTO `courses` VALUES ('2', '并行计算介绍', '以下内容仅用于系统测试，知识产权归课件开发者所有', '# 1. Overview\nParallel computing has become the dominant technique for achieving high performance in computational science and engineering research. Parallel computing systems are now becoming mainstream in commercial sectors as well, due to the performance demands and requirements of today\'s engineering, database, and financial applications. Multiprocessor systems based on commodity processors (IA32, IA64, G4, Alpha, UltraSparc, Power3, Power4) are now common and offer excellent performance for the price. However, parallel computing is relatively new to college curricula; until recently, parallel computing was largely learned on the side (for research scientists) or on the job (in industry).\nThis class will discuss architectures of modern parallel computers (briefly) and will teach students how to write parallel programs for these parallel computers. This class will be very \'applied\' in nature: there will be more emphasis on parallel programming libraries than on abstract theoretical parallel programming concepts or computer engineering details.\n# 2.  Prerequisites\nStudents must have prior programming experience using either C or Fortran. Experience using Unix workstations and developing scientific codes is helpful but not required.\n# 3.  Topics\n* Overview of Parallel Computing(Majumdar): parallel computing concepts, parallel computer architectures, and standard programming models for parallel computers.\n* Shared Memory Parallel Programming with OpenMP (Majumdar): OpenMP features and syntax, examples of parallelizing serial codes with OpenMP, discussion of performance issues.\n* Distributed Memory Programming with Message Passing Interface (MPI) (Majumdar): MPI features and syntax, examples of parallelizing serial codes with MPI, discussion of performance issues.\n* Single Processor Optimization (Valafar): overview of microprocessor architectures, utilizing microprocessor features (registers, cashes, etc.) effectively, characteristics and potential bottlenecks that determine maximum deliverable performance for code segments, and measuring and improving code performance.', '2016-09-20 08:00:00', '3', '0', 'upload/course/cover_2.png', null, null, '4.00', '1', null, null, '3', '17', '2');
+INSERT INTO `courses` VALUES ('3', '并行计算原理与实践', '华中科技大学金海教授主讲 （课程内容仅用于系统测试，知识产权归课件开发者所有）', '# 1. Course Description\nThe students will get the skills to use some of the best existing parallel programming tools, and be exposed to a number of open research questions. This course will:\n\n* provide an introduction to parallel computing including parallel computer architectures, analytical modeling of parallel programs, the principles of parallel algorithm design.\n* include material on TBB, OpenMP, CUDA, OpenCL, MPI, MapReduce.\n\n# 2. Prerequisite\nC language, discrete mathematics, data structure, principles of computer composition, operating system, C++, algorithms\n\n# 3. Syllabus\n* **Part 1: Principle (Lecture 1-5)**\n	\n	This section covers the very basics of parallel computing, and is intended for someone who is just becoming acquainted with the subject. It begins with a brief overview, including concepts and terminology associated with parallel computing. The topics of parallel memory architectures and programming models are then explored. These topics are followed by a discussion on a number of issues related to designing parallel programs.\n\n* **Part 2: Typical Issues Solved by Parallel Programming (Lecture 6-10)**\n	\n	This section concludes with several examples of how to parallelize simple serial programs. Including: threads and shared memory programming with TBB and OpenMP, SIMD programming model and Cuda & OpenCL, programming using the Message Passing Paradigm, parallel computing with MapReduce.\n\n* **Part 3: Parallel Programming Case Study and Assignment (Lecture 11 and Assignment)**\n	\n	Students in this course are required to complete several assignments, which accounts for 30% of their grade.', '2016-09-21 00:00:00', '12', '1', 'upload/course/cover_3.png', null, null, '3.00', '1', null, null, '3', '18', '3');
+INSERT INTO `courses` VALUES ('4', '并行编程', '以下内容仅用于系统测试，知识产权归课件开发者所有', '# 1. Background and Description\nThis course is a comprehensive exploration of parallel programming paradigms, examining core concepts, focusing on a subset of widely used contemporary parallel programmingmodels, and providing context with a small set of parallel algorithms. In the last few years, this area has been the subject of significant interest due to a number of factors. Most significantly, the advent of multi-core microprocessors has made parallel computing available to the masses. At the high end, major vendors of large-scale parallel systems, including IBM, and Cray, have recently introduced new parallel programming languages designed for applications that exploit tens of thousands of processors. Embedded devices can also be thought of as small multiprocessors. The convergence of these distinct markets offers an opportunity to finally provide application programmers with a productive way to express parallel computation.\n\nThe course will be structured as lectures, homeworks, programming assignments and a final project. Students will perform four programming projects to express algorithms using selected parallel programming models and measure their performance. The final project will consist of teams of 2-3 students who will implement codes by combining multiple programming models.\n\n# 2. Prerequisites\nCS 4400, or concurrent\n', '2016-09-22 00:00:00', '24', '1', 'upload/course/cover_4.png', null, null, '0.00', '0', '2017-01-03 13:03:37', '2017-02-23 14:50:34', '3', '19', '4');
+INSERT INTO `courses` VALUES ('5', '并行方法在数值分析中的应用', '以下内容仅用于系统测试，知识产权归课件开发者所有', '# 1. Course Description\nEmphasis is on techniques for obtaining maximum parallelism in numerical algorithms, especially those occurring when solving matrix problems, partial differential equations, and the subsequent mapping onto the computer. Implementation issues on parallel computers. Topics: parallel architecture, programming models (MPI, GPU Computing with CUDA ¿ quick review), matrix computations, FFT, fast multiple methods, domain decomposition, graph partitioning, discrete algorithms.\n\n# 2. Prerequisites\n302 or 200 ( ME 300A), 213 or equivalent, or consent of instructor. Recommended: differential equations and knowledge of a high-level programming language such as C or C++ (F90/95 also allowable).', '2016-09-23 01:00:00', '13', '2', 'upload/course/cover_5.png', null, null, '1.00', '1', null, null, '3', '20', '5');
+INSERT INTO `courses` VALUES ('6', ' CUDA Programming on NVIDIA GPUs', '以下内容仅用于系统测试，知识产权归课件开发者所有', '# 1. Course Description\nThe course consists of approximately 3 hours of lectures and 4 hours of practicals each day. The aim is that by the end of the course you will be able to write relatively simple programs and will be confident and able to continue learning through studying the examples provided by NVIDIA as part of their SDK (software development kit). \n\n# 2. Preliminary Reading\n* Please read chapters 1 and 2 of the NVIDIA CUDA C Programming Guide. \n\n* CUDA is an extension of C/C++, so if you are a little rusty with C/C++ you should refresh your memory of it. ', '2016-09-29 01:00:00', '11', '0', 'upload/course/cover_6.png', null, null, '0.00', '0', '2017-01-03 13:04:21', '2017-01-28 15:35:17', '3', '21', '6');
+INSERT INTO `courses` VALUES ('9', '并行编程初步', '上海超算中心张丹丹老师主讲（以下内容仅用于系统测试，知识产权归课件开发者所有）', '# Abstract\nThe Message Passing Interface Standard (MPI) is a message passing library standard based on the consensus of the MPI Forum, which has over 40 participating organizations, including vendors, researchers, software library developers, and users. The goal of the Message Passing Interface is to establish a portable, efficient, and flexible standard for message passing that will be widely used for writing message passing programs. As such, MPI is the first standardized, vendor independent, message passing library. The advantages of developing message passing software using MPI closely match the design goals of portability, efficiency, and flexibility. MPI is not an IEEE or ISO standard, but has in fact, become the \"industry standard\" for writing message passing programs on HPC platforms.\n\nThe goal of this tutorial is to teach those unfamiliar with MPI how to develop and run parallel programs according to the MPI standard. The primary topics that are presented focus on those which are the most useful for new MPI programmers. The tutorial begins with an introduction, background, and basic information for getting started with MPI. This is followed by a detailed look at the MPI routines that are most useful for new MPI programmers, including MPI Environment Management, Point-to-Point Communications, and Collective Communications routines. Numerous examples in both C and Fortran are provided, as well as a lab exercise.\n\nThe tutorial materials also include more advanced topics such as Derived Data Types, Group and Communicator Management Routines, and Virtual Topologies. However, these are not actually presented during the lecture, but are meant to serve as \"further reading\" for those who are interested.\n\n# Level/Prerequisites\nThis tutorial is ideal for those who are new to parallel programming with MPI. A basic understanding of parallel programming in C or Fortran is required. For those who are unfamiliar with Parallel Programming in general, the material covered in EC3500: Introduction To Parallel Computing would be helpful. ', '2016-10-23 08:58:17', '2', '0', 'upload/course/cover_9.png', null, null, '0.00', '1', null, null, '3', '22', '7');
+INSERT INTO `courses` VALUES ('10', '并行计算机体系结构', '以下内容仅用于系统测试，知识产权归课件开发者所有', '# 并行计算机\n并行计算机就是由多个处理单元组成的计算机系统，这些处理单元相互通信和协作，能快速，高效地求解大型复杂问题。\n# 涉及问题\n* **资源分配**\n	1. 并行计算机系统有多大? \n    2. 处理单元的性能如何?\n	3. 购买价格如何?\n\n* **数据存取, 通信 以及 同步** \n	1. 各处理单元如何协作及通信?\n	2. 数据如何在各处理机间传送?\n	3. 什么是协作的概念?\n\n* **性能与规模**\n	1. 如何将之全部转化为高性能?\n	2. 如何对其进行评测?\n', '2016-12-12 12:48:28', '8', '0', 'upload/course/cover_10.png', null, null, '0.00', '1', null, null, '3', '23', '8');
+INSERT INTO `courses` VALUES ('11', '并行算法的设计与分析', '以下内容仅用于系统测试，知识产权归课件开发者所有', '# 课程目标\n* 通过课程讲授、课程论文和课堂讨论的方式使同学们掌握各种并行计算模型上常用的、基本的、典型的并行算法设计和分析，以及在各自研究领域中的应用\n\n# 课程内容\n* 并行机结构模型、并行计算模型、并行算法基本知识\n* 非数值并行算法：排序、选择、组合搜索、串匹配、图论算法等\n* 数值并行算法：矩阵运算、线性方程组求解、FFT算法等\n* 并行计算理论初步和并行算法的应用举例\n', '2016-12-12 13:12:49', '13', '0', 'upload/course/cover_11.png', null, null, '0.00', '1', null, null, '3', '24', '9');
+INSERT INTO `courses` VALUES ('12', '并行计算基础', '以下内容仅用于系统测试，知识产权归课件开发者所有', '# 1. 集群计算\n集群计算主要研究方向是并行计算所需的各种工具，如并行调试器、容错工具、性能调试、 并行化编译等等，另外还包括集群计算的实际应用程序的开发，如生物信息学、电力系统模 拟与仿真等。\n\n随着计算机体系结构的发展，并行处理重新成为了研究热点。原因是单内核处理器的发展已 经遇到了瓶颈，进一步提高 CPU 的性能必须从多内核入手， Intel 公司目前大部分的研究 工作都开始以多内核为基础。8 － 16 内核的处理器现在已经是桌面和服务器的主流， 如何有效地利用多内核处理器系统对于研究者来说仍然是一个新 的挑战。需要在并行处理的体系结构、并行算法、并行编程工具以及运行时系统等多个方面 进行更加深入的研究。可以预计，此方向的研究在今后 10 年之内仍然会持续成为研究的热 点。\n\n# 2. 开设本课程的动机\n* 并行系统已经逐渐成为主流\n\n	(1) 多核已经成为趋势\n\n	(2) 桌面系统已经成为并行系统，而且核数增加，软件需要从串行变为并行\n\n	(3) 集群已经大量普及，但当前的并行编程方法、工具还是专家们所掌握\n\n* 并行不再是少数人的专利，并行计算有可能成为通用计算技术\n* 并行计算的使用者来自各个领域，但对并行编程的熟悉程度还不高\n\n# 3. 课程目标\n* 不是单纯理论学习课，偏重实践的课程 \n* 实实在在体验并行软件开发过程\n\n# 4. 得到的收获\n* 在今后采用并行计算方法提升程序性能\n* 能编写一定规模的并行程序\n* 知道使用并行工具提高并行程序实现效率\n* 初步了解并行计算程序设计的过程\n* 了解最新的众核/异构并行技术', '2016-12-16 15:22:12', '12', '0', 'upload/course/cover_12.png', null, null, '0.00', '1', null, null, '3', '25', '10');
+INSERT INTO `courses` VALUES ('14', '并行程序设计', '北京大学信息科学技术学院余华山老师主讲', '[课程网页](http://course.pku.edu.cn)', '2016-12-31 20:45:39', '14', '0', 'upload/course/cover_14.png', null, null, '0.00', '1', null, null, '3', '26', '11');
+INSERT INTO `courses` VALUES ('32', '云计算概论', '中山大学数据科学与计算机学院，2017年春', '本课程讲授内容包括云计算基础概念、原理和应用。', '2017-03-21 21:20:01', '3', '23', 'upload/course/cover_32.png', null, null, '0.00', '0', '2017-02-23 21:35:42', '2017-06-30 23:55:42', '15', '27', '1');
 
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -596,9 +597,25 @@ VALUES
 UNLOCK TABLES;
 
 
-# Dump of table homework_upload
-# ------------------------------------------------------------
+-- ----------------------------
+-- Table structure for homework_score
+-- ----------------------------
+DROP TABLE IF EXISTS `homework_score`;
+CREATE TABLE `homework_score` (
+  `user_id` int(11) NOT NULL,
+  `homework_id` int(11) NOT NULL,
+  `score` int(11) NOT NULL,
+  `comment` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`user_id`,`homework_id`),
+  KEY `homework_id` (`homework_id`),
+  CONSTRAINT `homework_score_ibfk_1` FOREIGN KEY (`homework_id`) REFERENCES `homework` (`id`),
+  CONSTRAINT `homework_score_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+-- ----------------------------
+-- Table structure for homework_upload
+-- ----------------------------
 DROP TABLE IF EXISTS `homework_upload`;
 
 CREATE TABLE `homework_upload` (
@@ -615,13 +632,16 @@ CREATE TABLE `homework_upload` (
   CONSTRAINT `homework_upload_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `homework_upload`
+--
+
 LOCK TABLES `homework_upload` WRITE;
 /*!40000 ALTER TABLE `homework_upload` DISABLE KEYS */;
+INSERT INTO `homework_upload` VALUES ('5', 'nahan.key.zip', '4', '3', 'course_1/homework_4/0_name_nahan.key.zip', '2017-03-12 20:47:56');
+INSERT INTO `homework_upload` VALUES ('6', '2016_1【迟交】.pdf', '3', '3', 'course_1\\homework_3\\150101102_张三丰_2016_1【迟交】.pdf', '2017-04-10 19:00:10');
+INSERT INTO `homework_upload` VALUES ('7', '2016_2【迟交】.pdf', '3', '3', 'course_1\\homework_3\\150101102_张三丰_2016_2【迟交】.pdf', '2017-04-10 19:00:10');
 
-INSERT INTO `homework_upload` (`id`, `name`, `homework_id`, `user_id`, `uri`, `submit_time`)
-VALUES
-	(5,'nahan.key.zip',4,3,'course_1/homework_4/0_name_nahan.key.zip','2017-03-12 20:47:56'),
-	(6,'高性能计算的发展现状及趋势【迟交】.pdf',3,3,'course_1/homework_3/150101102_张三丰_高性能计算的发展现状及趋势【迟交】.pdf','2017-04-10 09:41:52');
 
 /*!40000 ALTER TABLE `homework_upload` ENABLE KEYS */;
 UNLOCK TABLES;

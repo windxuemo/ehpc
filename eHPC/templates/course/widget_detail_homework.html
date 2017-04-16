@@ -76,7 +76,7 @@
     <script>
     var post_to = "{{ url_for('course.homework_upload', hid=homework.id) }}";
     var back_to_list = "{{ url_for('course.homework_list', cid=homework.course_id) }}";
-    var fle_path = "{{ url_for('static', filename='homework/upload/') }}";
+    var file_path = "{{ url_for('static', filename='homework/upload/') }}";
     $(document).ready(function() {
         var description = $("#homework-description");
         description.html(latex_support(description.data('to-render')));

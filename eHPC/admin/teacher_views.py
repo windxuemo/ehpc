@@ -4,6 +4,7 @@ import json
 import os
 import zipfile
 import shutil
+from xlrd import open_workbook
 from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, abort, jsonify, current_app, make_response, send_file, send_from_directory
@@ -13,77 +14,65 @@ from sqlalchemy import or_
 
 from . import admin
 from .. import db
-from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload, HomeworkAppendix
+from ..models import Classify, Program, Paper, Question, PaperQuestion, Homework, HomeworkUpload, HomeworkAppendix, HomeworkScore
 from ..models import Course, Lesson, Material, User, Apply, VNCKnowledge, VNCTask
 from ..models import Knowledge, Challenge, Group
 from ..user.authorize import teacher_login
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename, extension_to_file_type
 from ..util.pdf import get_paper_pdf
 from ..util.file_manage import remove_dirs
-from ..util.xlsx import get_member_xlsx
+from ..util.xlsx import get_member_xlsx, get_score_xlsx, get_allscore_xlsx
 
 
 @admin.route('/course/', methods=['GET', 'POST'])
 @teacher_login
 def course():
     if request.method == 'GET':
-        all_courses = current_user.teacher_courses.order_by(Course.nature_order.desc())
+        all_courses = current_user.teacher_courses.order_by(Course.nature_order.asc())
         return render_template('admin/course/index.html',
                                all_courses=all_courses,
                                title=gettext('Course Admin'))
     elif request.method == 'POST':
-        # 删除课程
-        curr_course = Course.query.filter_by(id=request.form['course_id']).first_or_404()
-        for l in curr_course.lessons:
-            for m in l.materials:
-                db.session.delete(m)
-            db.session.delete(l)
-        for h in curr_course.homeworks:
-            for x in h.uploads:
-                db.session.delete(x)
-            for x in h.appendix:
-                db.session.delete(x)
-            db.session.delete(h)
-        for p in curr_course.papers:
-            db.session.delete(p)
-        for c in curr_course.comments:
-            db.session.delete(c)
-        if curr_course.qrcode:
-            db.session.delete(curr_course.qrcode)
+        if request.form['op'] == 'del':
+            # 删除课程
+            curr_course = Course.query.filter_by(id=request.form['course_id']).first_or_404()
+            for l in curr_course.lessons:
+                for m in l.materials:
+                    db.session.delete(m)
+                db.session.delete(l)
+            for h in curr_course.homeworks:
+                for x in h.uploads:
+                    db.session.delete(x)
+                for x in h.appendix:
+                    db.session.delete(x)
+                db.session.delete(h)
+            for p in curr_course.papers:
+                db.session.delete(p)
+            for c in curr_course.comments:
+                db.session.delete(c)
+            if curr_course.qrcode:
+                db.session.delete(curr_course.qrcode)
 
-        resource_path = os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id)
-        homework_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], 'course_%d' % curr_course.id)
-        homework_appendix_path = os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], 'course_%d' % curr_course.id)
-        cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id)
-        remove_dirs(resource_path, homework_path, homework_appendix_path, cover_path)
+            resource_path = os.path.join(current_app.config['RESOURCE_FOLDER'], 'course_%d' % curr_course.id)
+            homework_path = os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'], 'course_%d' % curr_course.id)
+            homework_appendix_path = os.path.join(current_app.config['HOMEWORK_APPENDIX_FOLDER'], 'course_%d' % curr_course.id)
+            cover_path = os.path.join(current_app.config['COURSE_COVER_FOLDER'], 'cover_%d.png' % curr_course.id)
+            remove_dirs(resource_path, homework_path, homework_appendix_path, cover_path)
 
-        db.session.delete(curr_course)
-        db.session.commit()
-        return jsonify(status="success", course_id=curr_course.id)
-
-
-@admin.route('/course/down/<int:course_id>')
-@teacher_login
-def course_move_down(course_id):
-    cur_course = Course.query.filter_by(id=course_id).first_or_404()
-    des_course_list = Course.query.filter(Course.nature_order < cur_course.nature_order).all()
-    if len(des_course_list) != 0:
-        des_article = des_course_list[-1]
-        cur_course.nature_order, des_article.nature_order = des_article.nature_order, cur_course.nature_order
-        db.session.commit()
-    return redirect(url_for('admin.course'))
-
-
-@admin.route('/course/up/<int:course_id>')
-@teacher_login
-def course_move_up(course_id):
-    cur_course = Course.query.filter_by(id=course_id).first_or_404()
-    des_course_list = Course.query.filter(Course.nature_order > cur_course.nature_order).all()
-    if len(des_course_list) != 0:
-        des_course = des_course_list[0]
-        cur_course.nature_order, des_course.nature_order = des_course.nature_order, cur_course.nature_order
-        db.session.commit()
-    return redirect(url_for('admin.course'))
+            #将排在此课程后面的课程序号全部减1
+            total_courses = Course.query.order_by(Course.nature_order.asc())
+            for c in total_courses:
+                if c.nature_order >= curr_course.nature_order:
+                    c.nature_order -= 1
+            db.session.delete(curr_course)
+            db.session.commit()
+            return jsonify(status="success", course_id=curr_course.id)
+        elif request.form['op'] == 'seq':
+            seq = json.loads(request.form['seq'])
+            for c in current_user.teacher_courses:
+                c.nature_order = seq[str(c.id)]
+            db.session.commit()
+            return jsonify(status='success')
 
 
 @admin.route('/course/create/', methods=['GET', 'POST'])
@@ -94,17 +83,13 @@ def course_create():
                                title=gettext('Create Course'))
     elif request.method == 'POST':
         # 创建课程
-        all_courses = current_user.teacher_courses
-        idx = 0
-        for c in all_courses:
-            if idx < c.nature_order:
-                idx = c.nature_order
-        course_group = Group(title=request.form['title'], about=request.form['title'] + u' 的课程讨论', nature_order=idx+1)
+        idx = Course.query.count()
+        course_group = Group(title=request.form['title'], about=request.form['title'] + u' 的课程讨论')
         db.session.add(course_group)
         db.session.commit()
 
         curr_course = Course(title=request.form['title'], subtitle='', about='',
-                             lessonNum=0, smallPicture='upload/course/noImg.jpg', group_id=course_group.id)
+                             lessonNum=0, smallPicture='upload/course/noImg.jpg', group_id=course_group.id,  nature_order=idx+1)
         curr_course.teacher = current_user
         db.session.add(curr_course)
 
@@ -404,9 +389,9 @@ def course_homework(course_id):
                                homeworks=curr_course.homeworks,
                                title=gettext('Course Homework'))
     elif request.method == "POST":
+        curr_course = Course.query.filter_by(id=course_id).first_or_404()
         # 作业的删除
         if request.form['op'] == "del":
-            curr_course = Course.query.filter_by(id=course_id).first_or_404()
             curr_homework = curr_course.homeworks.filter_by(id=request.form['homework_id']).first_or_404()
             for a in curr_homework.appendix:
                 curr_homework.appendix.remove(a)
@@ -427,6 +412,12 @@ def course_homework(course_id):
             db.session.commit()
 
             return jsonify(status="success", homework_id=curr_homework.id)
+        elif request.form['op'] == 'download-score':
+            all_users = curr_course.users
+            all_homework = curr_course.homeworks
+            uri = get_allscore_xlsx(all_users, all_homework, curr_course.id)
+            download_file_name = "%s_score" % curr_course.title.encode('utf-8')
+            return jsonify(status="success", download_file_name=download_file_name)
         else:
             return abort(404)
 
@@ -595,12 +586,18 @@ def course_homework_upload_list(course_id, homework_id):
     elif request.method == "POST":
         curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
         curr_course = Course.query.filter_by(id=course_id).first_or_404()
-        upload_id = request.form.getlist('upload_id[]')
         if request.form['op'] == "del":
+            upload_id = request.form.getlist('upload_id[]')
             for idx in upload_id:
                 curr_upload = curr_homework.uploads.filter_by(id=idx).first()
                 if not curr_upload:
                     return jsonify(status="fail", info="Not Found")
+                curr_user_uploads = curr_homework.uploads.filter_by(user_id=curr_upload.user.id).all()
+                curr_user_uploads_count = len(curr_user_uploads)
+                if curr_user_uploads_count == 1:
+                    curr_homework_score = HomeworkScore.query.filter_by(user_id=curr_upload.user.id, homework_id=curr_homework.id).first()
+                    if curr_homework_score:
+                        db.session.delete(curr_homework_score)
                 curr_homework.uploads.remove(curr_upload)
                 db.session.delete(curr_upload)
                 db.session.commit()
@@ -610,6 +607,7 @@ def course_homework_upload_list(course_id, homework_id):
                     return jsonify(status="fail")
             return jsonify(status="success")
         elif request.form["op"] == "download":
+            upload_id = request.form.getlist('upload_id[]')
             zip_name = "homework_%d.zip" % curr_homework.id
             f = zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED)
             for idx in upload_id:
@@ -629,6 +627,90 @@ def course_homework_upload_list(course_id, homework_id):
             return jsonify(status="success",
                            homework_title=curr_homework.title,
                            course_title=curr_course.title)
+
+
+@admin.route('/course/<int:course_id>/homework/<int:homework_id>/correct', methods=['GET', 'POST'])
+@teacher_login
+def course_homework_correct(course_id, homework_id):
+    curr_course = Course.query.filter_by(id=course_id).first_or_404()
+    curr_homework = Homework.query.filter_by(id=homework_id).first_or_404()
+    if request.method == "GET":
+        return render_template('admin/course/homework_correct.html',
+                               course=curr_course,
+                               homework=curr_homework,
+                               title=gettext('Homework Correct'))
+    elif request.method == 'POST':
+        if request.form['op'] == 'set':
+            score = request.form['homework_score']
+            comment = request.form['homework_comment']
+            user_id = request.form['user_id']
+            his_upload = HomeworkUpload.query.filter_by(user_id=user_id, homework_id=homework_id).order_by(
+                HomeworkUpload.submit_time.asc()).first()
+            upload_status = 2
+            if not his_upload:
+                upload_status = 2
+            else:
+                if his_upload.submit_time > curr_homework.deadline:
+                    upload_status = 1
+                else:
+                    upload_status = 0
+            curr_homework_score = HomeworkScore(user_id=user_id, homework_id=homework_id, score=score, comment=comment, status=upload_status)
+            db.session.add(curr_homework_score)
+            db.session.commit()
+            return jsonify(status="success")
+        elif request.form['op'] == 'reset':
+            score = request.form['homework_score']
+            comment = request.form['homework_comment']
+            user_id = request.form['user_id']
+            curr_homework_score = HomeworkScore.query.filter_by(user_id=user_id, homework_id=homework_id).first_or_404()
+            curr_homework_score.score = score
+            curr_homework_score.comment = comment
+            db.session.commit()
+            return jsonify(status="success")
+        elif request.form['op'] == 'download-score':
+            all_users = curr_course.users
+            uri = get_score_xlsx(all_users, curr_course.id, curr_homework.id)
+            download_file_name = "%s_%s_score" % (curr_course.title.encode('utf-8'), curr_homework.title.encode('utf-8'))
+            return jsonify(status="success", download_file_name=download_file_name)
+        elif request.form['op'] == 'upload-score':
+            score_excel = request.files['score-file']
+            upload_path = unicode(os.path.join(current_app.config['HOMEWORK_UPLOAD_FOLDER'],
+                                               "course_%d" % curr_course.id, "homework_%d" % curr_homework.id, 'score-upload.xls'), 'utf-8')
+            status = upload_file(score_excel, upload_path)
+            if status[0]:
+                wb = open_workbook(upload_path)
+                sheet = wb.sheets()[0]
+                number_of_rows = sheet.nrows
+                number_of_columns = sheet.ncols
+                for row in range(1, number_of_rows):
+                    curr_row = []
+                    for col in range(number_of_columns):
+                        curr_row.append(sheet.cell(row, col).value)
+                    curr_student = User.query.filter_by(student_id=curr_row[0], name=curr_row[1]).first_or_404()
+                    homework_score = HomeworkScore.query.filter_by(user_id=curr_student.id, homework_id=homework_id).first()
+                    if not homework_score:
+                        if curr_student in curr_course.users:
+                            his_upload = HomeworkUpload.query.filter_by(user_id=curr_student.id, homework_id=homework_id).order_by(
+                                HomeworkUpload.submit_time.asc()).first()
+                            upload_status = 2
+                            if not his_upload:
+                                upload_status = 2
+                            else:
+                                if his_upload.submit_time > curr_homework.deadline:
+                                    upload_status = 1
+                                else:
+                                    upload_status = 0
+                            homework_score = HomeworkScore(user_id=curr_student.id, homework_id=homework_id,
+                                                           score=curr_row[2], comment=curr_row[3], status=upload_status)
+                            db.session.add(homework_score)
+                            db.session.commit()
+                    else:
+                        homework_score.score = curr_row[2]
+                        homework_score.comment = curr_row[3]
+                        db.session.commit()
+                return jsonify(status="success")
+            else:
+                return jsonify(status="fail")
 
 
 @admin.route('/course/<int:course_id>/paper/', methods=['GET', 'POST'])
@@ -716,7 +798,6 @@ def paper_edit(course_id, paper_id):
             curr_paper = Paper.query.filter_by(id=paper_id).first_or_404()
             question_id = request.form.getlist('question_id[]')
             for idx in question_id:
-                print idx
                 aux = curr_paper.questions.filter_by(question_id=idx).first_or_404()
                 curr_paper.questions.remove(aux)
                 curr_question = aux.questions
@@ -1047,7 +1128,6 @@ def lab_view(knowledge_id):
             db.session.commit()
             return jsonify(status='success')
         elif request.form['op'] == 'seq':
-            print(request.form)
             curr_knowledge = Knowledge.query.filter_by(id=knowledge_id).first_or_404()
             seq = json.loads(request.form['seq'])
             for x in curr_knowledge.challenges:

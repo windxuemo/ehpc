@@ -4,12 +4,13 @@ from flask import render_template, request, redirect, url_for, abort, jsonify, c
 from datetime import datetime
 from ..user.authorize import system_login
 from . import admin
-from ..models import User, Classify, Article, Group, Case, CaseVersion, CaseCodeMaterial
+from ..models import User, Classify, Article, Group, Case, CaseVersion, CaseCodeMaterial, Course
 from .. import db
 from flask_babel import gettext
 import os
 from ..util.file_manage import upload_img, upload_file, get_file_type, custom_secure_filename
 import shutil
+import json
 
 
 @admin.route('/')
@@ -18,6 +19,7 @@ def index():
     return render_template('admin/system.html',
                            title=gettext("System Admin"),
                            user_cnt=User.query.count(),
+                           course_cnt=Course.query.count(),
                            article_cnt=Article.query.count(),
                            group_cnt=Group.query.count(),
                            case_cnt=Case.query.count(),
@@ -45,6 +47,23 @@ def user_edit(uid):
         return render_template('admin/user/edit.html', user=u,
                                message_success=message_success,
                                title=gettext('User Edit'))
+
+
+@admin.route('/courses/', methods=['GET', 'POST'])
+@system_login
+def course_manage():
+    if request.method == 'GET':
+        all_courses = Course.query.order_by(Course.nature_order.asc())
+        return render_template('admin/course_manage.html',
+                               all_courses=all_courses,
+                               title=gettext('Course Admin'))
+    elif request.method == 'POST':
+        seq = json.loads(request.form['seq'])
+        all_courses = Course.query.order_by(Course.nature_order.asc())
+        for c in all_courses:
+            c.nature_order = seq[str(c.id)]
+        db.session.commit()
+        return jsonify(status='success')
 
 
 @admin.route('/articles/')

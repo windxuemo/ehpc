@@ -1,10 +1,10 @@
 $(document).ready(function () {
-    $('#homework-uploaded-table').DataTable({
+    var up_table = $('#homework-uploaded-table').DataTable({
         language: {
             url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Chinese.json"
         },
         "order": [[2, 'asc']],
-        "lengthMenu": [ 10, 30, 50, 100 ]
+        "lengthMenu": [[ 10, 30, 50, 100, -1],[ 10, 30, 50, 100, 'ALL']]
     });
     $("#all-homework-select").click(function () {
         var obj = this;
@@ -40,7 +40,8 @@ $(document).ready(function () {
                 if(data.status=="success"){
                     $("#homework-table-body").find("input").each(function () {
                         if (this.checked) {
-                            $(this).parent().parent().remove();
+                            up_table.row($(this).parent().parent()).remove();
+                            up_table.draw();
                         }
                     });
                     $("#homework-manage-panel").find("input").prop("checked", false);
@@ -74,7 +75,7 @@ $(document).ready(function () {
                 success: function (data) {
                     if(data.status=="success"){
                         $("#homework-manage-panel").find("input").prop("checked", false);
-                        var zip_path = $("#homework-table-body input[name='zip-path']").val();
+                        var zip_path = $("input[name='zip-path']").val();
                         var a = document.createElement('a');
                         a.href = zip_path;
                         a.target = '_parent';
@@ -89,7 +90,7 @@ $(document).ready(function () {
                             var cur_min = ("0" + cur_time.getMinutes()).slice(-2);
 
                             a.download = '' + data['course_title'] + '_' + data['homework_title'] + '_' + cur_year
-                                + cur_month + cur_day + '-' + cur_hour + '_' + cur_min + '.zip';
+                                + cur_month + cur_day + '-' + cur_hour + '-' + cur_min + '.zip';
                         }
                         // Add a to the doc for click to work.
                         (document.body || document.documentElement).appendChild(a);
@@ -111,6 +112,4 @@ $(document).ready(function () {
             });
         }
     });
-});/**
- * Created by YM on 2016/12/26.
- */
+});

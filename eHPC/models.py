@@ -575,3 +575,15 @@ class CodeCache(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     program_id = db.Column(db.Integer, nullable=False)
     code = db.Column(db.Text(), default=None)
+
+
+class HomeworkScore(db.Model):
+    __tablename__ = "homework_score"
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True)
+    homework_id = db.Column(db.Integer, db.ForeignKey('homework.id'), nullable=False, primary_key=True)
+    score = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.String(1024), nullable=True)
+    status = db.Column(db.Integer, nullable=False, default=2)      #此学生作业提交状态：0-已交；1-迟交；2-未交
+
+    user = db.relationship("User", backref='homeworkscore')
+

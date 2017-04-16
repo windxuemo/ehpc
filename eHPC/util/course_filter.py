@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from . import filter_blueprint
-from ..models import Course, User, PaperQuestion
+from ..models import Course, User, PaperQuestion, Homework, HomeworkUpload, HomeworkScore
 from sqlalchemy import *
 from .. import db
 import json
@@ -98,3 +98,34 @@ def sort_materials(materials):
 @filter_blueprint.app_template_filter('unite_time_format')
 def unite_time_format(course_time):
     return course_time.strftime('%Y-%m-%d %H:%M') if course_time else ""
+
+
+@filter_blueprint.app_template_filter('check_upload')
+def check_upload(user, homework_id):
+    homework = Homework.query.filter_by(id=homework_id).first_or_404()
+    his_upload = HomeworkUpload.query.filter_by(user_id=user.id, homework_id=homework_id).order_by(HomeworkUpload.submit_time.asc()).first()
+    if not his_upload:
+        return 2
+    else:
+        if his_upload.submit_time > homework.deadline:
+            return 1
+        else:
+            return 0
+
+
+@filter_blueprint.app_template_filter('get_score')
+def get_score(user, homework_id):
+    homework_score = HomeworkScore.query.filter_by(user_id=user.id, homework_id=homework_id).first()
+    if homework_score:
+        return homework_score.score
+    else:
+        return ""
+
+
+@filter_blueprint.app_template_filter('get_comment')
+def get_comment(user, homework_id):
+    homework_score = HomeworkScore.query.filter_by(user_id=user.id, homework_id=homework_id).first()
+    if homework_score:
+        return homework_score.comment
+    else:
+        return ""

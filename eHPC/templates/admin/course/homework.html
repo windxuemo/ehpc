@@ -26,11 +26,15 @@
                 <div class="panel panel-default panel-col">
                     <div class="panel-heading">
                         <div class="pull-right">
-                            <a href="{{ url_for('admin.course_homework_create', course_id=course.id) }}" class="btn btn-primary btn-sm" id="homework-create-btn"
+                            <a href="{{ url_for('admin.course_homework_create', course_id=course.id) }}" class="btn btn-info btn-sm" id="homework-create-btn"
                                     data-toggle="modal">
-                                <i class="glyphicon glyphicon-plus">作业</i>
+                                <i class="fa fa-plus"></i> 作业
                             </a>
                         </div>
+                        <button class="btn btn-info btn-sm pull-right" id="download-score-btn" style="margin-right:10px">
+                            <i class="fa fa-floppy-o"></i>
+                            导出所有成绩
+                        </button>
                         作业管理
                     </div>
 
@@ -50,6 +54,8 @@
                                             <i class="es-icon es-icon-delete"></i>删除</a>
                                         <a class="btn btn-link pull-right" href="{{ url_for('admin.course_homework_upload_list', course_id=course.id, homework_id=h.id) }}">
                                             <i class="glyphicon glyphicon-eye-open"></i>上交情况</a>
+                                        <a class="btn btn-link pull-right" href="{{ url_for('admin.course_homework_correct', course_id=course.id, homework_id=h.id) }}">
+                                            <i class="fa fa-check-square-o"></i> 批改作业</a>
                                     </div>
                                 </li>
                                 {% endfor %}
@@ -57,6 +63,7 @@
                                 <div class="text-center">本课程暂时未发布作业</div>
                             {% endif %}
                         </ul>
+                        <input type="hidden" name="score-path" value="{{ url_for('static',filename='homework/upload/course_%d/score.xlsx' % course.id) }}">
                     </div>
                 </div>
             </div>
@@ -91,6 +98,50 @@
                     else {
                         alert_modal("删除失败");
                     }
+                }
+            });
+        });
+
+        $("#download-score-btn").click(function () {
+            $.ajax({
+                type: "post",
+                url: location.href,
+                data: {
+                    op: "download-score",
+                },
+                success: function (data) {
+                    if(data.status=="success"){
+                        var score_path = $("input[name='score-path']").val();
+                        var a = document.createElement('a');
+                        a.href = score_path;
+                        a.target = '_parent';
+                        // Use a.download if available, it prevents plugins from opening.
+                        if ('download' in a) {
+                            var cur_time = new Date();
+                            var cur_year = cur_time.getFullYear();
+                            // 得到两位数的时间， 比如 20170302-11_01.zip
+                            var cur_month = ("0" + (cur_time.getMonth() + 1)).slice(-2);
+                            var cur_day = ("0" + cur_time.getDate()).slice(-2);
+                            var cur_hour = ("0" + cur_time.getHours()).slice(-2);
+                            var cur_min = ("0" + cur_time.getMinutes()).slice(-2);
+                            a.download = '' + data['download_file_name'] + '_' + cur_year
+                            + cur_month + cur_day + '-' + cur_hour + '-' + cur_min + '.xlsx';
+                        }
+                        // Add a to the doc for click to work.
+                        (document.body || document.documentElement).appendChild(a);
+                        if (a.click) {
+                            a.click(); // The click method is supported by most browsers.
+                        }
+                        else {
+                            $(a).click(); // Backup using jquery
+                        }
+                        // Delete the temporary link.
+                        a.parentNode.removeChild(a);
+                    }
+                },
+                error: function() {
+                    alert_modal("文件下载失败");
+                    setTimeout(function() {$("#modal-alert").modal("hide");}, 1500);
                 }
             });
         });

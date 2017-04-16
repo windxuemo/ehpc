@@ -2,6 +2,8 @@
 
 {% block header_ext %}
     <link href="{{ url_for('static', filename='css/qrcode.css') }}" rel="stylesheet">
+    <script src="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+    <link href="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet">
 {% endblock %}
 
 
@@ -12,22 +14,23 @@
             <div class="panel-heading">
                     <span class="pull-right">
                         <a id="create-course" href="{{ url_for('admin.course_create') }}" class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-plus"></span>
+                            <span class="fa fa-plus"></span>
                             创建课程
                         </a>
                     </span>
+                    <button id="edit-seq" class="btn btn-info btn-sm pull-right" style="margin-right: 20px;"><i class="fa fa-arrows-v" aria-hidden="true"></i> 调整顺序</button>
                 在教课程
             </div>
             <div class="panel-body">
+                <div id="hint" style="display: none;margin-bottom: 10px;"><i class="es-icon es-icon-info"></i> 请直接拖动课程来调整顺序</div>
                 <table class="table fixed-table" id="course-table">
                     <thead>
                     <tr>
                         <th width="40%">名称</th>
                         <th width="10%">课程数</th>
                         <th width="10%">学生数</th>
-                        <th width="15%">创建时间</th>
-                        <th width="10%">排序</th>
-                        <th width="15%">操作</th>
+                        <th width="20%">创建时间</th>
+                        <th width="20%">操作</th>
                     </tr>
                     </thead>
                     <tbody id="tb">
@@ -40,12 +43,7 @@
                             </td>
                             <td>{{ c.lessonNum }}</td>
                             <td>{{ c.studentNum }}</td>
-                            <td>{{ c.createdTime | unite_time_format}}</td>
-                            <td>
-                                <a href="{{ url_for('admin.course_move_up', course_id=c.id) }}">上移</a>
-                                <span class="divider"> | </span>
-                                <a href="{{ url_for('admin.course_move_down', course_id=c.id) }}">下移</a>
-                            </td>
+                            <td>{{ c.createdTime }}</td>
                             <td>
                                 <a href="{{ url_for('admin.course_edit', course_id=c.id) }}">管理</a>
                                 <span class="divider"> | </span>
@@ -110,13 +108,42 @@
                 $.ajax({
                     type: "post",
                     url: location.href,
-                    data: { course_id: $(obj).parent().parent().data('id') },
+                    data: {
+                        course_id: $(obj).parent().parent().data('id') ,
+                        op: "del"
+                    },
                     async: false,
                     success: function (data) {
                         $(obj).parent().parent().remove();
                         $("#del-warning").modal("hide");
                     }
                 });
+            });
+            $("#edit-seq").click(function () {
+                if ($(this).text() == " 调整顺序") {
+                    $("#course-table").find("tbody").sortable();
+                    $("#hint").show();
+                    $(this).text("保存");
+                }
+                else {
+                    var seq = {}, idx = 1;
+                    $("#course-table").find("tbody").find("tr").each(function () {
+                        seq[$(this).data("id")] = idx++;
+                    });
+                    $.ajax({
+                        type: "post",
+                        url: location.href,
+                        data: {
+                            op: "seq",
+                            seq: JSON.stringify(seq)
+                        },
+                        success: function (data) {
+                            if (data["status"] == "success") {
+                                location.reload();
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>

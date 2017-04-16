@@ -1,0 +1,84 @@
+{% extends 'admin/base.html' %}
+
+{% block header_ext %}
+    <script src="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+    <link href="//cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container" id="content-container">
+        <div class="panel panel-default panel-col">
+            <div class="panel-heading">
+                <button id="edit-seq" class="btn btn-info btn-sm pull-right" style="margin-right: 20px;"><i class="fa fa-arrows-v" aria-hidden="true"></i> 调整顺序</button>
+                所有课程
+            </div>
+            <div class="panel-body">
+                <div id="hint" style="display: none;margin-bottom: 10px;"><i class="es-icon es-icon-info"></i> 请直接拖动课程来调整顺序</div>
+                <table class="table fixed-table" id="course-table">
+                    <thead>
+                    <tr>
+                        <th width="40%">名称</th>
+                        <th class="text-center" width="10%">课程数</th>
+                        <th class="text-center" width="10%">学生数</th>
+                        <th class="text-center" width="20%">创建时间</th>
+                        <th class="text-center" width="10%">教师</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tb">
+                    {% if all_courses.count() > 0 %}
+                        {% for c in all_courses %}
+                        <tr data-id="{{ c.id }}" style="">
+                            <td  title="{{ c.title }}">
+                                <a href="{{ url_for('course.view', cid=c.id) }}"><img src="/static/{{ c.smallPicture }}" width="160px" height="90px"></a>
+                                <span class="overflow-ellipsis" data-toggle="tooltip">{{ c.title }}</span>
+                            </td>
+                            <td class="text-center">{{ c.lessonNum }}</td>
+                            <td class="text-center">{{ c.studentNum }}</td>
+                            <td class="text-center">{{ c.createdTime }}</td>
+                            <td class="text-center">{{ c.teacher.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr class="text-center"><td colspan="5">还没有发布任何课程</td></tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_ext %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#edit-seq").click(function () {
+                if ($(this).text() == " 调整顺序") {
+                    $("#course-table").find("tbody").sortable();
+                    $("#hint").show();
+                    $(this).text("保存");
+                }
+                else {
+                    var seq = {}, idx = 1;
+                    $("#course-table").find("tbody").find("tr").each(function () {
+                        seq[$(this).data("id")] = idx++;
+                    });
+                    $.ajax({
+                        type: "post",
+                        url: location.href,
+                        data: {
+                            seq: JSON.stringify(seq)
+                        },
+                        success: function (data) {
+                            if (data["status"] == "success") {
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -17,9 +17,9 @@
 
         <div style="padding: 10px 0">
             <div class="progress">
-                <div id="progress-bar" style="width:{{ (response_vnc_task.vnc_task_num - 1) / vnc_tasks_count * 100 }}%" class="progress-bar progress-bar-success"></div>
+                <div id="progress-bar" style="width:{{ response_vnc_task.vnc_task_num / vnc_tasks_count * 100 }}%" class="progress-bar progress-bar-success"></div>
             </div>
-            <div class="progress-nums"><span id="cur-task-number">{{ (response_vnc_task.vnc_task_num - 1) | string }}</span>/{{ vnc_tasks_count | string }}</div>
+            <div class="progress-nums"><span id="cur-task-number">{{ response_vnc_task.vnc_task_num | string }}</span>/{{ vnc_tasks_count | string }}</div>
 
             <div class="markdown-body" style="border-top: solid 1px #eee">
                 <p id="document-title" class="text-center text-xlarge"> {{ response_vnc_task.title }}</p>
@@ -35,11 +35,11 @@
 
     <div class="vnc-sidebar-trigger vnc-sidebar-trigger-show" id="toolbar-trigger">隐藏工具栏</div>
     <div class="vnc-sidebar vnc-sidebar-show" id="sidebar">
-        <div data-toggle="modal" data-target="#clipboard" class="vnc-nav">剪切板</div>
-        <div id="btn-fullscreen" class="vnc-nav">隐藏文档</div>
-        <div id="btn-browser-fullscreen" class="vnc-nav">全屏</div>
-        <div class="vnc-nav" id="change-resolution">更改分辨率</div>
-        <div class="vnc-nav" id="get-vnc-lab-progress">实验进度</div>
+        <div data-toggle="modal" data-target="#clipboard" class="vnc-nav"><i class="fa fa-clipboard" aria-hidden="true"></i>&nbsp;&nbsp;剪切板</div>
+        <div id="btn-fullscreen" class="vnc-nav"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;<span id="btn-hide-document-text">隐藏文档</span></div>
+        <div id="btn-browser-fullscreen" class="vnc-nav"><i class="fa fa-arrows-alt" aria-hidden="true"></i>&nbsp;&nbsp;<span id="btn-fullscreen-text">全屏</span></div>
+        <div class="vnc-nav" id="change-resolution"><i class="fa fa-desktop" aria-hidden="true"></i>&nbsp;&nbsp;更改分辨率</div>
+        <div class="vnc-nav" id="get-vnc-lab-progress"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;实验进度</div>
     </div>
 
     <div class="modal fade" id="clipboard" tabindex="-1" role="dialog" aria-hidden="true">
@@ -124,9 +124,9 @@
                          if(data["status"] === "success"){
                              document_title.text(data["title"]);
                              document_content.html(latex_support(data["content"]));
+                             cur_task_num++;
                              $("#progress-bar").css("width", (cur_task_num / {{ vnc_tasks_count }} * 100).toString() + "%");
                              $("#cur-task-number").text(cur_task_num);
-                             cur_task_num++;
                              history.replaceState({}, 'test', location.href.split("?")[0]+"?request_vnc_task_number=" + cur_task_num.toString());
                          }
                          else if(data["status"] === "fail"){
@@ -176,7 +176,7 @@
             $("#btn-fullscreen").click(function () {//文档隐藏选项按钮
                 if(!hide_document){
                     hide_document = true;
-                    $("#btn-fullscreen").text("显示文档");
+                    $("#btn-hide-document-text").text("显示文档");
                     content_left.hide("blind", {direction: "left"}, "normal", function () {
                         content_right.removeClass("vnc-right");
                         content_right.addClass("vnc-whole");
@@ -188,7 +188,7 @@
                 }
                 else{
                     hide_document = false;
-                    $("#btn-fullscreen").text("隐藏文档");
+                    $("#btn-hide-document-text").text("隐藏文档");
                     content_left.show("blind", {direction: "left"}, "normal");
                     content_right.removeClass("vnc-whole");
                     content_right.addClass("vnc-right");
@@ -205,33 +205,33 @@
                     if(element.requestFullscreen) {
                         element.requestFullscreen();
                         browser_fullscreen = true;
-                        $(this).text("退出全屏")
+                        $("#btn-fullscreen-text").text("退出全屏")
                     } else if(element.mozRequestFullScreen) {
                         element.mozRequestFullScreen();
                         browser_fullscreen = true;
-                        $(this).text("退出全屏")
+                        $("#btn-fullscreen-text").text("退出全屏")
                     } else if(element.webkitRequestFullscreen) {
                         element.webkitRequestFullscreen();
                         browser_fullscreen = true;
-                        $(this).text("退出全屏")
+                        $("#btn-fullscreen-text").text("退出全屏")
                     } else if(element.msRequestFullscreen) {
                         element.msRequestFullscreen();
                         browser_fullscreen = true;
-                        $(this).text("退出全屏")
+                        $("#btn-fullscreen-text").text("退出全屏")
                     }
                 }else{
                     if(document.exitFullscreen) {
                         document.exitFullscreen();
                         browser_fullscreen = false;
-                        $(this).text("全屏")
+                        $("#btn-fullscreen-text").text("全屏")
                     } else if(document.mozCancelFullScreen) {
                         document.mozCancelFullScreen();
                         browser_fullscreen = false;
-                        $(this).text("全屏")
+                        $("#btn-fullscreen-text").text("全屏")
                     } else if(document.webkitExitFullscreen) {
                         document.webkitExitFullscreen();
                         browser_fullscreen = false;
-                        $(this).text("全屏")
+                        $("#btn-fullscreen-text").text("全屏")
                     }
                 }
             });

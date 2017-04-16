@@ -636,10 +636,10 @@ html, body {
 .vnc-nav{
     padding: 10px;
     width: 100%;
-    font-size: 20px;
+    font-size: 15px;
     color: #c1c1c1;
     line-height: 40px;
-    text-align: center;
+    text-align: left;
     transition: all 0.2s ease-in-out 0s;
     -webkit-transition: all 0.2s ease-in-out 0s;
     -moz-transition: all 0.2s ease-in-out 0s;
@@ -778,7 +778,7 @@ html, body {
     border-radius: 3px 0 0 3px;
     font-size: 16px;
     z-index: 2;
-    line-height: 17px;
+    line-height: 18px;
     transition: all 0.3s ease-in-out 0s;
     -webkit-transition: all 0.3s ease-in-out 0s;
     -moz-transition: all 0.3s ease-in-out 0s;
@@ -791,7 +791,7 @@ html, body {
 }
 
 .vnc-sidebar-trigger-show{
-    right: 150px;
+    right: 120px;
 }
 
 .vnc-sidebar-trigger-hide{
@@ -804,7 +804,7 @@ html, body {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 150px;
+    width: 120px;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
@@ -815,7 +815,7 @@ html, body {
 }
 
 .vnc-sidebar-hide{
-    right: -150px;
+    right: -120px;
 }
 
 .vnc-sidebar-show{

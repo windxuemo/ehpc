@@ -227,7 +227,7 @@ class ehpc_client:
         返回的是脚本任务在队列中的id（数字与字母组成的字符串）
         """
 
-        if node_number > TH2_MAX_NODE_NUMBER :
+        if int(node_number) > TH2_MAX_NODE_NUMBER:
             partition = "BIGJOB1"
 
         jobscript = """#!/bin/bash
@@ -277,7 +277,7 @@ class ehpc_client:
         node_number指天河执行任务的结点数，language指编译器，partition指天河内部执行的分区
         对于参数进一步的解释请参照天河用户手册返回值为运行文件的输出（字符串）
         """
-        if node_number > TH2_MAX_NODE_NUMBER :
+        if int(node_number) > TH2_MAX_NODE_NUMBER:
             partition = "BIGJOB1"
 
         jobid = self.submit_job(myPath, job_filename, output_filename, node_number=node_number, task_number=task_number,

@@ -606,11 +606,18 @@ CREATE TABLE `homework_score` (
   `homework_id` int(11) NOT NULL,
   `score` int(11) NOT NULL,
   `comment` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` tinyint(2) NOT NULL DEFAULT '2',
   PRIMARY KEY (`user_id`,`homework_id`),
   KEY `homework_id` (`homework_id`),
   CONSTRAINT `homework_score_ibfk_1` FOREIGN KEY (`homework_id`) REFERENCES `homework` (`id`),
   CONSTRAINT `homework_score_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of homework_score
+-- ----------------------------
+INSERT INTO `homework_score` VALUES ('3', '3', '88', '还有些错误！', '1');
+INSERT INTO `homework_score` VALUES ('5', '3', '90', '下次早点交！', '1');
 
 
 -- ----------------------------
@@ -639,8 +646,9 @@ CREATE TABLE `homework_upload` (
 LOCK TABLES `homework_upload` WRITE;
 /*!40000 ALTER TABLE `homework_upload` DISABLE KEYS */;
 INSERT INTO `homework_upload` VALUES ('5', 'nahan.key.zip', '4', '3', 'course_1/homework_4/0_name_nahan.key.zip', '2017-03-12 20:47:56');
-INSERT INTO `homework_upload` VALUES ('6', '2016_1【迟交】.pdf', '3', '3', 'course_1\\homework_3\\150101102_张三丰_2016_1【迟交】.pdf', '2017-04-10 19:00:10');
-INSERT INTO `homework_upload` VALUES ('7', '2016_2【迟交】.pdf', '3', '3', 'course_1\\homework_3\\150101102_张三丰_2016_2【迟交】.pdf', '2017-04-10 19:00:10');
+INSERT INTO `homework_upload` VALUES ('6', '2016_1【迟交】.pdf', '3', '3', 'course_1/homework_3/150101102_张三丰_2016_1【迟交】.pdf', '2017-04-10 19:00:10');
+INSERT INTO `homework_upload` VALUES ('7', '2016_2【迟交】.pdf', '3', '3', 'course_1/homework_3/150101102_张三丰_2016_2【迟交】.pdf', '2017-04-10 19:00:10');
+INSERT INTO `homework_upload` VALUES ('8', '课程介绍与安排【迟交】.pdf', '3', '5', 'course_1/homework_3/123222222_admin_课程介绍与安排【迟交】.pdf', '2017-04-17 13:29:44');
 
 
 /*!40000 ALTER TABLE `homework_upload` ENABLE KEYS */;

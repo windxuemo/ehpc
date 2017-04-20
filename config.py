@@ -105,7 +105,7 @@ class ProductionConfig(Config):
     def __init__(self):
         pass
 
-    SQLALCHEMY_DATABASE_URI = (os.environ.get('DEV_DATABASE_URL') or
+    SQLALCHEMY_DATABASE_URI = (os.environ.get('PRO_DATABASE_URL') or
                                'mysql://root:123456@localhost/ehpc')
 
 

@@ -63,7 +63,7 @@
                                         <td>{{ a.user.student_id }}</td>
                                         <td>{{ '女' if a.user.gender else '男' }}</td>
                                         <td>{{ a.user.phone }}</td>
-                                        <td>{{ a.status | get_apply_status }}
+                                        <td>{{ a.status | get_apply_status }}</td>
                                         <td>
                                         {% if a.status == 0 %}
                                             <a href="{{ url_for('admin.course_approved', apply_id=a.id) }}">同意</a>
@@ -204,12 +204,22 @@
                 })
             });
             $("#batch-del").click(function () {
-                var array = [];
+                var array = [], flag = false;
                 $("input[name=select]").each(function () {
-                    if ($(this).prop("checked")) {
-                        array.push($(this).parent().parent().data("id"));
+                    if ($(this).prop("checked"))
+                    {
+                        if ($(this).parent().parent().children(":nth-child(6)").text() === "已同意") {
+                            flag = true;
+                        }
+                        else {
+                            array.push($(this).parent().parent().data("id"));
+                        }
                     }
                 });
+                if (flag) {
+                    alert_modal("该记录不可被删除。如要删除，请先将学生踢出课程。");
+                    return;
+                }
                 $.ajax({
                     url: "{{ url_for('admin.course_batch') }}",
                     type: "post",
@@ -224,6 +234,7 @@
                     }
                 })
             });
+            $("#course-member-form").find("input[type=checkbox]").prop("checked", true);
         });
     </script>
 {% endblock %}

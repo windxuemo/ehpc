@@ -908,19 +908,19 @@ html, body {
 .btn-green {
     border-color: #34a263;
     background-color: #46c37b;
-    color: #fff;
+    color: #ffffff;
 }
 
 .btn-green:hover {
-    color: #fff;
     background-color: #37a967;
+    color: #ffffff;
 }
 
 .btn-green:focus,
 .btn-green.focus,
 .btn-green.active {
-    color: #fff;
     background-color: #2e7138;
+    color: #ffffff;
 }
 
 /*进度条相关*/

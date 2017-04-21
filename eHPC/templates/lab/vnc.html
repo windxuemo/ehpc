@@ -9,13 +9,11 @@
     <div class="vnc-left">
         <nav class="navbar vnc-left-nav">
             <div class="container-fluid">
-                <ul class="navbar-nav nav">
-                    <li><a href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge_id) }}" class="btn btn-green"><span class="glyphicon glyphicon-chevron-left"></span>返回虚拟实验室</a></li>
-                </ul>
+                <a href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge_id) }}" class="btn btn-green"><span class="glyphicon glyphicon-chevron-left"></span>返回虚拟实验室</a>
             </div>
         </nav>
 
-        <div style="padding: 10px 0">
+        <div style="padding: 10px">
             <div class="progress">
                 <div id="progress-bar" style="width:{{ response_vnc_task.vnc_task_num / vnc_tasks_count * 100 }}%" class="progress-bar progress-bar-success"></div>
             </div>
@@ -25,7 +23,7 @@
                 <p id="document-title" class="text-center text-xlarge"> {{ response_vnc_task.title }}</p>
                 <div id="document-content" data-to-render="{{ response_vnc_task.content }}"></div>
             </div>
-            <button id="continue" class="btn btn-green btn-block" style="margin-bottom: 10px;">继续学习<span class="glyphicon glyphicon-forward"></span></button>
+            <button id="continue" class="btn btn-green btn-block" style="margin-bottom: 10px">继续学习<span class="glyphicon glyphicon-forward"></span></button>
         </div>
     </div>
     <div class="vnc-right">

@@ -18,7 +18,7 @@
                             <div class="lab-item">
                                 <div class="lab-content">
                                     <div class="lab-img">
-                                        <img src="{{ url_for('static', filename=vnc_knowledge.cover_url) }}" alt="{{ vnc_knowledge.title }}" class="img-responsive">
+                                        <a href="{{ url_for('lab.tasks_list', vnc_knowledge_id=vnc_knowledge.id) }}"><img src="{{ url_for('static', filename=vnc_knowledge.cover_url) }}" alt="{{ vnc_knowledge.title }}" class="img-responsive"></a>
                                     </div>
                                     <div class="lab-title">
                                         <strong>{{ vnc_knowledge.title }}</strong>
@@ -51,7 +51,7 @@
                             <div class="lab-item">
                                 <div class="lab-content">
                                     <div class="lab-img">
-                                        <img src="{{ url_for('static', filename=knowledge.cover_url) }}" alt="{{ knowledge.title }}" class="img-responsive">
+                                        <a href="{{ url_for('lab.detail', kid=knowledge.id) }}"><img src="{{ url_for('static', filename=knowledge.cover_url) }}" alt="{{ knowledge.title }}" class="img-responsive"></a>
                                     </div>
                                     <div class="lab-title">
                                         <strong>{{ knowledge.title }}</strong>

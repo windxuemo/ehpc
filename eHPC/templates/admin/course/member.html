@@ -168,6 +168,10 @@
                         array.push($(this).parent().parent().data("id"));
                     }
                 });
+                if (array.length === 0) {
+                    alert_modal("请选择要同意的学生");
+                    return;
+                }
                 $.ajax({
                     url: "{{ url_for('admin.course_batch') }}",
                     type: "post",
@@ -189,6 +193,10 @@
                         array.push($(this).parent().parent().data("id"));
                     }
                 });
+                if (array.length === 0) {
+                    alert_modal("请选择要踢出的学生");
+                    return;
+                }
                 $.ajax({
                     url: "{{ url_for('admin.course_batch') }}",
                     type: "post",
@@ -218,6 +226,10 @@
                 });
                 if (flag) {
                     alert_modal("该记录不可被删除。如要删除，请先将学生踢出课程。");
+                    return;
+                }
+                if (array.length === 0) {
+                    alert_modal("请选择要删除的记录");
                     return;
                 }
                 $.ajax({

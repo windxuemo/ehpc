@@ -290,7 +290,7 @@
                 $("#loading").modal({backdrop: 'static', keyboard: false});
                 console.log(resolution_width, resolution_height);
                 $.ajax({
-                    url: "http://a002.nscc-gz.cn:10231/server/vncsetter",
+                    url: "http://114.67.37.197:10008/server/vncsetter",
                     type: "post",
                     data: {
                         "width": Math.floor(resolution_width),
@@ -332,7 +332,7 @@
         function do_connect_vnc_server(token){
             var display = document.getElementById("display");
             guac = new Guacamole.Client(
-                new Guacamole.HTTPTunnel("http://a002.nscc-gz.cn:10231/server/tunnel")
+                new Guacamole.HTTPTunnel("http://114.67.37.197:10008/server/tunnel")
             );
             display.appendChild(guac.getDisplay().getElement());
             guac.onerror = function (error) {

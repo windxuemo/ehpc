@@ -261,14 +261,13 @@
 
 #laboratory {
     overflow: hidden;
-    min-height: 450px;
+    height: 50%;
     padding: 0;
     margin-top: 0;
 }
 
 #editor {
     border-color: #25282c;
-    min-height: 450px;
 }
 
 #terminal {

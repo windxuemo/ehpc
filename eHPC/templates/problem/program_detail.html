@@ -8,7 +8,6 @@
 
 {% block content %}
     <div id="content-container" class="container">
-
         <ol class="breadcrumb breadcrumb-o" style="margin-top:-18px">
             <li><a href="/">{{ _('Index') }}</a></li>
             <li><a href="{{ url_for('problem.index') }}">{{ _('Practice Center') }}</a></li>
@@ -24,7 +23,8 @@
                         <h1 class="col-md-8 panel-title"
                             style="font-size: 1.5em;">{{ problem.id }}. {{ problem.title }} </h1>
                         <div class="pull-right panel-title">
-                            <a class="btn btn-success" href="{{ url_for('problem.show_my_submits', pid=problem.id) }}">我的提交</a>
+                            <a class="btn btn-success"
+                               href="{{ url_for('problem.show_my_submits', pid=problem.id) }}">我的提交</a>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,9 @@
                 <div class="markdown-body">
                     <p class="text-center text-large">编译结果</p>
                     <hr>
-                    <div id="compiler-content"></div>
+                    <div id="compiler-content" class="result-keep-space">
+                    </div>
+
                 </div>
             </div>
 
@@ -144,15 +146,16 @@
                 <div class="markdown-body">
                     <p class="text-center text-large">运行结果</p>
                     <hr>
-                    <div id="run-content"></div>
+                    <div id="run-content" class="result-keep-space">
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- 代码文件命名模态框 -->
-    <div class="modal fade" id="download-warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="download-warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -161,10 +164,10 @@
                 </div>
                 <div class="modal-body" style="height: 100px;font-size: medium">
                     <form>
-                      <div class="form-group">
-                        <label class="control-label">请为下载文件命名：</label>
-                        <input id="filename" type="text" class="form-control" value="code.txt">
-                      </div>
+                        <div class="form-group">
+                            <label class="control-label">请为下载文件命名：</label>
+                            <input id="filename" type="text" class="form-control" value="code.txt">
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -211,9 +214,11 @@
             var data = $("form").serialize();
             $('#result-show').css("display", 'block');
             var loading = "<img src='{{ url_for('static', filename='images/submit.gif') }}' alt='Loading'></div>";
-            $("#run-content").empty();
+            var $run_result = $("#run-content");
+            var $compiler_result = $("#compiler-content");
+            $run_result.empty();
+            $("#compiler-content").html(loading);
 
-            $("#compiler-content").empty().append(loading);
             $.ajax({
                 method: "post",
                 cache: false,
@@ -221,75 +226,75 @@
                 data: data,
                 success: function (data) {
                     if (data.status === 'success') {
-                        $("#compiler-content").empty().append(data.compile_out);
-                        $("#run-content").empty().html(data.run_out);
+                        $compiler_result.html(data.compile_out);
+                        $run_result.html(data.run_out);
                     }
                     else {
-                        $("#compiler-content").empty().append(data.msg);
-                        $("#run-content").empty().html("<p class='text-center'>  暂时无法运行...</p>");
+                        $compiler_result.html(data.msg);
+                        $run_result.html("暂时无法运行...");
                     }
                 },
                 error: function (data) {
-                    $("#compiler-content").empty().append("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
-                    $("#run-content").html("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
+                    $compiler_result.html("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
+                    $run_result.html("<p class='text-center'> 暂时不能提交, 请稍后重试...</p>");
                 }
             });
         }
     </script>
 
     <script type="text/javascript">
-    $(function () {
-        {% if cache %}
-            editor.setValue($("#hidden-code").text());
-            $("#hidden-code").remove();
-        {% endif %}
-        $("#code-save").click(function () {
-            $.ajax({
-                url: location.href,
-                type: "post",
-                data: {
-                    op: "save",
-                    program_id: {{ problem.id }},
-                    code: editor.getValue()
-                },
-                success: function (data) {
-                    if (data['status'] == "success")
-                        alert_modal("保存成功");
-                }
+        $(function () {
+            {% if cache %}
+                editor.setValue($("#hidden-code").text());
+                $("#hidden-code").remove();
+            {% endif %}
+            $("#code-save").click(function () {
+                $.ajax({
+                    url: location.href,
+                    type: "post",
+                    data: {
+                        op: "save",
+                        program_id: {{ problem.id }},
+                        code: editor.getValue()
+                    },
+                    success: function (data) {
+                        if (data['status'] == "success")
+                            alert_modal("保存成功");
+                    }
+                });
+            });
+            $("#code-upload").click(function () {
+                $("#code-field").click();
+            });
+            $("#code-default").click(function () {
+                editor.setValue($("#default-code").text());
+            });
+            $("#code-field").change(function () {
+                var form = $(this).parent();
+                $.ajax({
+                    url: location.href,
+                    type: "post",
+                    data: new FormData(form[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        editor.setValue(data);
+                    }
+                });
+            });
+            $("#code-download").click(function () {
+                $("#download-warning").modal("show");
+            });
+            $("#download-confirm").click(function () {
+                var form = $("#code-download").next();
+                var filename = $("input[id=filename]").val();
+                form.children("input[name=code]").attr("value", editor.getValue());
+                form.children("input[name=filename]").attr("value", filename);
+                form.submit();
+                $("#download-warning").modal("hide");
             });
         });
-        $("#code-upload").click(function () {
-            $("#code-field").click();
-        });
-        $("#code-default").click(function () {
-            editor.setValue($("#default-code").text());
-        });
-        $("#code-field").change(function () {
-            var form = $(this).parent();
-            $.ajax({
-                url: location.href,
-                type: "post",
-                data: new FormData(form[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    editor.setValue(data);
-                }
-            });
-        });
-        $("#code-download").click(function () {
-            $("#download-warning").modal("show");
-        });
-        $("#download-confirm").click(function () {
-            var form = $("#code-download").next();
-            var filename = $("input[id=filename]").val();
-            form.children("input[name=code]").attr("value", editor.getValue());
-            form.children("input[name=filename]").attr("value", filename);
-            form.submit();
-            $("#download-warning").modal("hide");
-        });
-    });
     </script>
 
 {% endblock %}

@@ -7,13 +7,7 @@
 
 {% block content %}
 
-    <div class="modal markdown-body" id="loading-gif" style="display: none">
-        <p class="text-center">正在判题...</p>
-        <img src="{{ url_for('static', filename='images/loading.gif') }}">
-    </div>
-
     <div id="challenge-left">
-
         <div class="challenge-progress">
             <div class="progress">
                 <div style="width:{{ (next_progress - 1) / challenges_count * 100 }}%" class="progress-bar progress-bar-success"></div>

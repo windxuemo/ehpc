@@ -88,7 +88,7 @@ $(document).ready(function() {
                             + '<button type="button" class="close" aria-label="Close">'
                             + '<span class="delete-upload" aria-hidden="true" onclick="delete_upload(this);">&times;</span></button>'
                             + '<i class="es-icon es-icon-description status-icon pull-left"></i>'
-                            + '<a href="/static/homework/upload/' + response.new_upload_uri[i] + ') }}" download="'
+                            + '<a href="/static/homework/upload/' + response.new_upload_uri[i] + '" download="'
                             + response.new_upload_name[i] + '" class="col-md-8 col-sm-8">' + response.new_upload_name[i] + '</a>'
                             + '<span>提交于：' + response.new_upload_submit_time[i]  + '</span>'
                             + '</div>';

@@ -4852,3 +4852,11 @@ div.no-margin {
 .ui.grid {
     margin: 0 !important;
 }
+
+/*
+Render a string in HTML and preserve spaces and newlines
+http://stackoverflow.com/questions/9492249/render-a-string-in-html-and-preserve-spaces-and-newlines
+*/
+.result-keep-space{
+    white-space: pre-wrap;
+}

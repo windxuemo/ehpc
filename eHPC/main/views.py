@@ -12,7 +12,7 @@ from flask_login import current_user
 
 @main.route('/')
 def index():
-    courses = Course.query.limit(8).all()
+    courses = Course.query.order_by(Course.nature_order.asc()).limit(6).all()
     groups = Group.query.order_by(Group.memberNum.desc()).limit(6).all()
     articles = Article.query.order_by(Article.updatedTime.desc()).limit(5).all()
     if current_user.is_authenticated:

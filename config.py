@@ -53,7 +53,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
     # 如果配置了 EHPC_VNC_OUTSIDE_URL, 则公网可以访问， 否则只在超算内部可以访问 VNC
-    VNC_SERVER_URL = os.environ.get('EHPC_VNC_OUTSIDE_URL') or '10.182.15.14:8080'
+    VNC_SERVER_URL = os.environ.get('EHPC_VNC_OUTSIDE_URL') or '10.133.100.17:8080'
     # VNC_SERVER_URL = '114.67.37.197:10008'
 
     MAIL_SUBJECT_PREFIX = 'EasyHPC'

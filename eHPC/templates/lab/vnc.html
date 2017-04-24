@@ -290,7 +290,7 @@
                 $("#loading").modal({backdrop: 'static', keyboard: false});
                 console.log(resolution_width, resolution_height);
                 $.ajax({
-                    url: {{ vnc_url }},
+                    url: "http://{{ vnc_url }}/server/vncsetter",
                     type: "post",
                     data: {
                         "width": Math.floor(resolution_width),
@@ -332,7 +332,7 @@
         function do_connect_vnc_server(token){
             var display = document.getElementById("display");
             guac = new Guacamole.Client(
-                new Guacamole.HTTPTunnel("{{ vnc_url }}")
+                new Guacamole.HTTPTunnel("http://{{ vnc_url }}/server/tunnel")
             );
             display.appendChild(guac.getDisplay().getElement());
             guac.onerror = function (error) {

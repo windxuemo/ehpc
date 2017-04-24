@@ -238,8 +238,9 @@ def vnc_task(vnc_knowledge_id):
                 while status == 'repeated token':
                     try:
                         token = ''.join(random.sample(string.ascii_letters + string.digits, 32))
-                        req = requests.post(current_app.config['VNC_SERVER_URL'], params={"This_is_a_very_secret_token": token,
-                                                                                          "user_id": current_user.id}, timeout=30)
+                        req = requests.post("http://" + current_app.config['VNC_SERVER_URL'] + "/server/controller",
+                                            params={"This_is_a_very_secret_token": token, "user_id": current_user.id},
+                                            timeout=30)
                         req.raise_for_status()
                     except requests.RequestException as e:
                         print e

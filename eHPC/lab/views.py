@@ -4,7 +4,7 @@
 import os
 from datetime import datetime
 
-from flask import render_template, request, jsonify, abort, current_app, url_for, redirect
+from flask import render_template, request, jsonify, abort, current_app, url_for
 from flask_babel import gettext
 from flask_login import login_required, current_user
 
@@ -224,7 +224,8 @@ def vnc_task(vnc_knowledge_id):
                                    title=gettext('vnc'),
                                    response_vnc_task=response_vnc_task,
                                    vnc_tasks_count=vnc_tasks_count,
-                                   vnc_knowledge_id=cur_vnc_knowledge.id)
+                                   vnc_knowledge_id=cur_vnc_knowledge.id,
+                                   vnc_url=current_app.config['VNC_SERVER_URL'])
         else:
             abort(404)
     elif request.method == 'POST':

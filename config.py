@@ -52,6 +52,10 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'easyhpc@nscc-gz.cn'
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
+    # 如果配置了 EHPC_VNC_OUTSIDE_URL, 则公网可以访问， 否则只在超算内部可以访问 VNC
+    VNC_SERVER_URL = os.environ.get('EHPC_VNC_OUTSIDE_URL') or 'http://10.182.15.14:8080/server/controller'
+    # VNC_SERVER_URL = 'http://114.67.37.197:10008/server/controller'
+
     MAIL_SUBJECT_PREFIX = 'EasyHPC'
     MAIL_SENDER = '<easyhpc@nscc-gz.cn>'
     # 发送邮件开关， 为True才真正发送邮件，为False不发送邮件。
@@ -84,8 +88,6 @@ class Config:
     MAX_CONTENT_LENGTH = 512 * 1024 * 1024
     ALLOWED_RESOURCE_TYPE = {'pdf', 'video', 'audio', 'excel'}
 
-    VNC_SERVER_URL = 'http://10.182.15.14:8080/server/controller'
-    # VNC_SERVER_URL = 'http://114.67.37.197:10008/server/controller'
 
     @staticmethod
     def init_app(app):

@@ -69,11 +69,16 @@
 {% endblock %}
 
 {% block footer_ext %}
-    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script src="//cdn.bootcss.com/ace/1.2.6/ace.js"></script>
     <script>
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/tomorrow-night");
-        editor.getSession().setMode("ace/mode/c_cpp");
+        var default_options = {
+            useWrapMode: true,
+            highlightActiveLine: true,
+            showPrintMargin: false,
+            theme: 'ace/theme/tomorrow_night',
+            mode: 'ace/mode/c_cpp'
+        };
+        ace.edit("editor").setOptions(default_options);
         editor.setValue($("input[name=default-code]").val());
     </script>
 

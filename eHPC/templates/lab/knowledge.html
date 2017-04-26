@@ -10,7 +10,8 @@
     <div id="challenge-left">
         <div class="challenge-progress">
             <div class="progress">
-                <div style="width:{{ (next_progress - 1) / challenges_count * 100 }}%" class="progress-bar progress-bar-success"></div>
+                <div style="width:{{ (next_progress - 1) / challenges_count * 100 }}%"
+                     class="progress-bar progress-bar-success"></div>
             </div>
             <span class="progress-nums">{{ (next_progress - 1) | string + '/'+ challenges_count | string }}</span>
         </div>
@@ -34,13 +35,17 @@
     <div id="challenge-right">
         <div class="editor-header">
             <button id="run" class="btn btn-primary">
-                <i class="glyphicon glyphicon-play"></i> 提交运行</button>
-            <button id="set-timeout" class="btn btn-primary pull-right" data-toggle="modal" data-target="#setTimeout" style="margin-right: 10px">
-                <i class="glyphicon glyphicon-play"></i> 环境设置</button>
+                <i class="glyphicon glyphicon-play"></i> 提交运行
+            </button>
+            <button id="set-timeout" class="btn btn-primary pull-right" data-toggle="modal" data-target="#setTimeout"
+                    style="margin-right: 10px">
+                <i class="glyphicon glyphicon-play"></i> 环境设置
+            </button>
             <button id="check-source-code" class="btn btn-primary pull-right" style="margin-right: 10px">
-                <i class="glyphicon glyphicon-play"></i> 查看答案</button>
+                <i class="glyphicon glyphicon-play"></i> 查看答案
+            </button>
         </div>
-        <div id="laboratory" style="background-color: #1D1F21;">
+        <div id="laboratory">
             <div id="editor" class="editor"></div>
         </div>
         <div id="terminal">
@@ -49,7 +54,8 @@
 
     </div>
 
-    <div class="modal fade center" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade center" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body" style="height: 250px;">
@@ -59,8 +65,9 @@
         </div>
     </div>
 
-        <!-- 模态框（Modal） -->
-    <div class="modal fade" id="setTimeout" tabindex="-1" role="dialog" aria-labelledby="setTimeoutLabel" aria-hidden="true">
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="setTimeout" tabindex="-1" role="dialog" aria-labelledby="setTimeoutLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -71,14 +78,17 @@
                     <div class="form-group">
                         <div id="timeout-choice" class="col-md-offset-2">
                             <label><input type="radio" name="timeout" value="10">&nbsp;&nbsp;10s</label>
-                            <label><input type="radio" name="timeout" value="20" checked="checked">&nbsp;&nbsp;20s</label>
+                            <label><input type="radio" name="timeout" value="20"
+                                          checked="checked">&nbsp;&nbsp;20s</label>
                             <label><input type="radio" name="timeout" value="30">&nbsp;&nbsp;30s</label>
                             <label><input type="radio" name="timeout" value="50">&nbsp;&nbsp;50s</label>
                             <label><input type="radio" name="timeout" value="60">&nbsp;&nbsp;60s</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button id="confirm-timeout" class="btn btn-primary pull-right" style="margin-right: 8.333333%;">确认</button>
+                        <button id="confirm-timeout" class="btn btn-primary pull-right"
+                                style="margin-right: 8.333333%;">确认
+                        </button>
                     </div>
                 </div>
             </div><!-- /.modal-content -->
@@ -98,11 +108,16 @@
     </script>
 
     <!-- 引入代码编辑框 -->
-    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script src="//cdn.bootcss.com/ace/1.2.6/ace.js"></script>
     <script>
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/tomorrow-night");
-        editor.getSession().setMode("ace/mode/c_cpp");
+        var default_options = {
+            useWrapMode: true,
+            highlightActiveLine: true,
+            showPrintMargin: false,
+            theme: 'ace/theme/tomorrow_night',
+            mode: 'ace/mode/c_cpp'
+        };
+        ace.edit("editor").setOptions(default_options);
 
         $(function () {
             $.ajax({
@@ -113,7 +128,7 @@
                     k_num: {{ next_progress - 1 }}
                 },
                 success: function (data) {
-                    if(data["status"] == "success"){
+                    if (data["status"] == "success") {
                         editor.setValue(data['default_code']);
                     }
                 }
@@ -132,7 +147,7 @@
                 location.href = next_challenge_uri;
             });
             var time_out = 20;
-            $("#confirm-timeout").click(function() {
+            $("#confirm-timeout").click(function () {
                 time_out = $("#timeout-choice input[name='timeout']:checked").val();
                 $("#setTimeout").modal('hide');
             });
@@ -144,28 +159,28 @@
                 $.ajax({
                     url: address,
                     type: "post",
-                    timeout: time_out*1000, // sets timeout to 20 seconds
+                    timeout: time_out * 1000, // sets timeout to 20 seconds
                     data: {
                         op: "run",
                         code: code,
                         k_num: {{ next_progress - 1 }}
                     },
                     success: function (data) {
-                        if(data["status"] == "success"){
-                            if(data['result']['compile_success'] == 'true'){
+                        if (data["status"] == "success") {
+                            if (data['result']['compile_success'] == 'true') {
                                 terminal.eq(0).text(data['result']['run_out']);
                             }
-                            else if(data['result']['compile_success'] == 'false'){
+                            else if (data['result']['compile_success'] == 'false') {
                                 terminal.eq(0).text(data['result']['compile_out']);
                             }
                         }
-                        else if(data['status'] == 'fail'){
+                        else if (data['status'] == 'fail') {
                             terminal.eq(0).text(data['msg']);
                         }
                         $run.prop('disabled', false);
                         $("#loading").modal("hide");
                     },
-                    error: function(msg){
+                    error: function (msg) {
                         terminal.eq(0).text('天河服务器出错或者长时间没有反应, 请稍后重试...');
                         $run.prop('disabled', false);
                         $("#loading").modal("hide");
@@ -182,7 +197,7 @@
                         k_num: {{ next_progress - 1 }}
                     },
                     success: function (data) {
-                        if(data["status"] == "success"){
+                        if (data["status"] == "success") {
                             editor.setValue(data['source_code']);
                         }
                     }

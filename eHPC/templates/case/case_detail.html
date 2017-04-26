@@ -77,10 +77,10 @@
 
 {% block footer_ext %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/markdown_latex_support.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script src="//cdn.bootcss.com/ace/1.2.6/ace.js"></script>
     <script>
         var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/tomorrow");
+        editor.setTheme("ace/theme/tomorrow_night");
         var post_to = "{{ url_for('case.show_case', case_id=case.id) }}";
     </script>
     <script src="{{ url_for('static', filename='js/case/case_detail.js') }}"></script>

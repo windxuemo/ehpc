@@ -87,7 +87,8 @@
 
                                 <div class="col-md-2" style="padding-left: 0">
                                     <label for="cpu_number_per_task">CPU/任务</label>
-                                    <select class="selectpicker" name="cpu_number_per_task" id="cpu_number_per_task" data-width="130px">
+                                    <select class="selectpicker" name="cpu_number_per_task" id="cpu_number_per_task"
+                                            data-width="130px">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -126,7 +127,8 @@
                     </div>
 
                     <div class="panel-footer">
-                        <span id="challenge-save-info" class="hide" style="position:absolute; left:16.67%; bottom: 40px; color:red;">
+                        <span id="challenge-save-info" class="hide"
+                              style="position:absolute; left:16.67%; bottom: 40px; color:red;">
                             <i class="es-icon es-icon-warning"></i>&nbsp;
                             <span></span>
                         </span>
@@ -137,7 +139,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="materialModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="materialModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" style="width: 50%">
             <div class="modal-content">
                 <div class="modal-header">
@@ -159,15 +162,27 @@
 
 
 {% block footer_ext %}
-    <script src="{{ url_for('static', filename='js/ace.js') }}" charset="utf-8"></script>
+    <script src="//cdn.bootcss.com/ace/1.2.6/ace.js"></script>
     <script>
-        var editor_source_code = ace.edit("editor-source-code");
-        editor_source_code.setTheme("ace/theme/tomorrow-night");
-        editor_source_code.getSession().setMode("ace/mode/c_cpp");
-
-        var editor_default_code = ace.edit("editor-default-code");
-        editor_default_code.setTheme("ace/theme/tomorrow-night");
-        editor_default_code.getSession().setMode("ace/mode/c_cpp");
+        var editor = ace.edit("editor-source-code");
+        editor.setOptions({
+            useWrapMode: true,
+            highlightActiveLine: true,
+            showPrintMargin: false,
+            theme: 'ace/theme/tomorrow_night',
+            mode: 'ace/mode/c_cpp'
+        });
+    </script>
+    <script>
+        var default_options = {
+            useWrapMode: true,
+            highlightActiveLine: true,
+            showPrintMargin: false,
+            theme: 'ace/theme/tomorrow_night',
+            mode: 'ace/mode/c_cpp'
+        };
+        ace.edit("editor-source-code").setOptions(default_options);
+        ace.edit("editor-default-code").setOptions(default_options);
 
         $(function () {
             $("#default-code-btn").click(function () {
@@ -195,7 +210,7 @@
                         op: "get_code"
                     },
                     success: function (data) {
-                        if(data["status"] == "success"){
+                        if (data["status"] == "success") {
                             editor_default_code.setValue(data['default_code']);
                             editor_source_code.setValue(data['source_code']);
                         }
@@ -228,12 +243,12 @@
 
             $("#challenge-save-btn").click(function () {
                 if ($("#challenge-title").val() == "") {
-                    show_invalid_info("#challenge-save-info","#challenge-save-info span","任务标题不能为空");
+                    show_invalid_info("#challenge-save-info", "#challenge-save-info span", "任务标题不能为空");
                     return;
                 }
 
-                if(!edt.value()) {
-                    show_invalid_info("#challenge-save-info","#challenge-save-info span","任务内容不能为空");
+                if (!edt.value()) {
+                    show_invalid_info("#challenge-save-info", "#challenge-save-info span", "任务内容不能为空");
                     return;
                 }
 
